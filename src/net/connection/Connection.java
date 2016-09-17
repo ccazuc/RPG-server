@@ -35,8 +35,8 @@ public class Connection {
 	public final void send() {
 		try {
 			this.wBuffer.send();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -12,5 +12,7 @@ public class Command {
 	public Command(final ConnectionManager connectionManager) {
 		this.connection = connectionManager.getConnection();
 		this.player = connectionManager.getPlayer();
-}
+	}
+	
+	public void read() {}
 }

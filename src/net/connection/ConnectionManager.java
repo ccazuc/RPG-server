@@ -1,29 +1,40 @@
 package net.connection;
 
+import static net.connection.PacketID.*;
+
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
+import java.util.HashMap;
 
-import static net.PacketID.*;
 import net.Player;
-import net.Server;
+import net.command.Command;
 import net.command.CommandLogin;
+import net.command.CommandLogout;
+import net.command.CommandSelectScreenLoadCharacters;
 
 public class ConnectionManager {
 	
 	private Player player;
 	private Connection connection;
 	private CommandLogin commandLogin;
+	private CommandLogout commandLogout;
+	private CommandSelectScreenLoadCharacters commandSelectScreenLoadCharacters;
+	private HashMap<Integer, Command> commandList = new HashMap<Integer, Command>();
 	
 	public ConnectionManager(Player player, SocketChannel socket) {
 		this.player = player;
 		this.connection = new Connection(socket);
 		this.commandLogin = new CommandLogin(this);
+		this.commandLogout = new CommandLogout(this);
+		this.commandSelectScreenLoadCharacters = new CommandSelectScreenLoadCharacters(this);
+		commandList.put((int)LOGIN, this.commandLogin);
+		commandList.put((int)LOGOUT, this.commandLogout);
+		commandList.put((int)SELECT_SCREEN_LOAD_CHARACTERS, this.commandSelectScreenLoadCharacters);
 	}
 	
 	public void read() throws SQLException {
-		System.out.println("read");
-		byte packetId = -1;
+		byte packetId = 0;
 		try {
 			this.connection.read();
 			if(this.connection.hasRemaining()) {
@@ -32,29 +43,15 @@ public class ConnectionManager {
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
-			this.connection.close();
-			Server.removePlayer(player);
+			this.player.close();
 		}
 		if(this.connection.hasRemaining()) {
-			System.out.println('b');
-			if(packetId != -1)
-			System.out.println(packetId);
-			if(!this.player.isLoggedIn()) {
-				if(packetId == LOGIN) {
-					this.commandLogin.read();
-				}
-				else {
-					System.out.println("no login");
-					//this.connection.clearRBuffer();
-					Server.removePlayer(this.player);
-					this.player.close();
-				}
+			if(commandList.containsKey((int)packetId)) {
+				commandList.get((int)packetId).read();
 			}
 			else {
-				System.out.println("not logged");
-				//this.connection.clearRBuffer();
+				this.player.close();
 			}
-			System.out.println(this.connection.hasRemaining());
 		}
 	}
 	

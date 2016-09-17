@@ -1,91 +1,116 @@
 package net.command;
-import java.io.IOException;
 import java.sql.SQLException;
 
 import jdo.JDOStatement;
-import net.PacketID;
 import net.Server;
 import net.connection.ConnectionManager;
-
-
+import net.connection.PacketID;
 
 public class CommandLogin extends Command {
 	
+	private static JDOStatement read_statement;
+	private static JDOStatement write_statement;
 	public CommandLogin(ConnectionManager connectionManager) {
 		super(connectionManager);
-}
+	}
 
-	public final void read() throws SQLException {
-		String username = this.connection.readString();
-		String password = this.connection.readString();
-		JDOStatement statement = Server.getJDO().prepare("SELECT name, password, rank, banned, ban_duration FROM account WHERE name = ?");
-		statement.putString(username);
-		statement.execute();
-		while(statement.fetch()) {
-			String goodUsername = statement.getString();
-			String goodPassword = statement.getString();
-			if(goodPassword.equals(password) && goodUsername.equals(username)) {
-				int id = statement.getInt();
-				int ban = statement.getInt();
-				int banDuration = statement.getInt();
-				if(ban == 1 && banDuration > System.currentTimeMillis()) {
+	public  void read() {
+		try {
+			if(read_statement == null) {
+				read_statement = Server.getJDO().prepare("SELECT name, password, id, rank, banned, ban_duration FROM account WHERE name = ?");
+			}
+			String username = this.connection.readString();
+			String password = this.connection.readString();
+			read_statement.putString(username);
+			read_statement.execute();
+			if(read_statement.fetch()) {
+				String goodUsername = read_statement.getString();
+				String goodPassword = read_statement.getString();
+				if(goodPassword.equals(password) && goodUsername.equals(username)) {
+					int id = read_statement.getInt();
+					int rank = read_statement.getInt();
+					int ban = read_statement.getInt();
+					int banDuration = read_statement.getInt();
+					if(ban == 1) {
+						if(banDuration > System.currentTimeMillis()) {
+							this.connection.writeByte(PacketID.LOGIN);
+							this.connection.writeByte(PacketID.ACCOUNT_BANNED_TEMP);
+							this.connection.send();
+							this.player.close();
+							return;
+						}
+						if(banDuration == -1) {
+							this.connection.writeByte(PacketID.LOGIN);
+							this.connection.writeByte(PacketID.ACCOUNT_BANNED_PERM);
+							this.connection.send();
+							this.player.close();
+							return;
+						}
+					}
+					if((ban == 0 && banDuration > 0) || (ban == 1 && banDuration < System.currentTimeMillis())) {
+						updateBan(id, ban, banDuration);
+					}
+					if(Server.getPlayerList().containsKey(id)) {
+						this.connection.writeByte(PacketID.LOGIN);
+						this.connection.writeByte(PacketID.ALREADY_LOGGED);
+						this.connection.send();
+						this.player.close();
+						return;
+					}
 					this.connection.writeByte(PacketID.LOGIN);
-					this.connection.writeByte(PacketID.ACCOUNT_BANNED);
+					this.connection.writeByte(PacketID.LOGIN_ACCEPT);
+					this.connection.writeInt(id);
+					this.connection.writeInt(rank);
 					this.connection.send();
+					this.player.setId(id);
+					Server.removeNonLoggedPlayer(this.player);
+					Server.addLoggedPlayer(this.player);
 					return;
 				}
-				if((ban == 0 && banDuration > 0) || (ban == 1 && banDuration < System.currentTimeMillis())) {
-					updateBan(id, ban, banDuration);
-				}
-				if(Server.getPlayerList().containsKey(id)) {
+				else {
 					this.connection.writeByte(PacketID.LOGIN);
-					this.connection.writeByte(PacketID.ALREADY_LOGGED);
+					this.connection.writeByte(PacketID.LOGIN_WRONG);
 					this.connection.send();
 					this.player.close();
-					Server.removePlayer(this.player);
 					return;
 				}
-				this.connection.writeByte(PacketID.LOGIN);
-				this.connection.writeByte(PacketID.LOGIN_ACCEPT);
-				this.connection.send();
-				this.player.setId(id);
 			}
 			else {
 				this.connection.writeByte(PacketID.LOGIN);
 				this.connection.writeByte(PacketID.LOGIN_WRONG);
 				this.connection.send();
 				this.player.close();
-				Server.removePlayer(this.player);
 				return;
 			}
 		}
-		//System.out.println(this.connection.hasRemaining());
-		//this.connection.clearRBuffer();
-		//System.out.println(this.connection.hasRemaining());
-		statement.close();
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static void updateBan(int id, int ban, int banDuration) throws SQLException {
-		JDOStatement statement = Server.getJDO().prepare("UPDATE banned, ban_duration FROM acount WHERE id = ?");
-		statement.putInt(id);
-		statement.execute();
+		if(write_statement == null) {
+			write_statement = Server.getJDO().prepare("UPDATE banned, ban_duration FROM acount WHERE id = ?");
+		}
+		write_statement.putInt(id);
+		write_statement.execute();
 		if(ban == 0) {
 			if(banDuration > System.currentTimeMillis()) {
-				statement.putInt(1);
-				statement.putInt(banDuration);
+				write_statement.putInt(1);
+				write_statement.putInt(banDuration);
 			}
 			else {
-				statement.putInt(0);
-				statement.putInt(0);
+				write_statement.putInt(0);
+				write_statement.putInt(0);
 			}
 		}
 		else if(ban == 1) {
 			if(banDuration > System.currentTimeMillis()) {
-				statement.close();
+				write_statement.close();
 			}
 			else {
-				statement.putInt(0);
-				statement.putInt(0);
+				write_statement.putInt(0);
+				write_statement.putInt(0);
 			}
 		}
 	}

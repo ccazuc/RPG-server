@@ -36,5 +36,7 @@ public class Player {
 	
 	public void close() {
 		this.connectionManager.getConnection().close();
+		Server.removeNonLoggedPlayer(this);
+		Server.removeLoggedPlayer(this);
 	}
 }
