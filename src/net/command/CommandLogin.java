@@ -21,6 +21,7 @@ public class CommandLogin extends Command {
 			}
 			String username = this.connection.readString();
 			String password = this.connection.readString();
+			read_statement.clear();
 			read_statement.putString(username);
 			read_statement.execute();
 			if(read_statement.fetch()) {
@@ -92,6 +93,7 @@ public class CommandLogin extends Command {
 		if(write_statement == null) {
 			write_statement = Server.getJDO().prepare("UPDATE banned, ban_duration FROM acount WHERE id = ?");
 		}
+		write_statement.clear();
 		write_statement.putInt(id);
 		write_statement.execute();
 		if(ban == 0) {

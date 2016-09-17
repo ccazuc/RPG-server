@@ -11,4 +11,7 @@ public class PacketID {
 	public static final byte LOGIN_WRONG = 7;
 	public static final byte SELECT_SCREEN_LOAD_CHARACTERS = 8;
 	public static final byte CREATE_CHARACTER = 9;
+	public static final byte ERROR_NAME_ALPHABET = 10;
+	public static final byte ERROR_NAME_ALREADY_TAKEN = 11;
+	public static final byte CHARACTER_CREATED = 12;
 }

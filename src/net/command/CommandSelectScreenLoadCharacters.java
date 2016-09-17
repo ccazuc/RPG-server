@@ -17,16 +17,19 @@ public class CommandSelectScreenLoadCharacters extends Command {
 	}
 
 	public void read() {
+		System.out.println("read select");
 		int accountId = this.connection.readInt();
 		write(accountId);
 	}
 	
 	private void write(int accountId) {
+		System.out.println("write select");
 		try {
 			if(write_statement == null) {
 				write_statement = Server.getJDO().prepare("SELECT character_id, name, level, class, race FROM `character` WHERE account_id = ?");
 			}
 			boolean packet = true;
+			write_statement.clear();
 			write_statement.putInt(accountId);
 			write_statement.execute();
 			while(write_statement.fetch()) {
@@ -44,6 +47,7 @@ public class CommandSelectScreenLoadCharacters extends Command {
 				this.connection.writeInt(level);
 				this.connection.writeString(classe);
 				this.connection.writeString(race);
+				System.out.println(id+" "+name);
 			}
 			this.connection.send();
 		}

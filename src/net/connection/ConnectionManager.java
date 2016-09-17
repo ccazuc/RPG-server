@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import net.Player;
 import net.command.Command;
+import net.command.CommandCreateCharacter;
 import net.command.CommandLogin;
 import net.command.CommandLogout;
 import net.command.CommandSelectScreenLoadCharacters;
@@ -20,6 +21,7 @@ public class ConnectionManager {
 	private CommandLogin commandLogin;
 	private CommandLogout commandLogout;
 	private CommandSelectScreenLoadCharacters commandSelectScreenLoadCharacters;
+	private CommandCreateCharacter commandCreateCharacter;
 	private HashMap<Integer, Command> commandList = new HashMap<Integer, Command>();
 	
 	public ConnectionManager(Player player, SocketChannel socket) {
@@ -28,9 +30,11 @@ public class ConnectionManager {
 		this.commandLogin = new CommandLogin(this);
 		this.commandLogout = new CommandLogout(this);
 		this.commandSelectScreenLoadCharacters = new CommandSelectScreenLoadCharacters(this);
+		this.commandCreateCharacter = new CommandCreateCharacter(this);
 		commandList.put((int)LOGIN, this.commandLogin);
 		commandList.put((int)LOGOUT, this.commandLogout);
 		commandList.put((int)SELECT_SCREEN_LOAD_CHARACTERS, this.commandSelectScreenLoadCharacters);
+		commandList.put((int)CREATE_CHARACTER, this.commandCreateCharacter);
 	}
 	
 	public void read() throws SQLException {
