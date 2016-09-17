@@ -10,11 +10,12 @@ public class CommandLogin extends Command {
 	
 	private static JDOStatement read_statement;
 	private static JDOStatement write_statement;
+	
 	public CommandLogin(ConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 
-	public  void read() {
+	public void read() {
 		try {
 			if(read_statement == null) {
 				read_statement = Server.getJDO().prepare("SELECT name, password, id, rank, banned, ban_duration FROM account WHERE name = ?");

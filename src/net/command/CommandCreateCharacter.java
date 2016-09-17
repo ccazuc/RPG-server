@@ -16,7 +16,6 @@ public class CommandCreateCharacter extends Command {
 	}
 	
 	public void read() {
-		System.out.println("read create");
 		if(create_character == null) {
 			try {
 				create_character = Server.getJDO().prepare("INSERT INTO `character` (account_id, name, level, class, race) VALUES (?, ?, 1, ?, ?)");
@@ -40,12 +39,6 @@ public class CommandCreateCharacter extends Command {
 				this.connection.writeByte(PacketID.CREATE_CHARACTER);
 				this.connection.writeByte(PacketID.CHARACTER_CREATED);
 				this.connection.send();
-				/*creatingCharacter = false;
-				selectedCharacter[selectedCharacterIndex] = false;
-				selectedCharacter[totalCharacter] = true;
-				selectedCharacterIndex = totalCharacter;
-				character.resetText();
-				loadCharacter();*/
 			}
 		}
 		catch(SQLException e) {

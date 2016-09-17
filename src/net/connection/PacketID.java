@@ -14,4 +14,5 @@ public class PacketID {
 	public static final byte ERROR_NAME_ALPHABET = 10;
 	public static final byte ERROR_NAME_ALREADY_TAKEN = 11;
 	public static final byte CHARACTER_CREATED = 12;
+	public static final byte DELETE_CHARACTER = 13;
 }

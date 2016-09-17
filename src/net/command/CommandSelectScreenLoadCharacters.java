@@ -17,13 +17,11 @@ public class CommandSelectScreenLoadCharacters extends Command {
 	}
 
 	public void read() {
-		System.out.println("read select");
 		int accountId = this.connection.readInt();
 		write(accountId);
 	}
 	
 	private void write(int accountId) {
-		System.out.println("write select");
 		try {
 			if(write_statement == null) {
 				write_statement = Server.getJDO().prepare("SELECT character_id, name, level, class, race FROM `character` WHERE account_id = ?");
@@ -54,6 +52,5 @@ public class CommandSelectScreenLoadCharacters extends Command {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
-		
 	}
 }

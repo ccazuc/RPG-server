@@ -42,7 +42,7 @@ public class Buffer {
 	
 	private final byte read(final ByteBuffer buffer) throws IOException {
 		buffer.clear();
-		if(this.socket.isConnected() && this.socket.read(buffer) >= 0) {
+		if(this.socket.read(buffer) >= 1) {
 			buffer.flip();
 			return 1;
 		}
