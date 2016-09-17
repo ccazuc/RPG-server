@@ -70,7 +70,7 @@ public class CommandCreateCharacter extends Command {
 		check_character.putString(name);
 		check_character.execute();
 		if(check_character.fetch()) {
-		int id = check_character.getInt();
+			int id = check_character.getInt();
 			if(id != 0) {
 				return false;
 			}
