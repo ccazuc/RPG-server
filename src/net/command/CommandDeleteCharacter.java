@@ -15,6 +15,7 @@ public class CommandDeleteCharacter extends Command {
 		super(connectionManager);
 	}
 	
+	@Override
 	public void read() {
 		if(delete_character == null) {
 			try {

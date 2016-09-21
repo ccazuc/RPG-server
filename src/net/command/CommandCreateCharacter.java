@@ -11,10 +11,12 @@ public class CommandCreateCharacter extends Command {
 	
 	private static JDOStatement create_character;
 	private static JDOStatement check_character;
+	
 	public CommandCreateCharacter(ConnectionManager connectionManager) {
 		super(connectionManager);
 	}
 	
+	@Override
 	public void read() {
 		if(create_character == null) {
 			try {

@@ -8,6 +8,7 @@ public class CommandLogout extends Command {
 		super(connectionManager);
 	}
 
+	@Override
 	public final void read() {
 		this.player.close();
 	}

@@ -16,6 +16,7 @@ public class CommandSelectScreenLoadCharacters extends Command {
 		super(connectionManager);
 	}
 
+	@Override
 	public void read() {
 		int accountId = this.connection.readInt();
 		write(accountId);
@@ -26,14 +27,14 @@ public class CommandSelectScreenLoadCharacters extends Command {
 			if(write_statement == null) {
 				write_statement = Server.getJDO().prepare("SELECT character_id, name, level, class, race FROM `character` WHERE account_id = ?");
 			}
-			boolean packet = true;
+			boolean hasSendId = true;
 			write_statement.clear();
 			write_statement.putInt(accountId);
 			write_statement.execute();
 			while(write_statement.fetch()) {
-				if(packet) {
+				if(hasSendId) {
 					this.connection.writeByte(PacketID.SELECT_SCREEN_LOAD_CHARACTERS);
-					packet = false;
+					hasSendId = false;
 				}
 				int id = write_statement.getInt();
 				String name = write_statement.getString();
