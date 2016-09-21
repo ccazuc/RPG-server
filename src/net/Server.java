@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
+import net.game.Player;
 
 public class Server {
 	
@@ -40,21 +41,11 @@ public class Server {
 	private static void read() {
 		int i = 0;
 		while(i < nonLoggedPlayer.size()) {
-			try {
-				nonLoggedPlayer.get(i).getConnectionManager().read();
-			}
-			catch (SQLException e) {
-				e.printStackTrace();
-			}
+			nonLoggedPlayer.get(i).getConnectionManager().read();
 			i++;
 		}
 		for(Player player : playerList.values()) {
-			try {
-				player.getConnectionManager().read();
-			} 
-			catch (SQLException e) {
-				e.printStackTrace();
-			}
+			player.getConnectionManager().read();
 		}
 	}
 	
@@ -66,16 +57,32 @@ public class Server {
 		return jdo;
 	}
 	
+	public static Player getNonLoggedPlayer(int id) {
+		int i = 0;
+		while(i < nonLoggedPlayer.size()) {
+			if(nonLoggedPlayer.get(i).getAccountId() == id) {
+				return nonLoggedPlayer.get(i);
+			}
+			i++;
+		}
+		return null;
+	}
+	
 	public static void removeNonLoggedPlayer(Player player) {
-		nonLoggedPlayer.remove(player);
+		if(player != null) {
+			nonLoggedPlayer.remove(player);
+		}
 	}
 	
 	public static void addLoggedPlayer(Player player) {
-		playerList.put(player.getId(), player);
+		if(player != null) {
+			playerList.put(player.getAccountId(), player);
+		}
 	}
 	
 	public static void removeLoggedPlayer(Player player) {
-		playerList.remove(player.getId());
+		if(player != null) {
+			playerList.remove(player.getAccountId());
+		}
 	}
-	
 }

@@ -10,6 +10,11 @@ public class CommandLoadCharacter extends Command {
 
 	@Override
 	public void read() {
+		this.player.loadEquippedItemSQL();
+		this.player.loadEquippedBagSQL();
+	}
+	
+	public void write() {
 		
 	}
 }

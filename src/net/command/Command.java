@@ -1,8 +1,8 @@
 package net.command;
 
-import net.Player;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
+import net.game.Player;
 
 public class Command {
 	

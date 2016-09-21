@@ -12,7 +12,7 @@ public class Buffer {
 	private SocketChannel socket;
 	
 	public Buffer(SocketChannel socket) {
-		buffer = ByteBuffer.allocateDirect(16000);
+		this.buffer = ByteBuffer.allocateDirect(16000);
 		this.socket = socket;
 	}
 	

@@ -1,7 +1,7 @@
 package net.connection;
 
 public class PacketID {
-
+	
 	public static final byte LOGIN = 1;
 	public static final byte LOGOUT = 2;
 	public static final byte ALREADY_LOGGED = 3;
@@ -15,4 +15,7 @@ public class PacketID {
 	public static final byte ERROR_NAME_ALREADY_TAKEN = 11;
 	public static final byte CHARACTER_CREATED = 12;
 	public static final byte DELETE_CHARACTER = 13;
+	public static final byte LOAD_CHARACTER = 14;
+	public static final byte LOAD_EQUIPPED_ITEMS = 15;
+	public static final byte STUFF = 18;
 }

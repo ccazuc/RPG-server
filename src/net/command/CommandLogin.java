@@ -65,7 +65,7 @@ public class CommandLogin extends Command {
 					this.connection.writeInt(id);
 					this.connection.writeInt(rank);
 					this.connection.send();
-					this.player.setId(id);
+					this.player.setAccountId(id);
 					Server.removeNonLoggedPlayer(this.player);
 					Server.addLoggedPlayer(this.player);
 					return;
