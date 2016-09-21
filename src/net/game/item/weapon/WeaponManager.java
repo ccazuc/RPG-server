@@ -2,6 +2,7 @@ package net.game.item.weapon;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
@@ -14,7 +15,7 @@ import net.game.item.stuff.StuffManager;
 
 public class WeaponManager {
 	
-	private static ArrayList<Stuff> weaponList = new ArrayList<Stuff>();
+	private static HashMap<Integer, Stuff> weaponList = new HashMap<Integer, Stuff>();
 	private static JDOStatement loadWeapons;
 	
 	public static void loadWeapons() throws SQLException {
@@ -51,22 +52,18 @@ public class WeaponManager {
 			int strength = loadWeapons.getInt();
 			int sellPrice = loadWeapons.getInt();
 			Stuff newPiece = new Stuff(id, name, sprite_id, classeType, type, slot, quality, color1, color2, color3, bonusType, bonusValue, level, armor, stamina, mana, critical, strength, sellPrice);
-			weaponList.add(newPiece);
+			weaponList.put(id, newPiece);
 		}
 	}
 	public static Stuff getWeapon(int id) {
-		int i = 0;
-		while(i < weaponList.size()) {
-			if(weaponList.get(i).getId() == id) {
-				return weaponList.get(i);
-			}
-			i++;
+		if(weaponList.containsKey(id)) {
+			return weaponList.get(id);
 		}
 		return null;
 	}
 	
 	public static boolean exists(int id) {
-		return getWeapon(id) != null;
+		return weaponList.containsKey(id);
 	}
 	
 	public static Stuff getClone(int id) {
@@ -75,10 +72,6 @@ public class WeaponManager {
 			return new Stuff(temp, 0);
 		}
 		return null;
-	}
-	
-	public static ArrayList<Stuff> getWeaponList() {
-		return weaponList;
 	}
 	
 	private static WeaponType getType(String type) {

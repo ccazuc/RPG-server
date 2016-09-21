@@ -2,6 +2,7 @@ package net.game.item.stuff;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
@@ -13,7 +14,7 @@ import net.game.item.gem.GemColor;
 
 public class StuffManager {
 
-	private static ArrayList<Stuff> stuffList = new ArrayList<Stuff>();
+	private static HashMap<Integer, Stuff> stuffList = new HashMap<Integer, Stuff>();
 	private static int numberStuffLoaded;
 	private static JDOStatement loadStuff;
 	
@@ -51,24 +52,20 @@ public class StuffManager {
 			int strength = loadStuff.getInt();
 			int sellPrice = loadStuff.getInt();
 			Stuff newPiece = new Stuff(type, classeType, sprite_id, id, name, quality, color1, color2, color3, bonusType, bonusValue, level, wear, critical, strength, stamina, armor, mana, sellPrice);
-			stuffList.add(newPiece);
+			stuffList.put(id, newPiece);
 			numberStuffLoaded++;
 		}
 	}
 	
 	public static Stuff getStuff(int id) {
-		int i = 0;
-		while(i < stuffList.size()) {
-			if(stuffList.get(i).getId() == id) {
-				return stuffList.get(i);
-			}
-			i++;
+		if(stuffList.containsKey(id)) {
+			return stuffList.get(id);
 		}
 		return null;
 	}
 	
 	public static boolean exists(int id) {
-		return getStuff(id) != null;
+		return stuffList.containsKey(id);
 	}
 	
 	public static Stuff getClone(int id) {
@@ -200,10 +197,6 @@ public class StuffManager {
 	
 	public static int getNumberStuffLoaded() {
 		return numberStuffLoaded;
-	}
-	
-	public static ArrayList<Stuff> getStuffList() {
-		return stuffList;
 	}
 	
 	public static GemBonusType convBonusType(String bonus) {
