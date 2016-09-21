@@ -10,6 +10,7 @@ import java.util.HashMap;
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
 import net.game.Player;
+import net.game.item.stuff.StuffManager;
 
 public class Server {
 	
@@ -27,6 +28,7 @@ public class Server {
 		serverSocketChannel = ServerSocketChannel.open();
 		serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.bind(iNetSocketAdress);
+		StuffManager.loadStuffs();
 		while(true) {
 			if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);

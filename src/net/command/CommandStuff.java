@@ -1,7 +1,9 @@
 package net.command;
 
 import net.connection.ConnectionManager;
+import net.connection.PacketID;
 import net.game.item.stuff.Stuff;
+import net.game.item.stuff.StuffManager;
 
 public class CommandStuff extends Command {
 
@@ -11,10 +13,13 @@ public class CommandStuff extends Command {
 	}
 
 	@Override
-	public void read() {}
+	public void read() {
+		write(StuffManager.getStuff(this.connection.readInt()));
+	}
 	
 	public void write(Stuff stuff) {
 		int i = 0;
+		this.connection.writeByte(PacketID.STUFF);
 		this.connection.writeChar(stuff.getType().getValue());
 		this.connection.writeInt(stuff.getClassType().length);
 		while(i < stuff.getClassType().length) {
