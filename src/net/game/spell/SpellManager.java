@@ -18,32 +18,6 @@ public class SpellManager {
 	private static JDOStatement loadSpells;
 	private static JDOStatement loadDamageSpells;
 	private static JDOStatement loadHealSpells;
-	private static JDOStatement loadHealAndDamageSpells;
-	private static JDOStatement loadOtherSpells;
-	
-	/*public static void loadSpells() throws SQLException {
-		JDOStatement statement = Mideas.getJDO().prepare("SELECT id, sprite_id, name, type, basedamage, manacost, baseheal, basecd, cd, cast_time FROM spell");
-		statement.execute();
-		while(statement.fetch()) {
-			int id = statement.getInt();
-			String sprite_id = statement.getString();
-			String name = statement.getString();
-			String tempType = statement.getString();
-			SpellType type = getSpellType(tempType);
-			int baseDamage = statement.getInt();
-			int manaCost = statement.getInt();
-			int baseHeal = statement.getInt();
-			int baseCd = statement.getInt();
-			int cd = statement.getInt();
-			int time = statement.getInt();
-			Spell newSpell = new Spell(id, sprite_id, name, type, baseDamage, manaCost, baseHeal, baseCd, cd, time);
-			SpellShortcut newShortcutSpell = new SpellShortcut(newSpell);
-			spellList.add(newSpell);
-			spellShortcutList.add(newShortcutSpell);
-			spellCdList.put(id, 0);
-			numberSpellLoaded++;
-		}
-	}*/
 	
 	public static void loadSpells() throws SQLException {
 		if(loadSpells == null) {

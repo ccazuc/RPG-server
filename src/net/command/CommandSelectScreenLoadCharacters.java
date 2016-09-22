@@ -46,7 +46,6 @@ public class CommandSelectScreenLoadCharacters extends Command {
 				this.connection.writeInt(level);
 				this.connection.writeString(classe);
 				this.connection.writeString(race);
-				System.out.println(id+" "+name);
 			}
 			this.connection.send();
 		}

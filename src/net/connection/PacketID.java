@@ -17,5 +17,9 @@ public class PacketID {
 	public static final byte DELETE_CHARACTER = 13;
 	public static final byte LOAD_CHARACTER = 14;
 	public static final byte LOAD_EQUIPPED_ITEMS = 15;
+	public static final byte LOAD_BAG_ITEMS = 16;
 	public static final byte STUFF = 18;
+	public static final byte WEAPON = 19;
+	public static final byte GEM = 20;
+	public static final byte POTION = 21;
 }

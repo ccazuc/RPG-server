@@ -90,7 +90,7 @@ public class Player {
 		this.accountId = id;
 	}
 	
-	public void loadItemSQL() {
+	public void loadBagItemSQL() {
 		try {
 			this.itemManager.getBagItems(this);
 		} 
@@ -99,7 +99,7 @@ public class Player {
 		}
 	}
 	
-	public void setItemSQL() {
+	public void setBagItemSQL() {
 		try {
 			this.itemManager.setBagItems(this);
 		}

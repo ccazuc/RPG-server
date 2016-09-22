@@ -1,5 +1,6 @@
-package net.command;
+package net.command.item;
 
+import net.command.Command;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.item.stuff.Stuff;
@@ -14,7 +15,10 @@ public class CommandStuff extends Command {
 
 	@Override
 	public void read() {
-		write(StuffManager.getStuff(this.connection.readInt()));
+		int id = this.connection.readInt();
+		if(StuffManager.exists(id)) {
+			write(StuffManager.getStuff(id));
+		}
 	}
 	
 	public void write(Stuff stuff) {

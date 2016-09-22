@@ -86,56 +86,68 @@ public class ItemManager {
 		getBagItem.putInt(player.getCharacterId());
 		getBagItem.execute();
 		if(getBagItem.fetch()) {
-			while(i < 96) {
+			Connection connection = player.getConnectionManager().getConnection();
+			connection.writeByte(PacketID.LOAD_BAG_ITEMS);
+			connection.writeInt(player.getBag().getBag().length);
+			while(i < player.getBag().getBag().length) {
 				id = getBagItem.getInt();
 				number = getBagItem.getInt();
 				gem1Id = getBagItem.getInt();
 				gem2Id = getBagItem.getInt();
 				gem3Id = getBagItem.getInt();
-				if(i < player.getBag().getBag().length) {
-					if(StuffManager.exists(id)) {
-						player.getBag().setBag(i, StuffManager.getClone(id));
-						Stuff temp = (Stuff)player.getBag().getBag(i);
-						if(GemManager.exists(gem1Id) && temp.getGemSlot1() != GemColor.NONE) {
-							temp.setEquippedGem1(GemManager.getClone(gem1Id));
-						}
-						if(GemManager.exists(gem2Id) && temp.getGemSlot2() != GemColor.NONE) {
-							temp.setEquippedGem2(GemManager.getClone(gem2Id));
-						}
-						if(GemManager.exists(gem3Id) && temp.getGemSlot3() != GemColor.NONE) {
-							temp.setEquippedGem3(GemManager.getClone(gem3Id));
-						}
-						player.getBag().setBag(i, temp);
-						((Stuff)player.getBag().getBag(i)).checkBonusTypeActivated();
+				connection.writeInt(id);
+				connection.writeInt(number);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+				if(StuffManager.exists(id)) {
+					player.getBag().setBag(i, StuffManager.getClone(id));
+					Stuff temp = (Stuff)player.getBag().getBag(i);
+					if(GemManager.exists(gem1Id) && temp.getGemSlot1() != GemColor.NONE) {
+						temp.setEquippedGem1(GemManager.getClone(gem1Id));
 					}
-					else if(PotionManager.exists(id)) {
-						player.getBag().setBag(i, PotionManager.getClone(id));
-						player.getBag().getNumberStack().put(player.getBag().getBag(i), number);
+					if(GemManager.exists(gem2Id) && temp.getGemSlot2() != GemColor.NONE) {
+						temp.setEquippedGem2(GemManager.getClone(gem2Id));
 					}
-					else if(WeaponManager.exists(id)) {
-						player.getBag().setBag(i, WeaponManager.getClone(id));
-						Stuff temp = (Stuff)player.getBag().getBag(i);
-						if(GemManager.exists(gem1Id)) {
-							temp.setEquippedGem1(GemManager.getClone(gem1Id));
-						}
-						if(GemManager.exists(gem2Id)) {
-							temp.setEquippedGem2(GemManager.getClone(gem2Id));
-						}
-						if(GemManager.exists(gem3Id)) {
-							temp.setEquippedGem3(GemManager.getClone(gem3Id));
-						}
-						player.getBag().setBag(i, temp);
+					if(GemManager.exists(gem3Id) && temp.getGemSlot3() != GemColor.NONE) {
+						temp.setEquippedGem3(GemManager.getClone(gem3Id));
 					}
-					else if(GemManager.exists(id)) {
-						player.getBag().setBag(i, GemManager.getClone(id));
+					player.getBag().setBag(i, temp);
+					((Stuff)player.getBag().getBag(i)).checkBonusTypeActivated();
+					connection.writeChar(ItemType.STUFF.getValue());
+				}
+				else if(PotionManager.exists(id)) {
+					player.getBag().setBag(i, PotionManager.getClone(id));
+					player.getBag().getNumberStack().put(player.getBag().getBag(i), number);
+					connection.writeChar(ItemType.POTION.getValue());
+				}
+				else if(WeaponManager.exists(id)) {
+					player.getBag().setBag(i, WeaponManager.getClone(id));
+					Stuff temp = (Stuff)player.getBag().getBag(i);
+					if(GemManager.exists(gem1Id)) {
+						temp.setEquippedGem1(GemManager.getClone(gem1Id));
 					}
-					else {
-						player.getBag().setBag(i, null);
+					if(GemManager.exists(gem2Id)) {
+						temp.setEquippedGem2(GemManager.getClone(gem2Id));
 					}
+					if(GemManager.exists(gem3Id)) {
+						temp.setEquippedGem3(GemManager.getClone(gem3Id));
+					}
+					player.getBag().setBag(i, temp);
+					connection.writeChar(ItemType.WEAPON.getValue());
+				}
+				else if(GemManager.exists(id)) {
+					player.getBag().setBag(i, GemManager.getClone(id));
+					connection.writeChar(ItemType.GEM.getValue());
+				}
+				else {
+					player.getBag().setBag(i, null);
+					connection.writeChar((char)0);
 				}
 				i++;
 			}
 		}
+		getBagItem.close();
 	}
 	
 	public void setBagItems(Player player) throws SQLException {

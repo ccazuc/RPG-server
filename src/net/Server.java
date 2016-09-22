@@ -11,6 +11,7 @@ import jdo.JDO;
 import jdo.wrapper.MariaDB;
 import net.game.Player;
 import net.game.item.stuff.StuffManager;
+import net.game.item.weapon.WeaponManager;
 
 public class Server {
 	
@@ -29,14 +30,13 @@ public class Server {
 		serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.bind(iNetSocketAdress);
 		StuffManager.loadStuffs();
+		WeaponManager.loadWeapons();
 		while(true) {
 			if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);
 				nonLoggedPlayer.add(new Player(clientSocket));
 			}
 			read();
-			if(System.currentTimeMillis()%5000 < 1)
-			System.out.println(nonLoggedPlayer.size()+" "+playerList.size());
 		}
 	}
 	

@@ -48,6 +48,10 @@ public class Gem extends Item {
 		return this.critical;
 	}
 	
+	public int getMana() {
+		return this.mana;
+	}
+	
 	public GemColor getColor() {
 		return this.color;
 	}

@@ -12,6 +12,7 @@ public class CommandLoadCharacter extends Command {
 	public void read() {
 		this.player.loadEquippedItemSQL();
 		this.player.loadEquippedBagSQL();
+		this.player.loadBagItemSQL();
 	}
 	
 	public void write() {

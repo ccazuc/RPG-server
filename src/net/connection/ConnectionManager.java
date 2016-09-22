@@ -13,7 +13,9 @@ import net.command.CommandLoadCharacter;
 import net.command.CommandLogin;
 import net.command.CommandLogout;
 import net.command.CommandSelectScreenLoadCharacters;
-import net.command.CommandStuff;
+import net.command.item.CommandGem;
+import net.command.item.CommandStuff;
+import net.command.item.CommandWeapon;
 import net.game.Player;
 
 public class ConnectionManager {
@@ -32,6 +34,8 @@ public class ConnectionManager {
 		this.commandList.put((int)DELETE_CHARACTER, new CommandDeleteCharacter(this));
 		this.commandList.put((int)LOAD_CHARACTER, new CommandLoadCharacter(this));
 		this.commandList.put((int)STUFF, new CommandStuff(this));
+		this.commandList.put((int)WEAPON, new CommandWeapon(this));
+		this.commandList.put((int)GEM, new CommandGem(this));
 	}
 	
 	public void read() {

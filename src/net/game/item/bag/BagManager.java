@@ -1,7 +1,6 @@
 package net.game.item.bag;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import jdo.JDOStatement;
