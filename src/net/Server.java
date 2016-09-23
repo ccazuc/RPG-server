@@ -10,6 +10,7 @@ import java.util.HashMap;
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
 import net.game.Player;
+import net.game.item.ItemManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 
@@ -29,6 +30,7 @@ public class Server {
 		serverSocketChannel = ServerSocketChannel.open();
 		serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.bind(iNetSocketAdress);
+		ItemManager.initSQLRequest();
 		StuffManager.loadStuffs();
 		WeaponManager.loadWeapons();
 		while(true) {

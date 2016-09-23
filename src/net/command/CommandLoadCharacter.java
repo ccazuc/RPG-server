@@ -10,9 +10,11 @@ public class CommandLoadCharacter extends Command {
 
 	@Override
 	public void read() {
+		int id = this.connection.readInt();
+		this.player.setCharacterId(id);
 		this.player.loadEquippedItemSQL();
-		this.player.loadEquippedBagSQL();
 		this.player.loadBagItemSQL();
+		//this.player.loadEquippedBagSQL();
 	}
 	
 	public void write() {
