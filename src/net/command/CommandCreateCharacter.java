@@ -67,6 +67,12 @@ public class CommandCreateCharacter extends Command {
 				i++;
 			}
 		}
+		else {
+			this.connection.writeByte(PacketID.CREATE_CHARACTER);
+			this.connection.writeByte(PacketID.ERROR_NAME_LENGTH);
+			this.connection.send();
+			return false;
+		}
 		if(check_character == null) {
 			check_character = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
 		}

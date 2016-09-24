@@ -13,13 +13,14 @@ public class PacketID {
 	public static final byte CREATE_CHARACTER = 9;
 	public static final byte ERROR_NAME_ALPHABET = 10;
 	public static final byte ERROR_NAME_ALREADY_TAKEN = 11;
-	public static final byte CHARACTER_CREATED = 12;
-	public static final byte DELETE_CHARACTER = 13;
-	public static final byte LOAD_CHARACTER = 14;
-	public static final byte LOAD_EQUIPPED_ITEMS = 15;
-	public static final byte LOAD_BAG_ITEMS = 16;
-	public static final byte STUFF = 18;
-	public static final byte WEAPON = 19;
-	public static final byte GEM = 20;
-	public static final byte POTION = 21;
+	public static final byte ERROR_NAME_LENGTH = 12;
+	public static final byte CHARACTER_CREATED = 13;
+	public static final byte DELETE_CHARACTER = 14;
+	public static final byte LOAD_CHARACTER = 15;
+	public static final byte LOAD_EQUIPPED_ITEMS = 16;
+	public static final byte LOAD_BAG_ITEMS = 17;
+	public static final byte STUFF = 19;
+	public static final byte WEAPON = 20;
+	public static final byte GEM = 21;
+	public static final byte POTION = 22;
 }

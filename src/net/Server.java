@@ -11,6 +11,9 @@ import jdo.JDO;
 import jdo.wrapper.MariaDB;
 import net.game.Player;
 import net.game.item.ItemManager;
+import net.game.item.bag.BagManager;
+import net.game.item.gem.GemManager;
+import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 
@@ -32,7 +35,10 @@ public class Server {
 		serverSocketChannel.bind(iNetSocketAdress);
 		ItemManager.initSQLRequest();
 		StuffManager.loadStuffs();
+		PotionManager.loadPotions();
 		WeaponManager.loadWeapons();
+		GemManager.loadGems();
+		BagManager.loadBags();
 		while(true) {
 			if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);
