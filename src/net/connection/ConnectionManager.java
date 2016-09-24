@@ -14,6 +14,7 @@ import net.command.CommandLogin;
 import net.command.CommandLogout;
 import net.command.CommandSelectScreenLoadCharacters;
 import net.command.item.CommandGem;
+import net.command.item.CommandPotion;
 import net.command.item.CommandStuff;
 import net.command.item.CommandWeapon;
 import net.game.Player;
@@ -36,6 +37,7 @@ public class ConnectionManager {
 		this.commandList.put((int)STUFF, new CommandStuff(this));
 		this.commandList.put((int)WEAPON, new CommandWeapon(this));
 		this.commandList.put((int)GEM, new CommandGem(this));
+		this.commandList.put((int)POTION, new CommandPotion(this));
 	}
 	
 	public void read() {
@@ -54,8 +56,7 @@ public class ConnectionManager {
 			this.commandList.get((int)packetId).read();
 		}
 		else if(readedByte > 0 && packetId != -1) {
-			System.out.println(readedByte+": "+packetId);
-			System.out.println("Disconnected client account: "+this.player.getAccountId());
+			System.out.println("Disconnected client account: "+this.player.getAccountId()+" for unknown packetid: "+packetId+" and "+readedByte+" byte readed");
 			this.player.close();
 		}
 	}
