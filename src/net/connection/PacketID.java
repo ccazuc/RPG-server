@@ -23,4 +23,5 @@ public class PacketID {
 	public static final byte WEAPON = 20;
 	public static final byte GEM = 21;
 	public static final byte POTION = 22;
+	public static final byte PING = 25;
 }
