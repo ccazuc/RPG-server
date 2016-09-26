@@ -1,4 +1,4 @@
-package net.connection;
+package net.sql;
 
 import java.sql.SQLException;
 import java.sql.SQLTimeoutException;
@@ -14,11 +14,14 @@ public class MyRunnable implements Runnable {
 		this.list = Collections.synchronizedList(this.list);
 	}
 	
+	@Override
 	public void run() {
+		System.out.println("run");
 		while(true) {
 			if(this.list.size() > 0) {
 				try {
 					this.list.get(0).execute();
+					this.list.remove(0);
 				} 
 				catch (SQLTimeoutException e) {
 					e.printStackTrace();
@@ -28,5 +31,9 @@ public class MyRunnable implements Runnable {
 				}
 			}
 		}
+	}
+	
+	public void addRequest(SQLRequest request) {
+		this.list.add(request);
 	}
 }

@@ -1,4 +1,4 @@
-package net.connection;
+package net.sql;
 
 import java.sql.SQLException;
 
@@ -8,10 +8,12 @@ import net.game.Player;
 
 public class SQLRequest {
 	
-	private JDOStatement statement;
+	protected JDOStatement statement;
 	protected int id;
 	protected Player player;
 	private boolean shouldSendPlayerId;
+	protected String userName;
+	protected String password;
 	
 	public SQLRequest(String request, boolean shouldSendPlayerId) {
 		try {
@@ -28,10 +30,13 @@ public class SQLRequest {
 		if(this.shouldSendPlayerId) {
 			this.statement.putInt(this.id);
 		}
+		this.statement.putString("Mideas");
 		this.statement.execute();
 		gatherData();
 		this.id = 0;
 		this.player = null;
+		this.userName = null;
+		this.password = null;
 	}
 	
 	public void setId(int id) {
@@ -42,5 +47,13 @@ public class SQLRequest {
 		this.player = message;
 	}
 	
-	public void gatherData() throws SQLException {}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public void gatherData() {}
 }

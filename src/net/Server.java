@@ -5,7 +5,10 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
@@ -16,6 +19,8 @@ import net.game.item.gem.GemManager;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
+import net.sql.MyRunnable;
+import net.sql.SQLRequest;
 
 public class Server {
 	
@@ -24,11 +29,14 @@ public class Server {
 	private static JDO jdo;
 	private static ServerSocketChannel serverSocketChannel;
 	private static SocketChannel clientSocket;
-	private static HashMap<Integer, Player> playerList = new HashMap<Integer, Player>();
-	private static ArrayList<Player> nonLoggedPlayer = new ArrayList<Player>();
+	private static Map<Integer, Player> playerList = Collections.synchronizedMap(new HashMap<Integer, Player>());
+	private static List<Player> nonLoggedPlayer = new ArrayList<Player>();
+	private static Thread sqlRequest;
+	private static MyRunnable runnable;
 	
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
+		nonLoggedPlayer = Collections.synchronizedList(nonLoggedPlayer);
 		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(PORT);
 		serverSocketChannel = ServerSocketChannel.open();
 		serverSocketChannel.configureBlocking(false);
@@ -39,6 +47,9 @@ public class Server {
 		WeaponManager.loadWeapons();
 		GemManager.loadGems();
 		BagManager.loadBags();
+		runnable = new MyRunnable();
+		sqlRequest = new Thread(runnable);
+		sqlRequest.start();
 		while(true) {
 			if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);
@@ -46,6 +57,10 @@ public class Server {
 			}
 			read();
 		}
+	}
+	
+	public static void addNewRequest(SQLRequest request) {
+		runnable.addRequest(request);
 	}
 	
 	private static void read() {
@@ -59,7 +74,7 @@ public class Server {
 		}
 	}
 	
-	public static HashMap<Integer, Player> getPlayerList() {
+	public static Map<Integer, Player> getPlayerList() {
 		return playerList;
 	}
 	

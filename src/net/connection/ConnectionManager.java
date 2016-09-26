@@ -41,22 +41,13 @@ public class ConnectionManager {
 	}
 	
 	public void read() {
-		byte packetId = -1;
-		int readedByte = 0;
 		try {
-			if((readedByte = this.connection.read()) == 1) {
-				packetId = this.connection.readByte();
+			if(this.connection.read() == 1) {
+				readPacket();
 			}
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
-			this.player.close();
-		}
-		if(packetId != -1 && this.commandList.containsKey((int)packetId)) {
-			this.commandList.get((int)packetId).read();
-		}
-		else if(readedByte > 0 && packetId != -1) {
-			System.out.println("Disconnected client account: "+this.player.getAccountId()+" for unknown packetid: "+packetId+" and "+readedByte+" byte readed");
 			this.player.close();
 		}
 	}
@@ -67,5 +58,17 @@ public class ConnectionManager {
 	
 	public Player getPlayer() {
 		return this.player;
+	}
+	
+	private void readPacket() {
+		while(this.connection != null && this.connection.hasRemaining()) {
+			byte packetId = this.connection.readByte();
+			if(this.commandList.containsKey((int)packetId)) {
+				this.commandList.get((int)packetId).read();
+			}
+			else {
+				System.out.println("Unknown packet: "+(int)packetId);
+			}
+		}
 	}
 }
