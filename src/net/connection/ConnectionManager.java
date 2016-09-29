@@ -12,6 +12,7 @@ import net.command.CommandDeleteCharacter;
 import net.command.CommandLoadCharacter;
 import net.command.CommandLogin;
 import net.command.CommandLogout;
+import net.command.CommandPing;
 import net.command.CommandSelectScreenLoadCharacters;
 import net.command.item.CommandGem;
 import net.command.item.CommandPotion;
@@ -38,6 +39,7 @@ public class ConnectionManager {
 		this.commandList.put((int)WEAPON, new CommandWeapon(this));
 		this.commandList.put((int)GEM, new CommandGem(this));
 		this.commandList.put((int)POTION, new CommandPotion(this));
+		this.commandList.put((int)PING, new CommandPing(this));
 	}
 	
 	public void read() {

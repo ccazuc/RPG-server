@@ -30,7 +30,7 @@ public class Server {
 	private static ServerSocketChannel serverSocketChannel;
 	private static SocketChannel clientSocket;
 	private static Map<Integer, Player> playerList = Collections.synchronizedMap(new HashMap<Integer, Player>());
-	private static List<Player> nonLoggedPlayer = new ArrayList<Player>();
+	private static List<Player> nonLoggedPlayer = Collections.synchronizedList(new ArrayList<Player>());
 	private static Thread sqlRequest;
 	private static MyRunnable runnable;
 	
