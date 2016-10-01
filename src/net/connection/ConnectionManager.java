@@ -13,6 +13,7 @@ import net.command.CommandLoadCharacter;
 import net.command.CommandLogin;
 import net.command.CommandLogout;
 import net.command.CommandPing;
+import net.command.CommandPingConfirmed;
 import net.command.CommandSelectScreenLoadCharacters;
 import net.command.item.CommandGem;
 import net.command.item.CommandPotion;
@@ -25,6 +26,7 @@ public class ConnectionManager {
 	private Player player;
 	private Connection connection;
 	private HashMap<Integer, Command> commandList = new HashMap<Integer, Command>();
+	private final static int TIMEOUT_TIMER = 10000;
 	
 	public ConnectionManager(Player player, SocketChannel socket) {
 		this.player = player;
@@ -40,9 +42,13 @@ public class ConnectionManager {
 		this.commandList.put((int)GEM, new CommandGem(this));
 		this.commandList.put((int)POTION, new CommandPotion(this));
 		this.commandList.put((int)PING, new CommandPing(this));
+		this.commandList.put((int)PING_CONFIRMED, new CommandPingConfirmed(this));
 	}
 	
 	public void read() {
+		if(this.player.getPingStatus() && System.currentTimeMillis()-this.player.getPingTimer() > TIMEOUT_TIMER) {
+			this.player.close();
+		}
 		try {
 			if(this.connection.read() == 1) {
 				readPacket();

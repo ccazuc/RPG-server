@@ -32,12 +32,14 @@ public class Player {
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
 	private Bag bag = new Bag();
+	private boolean pingStatus;
 	private int numberBlueGem;
 	private Shortcut[] spells;
 	private int defaultArmor;
 	private ClassType classe;
 	private int numberRedGem;
 	private int characterId;
+	private long pingTimer;
 	private int maxStamina;
 	private int goldGained;
 	private boolean logged;
@@ -595,5 +597,21 @@ public class Player {
 	
 	public void loadSpellBar() throws SQLException {
 		this.spellBarManager.loadSpellBar(this);
+	}
+
+	public boolean getPingStatus() {
+		return this.pingStatus;
+	}
+
+	public void setPingStatus(boolean pingStatus) {
+		this.pingStatus = pingStatus;
+	}
+
+	public long getPingTimer() {
+		return this.pingTimer;
+	}
+
+	public void setPingTimer(long pingTimer) {
+		this.pingTimer = pingTimer;
 	}
 }

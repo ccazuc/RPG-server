@@ -30,6 +30,5 @@ public class CommandPotion extends Command {
 		this.connection.writeInt(potion.getPotionMana());
 		this.connection.writeInt(potion.getSellPrice());
 		this.connection.send();
-		System.out.println(potion.getId()+" "+potion.getSpriteId()+" "+potion.getStuffName()+" "+potion.getLevel()+" "+potion.getPotionHeal()+" "+potion.getPotionMana()+" "+potion.getSellPrice());
 	}
 }

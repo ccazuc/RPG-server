@@ -119,7 +119,6 @@ public class ItemManager {
 					player.getBag().setBag(i, PotionManager.getClone(id));
 					player.getBag().getNumberStack().put(player.getBag().getBag(i), number);
 					connection.writeChar(ItemType.POTION.getValue());
-					System.out.println(ItemType.POTION);
 				}
 				else if(WeaponManager.exists(id)) {
 					player.getBag().setBag(i, WeaponManager.getClone(id));

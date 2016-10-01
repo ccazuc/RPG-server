@@ -17,7 +17,6 @@ public class CommandWeapon extends Command {
 	public void read() {
 		int id = this.connection.readInt();
 		if(WeaponManager.exists(id)) {
-			System.out.println("read: "+id);
 			write(WeaponManager.getWeapon(id));
 		}
 	}
