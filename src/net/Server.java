@@ -65,7 +65,7 @@ public class Server {
 	
 	private static void read() {
 		int i = 0;
-		while(i < nonLoggedPlayer.size()) {
+		while(i < nonLoggedPlayer.size() && nonLoggedPlayer.size() > 0) {
 			nonLoggedPlayer.get(i).getConnectionManager().read();
 			i++;
 		}
