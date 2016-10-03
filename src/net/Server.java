@@ -65,12 +65,16 @@ public class Server {
 	
 	private static void read() {
 		int i = 0;
-		while(i < nonLoggedPlayer.size() && nonLoggedPlayer.size() > 0) {
-			nonLoggedPlayer.get(i).getConnectionManager().read();
-			i++;
+		synchronized(nonLoggedPlayer) {
+			while(i < nonLoggedPlayer.size()) {
+				nonLoggedPlayer.get(i).getConnectionManager().read();
+				i++;
+			}
 		}
-		for(Player player : playerList.values()) {
-			player.getConnectionManager().read();
+		synchronized(playerList) {
+			for(Player player : playerList.values()) {
+				player.getConnectionManager().read();
+			}
 		}
 	}
 	
@@ -84,30 +88,38 @@ public class Server {
 	
 	public static Player getNonLoggedPlayer(int id) {
 		int i = 0;
-		while(i < nonLoggedPlayer.size()) {
-			if(nonLoggedPlayer.get(i).getAccountId() == id) {
-				return nonLoggedPlayer.get(i);
+		synchronized(nonLoggedPlayer) {
+			while(i < nonLoggedPlayer.size()) {
+				if(nonLoggedPlayer.get(i).getAccountId() == id) {
+					return nonLoggedPlayer.get(i);
+				}
+				i++;
 			}
-			i++;
 		}
 		return null;
 	}
 	
 	public static void removeNonLoggedPlayer(Player player) {
 		if(player != null) {
-			nonLoggedPlayer.remove(player);
+			synchronized(nonLoggedPlayer) {
+				nonLoggedPlayer.remove(player);
+			}
 		}
 	}
 	
 	public static void addLoggedPlayer(Player player) {
 		if(player != null) {
-			playerList.put(player.getAccountId(), player);
+			synchronized(playerList) {
+				playerList.put(player.getAccountId(), player);
+			}
 		}
 	}
 	
 	public static void removeLoggedPlayer(Player player) {
 		if(player != null) {
-			playerList.remove(player.getAccountId());
+			synchronized(playerList) {
+				playerList.remove(player.getAccountId());
+			}
 		}
 	}
 }

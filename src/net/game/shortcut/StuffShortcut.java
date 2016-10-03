@@ -4,8 +4,6 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
 import net.game.Player;
-import net.game.item.Item;
-import net.game.item.ItemType;
 import net.game.item.stuff.Stuff;
 
 public class StuffShortcut implements Shortcut {

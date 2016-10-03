@@ -70,7 +70,7 @@ public class Stuff extends Item {
 		this.mana = mana;
 	}
 
-	public Stuff(Stuff weapon, int i) { //weapon constructor
+	public Stuff(Stuff weapon, @SuppressWarnings("unused") int i) { //weapon constructor
 		super(weapon.id, weapon.sprite_id, weapon.itemType, weapon.name, weapon.quality, weapon.sellPrice, weapon.maxStack);
 		this.gemBonusValue = weapon.gemBonusValue;
 		this.gemBonusType = weapon.gemBonusType;

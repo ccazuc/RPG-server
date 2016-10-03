@@ -15,6 +15,7 @@ import net.command.CommandLogout;
 import net.command.CommandPing;
 import net.command.CommandPingConfirmed;
 import net.command.CommandSelectScreenLoadCharacters;
+import net.command.CommandSendSingleBagItem;
 import net.command.item.CommandGem;
 import net.command.item.CommandPotion;
 import net.command.item.CommandStuff;
@@ -43,6 +44,7 @@ public class ConnectionManager {
 		this.commandList.put((int)POTION, new CommandPotion(this));
 		this.commandList.put((int)PING, new CommandPing(this));
 		this.commandList.put((int)PING_CONFIRMED, new CommandPingConfirmed(this));
+		this.commandList.put((int)SEND_SINGLE_BAG_ITEM, new CommandSendSingleBagItem(this));
 	}
 	
 	public void read() {
