@@ -15,10 +15,13 @@ public class CommandLogin extends Command {
 		@Override
 		public void gatherData() {
 			try {
+				this.statement.clear();
+				this.statement.putString(this.userName);
+				this.statement.execute();
 				if(this.statement.fetch()) {
-					String goodUsername = this.statement.getString();
+					String goodUsername = this.statement.getString().toLowerCase();
 					String goodPassword = this.statement.getString();
-					if(goodPassword.equals(this.password) && goodUsername.equals(this.userName)) {
+					if(goodPassword.equals(this.password) && goodUsername.equals(this.userName.toLowerCase())) {
 						int id = this.statement.getInt();
 						int rank = this.statement.getInt();
 						int ban = this.statement.getInt();
@@ -87,7 +90,7 @@ public class CommandLogin extends Command {
 	@Override
 	public void read() {
 		loginRequest.setPlayer(this.player);
-		loginRequest.setUserName(this.connection.readString());
+		loginRequest.setUserName(this.connection.readString().toLowerCase());
 		loginRequest.setPassword(this.connection.readString());
 		Server.addNewRequest(loginRequest);
 	}

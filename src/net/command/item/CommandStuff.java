@@ -8,7 +8,6 @@ import net.game.item.stuff.StuffManager;
 
 public class CommandStuff extends Command {
 
-
 	public CommandStuff(ConnectionManager connectionManager) {
 		super(connectionManager);
 	}
@@ -17,7 +16,9 @@ public class CommandStuff extends Command {
 	public void read() {
 		int id = this.connection.readInt();
 		if(StuffManager.exists(id)) {
-			write(StuffManager.getStuff(id));
+			this.connection.writeByte(PacketID.STUFF);
+			this.connection.writeStuff(StuffManager.getStuff(id));
+			this.connection.send();
 		}
 	}
 	

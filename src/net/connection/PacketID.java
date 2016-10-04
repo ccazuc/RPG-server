@@ -29,4 +29,11 @@ public class PacketID {
 	public static final byte PING = 25;
 	public static final byte PING_CONFIRMED = 26;
 	public static final byte SEND_SINGLE_BAG_ITEM = 27;
+	public static final byte SEND_SINGLE_EQUIPPED_ITEM = 28;
+	public static final byte SEND_SINGLE_SPELLBAR_ITEM = 29;
+	public static final byte LOAD_STATS = 30;
+	public static final byte ADD_ITEM = 31;
+	public static final byte ADD_ITEM_CONFIRMED = 32;
+	public static final byte REQUEST_ITEM = 33;
+	public static final byte CHAT_LIST_PLAYER = 34;
 }

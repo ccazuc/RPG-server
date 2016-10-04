@@ -4,10 +4,13 @@ import java.sql.SQLException;
 
 import net.Server;
 import net.connection.ConnectionManager;
+import net.connection.PacketID;
 import net.game.item.Item;
 import net.game.item.ItemManager;
 import net.game.item.ItemType;
 import net.game.item.bag.Bag;
+import net.game.item.gem.Gem;
+import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
@@ -20,10 +23,10 @@ import net.game.spell.SpellBarManager;
 
 public class Player {
 
-	
 	private ProfessionManager professionManager = new ProfessionManager();
 	private SpellBarManager spellBarManager = new SpellBarManager();
 	private ItemManager itemManager = new ItemManager();
+	private CharacterManager characterManager = new CharacterManager();
 	private ConnectionManager connectionManager;
 	private Profession secondProfession;
 	private Profession firstProfession;
@@ -51,14 +54,24 @@ public class Player {
 	private int stamina;
 	private float armor;
 	private int maxMana;
-	private int baseExp;
 	private String name;
 	private int level;
+	private Race race;
 	private Wear wear;
 	private int mana;
 	private int gold;
 	private int exp;
 	//private int tailorExp;
+
+	private final static String warrior = "Warrior";
+	private final static String hunter = "Hunter";
+	private final static String mage = "Mage";
+	private final static String paladin = "Paladin";
+	private final static String priest = "Priest";
+	private final static String rogue = "Rogue";
+	private final static String shaman = "Shaman";
+	private final static String warlock = "Warlock";
+	private final static String druid = "Warlock";
 	
 	public Player(SocketChannel socket) {
 		this.connectionManager = new ConnectionManager(this, socket);
@@ -66,6 +79,10 @@ public class Player {
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	public ConnectionManager getConnectionManager() {
@@ -90,6 +107,18 @@ public class Player {
 	
 	public void setAccountId(int id) {
 		this.accountId = id;
+	}
+	
+	public void sendStats() {
+		this.connectionManager.getConnection().writeByte(PacketID.LOAD_STATS);
+		this.connectionManager.getConnection().writeInt(this.exp);
+		this.connectionManager.getConnection().writeInt(this.gold);
+	}
+	
+	public void initTable() {
+		this.spells = new Shortcut[36];
+		this.stuff = new Stuff[19];
+		this.spellUnlocked = new Spell[19];
 	}
 	
 	public void loadBagItemSQL() {
@@ -146,6 +175,15 @@ public class Player {
 		}
 	}
 	
+	public void loadCharacterInfoSQL() {
+		try {
+			this.characterManager.loadCharacterInfo(this);
+		} 
+		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void event() {
 		if(this.bag.getBagChange()) {
 			updateBagItem();
@@ -184,12 +222,14 @@ public class Player {
 	
 	public boolean addItem(Item item, int amount) throws SQLException {
 		int i = 0;
+		boolean returns = false;
 		if(!item.isStackable()) {
 			while(i < this.bag.getBag().length && amount > 0) {
 				if(this.bag.getBag(i) == null) {
 					this.bag.setBag(i, item);
 					this.bag.setBagChange(true);
 					amount --;
+					returns = true;
 				}
 				i++;
 			}
@@ -216,7 +256,7 @@ public class Player {
 				i++;
 			}
 		}
-		return false;
+		return returns;
 	}
 	
 	public void updateBagItem() {
@@ -245,8 +285,9 @@ public class Player {
 		}
 	}
 	
-	public void addMultipleUnstackableItem(int id, int number) throws SQLException {
+	public boolean addMultipleUnstackableItem(int id, int number) throws SQLException {
 		int i = 0;
+		boolean returns = false;
 		ItemType type;
 		if(WeaponManager.exists(id) || StuffManager.exists(id)) {
 			if(WeaponManager.exists(id)) {
@@ -263,6 +304,7 @@ public class Player {
 					else {
 						this.bag.setBag(i, StuffManager.getClone(id));
 					}
+					returns = true;
 					this.bag.setBagChange(true);
 					number--;
 				}
@@ -271,6 +313,37 @@ public class Player {
 			}
 			this.itemManager.setBagItems(this);
 		}
+		return returns;
+	}
+	
+	public boolean addMultipleUnstackableItem(Item item, int number) throws SQLException {
+		int i = 0;
+		boolean returns = false;
+		while(i < this.bag.getBag().length && number > 0) {
+			if(this.bag.getBag(i) == null) {
+				if(item.isStuff() || item.isWeapon()) {
+					this.bag.setBag(i, new Stuff((Stuff)item));
+					number--;
+					this.bag.setBagChange(true);
+					returns = true;
+				}
+				else if(item.isGem()) {
+					this.bag.setBag(i, new Gem((Gem)item));
+					number--;
+					this.bag.setBagChange(true);
+					returns = true;
+				}
+				else if(item.isPotion()) {
+					this.bag.setBag(i, new Potion((Potion)item));
+					number--;
+					this.bag.setBagChange(true);
+					returns = true;
+				}
+			}
+			i++;
+		}
+		this.itemManager.setBagItems(this);
+		return returns;
 	}
 	
 	public void deleteItem(Item item, int amount) throws SQLException {
@@ -377,6 +450,23 @@ public class Player {
 		return this.level;
 	}
 	
+	public void setExperience(int exp) {
+		this.exp = exp;
+		this.level = getLevel(this.exp);
+	}
+	
+	public int getExperience() {
+		return this.exp;
+	}
+	
+	public int getGold() {
+		return this.gold;
+	}
+	
+	public void setGold(int gold) {
+		this.gold = gold;
+	}
+	
 	public int getNumberRedGem() {
 		return this.numberRedGem;
 	}
@@ -469,7 +559,7 @@ public class Player {
 		if(tempItem == null) {
 			this.stuff[i] = null;
 		}
-		else if(tempItem.getItemType() == ItemType.STUFF || tempItem.getItemType() == ItemType.WEAPON) {
+		else if(tempItem.isStuff() || tempItem.isWeapon()) {
 			this.stuff[i] = (Stuff)tempItem;
 		}
 	}
@@ -494,10 +584,6 @@ public class Player {
 		return this.exp;
 	}
 	
-	public int getBaseExp() {
-		return this.baseExp;
-	}
-	
 	public int getExpGained() {
 		return this.expGained;
 	}
@@ -510,16 +596,8 @@ public class Player {
 		return this.defaultArmor;
 	}
 	
-	public int getGold() {
-		return this.gold;
-	}
-	
 	public int getGoldGained() {
 		return this.goldGained;
-	}
-	
-	public void setExp(int baseExp, int expGained ) {
-		this.exp = baseExp+expGained;
 	}
 	
 	public void setMaxStamina(int stamina) {
@@ -595,6 +673,22 @@ public class Player {
 		return null;
 	}
 	
+	public ClassType getClasse() {
+		return this.classe;
+	}
+	
+	public void setClasse(ClassType classe) {
+		this.classe = classe;
+	}
+	
+	public Race getRace() {
+		return this.race;
+	}
+	
+	public void setRace(Race race) {
+		this.race = race;
+	}
+	
 	public void loadSpellBar() throws SQLException {
 		this.spellBarManager.loadSpellBar(this);
 	}
@@ -613,5 +707,247 @@ public class Player {
 
 	public void setPingTimer(long pingTimer) {
 		this.pingTimer = pingTimer;
+	}
+	
+	public static String convClassTypeToString(ClassType type) {
+		if(type == ClassType.DRUID) {
+			return druid;
+		}
+		if(type == ClassType.GUERRIER) {
+			return warrior;
+		}
+		if(type == ClassType.HUNTER) {
+			return hunter;
+		}
+		if(type == ClassType.MAGE) {
+			return mage;
+		}
+		if(type == ClassType.PALADIN) {
+			return paladin;
+		}
+		if(type == ClassType.PRIEST) {
+			return priest;
+		}
+		if(type == ClassType.ROGUE) {
+			return rogue;
+		}
+		if(type == ClassType.SHAMAN) {
+			return shaman;
+		}
+		if(type == ClassType.WARLOCK) {
+			return warlock;
+		}
+		return null;
+	}
+	
+	public static int getLevel(int exp) {
+		if(exp <= 400) {
+			return 1;
+		}
+		else if(exp <= 900) {
+			return 2;
+		}
+		else if(exp <= 1400) {
+			return 3;
+		}
+		else if(exp <= 2100) {
+			return 4;
+		}
+		else if(exp <= 2800) {
+			return 5;
+		}
+		else if(exp <= 3600) {
+			return 6;
+		}
+		else if(exp <= 4500) {
+			return 7;
+		}
+		else if(exp <= 5400) {
+			return 8;
+		}
+		else if(exp <= 6500) {
+			return 9;
+		}
+		else if(exp <= 7600) {
+			return 10;
+		}
+		else if(exp <= 8700) {
+			return 11;
+		}
+		else if(exp <= 9800) {
+			return 12;
+		}
+		else if(exp <= 11000) {
+			return 13;
+		}
+		else if(exp <= 12300) {
+			return 14;
+		}
+		else if(exp <= 13600) {
+			return 15;
+		}
+		else if(exp <= 15000) {
+			return 16;
+		}
+		else if(exp <= 16400) {
+			return 17;
+		}
+		else if(exp <= 17800) {
+			return 18;
+		}
+		else if(exp <= 19300) {
+			return 19;
+		}
+		else if(exp <= 20800) {
+			return 20;
+		}
+		else if(exp <= 22400) {
+			return 21;
+		}
+		else if(exp <= 24000) {
+			return 22;
+		}
+		else if(exp <= 25500) {
+			return 23;
+		}
+		else if(exp <= 27200) {
+			return 24;
+		}
+		else if(exp <= 28900) {
+			return 25;
+		}
+		else if(exp <= 30500) {
+			return 26;
+		}
+		else if(exp <= 32200) {
+			return 27;
+		}
+		else if(exp <= 33900) {
+			return 28;
+		}
+		else if(exp <= 36300) {
+			return 29;
+		}
+		else if(exp <= 38800) {
+			return 30;
+		}
+		else if(exp <= 41600) {
+			return 31;
+		}
+		else if(exp <= 44600) {
+			return 32;
+		}
+		else if(exp <= 48000) {
+			return 33;
+		}
+		else if(exp <= 51400) {
+			return 34;
+		}
+		else if(exp <= 55000) {
+			return 35;
+		}
+		else if(exp <= 58700) {
+			return 36;
+		}
+		else if(exp <= 62400) {
+			return 37;
+		}
+		else if(exp <= 66200) {
+			return 38;
+		}
+		else if(exp <= 70200) {
+			return 39;
+		}
+		else if(exp <= 74300) {
+			return 40;
+		}
+		else if(exp <= 78500) {
+			return 41;
+		}
+		else if(exp <= 82800) {
+			return 42;
+		}
+		else if(exp <= 87100) {
+			return 43;
+		}
+		else if(exp <= 91600) {
+			return 44;
+		}
+		else if(exp <= 96300) {
+			return 45;
+		}
+		else if(exp <= 101000) {
+			return 46;
+		}
+		else if(exp <= 105800) {
+			return 47;
+		}
+		else if(exp <= 110700) {
+			return 48;
+		}
+		else if(exp <= 115700) {
+			return 49;
+		}
+		else if(exp <= 120900) {
+			return 50;
+		}
+		else if(exp <= 126100) {
+			return 51;
+		}
+		else if(exp <= 131500) {
+			return 52;
+		}
+		else if(exp <= 137000) {
+			return 53;
+		}
+		else if(exp <= 142500) {
+			return 54;
+		}
+		else if(exp <= 148200) {
+			return 55;
+		}
+		else if(exp <= 154000) {
+			return 56;
+		}
+		else if(exp <= 159900) {
+			return 57;
+		}
+		else if(exp <= 165800) {
+			return 58;
+		}
+		else if(exp <= 172000) {
+			return 59;
+		}
+		else if(exp <= 290000) {
+			return 60;
+		}
+		else if(exp <= 317000) {
+			return 61;
+		}
+		else if(exp <= 349000) {
+			return 62;
+		}
+		else if(exp <= 386000) {
+			return 63;
+		}
+		else if(exp <= 428000) {
+			return 64;
+		}
+		else if(exp <= 475000) {
+			return 65;
+		}
+		else if(exp <= 527000) {
+			return 66;
+		}
+		else if(exp <= 585000) {
+			return 67;
+		}
+		else if(exp <= 648000) {
+			return 68;
+		}
+		else if(exp <= 717000) {
+			return 69;
+		}
+		return 70;
 	}
 }

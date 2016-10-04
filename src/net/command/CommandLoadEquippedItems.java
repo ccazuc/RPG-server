@@ -9,11 +9,7 @@ public class CommandLoadEquippedItems extends Command {
 	}
 
 	@Override
-	public void read() {
-	}
+	public void read() {}
 	
-	public void write() {
-		
-	}
-
+	public void write() {}
 }

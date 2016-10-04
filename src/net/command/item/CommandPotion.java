@@ -16,7 +16,9 @@ public class CommandPotion extends Command {
 	public void read() {
 		int id = this.connection.readInt();
 		if(PotionManager.exists(id)) {
-			write(PotionManager.getPotion(id));
+			this.connection.writeByte(PacketID.POTION);
+			this.connection.writePotion(PotionManager.getPotion(id));
+			this.connection.send();
 		}
 	}
 	

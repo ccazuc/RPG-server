@@ -6,6 +6,7 @@ import jdo.JDOStatement;
 import net.Server;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
+import net.game.Player;
 
 
 public class CommandSelectScreenLoadCharacters extends Command {
@@ -25,7 +26,7 @@ public class CommandSelectScreenLoadCharacters extends Command {
 	private void write(int accountId) {
 		try {
 			if(write_statement == null) {
-				write_statement = Server.getJDO().prepare("SELECT character_id, name, level, class, race FROM `character` WHERE account_id = ?");
+				write_statement = Server.getJDO().prepare("SELECT character_id, name, experience, class, race FROM `character` WHERE account_id = ?");
 			}
 			boolean hasSendId = true;
 			write_statement.clear();
@@ -38,7 +39,7 @@ public class CommandSelectScreenLoadCharacters extends Command {
 				}
 				int id = write_statement.getInt();
 				String name = write_statement.getString();
-				int level = write_statement.getInt();
+				int level = Player.getLevel(write_statement.getInt());
 				String classe = write_statement.getString();
 				String race = write_statement.getString();
 				this.connection.writeInt(id);

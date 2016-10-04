@@ -5,6 +5,10 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 
+import net.game.item.gem.Gem;
+import net.game.item.potion.Potion;
+import net.game.item.stuff.Stuff;
+
 public class Buffer {
 
 	private ByteBuffer buffer;	
@@ -51,6 +55,84 @@ public class Buffer {
 	
 	protected final boolean hasRemaining() {
 		return this.buffer.hasRemaining();
+	}
+	
+	protected final void writeStuff(final Stuff stuff) {
+		int i = 0;
+		writeChar(stuff.getType().getValue());
+		writeInt(stuff.getClassType().length);
+		while(i < stuff.getClassType().length) {
+			writeChar(stuff.getClassType(i).getValue());
+			i++;
+		}
+		writeString(stuff.getSpriteId());
+		writeInt(stuff.getId());
+		writeString(stuff.getStuffName());
+		writeInt(stuff.getQuality());
+		writeChar(stuff.getGemSlot1().getValue());
+		writeChar(stuff.getGemSlot2().getValue());
+		writeChar(stuff.getGemSlot3().getValue());
+		writeChar(stuff.getGemBonusType().getValue());
+		writeInt(stuff.getGemBonusValue());
+		writeInt(stuff.getLevel());
+		writeChar(stuff.getWear().getValue());
+		writeInt(stuff.getCritical());
+		writeInt(stuff.getStrength());
+		writeInt(stuff.getStamina());
+		writeInt(stuff.getArmor());
+		writeInt(stuff.getMana());
+		writeInt(stuff.getSellPrice());
+	}
+	
+	protected final void writeGem(final Gem gem) {
+		writeInt(gem.getId());
+		writeString(gem.getSpriteId());
+		writeString(gem.getStuffName());
+		writeInt(gem.getQuality());
+		writeChar(gem.getColor().getValue());
+		writeInt(gem.getStrength());
+		writeInt(gem.getStamina());
+		writeInt(gem.getArmor());
+		writeInt(gem.getMana());
+		writeInt(gem.getCritical());
+		writeInt(gem.getSellPrice());
+	}
+	
+	protected final void writePotion(final Potion potion) {
+		writeInt(potion.getId());
+		writeString(potion.getSpriteId());
+		writeString(potion.getStuffName());
+		writeInt(potion.getLevel());
+		writeInt(potion.getPotionHeal());
+		writeInt(potion.getPotionMana());
+		writeInt(potion.getSellPrice());
+	}
+	
+	protected final void writeWeapon(final Stuff weapon) {
+		int i = 0;
+		writeInt(weapon.getId());
+		writeString(weapon.getStuffName());
+		writeString(weapon.getSpriteId());
+		writeInt(weapon.getClassType().length);
+		while(i < weapon.getClassType().length) {
+			writeChar(weapon.getClassType(i).getValue());
+			i++;
+		}
+		writeChar(weapon.getWeaponType().getValue());
+		writeChar(weapon.getWeaponSlot().getValue());
+		writeInt(weapon.getQuality());
+		writeChar(weapon.getGemSlot1().getValue());
+		writeChar(weapon.getGemSlot2().getValue());
+		writeChar(weapon.getGemSlot3().getValue());
+		writeChar(weapon.getGemBonusType().getValue());
+		writeInt(weapon.getGemBonusValue());
+		writeInt(weapon.getLevel());
+		writeInt(weapon.getArmor());
+		writeInt(weapon.getStamina());
+		writeInt(weapon.getMana());
+		writeInt(weapon.getCritical());
+		writeInt(weapon.getStrength());
+		writeInt(weapon.getSellPrice());
 	}
 
 	protected final void writeString(final String s) {

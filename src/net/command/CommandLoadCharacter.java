@@ -12,12 +12,13 @@ public class CommandLoadCharacter extends Command {
 	public void read() {
 		int id = this.connection.readInt();
 		this.player.setCharacterId(id);
+		this.player.initTable();
+		this.player.loadCharacterInfoSQL();
 		this.player.loadEquippedItemSQL();
 		this.player.loadBagItemSQL();
+		this.player.sendStats();
 		//this.player.loadEquippedBagSQL();
 	}
 	
-	public void write() {
-		
-	}
+	public void write() {}
 }

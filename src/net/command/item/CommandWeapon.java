@@ -8,7 +8,6 @@ import net.game.item.weapon.WeaponManager;
 
 public class CommandWeapon extends Command {
 
-
 	public CommandWeapon(ConnectionManager connectionManager) {
 		super(connectionManager);
 	}
@@ -17,7 +16,9 @@ public class CommandWeapon extends Command {
 	public void read() {
 		int id = this.connection.readInt();
 		if(WeaponManager.exists(id)) {
-			write(WeaponManager.getWeapon(id));
+			this.connection.writeByte(PacketID.WEAPON);
+			this.connection.writeWeapon(WeaponManager.getWeapon(id));
+			this.connection.send();
 		}
 	}
 	

@@ -2,16 +2,15 @@ package net.game;
 
 public enum ClassType {
 
-	DEATHKNIGHT((char)0),
+	DRUID((char)0),
 	GUERRIER((char)1),
 	HUNTER((char)2),
 	MAGE((char)3),
-	MONK((char)4),
-	PALADIN((char)5),
-	PRIEST((char)6),
-	ROGUE((char)7),
-	SHAMAN((char)8),
-	WARLOCK((char)9);
+	PALADIN((char)4),
+	PRIEST((char)5),
+	ROGUE((char)6),
+	SHAMAN((char)7),
+	WARLOCK((char)8);
 	
 	private char value;
 	

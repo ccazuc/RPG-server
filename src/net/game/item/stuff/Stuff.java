@@ -347,9 +347,6 @@ public class Stuff extends Item {
 	
 	public String convClassTypeToString(int i) {
 		if(i < this.classType.length) {
-			if(this.classType[i] == ClassType.DEATHKNIGHT) {
-				return "DeathKnight";
-			}
 			if(this.classType[i] == ClassType.GUERRIER) {
 				return "Warrior";
 			}
@@ -358,9 +355,6 @@ public class Stuff extends Item {
 			}
 			if(this.classType[i] == ClassType.MAGE) {
 				return "Mage";
-			}
-			if(this.classType[i] == ClassType.MONK) {
-				return "MonK";
 			}
 			if(this.classType[i] == ClassType.PALADIN) {
 				return "Paladin";
@@ -373,6 +367,9 @@ public class Stuff extends Item {
 			}
 			if(this.classType[i] == ClassType.SHAMAN) {
 				return "Shaman";
+			}
+			if(this.classType[i] == ClassType.DRUID) {
+				return "Druid";
 			}
 			return "Warlock";
 		}

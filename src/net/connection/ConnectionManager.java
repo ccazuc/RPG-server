@@ -16,8 +16,10 @@ import net.command.CommandPing;
 import net.command.CommandPingConfirmed;
 import net.command.CommandSelectScreenLoadCharacters;
 import net.command.CommandSendSingleBagItem;
+import net.command.chat.CommandListPlayer;
 import net.command.item.CommandGem;
 import net.command.item.CommandPotion;
+import net.command.item.CommandRequestItem;
 import net.command.item.CommandStuff;
 import net.command.item.CommandWeapon;
 import net.game.Player;
@@ -45,6 +47,8 @@ public class ConnectionManager {
 		this.commandList.put((int)PING, new CommandPing(this));
 		this.commandList.put((int)PING_CONFIRMED, new CommandPingConfirmed(this));
 		this.commandList.put((int)SEND_SINGLE_BAG_ITEM, new CommandSendSingleBagItem(this));
+		this.commandList.put((int)CHAT_LIST_PLAYER, new CommandListPlayer(this));
+		this.commandList.put((int)REQUEST_ITEM, new CommandRequestItem(this));
 	}
 	
 	public void read() {

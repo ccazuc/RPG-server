@@ -4,7 +4,6 @@ import net.connection.ConnectionManager;
 import net.connection.PacketID;
 
 public class CommandPing extends Command {
-	
 
 	public CommandPing(ConnectionManager connectionManager) {
 		super(connectionManager);

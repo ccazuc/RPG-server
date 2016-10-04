@@ -3,6 +3,10 @@ package net.connection;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import net.game.item.gem.Gem;
+import net.game.item.potion.Potion;
+import net.game.item.stuff.Stuff;
+
 public class Connection {
 
 	private Buffer wBuffer;
@@ -43,6 +47,22 @@ public class Connection {
 	
 	public final boolean hasRemaining() {
 		return this.rBuffer.hasRemaining();
+	}
+	
+	public final void writeStuff(final Stuff stuff) {
+		this.wBuffer.writeStuff(stuff);
+	}
+	
+	public final void writeGem(final Gem gem) {
+		this.wBuffer.writeGem(gem);
+	}
+	
+	public final void writePotion(final Potion potion) {
+		this.wBuffer.writePotion(potion);
+	}
+	
+	public final void writeWeapon(final Stuff weapon) {
+		this.wBuffer.writeWeapon(weapon);
 	}
 	
 	public final void writeBoolean(final boolean b) {

@@ -50,12 +50,17 @@ public class Server {
 		runnable = new MyRunnable();
 		sqlRequest = new Thread(runnable);
 		sqlRequest.start();
+		long time;
 		while(true) {
 			if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);
 				nonLoggedPlayer.add(new Player(clientSocket));
 			}
+			time = System.currentTimeMillis();
 			read();
+			if((System.currentTimeMillis()-time)/1000d >= 0.05) {
+				System.out.println("Loop too long: "+(System.currentTimeMillis()-time)/1000d);
+			}
 		}
 	}
 	
@@ -79,7 +84,9 @@ public class Server {
 	}
 	
 	public static Map<Integer, Player> getPlayerList() {
-		return playerList;
+		synchronized(playerList) {
+			return playerList;
+		}
 	}
 	
 	public static JDO getJDO() {

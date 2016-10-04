@@ -16,7 +16,9 @@ public class CommandGem extends Command {
 	public void read() {
 		int id = this.connection.readInt();
 		if(GemManager.exists(id)) {
-			write(GemManager.getGem(id));
+			this.connection.writeByte(PacketID.GEM);
+			this.connection.writeGem(GemManager.getGem(id));
+			this.connection.send();
 		}
 	}
 	

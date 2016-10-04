@@ -26,12 +26,6 @@ public class SQLRequest {
 	}
 	
 	public void execute() throws SQLException {
-		this.statement.clear();
-		if(this.shouldSendPlayerId) {
-			this.statement.putInt(this.id);
-		}
-		this.statement.putString("Mideas");
-		this.statement.execute();
 		gatherData();
 		this.id = 0;
 		this.player = null;
