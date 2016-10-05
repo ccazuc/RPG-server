@@ -5,7 +5,7 @@ public enum ItemType {
 	STUFF((char)0),
 	ITEM((char)1),
 	POTION((char)2),
-	BAG((char)3),
+	CONTAINER((char)3),
 	WEAPON((char)4),
 	GEM((char)5);
 	

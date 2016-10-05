@@ -19,6 +19,7 @@ public class CommandGem extends Command {
 			this.connection.writeByte(PacketID.GEM);
 			this.connection.writeGem(GemManager.getGem(id));
 			this.connection.send();
+			this.player.addItemSentToClient(id);
 		}
 	}
 	

@@ -7,6 +7,7 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
 import net.command.Command;
+import net.command.CommandAddItem;
 import net.command.CommandCreateCharacter;
 import net.command.CommandDeleteCharacter;
 import net.command.CommandLoadCharacter;
@@ -30,6 +31,7 @@ public class ConnectionManager {
 	private Connection connection;
 	private HashMap<Integer, Command> commandList = new HashMap<Integer, Command>();
 	private final static int TIMEOUT_TIMER = 10000;
+	private byte lastPacketReaded;
 	
 	public ConnectionManager(Player player, SocketChannel socket) {
 		this.player = player;
@@ -49,6 +51,7 @@ public class ConnectionManager {
 		this.commandList.put((int)SEND_SINGLE_BAG_ITEM, new CommandSendSingleBagItem(this));
 		this.commandList.put((int)CHAT_LIST_PLAYER, new CommandListPlayer(this));
 		this.commandList.put((int)REQUEST_ITEM, new CommandRequestItem(this));
+		this.commandList.put((int)ADD_ITEM, new CommandAddItem(this));
 	}
 	
 	public void read() {
@@ -78,10 +81,11 @@ public class ConnectionManager {
 		while(this.connection != null && this.connection.hasRemaining()) {
 			byte packetId = this.connection.readByte();
 			if(this.commandList.containsKey((int)packetId)) {
+				this.lastPacketReaded = packetId;
 				this.commandList.get((int)packetId).read();
 			}
 			else {
-				System.out.println("Unknown packet: "+(int)packetId);
+				System.out.println("Unknown packet: "+(int)packetId+", last packet readed: "+this.lastPacketReaded+" for player "+this.player.getAccountId());
 			}
 		}
 	}

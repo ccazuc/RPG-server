@@ -19,6 +19,7 @@ public class CommandPotion extends Command {
 			this.connection.writeByte(PacketID.POTION);
 			this.connection.writePotion(PotionManager.getPotion(id));
 			this.connection.send();
+			this.player.addItemSentToClient(id);
 		}
 	}
 	

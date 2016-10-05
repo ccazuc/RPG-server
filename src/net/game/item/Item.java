@@ -80,8 +80,8 @@ public class Item implements Cloneable {
 		return this.itemType == ItemType.GEM;
 	}
 	
-	public boolean isBag() {
-		return this.itemType == ItemType.BAG;
+	public boolean isContainer() {
+		return this.itemType == ItemType.CONTAINER;
 	}
 	
 	public static Item getItem(int id) {

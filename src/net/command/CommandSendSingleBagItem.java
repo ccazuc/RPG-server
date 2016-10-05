@@ -16,7 +16,7 @@ public class CommandSendSingleBagItem extends Command {
 		int i = this.connection.readInt();
 		int id = this.connection.readInt();
 		Item item = Item.getItem(id);
-		if(item.isBag() || item.isGem()) {
+		if(item.isContainer() || item.isGem()) {
 			this.player.getBag().setBag(i, item);
 		}
 		else if(item.isStuff() || item.isWeapon()) {

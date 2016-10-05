@@ -3,6 +3,7 @@ package net.connection;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
@@ -63,6 +64,10 @@ public class Connection {
 	
 	public final void writeWeapon(final Stuff weapon) {
 		this.wBuffer.writeWeapon(weapon);
+	}
+	
+	public final void writeContainer(final Container bag) {
+		this.wBuffer.writeContainer(bag);
 	}
 	
 	public final void writeBoolean(final boolean b) {

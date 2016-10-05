@@ -35,5 +35,7 @@ public class PacketID {
 	public static final byte ADD_ITEM = 31;
 	public static final byte ADD_ITEM_CONFIRMED = 32;
 	public static final byte REQUEST_ITEM = 33;
-	public static final byte CHAT_LIST_PLAYER = 34;
+	public static final byte KNOWN_ITEM = 34;
+	public static final byte UNKNOWN_ITEM = 35;
+	public static final byte CHAT_LIST_PLAYER = 36;
 }

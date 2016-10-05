@@ -21,21 +21,25 @@ public class CommandRequestItem extends Command {
 			this.connection.writeByte(PacketID.STUFF);
 			this.connection.writeStuff(StuffManager.getStuff(id));
 			this.connection.send();
+			this.player.addItemSentToClient(id);
 		}
 		else if(WeaponManager.exists(id)) {
 			this.connection.writeByte(PacketID.WEAPON);
 			this.connection.writeWeapon(WeaponManager.getWeapon(id));
 			this.connection.send();
+			this.player.addItemSentToClient(id);
 		}
 		else if(GemManager.exists(id)) {
 			this.connection.writeByte(PacketID.GEM);
 			this.connection.writeGem(GemManager.getGem(id));
 			this.connection.send();
+			this.player.addItemSentToClient(id);
 		}
 		else if(PotionManager.exists(id)) {
 			this.connection.writeByte(PacketID.POTION);
 			this.connection.writePotion(PotionManager.getPotion(id));
 			this.connection.send();
+			this.player.addItemSentToClient(id);
 		}
 	}
 }

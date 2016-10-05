@@ -3,39 +3,18 @@ package net.game.item.bag;
 import java.util.HashMap;
 
 import net.game.item.Item;
-import net.game.item.ItemType;
 
 
 public class Bag extends Item implements Cloneable {
 	
 	private Item[] bag = new Item[16];
-	private Bag[] equippedBag = new Bag[4];
-	private int id;
-	private String sprite_id;
-	private String name;
-	private int size;
+	private Container[] equippedBag = new Container[4];
 	private boolean bagChange = true;
 	
 	private static HashMap<Item, Integer> numberStack = new HashMap<Item, Integer>();
 	private static HashMap<Integer, Integer> itemList = new HashMap<Integer, Integer>();
 	
 	public Bag() {}
-	
-	public Bag(Bag bag) {
-		super(bag.id, bag.sprite_id, bag.itemType, bag.name, bag.quality, bag.sellPrice, bag.maxStack);
-		this.sprite_id = bag.sprite_id;
-		this.name = bag.name;
-		this.size = bag.size;
-		this.id = bag.id;
-	}
-	
-	public Bag(int id, String sprite_id, String name, int quality, int size, int sellPrice) {
-		super(id, sprite_id, ItemType.BAG, name, quality, sellPrice, 1);
-		this.sprite_id = sprite_id;
-		this.name = name;
-		this.size = size;
-		this.id = id;
-	}
 	
 	public Item[] getBag() {
 		return this.bag;
@@ -45,15 +24,15 @@ public class Bag extends Item implements Cloneable {
 		this.bag = bag;
 	}
 	
-	public Bag[] getEquippedBag() {
+	public Container[] getEquippedBag() {
 		return this.equippedBag;
 	}
 	
-	public void setEquippedBag(int i, Bag bag) {
+	public void setEquippedBag(int i, Container bag) {
 		this.equippedBag[i] = bag;
 	}
 	
-	public Bag getEquippedBag(int i) {
+	public Container getEquippedBag(int i) {
 		return this.equippedBag[i];
 	}
 	
@@ -62,20 +41,16 @@ public class Bag extends Item implements Cloneable {
 		return this.sprite_id;
 	}
 	
-	public int getSize() {
-		return this.size;
-	}
-	
 	public String getSpriteId(int i) {
 		if(i < this.equippedBag.length) {
-			return this.equippedBag[i].sprite_id;
+			return this.equippedBag[i].getSpriteId();
 		}
 		return null;
 	}
 	
 	public int getEquippedBagSize(int i) {
 		if(i < this.equippedBag.length && this.equippedBag[i] != null) {
-			return this.equippedBag[i].size;
+			return this.equippedBag[i].getSize();
 		}
 		return 0;
 	}

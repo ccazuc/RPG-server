@@ -19,6 +19,7 @@ public class CommandStuff extends Command {
 			this.connection.writeByte(PacketID.STUFF);
 			this.connection.writeStuff(StuffManager.getStuff(id));
 			this.connection.send();
+			this.player.addItemSentToClient(id);
 		}
 	}
 	

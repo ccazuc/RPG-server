@@ -1,6 +1,7 @@
 package net.game;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import net.Server;
 import net.connection.ConnectionManager;
@@ -9,6 +10,7 @@ import net.game.item.Item;
 import net.game.item.ItemManager;
 import net.game.item.ItemType;
 import net.game.item.bag.Bag;
+import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
@@ -28,6 +30,7 @@ public class Player {
 	private ItemManager itemManager = new ItemManager();
 	private CharacterManager characterManager = new CharacterManager();
 	private ConnectionManager connectionManager;
+	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private Profession secondProfession;
 	private Profession firstProfession;
 	private WeaponType[] weaponType;
@@ -107,6 +110,36 @@ public class Player {
 	
 	public void setAccountId(int id) {
 		this.accountId = id;
+	}
+	
+	public void addItemSentToClient(int id) {
+		this.itemSentToClient.add(id);
+	}
+	
+	public void addItemSentToClient(Item item) {
+		this.itemSentToClient.add(item.getId());
+	}
+	
+	public boolean itemHasBeenSendToClient(int id) {
+		int i = 0;
+		while(i < this.itemSentToClient.size()) {
+			if(this.itemSentToClient.get(i) == id) {
+				return true;
+			}
+			i++;
+		}
+		return false;
+	}
+	
+	public boolean itemHasBeenSendToClient(Item item) {
+		int i = 0;
+		while(i < this.itemSentToClient.size()) {
+			if(this.itemSentToClient.get(i) == item.getId()) {
+				return true;
+			}
+			i++;
+		}
+		return false;
 	}
 	
 	public void sendStats() {
@@ -197,6 +230,32 @@ public class Player {
 		Server.removeLoggedPlayer(this);
 	}
 	
+	public void updateBagItem() {
+		this.bag.getItemList().clear();
+		int i = 0;
+		while(i < this.bag.getBag().length) {
+			if(this.bag.getBag(i) != null) {
+				if(this.bag.getItemList().containsKey(this.bag.getBag(i).getId())) {
+					if(this.bag.getBag(i).isStackable()) {
+						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getNumberBagItem(this.bag.getBag(i))+this.bag.getItemList().get(this.bag.getBag(i).getId()));
+					}
+					else {
+						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getItemList().get(this.bag.getBag(i).getId())+1);
+					}
+				}
+				else {
+					if(this.bag.getBag(i).isStackable()) {
+						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getNumberBagItem(this.bag.getBag(i)));
+					}
+					else {
+						this.bag.getItemList().put(this.bag.getBag(i).getId(), 1);
+					}
+				}
+			}
+			i++;
+		}
+	}
+	
 	/*private int checkNumberFreeSlotBag() {
 		int i = 0;
 		int number = 0;
@@ -221,6 +280,21 @@ public class Player {
 	}
 	
 	public boolean addItem(Item item, int amount) throws SQLException {
+		if(amount == 1) {
+			return addSingleItem(item, amount);
+		}
+		else if(amount > 1) {
+			if(item.isStackable()) {
+				return addSingleItem(item, amount);
+			}
+			else {
+				return addMultipleUnstackableItem(item, amount);
+			}
+		}
+		return false;
+	}
+	
+	private boolean addSingleItem(Item item, int amount) throws SQLException {
 		int i = 0;
 		boolean returns = false;
 		if(!item.isStackable()) {
@@ -259,33 +333,7 @@ public class Player {
 		return returns;
 	}
 	
-	public void updateBagItem() {
-		this.bag.getItemList().clear();
-		int i = 0;
-		while(i < this.bag.getBag().length) {
-			if(this.bag.getBag(i) != null) {
-				if(this.bag.getItemList().containsKey(this.bag.getBag(i).getId())) {
-					if(this.bag.getBag(i).isStackable()) {
-						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getNumberBagItem(this.bag.getBag(i))+this.bag.getItemList().get(this.bag.getBag(i).getId()));
-					}
-					else {
-						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getItemList().get(this.bag.getBag(i).getId())+1);
-					}
-				}
-				else {
-					if(this.bag.getBag(i).isStackable()) {
-						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getNumberBagItem(this.bag.getBag(i)));
-					}
-					else {
-						this.bag.getItemList().put(this.bag.getBag(i).getId(), 1);
-					}
-				}
-			}
-			i++;
-		}
-	}
-	
-	public boolean addMultipleUnstackableItem(int id, int number) throws SQLException {
+	private boolean addMultipleUnstackableItem(int id, int number) throws SQLException {
 		int i = 0;
 		boolean returns = false;
 		ItemType type;
@@ -316,7 +364,7 @@ public class Player {
 		return returns;
 	}
 	
-	public boolean addMultipleUnstackableItem(Item item, int number) throws SQLException {
+	private boolean addMultipleUnstackableItem(Item item, int number) throws SQLException {
 		int i = 0;
 		boolean returns = false;
 		while(i < this.bag.getBag().length && number > 0) {
@@ -373,7 +421,7 @@ public class Player {
 		}
 	}
 	
-	public void setEquippedBag(int i, Bag bag) {
+	public void setEquippedBag(int i, Container bag) {
 		if(i < this.bag.getEquippedBag().length) {
 			if(bag != null) {
 				int length = this.bag.getBag().length;

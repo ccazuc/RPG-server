@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 
+import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
@@ -133,6 +134,15 @@ public class Buffer {
 		writeInt(weapon.getCritical());
 		writeInt(weapon.getStrength());
 		writeInt(weapon.getSellPrice());
+	}
+	
+	protected final void writeContainer(final Container bag) {
+		writeInt(bag.getId());
+		writeString(bag.getStuffName());
+		writeString(bag.getSpriteId());
+		writeInt(bag.getQuality());
+		writeInt(bag.getSize());
+		writeInt(bag.getSellPrice());
 	}
 
 	protected final void writeString(final String s) {

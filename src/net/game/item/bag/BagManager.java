@@ -8,7 +8,7 @@ import net.Server;
 
 public class BagManager {
 	
-	private static HashMap<Integer, Bag> containerList = new HashMap<Integer, Bag>();
+	private static HashMap<Integer, Container> containerList = new HashMap<Integer, Container>();
 	private static JDOStatement loadBags;
 	
 	public static void loadBags() throws SQLException {
@@ -24,12 +24,11 @@ public class BagManager {
 			int quality = loadBags.getInt();
 			int size = loadBags.getInt();
 			int sellPrice = loadBags.getInt();
-			Bag newPiece = new Bag(id, sprite_id, name, quality, size, sellPrice);
-			containerList.put(id, newPiece);
+			containerList.put(id, new Container(id, sprite_id, name, quality, size, sellPrice));
 		}
 	}
 	
-	public static Bag getContainer(int id) {
+	public static Container getContainer(int id) {
 		if(containerList.containsKey(id)) {
 			return containerList.get(id);
 		}
@@ -40,10 +39,10 @@ public class BagManager {
 		return containerList.containsKey(id);
 	}
 	
-	public static Bag getClone(int id) {
-		Bag tempContainer = getContainer(id);
+	public static Container getClone(int id) {
+		Container tempContainer = getContainer(id);
 		if(tempContainer != null) {
-			return new Bag(tempContainer);
+			return new Container(tempContainer);
 		}
 		return null;
 	}

@@ -193,7 +193,7 @@ public class ItemManager {
 						setBagItem.putInt((((Stuff)tempBag).getEquippedGem3().getId()));
 					}
 				}
-				else if(tempBag.isBag() || tempBag.isGem()) {
+				else if(tempBag.isContainer() || tempBag.isGem()) {
 					setBagItem.putInt(tempBag.getId());
 					setBagItem.putInt(0);
 					setBagItem.putInt(0);
@@ -238,6 +238,7 @@ public class ItemManager {
 		getEquippedBag.clear();
 		getEquippedBag.putInt(player.getCharacterId());
 		getEquippedBag.execute();
+		Connection connection = player.getConnectionManager().getConnection();
 		int i = 0;
 		int id;
 		if(getEquippedBag.fetch()) {
@@ -245,9 +246,16 @@ public class ItemManager {
 				id = getEquippedBag.getInt();
 				if(BagManager.exists(id)) {
 					player.getBag().setEquippedBag(i, BagManager.getClone(id));
+					connection.writeContainer(BagManager.getContainer(id));
 				}
 				else {
 					player.getBag().setEquippedBag(i, null);
+					connection.writeInt(0);
+					connection.writeString("");
+					connection.writeString("");
+					connection.writeInt(0);
+					connection.writeInt(0);
+					connection.writeInt(0);
 				}
 				i++;
 			}

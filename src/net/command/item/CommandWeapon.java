@@ -19,6 +19,7 @@ public class CommandWeapon extends Command {
 			this.connection.writeByte(PacketID.WEAPON);
 			this.connection.writeWeapon(WeaponManager.getWeapon(id));
 			this.connection.send();
+			this.player.addItemSentToClient(id);
 		}
 	}
 	
