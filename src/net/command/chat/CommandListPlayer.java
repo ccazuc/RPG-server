@@ -17,6 +17,7 @@ public class CommandListPlayer extends Command {
 		write();
 	}
 	
+	@Override
 	public void write() {
 		this.connection.writeByte(PacketID.CHAT_LIST_PLAYER);
 		int number = Server.getPlayerList().size();

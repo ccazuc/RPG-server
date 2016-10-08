@@ -11,5 +11,6 @@ public class CommandLoadEquippedItems extends Command {
 	@Override
 	public void read() {}
 	
+	@Override
 	public void write() {}
 }

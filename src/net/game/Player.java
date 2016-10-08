@@ -45,6 +45,7 @@ public class Player {
 	private ClassType classe;
 	private int numberRedGem;
 	private int characterId;
+	private int accountRank;
 	private long pingTimer;
 	private int maxStamina;
 	private int goldGained;
@@ -86,6 +87,10 @@ public class Player {
 	
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getIpAdresse() {
+		return this.connectionManager.getIpAdress();
 	}
 	
 	public ConnectionManager getConnectionManager() {
@@ -333,6 +338,7 @@ public class Player {
 		return returns;
 	}
 	
+	@SuppressWarnings("unused")
 	private boolean addMultipleUnstackableItem(int id, int number) throws SQLException {
 		int i = 0;
 		boolean returns = false;
@@ -450,6 +456,14 @@ public class Player {
 				this.bag.setEquippedBag(i, bag);
 			}
 		}
+	}
+	
+	public void setAccountRank(int rank) {
+		this.accountRank = rank;
+	}
+	
+	public int getAccountRank() {
+		return this.accountRank;
 	}
 	
 	public void setFirstProfession(Profession profession) {

@@ -226,7 +226,6 @@ public class ItemManager {
 			}
 			i = 0;
 			connection.writeInt(numberBagItems);
-			System.out.println(numberBagItems);
 			while(i < player.getBag().getBag().length) {
 				if(player.getBag().getBag(i) != null) {
 					if(player.getBag().getBag(i).isContainer() || player.getBag().getBag(i).isGem()) {

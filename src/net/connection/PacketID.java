@@ -38,4 +38,17 @@ public class PacketID {
 	public static final byte KNOWN_ITEM = 34;
 	public static final byte UNKNOWN_ITEM = 35;
 	public static final byte CHAT_LIST_PLAYER = 36;
+	public static final byte CHAT_SET_STAMINA = 37;
+	public static final byte CHAT_SET_MANA = 38;
+	public static final byte CHAT_PLAYER_INFO = 39;
+	public static final byte CHAT_NOT_ALLOWED = 40;
+	public static final byte CHAT_SET = 41;
+	public static final byte CHAT_SET_GOLD = 42;
+	public static final byte CHAT_SET_EXPERIENCE = 43;
+	public static final byte CHAT_GET = 44;
+	public static final byte CHAT_GET_STAMINA = 45;
+	public static final byte CHAT_GET_MANA = 46;
+	public static final byte CHAT_GET_GOLD = 47;
+	public static final byte CHAT_GET_EXPERIENCE = 48;
+	public static final byte CHAT_GET_ID = 49;
 }

@@ -20,5 +20,6 @@ public class CommandLoadCharacter extends Command {
 		this.player.sendStats();
 	}
 	
+	@Override
 	public void write() {}
 }

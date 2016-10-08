@@ -17,7 +17,10 @@ import net.command.CommandPing;
 import net.command.CommandPingConfirmed;
 import net.command.CommandSelectScreenLoadCharacters;
 import net.command.CommandSendSingleBagItem;
+import net.command.chat.CommandGet;
 import net.command.chat.CommandListPlayer;
+import net.command.chat.CommandPlayerInfo;
+import net.command.chat.CommandSet;
 import net.command.item.CommandGem;
 import net.command.item.CommandPotion;
 import net.command.item.CommandRequestItem;
@@ -35,23 +38,26 @@ public class ConnectionManager {
 	
 	public ConnectionManager(Player player, SocketChannel socket) {
 		this.player = player;
-		this.connection = new Connection(socket);
-		this.commandList.put((int)LOGIN, new CommandLogin(this));
-		this.commandList.put((int)LOGOUT, new CommandLogout(this));
+		this.connection = new Connection(socket, player);
 		this.commandList.put((int)SELECT_SCREEN_LOAD_CHARACTERS, new CommandSelectScreenLoadCharacters(this));
+		this.commandList.put((int)SEND_SINGLE_BAG_ITEM, new CommandSendSingleBagItem(this));
 		this.commandList.put((int)CREATE_CHARACTER, new CommandCreateCharacter(this));
 		this.commandList.put((int)DELETE_CHARACTER, new CommandDeleteCharacter(this));
-		this.commandList.put((int)LOAD_CHARACTER, new CommandLoadCharacter(this));
-		this.commandList.put((int)STUFF, new CommandStuff(this));
-		this.commandList.put((int)WEAPON, new CommandWeapon(this));
-		this.commandList.put((int)GEM, new CommandGem(this));
-		this.commandList.put((int)POTION, new CommandPotion(this));
-		this.commandList.put((int)PING, new CommandPing(this));
 		this.commandList.put((int)PING_CONFIRMED, new CommandPingConfirmed(this));
-		this.commandList.put((int)SEND_SINGLE_BAG_ITEM, new CommandSendSingleBagItem(this));
+		this.commandList.put((int)LOAD_CHARACTER, new CommandLoadCharacter(this));
 		this.commandList.put((int)CHAT_LIST_PLAYER, new CommandListPlayer(this));
+		this.commandList.put((int)CHAT_PLAYER_INFO, new CommandPlayerInfo(this));
 		this.commandList.put((int)REQUEST_ITEM, new CommandRequestItem(this));
 		this.commandList.put((int)ADD_ITEM, new CommandAddItem(this));
+		this.commandList.put((int)WEAPON, new CommandWeapon(this));
+		this.commandList.put((int)POTION, new CommandPotion(this));
+		this.commandList.put((int)LOGOUT, new CommandLogout(this));
+		this.commandList.put((int)CHAT_SET, new CommandSet(this));
+		this.commandList.put((int)CHAT_GET, new CommandGet(this));
+		this.commandList.put((int)LOGIN, new CommandLogin(this));
+		this.commandList.put((int)STUFF, new CommandStuff(this));
+		this.commandList.put((int)PING, new CommandPing(this));
+		this.commandList.put((int)GEM, new CommandGem(this));
 	}
 	
 	public void read() {
@@ -67,6 +73,10 @@ public class ConnectionManager {
 			e.printStackTrace();
 			this.player.close();
 		}
+	}
+	
+	public String getIpAdress() {
+		return this.connection.getIpAdress();
 	}
 	
 	public Connection getConnection() {

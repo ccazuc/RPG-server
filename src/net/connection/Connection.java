@@ -3,6 +3,7 @@ package net.connection;
 import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
+import net.game.Player;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
@@ -14,10 +15,10 @@ public class Connection {
 	private Buffer rBuffer;
 	private SocketChannel socket;
 	
-	public Connection(SocketChannel socket) {
+	public Connection(SocketChannel socket, Player player) {
 		this.socket = socket;
-		this.wBuffer = new Buffer(socket);
-		this.rBuffer = new Buffer(socket);
+		this.wBuffer = new Buffer(socket, player);
+		this.rBuffer = new Buffer(socket, player);
 	}
 
 	public final void close() {
@@ -27,6 +28,10 @@ public class Connection {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public final String getIpAdress() {
+		return this.socket.socket().getInetAddress().toString();
 	}
 	
 	public final void clearRBuffer() {

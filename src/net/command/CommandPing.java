@@ -16,6 +16,7 @@ public class CommandPing extends Command {
 		write();
 	}
 	
+	@Override
 	public void write() {
 		this.connection.writeByte(PacketID.PING);
 		this.connection.send();

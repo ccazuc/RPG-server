@@ -1,10 +1,12 @@
 package net.connection;
 
 import java.io.IOException;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 
+import net.game.Player;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
@@ -15,10 +17,12 @@ public class Buffer {
 	private ByteBuffer buffer;	
 	private boolean written;
 	private SocketChannel socket;
+	private Player player;
 	
-	public Buffer(SocketChannel socket) {
+	public Buffer(SocketChannel socket, Player player) {
 		this.buffer = ByteBuffer.allocateDirect(16000);
 		this.socket = socket;
+		this.player = player;
 	}
 	
 	protected final void send() throws IOException {
@@ -174,7 +178,14 @@ public class Buffer {
 	}
 	
 	protected final boolean readBoolean() {
-		return this.buffer.get() == 1;
+		try {
+			return this.buffer.get() == 1;
+		}
+		catch(BufferUnderflowException e) {
+			e.printStackTrace();
+			this.player.close();
+			return false;
+		}
 	}
 	
 	protected final void writeByte(final byte b) {
@@ -183,7 +194,14 @@ public class Buffer {
 	}
 	
 	protected final byte readByte() {
-		return this.buffer.get();
+		try {
+			return this.buffer.get();
+		}
+		catch(BufferUnderflowException e) {
+			e.printStackTrace();
+			this.player.close();
+			return 0;
+		}
 	}
 	
 	protected final void writeShort(final short s) {
@@ -192,7 +210,14 @@ public class Buffer {
 	}
 	
 	protected final short readShort() {
-		return this.buffer.getShort();
+		try {
+			return this.buffer.getShort();
+		}
+		catch(BufferUnderflowException e) {
+			e.printStackTrace();
+			this.player.close();
+			return 0;
+		}
 	}
 	
 	protected final void writeInt(final int i) {
@@ -201,7 +226,14 @@ public class Buffer {
 	}
 	
 	protected final int readInt() {
-		return this.buffer.getInt();
+		try {
+			return this.buffer.getInt();
+		}
+		catch(BufferUnderflowException e) {
+			e.printStackTrace();
+			this.player.close();
+			return 0;
+		}
 	}
 	
 	protected final void writeLong(final long l) {
@@ -210,7 +242,14 @@ public class Buffer {
 	}
 	
 	protected final long readLong() {
-		return this.buffer.getLong();
+		try {
+			return this.buffer.getLong();
+		}
+		catch(BufferUnderflowException e) {
+			e.printStackTrace();
+			this.player.close();
+			return 0;
+		}
 	}
 	
 	protected final void writeFloat(final float f) {
@@ -219,7 +258,14 @@ public class Buffer {
 	}
 	
 	protected final float readFloat() {
-		return this.buffer.getFloat();
+		try {
+			return this.buffer.getFloat();
+		}
+		catch(BufferUnderflowException e) {
+			e.printStackTrace();
+			this.player.close();
+			return 0;
+		}
 	}
 	
 	protected final void writeDouble(final double d) {
@@ -228,7 +274,14 @@ public class Buffer {
 	}
 	
 	protected final double readDouble() {
-		return this.buffer.getDouble();
+		try {
+			return this.buffer.getDouble();
+		}
+		catch(BufferUnderflowException e) {
+			e.printStackTrace();
+			this.player.close();
+			return 0;
+		}
 	}
 	
 	protected final void writeChar(final char c) {
@@ -237,6 +290,13 @@ public class Buffer {
 	}
 	
 	protected final char readChar() {
-		return (char)(Character.MAX_VALUE-this.buffer.getChar());
-}
+		try {
+			return (char)(Character.MAX_VALUE-this.buffer.getChar());
+		}
+		catch(BufferUnderflowException e) {
+			e.printStackTrace();
+			this.player.close();
+			return 0;
+		}
+	}
 }

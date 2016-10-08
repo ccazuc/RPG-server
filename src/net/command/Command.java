@@ -15,4 +15,5 @@ public class Command {
 	}
 	
 	public void read() {}
+	public void write() {}
 }
