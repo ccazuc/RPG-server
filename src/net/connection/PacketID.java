@@ -51,4 +51,7 @@ public class PacketID {
 	public static final byte CHAT_GET_GOLD = 47;
 	public static final byte CHAT_GET_EXPERIENCE = 48;
 	public static final byte CHAT_GET_ID = 49;
+	public static final byte CHAT_GET_IP = 50;
+	public static final byte STRING = 51;
+	public static final byte INT = 52;
 }

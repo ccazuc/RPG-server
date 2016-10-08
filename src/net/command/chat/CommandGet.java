@@ -1,5 +1,8 @@
 package net.command.chat;
 
+import java.sql.SQLException;
+
+import jdo.JDOStatement;
 import net.Server;
 import net.command.Command;
 import net.connection.ConnectionManager;
@@ -8,6 +11,7 @@ import net.game.Player;
 
 public class CommandGet extends Command {
 
+	private static JDOStatement statement;
 	public CommandGet(ConnectionManager connectionManager) {
 		super(connectionManager);
 	}
@@ -17,34 +21,70 @@ public class CommandGet extends Command {
 		byte packetID = this.connection.readByte();
 		if(packetID == PacketID.CHAT_GET_STAMINA) {
 			int id = this.connection.readInt();
-			write((id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id)).getStamina());
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			if(player != null) {
+				write(player.getStamina());
+			}
 		}
 		else if(packetID == PacketID.CHAT_GET_MANA) {
 			int id = this.connection.readInt();
-			write((id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id)).getMana());
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			if(player != null) {
+				write(player.getMana());
+			}
 		}
 		else if(packetID == PacketID.CHAT_GET_EXPERIENCE) {
 			int id = this.connection.readInt();
-			write((id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id)).getExp());
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			if(player != null) {
+				write(player.getExp());
+			}
 		}
 		else if(packetID == PacketID.CHAT_GET_GOLD) {
 			int id = this.connection.readInt();
-			write((id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id)).getGold());
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			if(player != null) {
+				write(player.getGold());
+			}
 		}
 		else if(packetID == PacketID.CHAT_GET_ID) {
 			String name = this.connection.readString();
-			for(Player player : Server.getPlayerList().values()) {
-				if(player.getName().equals(name)) {
-					write(player.getCharacterId());
-					return;
+			try {
+				if(statement == null) {
+					statement = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
 				}
+				statement.clear();
+				statement.putString(name);
+				statement.execute();
+				if(statement.fetch()) {
+					write(statement.getInt());
+				}
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		else if(packetID == PacketID.CHAT_GET_IP) {
+			int id = this.connection.readInt();
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			if(player != null) {
+				write(player.getIpAdresse().substring(1));
 			}
 		}
 	}
 	
 	public void write(int value) {
 		this.connection.writeByte(PacketID.CHAT_GET);
+		this.connection.writeByte(PacketID.INT);
 		this.connection.writeInt(value);
 		this.connection.send();
+	}
+	
+	public void write(String msg) {
+		this.connection.writeByte(PacketID.CHAT_GET);
+		this.connection.writeByte(PacketID.STRING);
+		this.connection.writeString(msg);
+		this.connection.send();
+		
 	}
 }

@@ -47,7 +47,7 @@ public class Player {
 	private int characterId;
 	private int accountRank;
 	private long pingTimer;
-	private int maxStamina;
+	private int maxStamina = 10000;
 	private int goldGained;
 	private boolean logged;
 	private int accountId;
@@ -57,7 +57,7 @@ public class Player {
 	private int strength;
 	private int stamina;
 	private float armor;
-	private int maxMana;
+	private int maxMana = 3000;
 	private String name;
 	private int level;
 	private Race race;
@@ -151,6 +151,7 @@ public class Player {
 		this.connectionManager.getConnection().writeByte(PacketID.LOAD_STATS);
 		this.connectionManager.getConnection().writeInt(this.exp);
 		this.connectionManager.getConnection().writeInt(this.gold);
+		this.connectionManager.getConnection().send();
 	}
 	
 	public void initTable() {
