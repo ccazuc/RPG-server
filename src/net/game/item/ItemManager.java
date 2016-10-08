@@ -64,7 +64,7 @@ public class ItemManager {
 		getBagRequest = builderGetBagItemsRequest.toString();
 	}
 	
-	public void getBagItems(Player player) throws SQLException {
+	/*public void getBagItems(Player player) throws SQLException {
 		int i = 1;
 		int id;
 		int number;
@@ -142,6 +142,127 @@ public class ItemManager {
 				else {
 					player.getBag().setBag(i, null);
 					connection.writeChar((char)0);
+				}
+				i++;
+			}
+			connection.send();
+		}
+	}*/
+	
+	public void getBagItems(Player player) throws SQLException {
+		int i = 1;
+		int id;
+		int number;
+		int gem1Id;
+		int gem2Id;
+		int gem3Id;
+		if(getBagItem == null) {
+			String request = "";
+			StringBuilder builder = new StringBuilder();
+			builder.append("SELECT ");
+			builder.append(getBagRequest);
+			builder.append("FROM bag WHERE character_id = ?");
+			request = builder.toString();
+			getBagItem = Server.getJDO().prepare(request);
+		}
+		i = 0;
+		int numberBagItems = 0;
+		getBagItem.clear();
+		getBagItem.putInt(player.getCharacterId());
+		getBagItem.execute();
+		if(getBagItem.fetch()) {
+			Connection connection = player.getConnectionManager().getConnection();
+			connection.writeByte(PacketID.LOAD_BAG_ITEMS);
+			while(i < player.getBag().getBag().length) {
+				id = getBagItem.getInt();
+				number = getBagItem.getInt();
+				gem1Id = getBagItem.getInt();
+				gem2Id = getBagItem.getInt();
+				gem3Id = getBagItem.getInt();
+				if(StuffManager.exists(id)) {
+					player.getBag().setBag(i, StuffManager.getClone(id));
+					Stuff temp = (Stuff)player.getBag().getBag(i);
+					if(GemManager.exists(gem1Id) && temp.getGemSlot1() != GemColor.NONE) {
+						temp.setEquippedGem1(GemManager.getClone(gem1Id));
+					}
+					if(GemManager.exists(gem2Id) && temp.getGemSlot2() != GemColor.NONE) {
+						temp.setEquippedGem2(GemManager.getClone(gem2Id));
+					}
+					if(GemManager.exists(gem3Id) && temp.getGemSlot3() != GemColor.NONE) {
+						temp.setEquippedGem3(GemManager.getClone(gem3Id));
+					}
+					player.getBag().setBag(i, temp);
+					((Stuff)player.getBag().getBag(i)).checkBonusTypeActivated();
+					numberBagItems++;
+				}
+				else if(PotionManager.exists(id)) {
+					player.getBag().setBag(i, PotionManager.getClone(id));
+					player.getBag().getNumberStack().put(player.getBag().getBag(i), number);
+					numberBagItems++;
+				}
+				else if(WeaponManager.exists(id)) {
+					player.getBag().setBag(i, WeaponManager.getClone(id));
+					Stuff temp = (Stuff)player.getBag().getBag(i);
+					if(GemManager.exists(gem1Id)) {
+						temp.setEquippedGem1(GemManager.getClone(gem1Id));
+					}
+					if(GemManager.exists(gem2Id)) {
+						temp.setEquippedGem2(GemManager.getClone(gem2Id));
+					}
+					if(GemManager.exists(gem3Id)) {
+						temp.setEquippedGem3(GemManager.getClone(gem3Id));
+					}
+					player.getBag().setBag(i, temp);
+					numberBagItems++;
+				}
+				else if(GemManager.exists(id)) {
+					player.getBag().setBag(i, GemManager.getClone(id));
+					numberBagItems++;
+				}
+				else {
+					player.getBag().setBag(i, null);
+				}
+				i++;
+			}
+			i = 0;
+			connection.writeInt(numberBagItems);
+			System.out.println(numberBagItems);
+			while(i < player.getBag().getBag().length) {
+				if(player.getBag().getBag(i) != null) {
+					if(player.getBag().getBag(i).isContainer() || player.getBag().getBag(i).isGem()) {
+						connection.writeInt(i);
+						connection.writeInt(player.getBag().getBag(i).getId());
+						connection.writeChar(player.getBag().getBag(i).getItemType().getValue());
+					}
+					else if(player.getBag().getBag(i).isPotion()) {
+						connection.writeInt(i);
+						connection.writeInt(player.getBag().getBag(i).getId());
+						connection.writeChar(player.getBag().getBag(i).getItemType().getValue());
+						connection.writeInt(player.getBag().getNumberBagItem(player.getBag().getBag(i)));
+					}
+					else if(player.getBag().getBag(i).isStuff() || player.getBag().getBag(i).isWeapon()) {
+						connection.writeInt(i);
+						connection.writeInt(player.getBag().getBag(i).getId());
+						connection.writeChar(player.getBag().getBag(i).getItemType().getValue());
+						if(((Stuff)player.getBag().getBag(i)).getEquippedGem1() != null) {
+							connection.writeInt(((Stuff)player.getBag().getBag(i)).getEquippedGem1().getId());
+						}
+						else {
+							connection.writeInt(0);
+						}
+						if(((Stuff)player.getBag().getBag(i)).getEquippedGem2() != null) {
+							connection.writeInt(((Stuff)player.getBag().getBag(i)).getEquippedGem2().getId());
+						}
+						else {
+							connection.writeInt(0);
+						}
+						if(((Stuff)player.getBag().getBag(i)).getEquippedGem2() != null) {
+							connection.writeInt(((Stuff)player.getBag().getBag(i)).getEquippedGem2().getId());
+						}
+						else {
+							connection.writeInt(0);
+						}
+					}
 				}
 				i++;
 			}
@@ -246,16 +367,16 @@ public class ItemManager {
 				id = getEquippedBag.getInt();
 				if(BagManager.exists(id)) {
 					player.getBag().setEquippedBag(i, BagManager.getClone(id));
-					connection.writeContainer(BagManager.getContainer(id));
+					//connection.writeContainer(BagManager.getContainer(id));
 				}
 				else {
 					player.getBag().setEquippedBag(i, null);
-					connection.writeInt(0);
+					/*connection.writeInt(0);
 					connection.writeString("");
 					connection.writeString("");
 					connection.writeInt(0);
 					connection.writeInt(0);
-					connection.writeInt(0);
+					connection.writeInt(0);*/
 				}
 				i++;
 			}
