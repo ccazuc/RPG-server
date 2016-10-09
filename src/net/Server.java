@@ -31,6 +31,7 @@ public class Server {
 	private static SocketChannel clientSocket;
 	private static Map<Integer, Player> playerList = Collections.synchronizedMap(new HashMap<Integer, Player>());
 	private static List<Player> nonLoggedPlayer = Collections.synchronizedList(new ArrayList<Player>());
+	private static ArrayList<Integer> playerWaitingForKick = new ArrayList<Integer>();
 	private static Thread sqlRequest;
 	private static MyRunnable runnable;
 	
@@ -58,6 +59,7 @@ public class Server {
 			}
 			time = System.currentTimeMillis();
 			read();
+			kickPlayers();
 			if((System.currentTimeMillis()-time)/1000d >= 0.05) {
 				System.out.println("Loop too long: "+(System.currentTimeMillis()-time)/1000d);
 			}
@@ -66,6 +68,15 @@ public class Server {
 	
 	public static void addNewRequest(SQLRequest request) {
 		runnable.addRequest(request);
+	}
+	
+	private static void kickPlayers() {
+		int i = 0;
+		while(i < playerWaitingForKick.size()) {
+			playerList.remove(playerWaitingForKick.get(i));
+			i++;
+		}
+		playerWaitingForKick.clear();
 	}
 	
 	private static void read() {
@@ -124,9 +135,7 @@ public class Server {
 	
 	public static void removeLoggedPlayer(Player player) {
 		if(player != null) {
-			synchronized(playerList) {
-				playerList.remove(player.getAccountId());
-			}
+			playerWaitingForKick.add(player.getAccountId());
 		}
 	}
 	
