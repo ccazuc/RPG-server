@@ -1,9 +1,9 @@
 package net.command;
 
-import java.sql.SQLException;
-
+import net.Server;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
+import net.game.Player;
 import net.game.item.Item;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
@@ -18,63 +18,51 @@ public class CommandAddItem extends Command {
 	
 	@Override
 	public void read() {
-		byte packetID = this.connection.readByte();
-		int id = this.connection.readInt();
+		int character_id = this.connection.readInt();
+		int item_id = this.connection.readInt();
 		int number = this.connection.readInt();
-		if(packetID == PacketID.KNOWN_ITEM) {
-			if(Item.exists(id)) {
-				try {
-					if(this.player.addItem(Item.getItem(id), number)) {
-						writeKnownItem(id, number);
-					}
-				} 
-				catch (SQLException e) {
-					e.printStackTrace();
+		if(this.player.getAccountRank() >= 1 && Item.exists(item_id)) {
+			Player player = character_id == this.player.getCharacterId() ? this.player : Server.getCharacter(character_id);
+			if(player != null) {
+				if(player.itemHasBeenSendToClient(item_id)) {
+					writeKnownItem(player, item_id, number);
 				}
-			}
-		}
-		else if(packetID == PacketID.UNKNOWN_ITEM) {
-			if(Item.exists(id)) {
-				try {
-					if(this.player.addItem(Item.getItem(id), number));
-					writeUnknownItem(id, number);
-				}
-				catch(SQLException e) {
-					e.printStackTrace();
+				else {
+					writeUnknownItem(player, item_id, number);
 				}
 			}
 		}
 	}
 	
-	private void writeKnownItem(int id, int number) {
-		this.connection.writeByte(PacketID.ADD_ITEM);
-		this.connection.writeByte(PacketID.KNOWN_ITEM);
-		this.connection.writeInt(id);
-		this.connection.writeInt(number);
-		this.connection.send();
+	private void writeKnownItem(Player player, int id, int number) {
+		player.getConnection().writeByte(PacketID.ADD_ITEM);
+		player.getConnection().writeByte(PacketID.KNOWN_ITEM);
+		player.getConnection().writeInt(id);
+		player.getConnection().writeInt(number);
+		player.getConnection().send();
 	}
 	
-	private void writeUnknownItem(int id, int number) {
+	private void writeUnknownItem(Player player, int id, int number) {
 		Item temp = Item.getItem(id);
-		this.connection.writeByte(PacketID.ADD_ITEM);
-		this.connection.writeByte(PacketID.UNKNOWN_ITEM);
-		this.connection.writeInt(number);
-		this.connection.writeChar(temp.getItemType().getValue());
+		player.getConnection().writeByte(PacketID.ADD_ITEM);
+		player.getConnection().writeByte(PacketID.UNKNOWN_ITEM);
+		player.getConnection().writeInt(number);
+		player.getConnection().writeChar(temp.getItemType().getValue());
 		if(temp.isContainer()) {
-			this.connection.writeContainer((Container)temp);
+			player.getConnection().writeContainer((Container)temp);
 		}
 		else if(temp.isGem()) {
-			this.connection.writeGem((Gem)temp);
+			player.getConnection().writeGem((Gem)temp);
 		}
 		else if(temp.isPotion()) {
-			this.connection.writePotion((Potion)temp);
+			player.getConnection().writePotion((Potion)temp);
 		}
 		else if(temp.isStuff()) {
-			this.connection.writeStuff((Stuff)temp);
+			player.getConnection().writeStuff((Stuff)temp);
 		}
 		else if(temp.isWeapon()) {
-			this.connection.writeWeapon((Stuff)temp);
+			player.getConnection().writeWeapon((Stuff)temp);
 		}
-		this.connection.send();
+		player.getConnection().send();
 	}
 }

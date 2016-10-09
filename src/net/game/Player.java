@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import net.Server;
+import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.item.Item;
@@ -457,6 +458,10 @@ public class Player {
 				this.bag.setEquippedBag(i, bag);
 			}
 		}
+	}
+	
+	public Connection getConnection() {
+		return this.connectionManager.getConnection();
 	}
 	
 	public void setAccountRank(int rank) {

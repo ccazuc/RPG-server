@@ -21,28 +21,28 @@ public class CommandGet extends Command {
 		byte packetID = this.connection.readByte();
 		if(packetID == PacketID.CHAT_GET_STAMINA) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
 			if(player != null) {
 				write(player.getStamina());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_MANA) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
 			if(player != null) {
 				write(player.getMana());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_EXPERIENCE) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
 			if(player != null) {
 				write(player.getExp());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_GOLD) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
 			if(player != null) {
 				write(player.getGold());
 			}
@@ -66,7 +66,7 @@ public class CommandGet extends Command {
 		}
 		else if(packetID == PacketID.CHAT_GET_IP) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
 			if(player != null) {
 				write(player.getIpAdresse().substring(1));
 			}

@@ -129,4 +129,15 @@ public class Server {
 			}
 		}
 	}
+	
+	public static Player getCharacter(int id) {
+		synchronized(playerList) {
+			for(Player player : playerList.values()) {
+				if(player.getCharacterId() == id) {
+					return player;
+				}
+			}
+		}
+		return null;
+	}
 }

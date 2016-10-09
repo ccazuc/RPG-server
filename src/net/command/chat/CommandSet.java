@@ -17,13 +17,11 @@ public class CommandSet extends Command {
 		byte packetID = this.connection.readByte();
 		int id = this.connection.readInt();
 		int value = this.connection.readInt();
-		System.out.println(id+" "+value);
-		Player player = id == this.player.getCharacterId() ? this.player : Server.getPlayerList().get(id);
+		Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
 		if(this.player.getAccountRank() >= 1) {
 			if(packetID == PacketID.CHAT_SET_STAMINA) {
 				if(value >= 0 && value <= this.player.getMaxStamina()) {
 					player.setStamina(value);
-					System.out.println(player.getStamina());
 				}
 			}
 			else if(packetID == PacketID.CHAT_SET_MANA) {
@@ -39,7 +37,6 @@ public class CommandSet extends Command {
 			else if(packetID == PacketID.CHAT_SET_GOLD) {
 				if(value >= 0) {
 					player.setGold(value);
-					System.out.println("gold: "+player.getGold());
 				}
 			}
 		}
