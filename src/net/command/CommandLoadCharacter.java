@@ -17,6 +17,7 @@ public class CommandLoadCharacter extends Command {
 		this.player.loadEquippedItemSQL();
 		this.player.loadBagItemSQL();
 		this.player.loadCharacterInfoSQL();
+		this.player.loadSpellUnlocked();
 		this.player.sendStats();
 	}
 	

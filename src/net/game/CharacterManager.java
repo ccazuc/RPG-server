@@ -8,6 +8,7 @@ import net.Server;
 public class CharacterManager {
 
 	private static JDOStatement loadCharacterInfo;
+	private static JDOStatement loadSpellUnlocked;
 	
 	private static String rogue = "ROGUE";
 	private static String mage = "MAGE";
@@ -54,6 +55,18 @@ public class CharacterManager {
 				player.setStuffStrength(player.getStuff(i));
 			}
 			i++;
+		}
+	}
+	
+	public void loadSpellUnlocked(Player player) throws SQLException {
+		if(loadSpellUnlocked == null) {
+			loadSpellUnlocked = Server.getJDO().prepare("SELECT id FROM character_spell_unlocked WHERE character_id = ?");
+		}
+		loadSpellUnlocked.clear();
+		loadSpellUnlocked.putInt(player.getCharacterId());
+		loadSpellUnlocked.execute();
+		while(loadSpellUnlocked.fetch()) {
+			player.addUnlockedSpell(loadSpellUnlocked.getInt());
 		}
 	}
 	

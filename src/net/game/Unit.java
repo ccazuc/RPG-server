@@ -14,8 +14,10 @@ public class Unit {
 	protected int strength;
 	protected UnitType unitType;
 	protected int id;
+	private int expGained;
+	private int goldGained;
 	
-	public Unit(UnitType unitType, int id, int stamina, int maxStamina, int mana, int maxMana, int level, String name, int armor, int critical, int strength) {
+	public Unit(UnitType unitType, int id, int stamina, int maxStamina, int mana, int maxMana, int level, String name, int armor, int critical, int strength, int expGained, int goldGained) {
 		this.stamina = stamina;
 		this.maxStamina = maxStamina;
 		this.mana = mana;
@@ -26,6 +28,12 @@ public class Unit {
 		this.armor = armor;
 		this.critical = critical;
 		this.strength = strength;
+		this.unitType = unitType;
+		this.goldGained = goldGained;
+		this.expGained = expGained;
+	}
+	
+	public Unit(UnitType unitType) {
 		this.unitType = unitType;
 	}
 	
@@ -43,6 +51,14 @@ public class Unit {
 	
 	public void setMaxStamina(int maxStamina) {
 		this.maxStamina = maxStamina;
+	}
+	
+	public int getGoldGained() {
+		return this.goldGained;
+	}
+	
+	public int getExpGained() {
+		return this.expGained;
 	}
 	
 	public int getMana() {

@@ -58,4 +58,7 @@ public class PacketID {
 	public static final byte UPDATE_STATS = 54;
 	public static final byte UPDATE_STATS_STAMINA = 55;
 	public static final byte UPDATE_STATS_MANA = 56;
+	public static final byte CHARACTER_LOGOUT = 57;
+	public static final byte UPDATE_STATS_EXPERIENCE = 58;
+	public static final byte UPDATE_STATS_GOLD = 59;
 }

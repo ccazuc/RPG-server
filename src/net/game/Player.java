@@ -3,6 +3,7 @@ package net.game;
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.Server;
 import net.connection.Connection;
@@ -25,6 +26,7 @@ import net.game.profession.ProfessionManager;
 import net.game.shortcut.Shortcut;
 import net.game.spell.Spell;
 import net.game.spell.SpellBarManager;
+import net.game.spell.SpellManager;
 
 public class Player extends Unit {
 
@@ -37,7 +39,7 @@ public class Player extends Unit {
 	private Profession secondProfession;
 	private Profession firstProfession;
 	private WeaponType[] weaponType;
-	private Spell[] spellUnlocked;
+	private HashMap<Integer, Spell> spellUnlocked;
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
 	private Bag bag = new Bag();
@@ -50,13 +52,11 @@ public class Player extends Unit {
 	private int characterId;
 	private int accountRank;
 	private long pingTimer;
-	private int goldGained;
 	private boolean logged;
 	private int accountId;
 	private Stuff[] stuff;
-	private int expGained;
 	private float armor;
-	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0);
+	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
 	private int level;
 	private Race race;
 	private Wear wear;
@@ -75,7 +75,7 @@ public class Player extends Unit {
 	private final static String druid = "Warlock";
 	
 	public Player(SocketChannel socket) {
-		super(UnitType.PLAYER, 0, 0, 0, 0, 0, 0, "", 0, 0, 0);
+		super(UnitType.PLAYER);
 		this.connectionManager = new ConnectionManager(this, socket);
 	}
 	
@@ -85,6 +85,14 @@ public class Player extends Unit {
 	
 	public ConnectionManager getConnectionManager() {
 		return this.connectionManager;
+	}
+	
+	public HashMap<Integer, Spell> getSpellUnlocked() {
+		return this.spellUnlocked;
+	}
+	
+	public Spell getSpellUnlocked(int id) {
+		return this.spellUnlocked.get(id);
 	}
 	
 	public boolean isLoggedIn() {
@@ -147,7 +155,7 @@ public class Player extends Unit {
 	public void initTable() {
 		this.spells = new Shortcut[36];
 		this.stuff = new Stuff[19];
-		this.spellUnlocked = new Spell[19];
+		this.spellUnlocked = new HashMap<Integer, Spell>();
 	}
 	
 	public void loadBagItemSQL() {
@@ -209,6 +217,15 @@ public class Player extends Unit {
 			this.characterManager.loadCharacterInfo(this);
 		} 
 		catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadSpellUnlocked() {
+		try {
+			this.characterManager.loadSpellUnlocked(this);
+		}
+		catch(SQLException e) {
 			e.printStackTrace();
 		}
 	}
@@ -453,6 +470,33 @@ public class Player extends Unit {
 		}
 	}
 	
+	public void resetDatas() {
+		this.stamina = 0;
+		this.maxStamina = 0;
+		this.mana = 0;
+		this.strength = 0;
+		this.critical = 0;
+		this.armor = 0;
+		this.bag = null;
+		this.characterId = 0;
+		this.classe = null;
+		this.damage = 0;
+		this.defaultArmor = 0;
+		this.exp = 0;
+		this.firstProfession = null;
+		this.gold = 0;
+		this.level = 1;
+		this.name = "";
+		this.numberBlueGem = 0;
+		this.numberRedGem = 0;
+		this.numberYellowGem = 0;
+		this.race = null;
+		this.secondProfession = null;
+		this.spellUnlocked.clear();
+		this.target = null;
+		this.wear = null;
+	}
+	
 	public Connection getConnection() {
 		return this.connectionManager.getConnection();
 	}
@@ -564,14 +608,6 @@ public class Player extends Unit {
 		this.spells[i] = spell;
 	}
 	
-	public Spell[] getSpellUnlocked() {
-		return this.spellUnlocked;
-	}
-	
-	public Spell getSpellUnlocked(int i) {
-		return this.spellUnlocked[i];
-	}
-	
 	public Stuff[] getStuff() {
 		return this.stuff;
 	}
@@ -597,8 +633,10 @@ public class Player extends Unit {
 		return this.shortcut;
 	}
 
-	public void setSpellUnlocked(int i, Spell spell) {
-		this.spellUnlocked[i] = spell;
+	public void addUnlockedSpell(int id) {
+		if(SpellManager.exists(id)) {
+			this.spellUnlocked.put(id, SpellManager.getBookSpell(id));
+		}
 	}
 	
 	public Bag getBag() {
@@ -609,20 +647,12 @@ public class Player extends Unit {
 		return this.exp;
 	}
 	
-	public int getExpGained() {
-		return this.expGained;
-	}
-	
 	public void setArmor(float number) {
 		this.armor = (Math.round(100*(this.armor+number))/100.f);
 	}
 	
 	public int getDefaultArmor() {
 		return this.defaultArmor;
-	}
-	
-	public int getGoldGained() {
-		return this.goldGained;
 	}
 	
 	public int getNumberItem(Item item) {

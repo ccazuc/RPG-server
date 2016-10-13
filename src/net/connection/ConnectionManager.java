@@ -13,6 +13,7 @@ import net.command.CommandDeleteCharacter;
 import net.command.CommandLoadCharacter;
 import net.command.CommandLogin;
 import net.command.CommandLogout;
+import net.command.CommandLogoutCharacter;
 import net.command.CommandPing;
 import net.command.CommandPingConfirmed;
 import net.command.CommandSelectScreenLoadCharacters;
@@ -62,6 +63,7 @@ public class ConnectionManager {
 		this.commandList.put((int)GEM, new CommandGem(this));
 		this.commandList.put((int)SPELL_CAST, new CommandSpellCast(this));
 		this.commandList.put((int)UPDATE_STATS, new CommandUpdateStats(this));
+		this.commandList.put((int)CHARACTER_LOGOUT, new CommandLogoutCharacter(this));
 	}
 	
 	public void read() {
