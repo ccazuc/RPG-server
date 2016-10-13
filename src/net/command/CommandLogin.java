@@ -11,7 +11,7 @@ public class CommandLogin extends Command {
 	
 	static JDOStatement read_statement;
 	private static JDOStatement write_statement;
-	private static SQLRequest loginRequest = new SQLRequest("SELECT name, password, id, rank, banned, ban_duration FROM account WHERE name = ?", false) {
+	private static SQLRequest loginRequest = new SQLRequest("SELECT name, password, id, rank, banned, ban_duration FROM account WHERE name = ?") {
 		@Override
 		public void gatherData() {
 			try {

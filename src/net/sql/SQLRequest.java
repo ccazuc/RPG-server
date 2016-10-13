@@ -11,21 +11,19 @@ public class SQLRequest {
 	protected JDOStatement statement;
 	protected int id;
 	protected Player player;
-	private boolean shouldSendPlayerId;
 	protected String userName;
 	protected String password;
 	
-	public SQLRequest(String request, boolean shouldSendPlayerId) {
+	public SQLRequest(String request) {
 		try {
 			this.statement = Server.getJDO().prepare(request);
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.shouldSendPlayerId = shouldSendPlayerId;
 	}
 	
-	public void execute() throws SQLException {
+	public void execute() {
 		gatherData();
 		this.id = 0;
 		this.player = null;

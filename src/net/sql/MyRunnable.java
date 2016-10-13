@@ -1,7 +1,5 @@
 package net.sql;
 
-import java.sql.SQLException;
-import java.sql.SQLTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,16 +17,8 @@ public class MyRunnable implements Runnable {
 		System.out.println("run");
 		while(true) {
 			if(this.list.size() > 0) {
-				try {
-					this.list.get(0).execute();
-					this.list.remove(0);
-				} 
-				catch (SQLTimeoutException e) {
-					e.printStackTrace();
-				} 
-				catch (SQLException e) {
-					e.printStackTrace();
-				}
+				this.list.get(0).execute();
+				this.list.remove(0);
 			}
 		}
 	}

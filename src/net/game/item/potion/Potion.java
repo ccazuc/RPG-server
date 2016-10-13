@@ -5,9 +5,9 @@ import net.game.item.ItemType;
 
 public class Potion extends Item {
 
-	protected int doHeal;
-	protected int doMana;
-	protected int level;
+	private int doHeal;
+	private int doMana;
+	private int level;
 
 	public Potion(Potion potion) {
 		super(potion.id, potion.sprite_id, potion.itemType, potion.name, 1, potion.sellPrice, potion.maxStack);

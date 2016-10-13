@@ -5,12 +5,12 @@ import net.game.item.ItemType;
 
 public class Gem extends Item {
 	
-	protected int strength;
-	protected int stamina;
-	protected int mana;
-	protected int armor;
-	protected int critical;
-	protected GemColor color;
+	private int strength;
+	private int stamina;
+	private int mana;
+	private int armor;
+	private int critical;
+	private GemColor color;
 
 	public Gem(Gem gem) {
 		super(gem.id, gem.sprite_id, gem.itemType, gem.name, gem.quality, gem.sellPrice, 1);
@@ -30,6 +30,25 @@ public class Gem extends Item {
 		this.armor = armor;
 		this.color = color;
 		this.mana = mana;
+	}
+	
+	public int getBonusValue(GemBonusType type) {
+		if(type == GemBonusType.STAMINA) {
+			return this.stamina;
+		}
+		if(type == GemBonusType.ARMOR) {
+			return this.armor;
+		}
+		if(type == GemBonusType.CRITICAL) {
+			return this.critical;
+		}
+		if(type == GemBonusType.MANA) {
+			return this.mana;
+		}
+		if(type == GemBonusType.STRENGTH) {
+			return this.strength;
+		}
+		return 0;
 	}
 	
 	public int getStrength() {

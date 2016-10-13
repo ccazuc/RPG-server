@@ -44,6 +44,17 @@ public class CharacterManager {
 			player.setExperience(loadCharacterInfo.getInt());
 			player.setGold(loadCharacterInfo.getInt());
 		}
+		int i = 0;
+		while(i < player.getStuff().length) {
+			if(player.getStuff(i) != null) {
+				player.setStuffStamina(player.getStuff(i));
+				player.setStuffCritical(player.getStuff(i));
+				player.setStuffArmor(player.getStuff(i));
+				player.setStuffMana(player.getStuff(i));
+				player.setStuffStrength(player.getStuff(i));
+			}
+			i++;
+		}
 	}
 	
 	private static ClassType convStringToClasse(String classe) {

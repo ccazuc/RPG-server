@@ -54,4 +54,8 @@ public class PacketID {
 	public static final byte CHAT_GET_IP = 50;
 	public static final byte STRING = 51;
 	public static final byte INT = 52;
+	public static final byte SPELL_CAST = 53;
+	public static final byte UPDATE_STATS = 54;
+	public static final byte UPDATE_STATS_STAMINA = 55;
+	public static final byte UPDATE_STATS_MANA = 56;
 }

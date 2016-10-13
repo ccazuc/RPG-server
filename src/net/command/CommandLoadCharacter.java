@@ -14,9 +14,9 @@ public class CommandLoadCharacter extends Command {
 		this.player.setCharacterId(id);
 		this.player.initTable();
 		this.player.loadEquippedBagSQL();
-		this.player.loadCharacterInfoSQL();
 		this.player.loadEquippedItemSQL();
 		this.player.loadBagItemSQL();
+		this.player.loadCharacterInfoSQL();
 		this.player.sendStats();
 	}
 	

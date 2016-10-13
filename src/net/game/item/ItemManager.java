@@ -358,7 +358,7 @@ public class ItemManager {
 		getEquippedBag.clear();
 		getEquippedBag.putInt(player.getCharacterId());
 		getEquippedBag.execute();
-		Connection connection = player.getConnectionManager().getConnection();
+		//Connection connection = player.getConnectionManager().getConnection();
 		int i = 0;
 		int id;
 		if(getEquippedBag.fetch()) {
@@ -661,22 +661,6 @@ public class ItemManager {
 		}
 		if(stuff.getGemSlot3() != GemColor.NONE && GemManager.exists(gem3Id)) {
 			stuff.setEquippedGem1(GemManager.getClone(gem3Id));
-		}
-	}
-
-	public static void calcStuffStats(Player player) {
-		if(player != null) {
-			int i = 0;
-			while(i < player.getStuff().length) {
-				if(player.getStuff(i) != null) {
-					player.setStuffStamina(player.getStuff(i).getStamina());
-					player.setStuffCritical(player.getStuff(i).getCritical());
-					player.setStuffArmor(player.getStuff(i).getArmor());
-					player.setStuffMana(player.getStuff(i).getMana());
-					player.setStuffStrength(player.getStuff(i).getStrength());
-				}
-				i++;
-			}
 		}
 	}
 }

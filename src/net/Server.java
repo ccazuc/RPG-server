@@ -19,6 +19,7 @@ import net.game.item.gem.GemManager;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
+import net.game.spell.SpellManager;
 import net.sql.MyRunnable;
 import net.sql.SQLRequest;
 
@@ -48,6 +49,7 @@ public class Server {
 		WeaponManager.loadWeapons();
 		GemManager.loadGems();
 		BagManager.loadBags();
+		SpellManager.loadSpells();
 		runnable = new MyRunnable();
 		sqlRequest = new Thread(runnable);
 		sqlRequest.start();

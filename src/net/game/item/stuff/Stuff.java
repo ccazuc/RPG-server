@@ -12,27 +12,27 @@ import net.game.item.weapon.WeaponType;
 
 public class Stuff extends Item {
 
-	protected boolean gemBonusActivated;
-	protected GemBonusType gemBonusType;
-	protected ClassType[] classType;
-	protected WeaponType weaponType;
-	protected WeaponSlot weaponSlot;
-	protected int gemBonusValue;
-	protected Gem equippedGem1;
-	protected Gem equippedGem2;
-	protected Gem equippedGem3;
-	protected GemColor color1;
-	protected GemColor color2;
-	protected GemColor color3;
-	protected StuffType type;
-	protected int critical;
-	protected int strength;
-	protected int stamina;
-	protected Wear wear;
-	protected int price;
-	protected int armor;
-	protected int level;
-	protected int mana;
+	private boolean gemBonusActivated;
+	private GemBonusType gemBonusType;
+	private ClassType[] classType;
+	private WeaponType weaponType;
+	private WeaponSlot weaponSlot;
+	private int gemBonusValue;
+	private Gem equippedGem1;
+	private Gem equippedGem2;
+	private Gem equippedGem3;
+	private GemColor color1;
+	private GemColor color2;
+	private GemColor color3;
+	private StuffType type;
+	private int critical;
+	private int strength;
+	private int stamina;
+	private Wear wear;
+	private int price;
+	private int armor;
+	private int level;
+	private int mana;
 
 	public Stuff(Stuff stuff) {
 		super(stuff.id, stuff.sprite_id, stuff.itemType, stuff.name, stuff.quality, stuff.sellPrice, stuff.maxStack);
@@ -131,6 +131,20 @@ public class Stuff extends Item {
 		}
 		this.gemBonusActivated = false;
 		return false;
+	}
+	
+	public int getStatsFromGems(GemBonusType type) {
+		int stats = 0;
+		if(this.equippedGem1 != null ) {
+			stats+= this.equippedGem1.getBonusValue(type);
+		}
+		if(this.equippedGem2 != null) {
+			stats+= this.equippedGem2.getBonusValue(type);
+		}
+		if(this.equippedGem3 != null) {
+			stats+= this.equippedGem3.getBonusValue(type);
+		}
+		return stats;
 	}
 	
 	public boolean getGemBonusActivated() {

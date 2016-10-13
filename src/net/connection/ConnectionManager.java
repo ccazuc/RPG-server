@@ -17,6 +17,8 @@ import net.command.CommandPing;
 import net.command.CommandPingConfirmed;
 import net.command.CommandSelectScreenLoadCharacters;
 import net.command.CommandSendSingleBagItem;
+import net.command.CommandSpellCast;
+import net.command.CommandUpdateStats;
 import net.command.chat.CommandGet;
 import net.command.chat.CommandListPlayer;
 import net.command.chat.CommandPlayerInfo;
@@ -58,6 +60,8 @@ public class ConnectionManager {
 		this.commandList.put((int)STUFF, new CommandStuff(this));
 		this.commandList.put((int)PING, new CommandPing(this));
 		this.commandList.put((int)GEM, new CommandGem(this));
+		this.commandList.put((int)SPELL_CAST, new CommandSpellCast(this));
+		this.commandList.put((int)UPDATE_STATS, new CommandUpdateStats(this));
 	}
 	
 	public void read() {
@@ -85,6 +89,10 @@ public class ConnectionManager {
 	
 	public Player getPlayer() {
 		return this.player;
+	}
+	
+	public HashMap<Integer, Command> getCommandList() {
+		return this.commandList;
 	}
 	
 	private void readPacket() {

@@ -1,4 +1,5 @@
 package net.game;
+
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import net.game.item.ItemType;
 import net.game.item.bag.Bag;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
+import net.game.item.gem.GemBonusType;
 import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
 import net.game.item.stuff.StuffManager;
@@ -24,7 +26,7 @@ import net.game.shortcut.Shortcut;
 import net.game.spell.Spell;
 import net.game.spell.SpellBarManager;
 
-public class Player {
+public class Player extends Unit {
 
 	private ProfessionManager professionManager = new ProfessionManager();
 	private SpellBarManager spellBarManager = new SpellBarManager();
@@ -48,22 +50,16 @@ public class Player {
 	private int characterId;
 	private int accountRank;
 	private long pingTimer;
-	private int maxStamina = 10000;
 	private int goldGained;
 	private boolean logged;
 	private int accountId;
 	private Stuff[] stuff;
 	private int expGained;
-	private int critical;
-	private int strength;
-	private int stamina;
 	private float armor;
-	private int maxMana = 3000;
-	private String name;
+	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0);
 	private int level;
 	private Race race;
 	private Wear wear;
-	private int mana;
 	private int gold;
 	private int exp;
 	//private int tailorExp;
@@ -79,15 +75,8 @@ public class Player {
 	private final static String druid = "Warlock";
 	
 	public Player(SocketChannel socket) {
+		super(UnitType.PLAYER, 0, 0, 0, 0, 0, 0, "", 0, 0, 0);
 		this.connectionManager = new ConnectionManager(this, socket);
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
 	}
 	
 	public String getIpAdresse() {
@@ -274,6 +263,10 @@ public class Player {
 		}
 		return number;
 	}*/
+	
+	public Unit getTarget() {
+		return this.target;
+	}
 
 	public boolean canWearWeapon(Stuff stuff) {
 		int i = 0;
@@ -488,34 +481,30 @@ public class Player {
 		this.secondProfession = profession;
 	}
 	
-	public void setStuffArmor(int armor) {
-		this.armor+= armor;
+	public void setStuffArmor(Stuff stuff) {
+		this.armor+= stuff.getArmor()+stuff.getStatsFromGems(GemBonusType.ARMOR);
 	}
 
-	public void setStuffStrength(int strengh) {
-		this.strength+= strengh;
+	public void setStuffStrength(Stuff stuff) {
+		this.strength+= stuff.getStrength()+stuff.getStatsFromGems(GemBonusType.STRENGTH);
 	}
 	
-	public void setStuffStamina(int stamina) {
-		this.maxStamina+= stamina;
-		this.stamina+= stamina;
+	public void setStuffStamina(Stuff stuff) {
+		this.maxStamina+= stuff.getStamina()+stuff.getStatsFromGems(GemBonusType.STAMINA);
+		this.stamina+= stuff.getStamina()+stuff.getStatsFromGems(GemBonusType.STAMINA);
 	}
 	
-	public void setStuffCritical(int critical) {
-		this.critical+= critical;
+	public void setStuffCritical(Stuff stuff) {
+		this.critical+= stuff.getCritical()+stuff.getStatsFromGems(GemBonusType.CRITICAL);
 	}
 	
-	public void setStuffMana(int mana) {
-		this.maxMana+= mana;
-		this.mana+= mana;
+	public void setStuffMana(Stuff stuff) {
+		this.maxMana+= stuff.getMana()+stuff.getStatsFromGems(GemBonusType.MANA);
+		this.mana+= stuff.getMana()+stuff.getStatsFromGems(GemBonusType.MANA);
 	}
 	
 	public void setNumberRedGem(int nb) {
 		this.numberRedGem = nb;
-	}
-	
-	public int getLevel() {
-		return this.level;
 	}
 	
 	public void setExperience(int exp) {
@@ -555,44 +544,12 @@ public class Player {
 		return this.numberYellowGem;
 	}
 	
-	public float getArmor() {
-		return this.armor;
-	}
-	
 	public void setStamina(double d) {
 		this.stamina = (int)Math.max(d, 0);
 	}
 	
-	public int getMaxStamina() {
-		return this.maxStamina;
-	}
-	
-	public int getStamina() {
-		return this.stamina;
-	}
-	
 	public Wear getWear() {
 		return this.wear;
-	}
-	
-	public int getCritical() {
-		return this.critical;
-	}
-	
-	public int getStrength() {
-		return this.strength;
-	}
-	
-	public void setMana(int mana) {
-		this.mana = Math.max(mana, 0);
-	}
-	
-	public int getMana() {
-		return this.mana;
-	}
-	
-	public int getMaxMana() {
-		return this.maxMana;
 	}
 
 	public Shortcut[] getSpells() {
@@ -666,14 +623,6 @@ public class Player {
 	
 	public int getGoldGained() {
 		return this.goldGained;
-	}
-	
-	public void setMaxStamina(int stamina) {
-		this.maxStamina = stamina;
-	}
-	
-	public void setMaxMana(int mana) {
-		this.maxMana = mana;
 	}
 	
 	public int getNumberItem(Item item) {

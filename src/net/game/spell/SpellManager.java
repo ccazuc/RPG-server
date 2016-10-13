@@ -6,8 +6,11 @@ import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.game.Player;
+import net.connection.PacketID;
+import net.game.Unit;
+import net.game.UnitType;
 import net.game.shortcut.SpellShortcut;
+import net.game.Player;
 
 public class SpellManager {
 
@@ -48,8 +51,11 @@ public class SpellManager {
 					spellCdList.put(id, 0);
 					spellList.add(new Spell(id, sprite_id, name, spellType, damage, manaCost, stunRate, stunDuration, cd, castTime) {
 						@Override
-						public void action(Player target, Player caster) {
+						public void action(Unit target, Unit caster) {
 							this.doDamage(target, caster);
+							if(caster.getUnitType() == UnitType.PLAYER) {
+								((Player)caster).getConnectionManager().getCommandList().get((int)PacketID.UPDATE_STATS).write(PacketID.UPDATE_STATS_STAMINA, target.getid(), target.getStamina());
+							}
 						}
 					});
 				}
@@ -72,7 +78,7 @@ public class SpellManager {
 					spellCdList.put(id, 0);
 					spellList.add(new Spell(id, sprite_id, name, spellType, manaCost, heal, cd, castTime) {
 						@Override
-						public void action(Player target, Player caster) {
+						public void action(Unit target, Unit caster) {
 							this.doHeal(target, caster);
 						}
 					});
