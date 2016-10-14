@@ -2,6 +2,7 @@ package net.command;
 
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
+import net.game.Player;
 
 public class CommandUpdateStats extends Command {
 
@@ -9,12 +10,11 @@ public class CommandUpdateStats extends Command {
 		super(connectionManager);
 	}
 	
-	@Override
-	public void write(byte packetID, int id, int value) {
-		this.connection.writeByte(PacketID.UPDATE_STATS);
-		this.connection.writeByte(packetID);
-		this.connection.writeInt(id);
-		this.connection.writeInt(value);
-		this.connection.send();
+	public static void write(Player player, byte packetID, int id, int value) {
+		player.getConnection().writeByte(PacketID.UPDATE_STATS);
+		player.getConnection().writeByte(packetID);
+		player.getConnection().writeInt(id);
+		player.getConnection().writeInt(value);
+		player.getConnection().send();
 	}
 }

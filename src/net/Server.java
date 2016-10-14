@@ -151,4 +151,15 @@ public class Server {
 		}
 		return null;
 	}
+	
+	public static Player getCharacter(String name) {
+		synchronized(playerList) {
+			for(Player player : playerList.values()) {
+				if(player.getName().equals(name)) {
+					return player;
+				}
+			}
+		}
+		return null;
+	}
 }

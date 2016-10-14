@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.command.CommandUpdateStats;
 import net.connection.PacketID;
 import net.game.Unit;
 import net.game.UnitType;
@@ -54,7 +55,8 @@ public class SpellManager {
 						public void action(Unit target, Unit caster) {
 							this.doDamage(target, caster);
 							if(caster.getUnitType() == UnitType.PLAYER) {
-								((Player)caster).getConnectionManager().getCommandList().get((int)PacketID.UPDATE_STATS).write(PacketID.UPDATE_STATS_STAMINA, target.getid(), target.getStamina());
+								CommandUpdateStats.write((Player)caster, PacketID.UPDATE_STATS_STAMINA, target.getid(), target.getStamina());
+								//((Player)caster).getConnectionManager().getCommandList().get((int)PacketID.UPDATE_STATS).write(PacketID.UPDATE_STATS_STAMINA, target.getid(), target.getStamina());
 							}
 						}
 					});

@@ -22,7 +22,6 @@ import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 import net.game.item.weapon.WeaponType;
 import net.game.profession.Profession;
-import net.game.profession.ProfessionManager;
 import net.game.shortcut.Shortcut;
 import net.game.spell.Spell;
 import net.game.spell.SpellBarManager;
@@ -30,22 +29,23 @@ import net.game.spell.SpellManager;
 
 public class Player extends Unit {
 
-	private ProfessionManager professionManager = new ProfessionManager();
+	//private ProfessionManager professionManager = new ProfessionManager();
+	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
+	private CharacterManager characterManager = new CharacterManager();
 	private SpellBarManager spellBarManager = new SpellBarManager();
 	private ItemManager itemManager = new ItemManager();
-	private CharacterManager characterManager = new CharacterManager();
+	private HashMap<Integer, Spell> spellUnlocked;
 	private ConnectionManager connectionManager;
-	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private Profession secondProfession;
 	private Profession firstProfession;
+	private boolean hasAcceptedTrade;
 	private WeaponType[] weaponType;
-	private HashMap<Integer, Spell> spellUnlocked;
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
 	private Bag bag = new Bag();
 	private boolean pingStatus;
 	private int numberBlueGem;
-	private int playerTradeId;
+	private Player playerTrade;
 	private Shortcut[] spells;
 	private int defaultArmor;
 	private ClassType classe;
@@ -282,6 +282,14 @@ public class Player extends Unit {
 		return number;
 	}*/
 	
+	public boolean hasAcceptedTrade() {
+		return this.hasAcceptedTrade;
+	}
+	
+	public void setHasAcceptedTrade(boolean we) {
+		this.hasAcceptedTrade = we;
+	}
+	
 	public Unit getTarget() {
 		return this.target;
 	}
@@ -498,12 +506,12 @@ public class Player extends Unit {
 		this.wear = null;
 	}
 	
-	public int getPlayerTradeId() {
-		return this.playerTradeId;
+	public Player getPlayerTrade() {
+		return this.playerTrade;
 	}
 	
-	public void setPlayerTradeId(int id) {
-		this.playerTradeId = id;
+	public void setPlayerTrade(Player player) {
+		this.playerTrade = player;
 	}
 	
 	public Connection getConnection() {
