@@ -7,6 +7,8 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 
 import net.game.Player;
+import net.game.item.Item;
+import net.game.item.ItemType;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
@@ -60,6 +62,28 @@ public class Buffer {
 	
 	protected final boolean hasRemaining() {
 		return this.buffer.hasRemaining();
+	}
+	
+	protected final void writeItem(final Item item) {
+		writeChar(item.getItemType().getValue());
+		if(item.getItemType() == ItemType.CONTAINER) {
+			writeContainer((Container)item);
+		}
+		else if(item.getItemType() == ItemType.GEM) {
+			writeGem((Gem)item);
+		}
+		else if(item.getItemType() == ItemType.ITEM) {
+			//
+		}
+		else if(item.getItemType() == ItemType.POTION) {
+			writePotion((Potion)item);
+		}
+		else if(item.getItemType() == ItemType.STUFF) {
+			writeStuff((Stuff)item);
+		}
+		else if(item.getItemType() == ItemType.WEAPON) {
+			writeWeapon((Stuff)item);
+		}
 	}
 	
 	protected final void writeStuff(final Stuff stuff) {

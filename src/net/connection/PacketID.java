@@ -61,4 +61,10 @@ public class PacketID {
 	public static final byte CHARACTER_LOGOUT = 57;
 	public static final byte UPDATE_STATS_EXPERIENCE = 58;
 	public static final byte UPDATE_STATS_GOLD = 59;
+	public static final byte TRADE = 60;
+	public static final byte TRADE_NEW = 61;
+	public static final byte TRADE_ADD_ITEM = 62;
+	public static final byte TRADE_ACCEPT = 63;
+	public static final byte TRADE_NEW_CONFIRM = 64;
+	public static final byte TRADE_REQUEST = 65;
 }

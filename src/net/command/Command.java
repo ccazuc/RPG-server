@@ -17,4 +17,5 @@ public class Command {
 	public void read() {}
 	public void write() {}
 	public void write(byte PacketID, int id, int value) {}
+	public void write(byte PacketID, String name) {}
 }

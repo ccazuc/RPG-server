@@ -19,6 +19,7 @@ import net.command.CommandPingConfirmed;
 import net.command.CommandSelectScreenLoadCharacters;
 import net.command.CommandSendSingleBagItem;
 import net.command.CommandSpellCast;
+import net.command.CommandTrade;
 import net.command.CommandUpdateStats;
 import net.command.chat.CommandGet;
 import net.command.chat.CommandListPlayer;
@@ -64,6 +65,7 @@ public class ConnectionManager {
 		this.commandList.put((int)SPELL_CAST, new CommandSpellCast(this));
 		this.commandList.put((int)UPDATE_STATS, new CommandUpdateStats(this));
 		this.commandList.put((int)CHARACTER_LOGOUT, new CommandLogoutCharacter(this));
+		this.commandList.put((int)TRADE, new CommandTrade(this));
 	}
 	
 	public void read() {

@@ -45,6 +45,7 @@ public class Player extends Unit {
 	private Bag bag = new Bag();
 	private boolean pingStatus;
 	private int numberBlueGem;
+	private int playerTradeId;
 	private Shortcut[] spells;
 	private int defaultArmor;
 	private ClassType classe;
@@ -495,6 +496,14 @@ public class Player extends Unit {
 		this.spellUnlocked.clear();
 		this.target = null;
 		this.wear = null;
+	}
+	
+	public int getPlayerTradeId() {
+		return this.playerTradeId;
+	}
+	
+	public void setPlayerTradeId(int id) {
+		this.playerTradeId = id;
 	}
 	
 	public Connection getConnection() {

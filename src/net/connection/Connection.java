@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.channels.SocketChannel;
 
 import net.game.Player;
+import net.game.item.Item;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
@@ -53,6 +54,10 @@ public class Connection {
 	
 	public final boolean hasRemaining() {
 		return this.rBuffer.hasRemaining();
+	}
+	
+	public final void writeItem(final Item item) {
+		this.wBuffer.writeItem(item);
 	}
 	
 	public final void writeStuff(final Stuff stuff) {
