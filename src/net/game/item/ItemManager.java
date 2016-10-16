@@ -7,7 +7,7 @@ import net.Server;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
-import net.game.item.bag.BagManager;
+import net.game.item.bag.ContainerManager;
 import net.game.item.gem.GemColor;
 import net.game.item.gem.GemManager;
 import net.game.item.potion.PotionManager;
@@ -197,7 +197,7 @@ public class ItemManager {
 				}
 				else if(PotionManager.exists(id)) {
 					player.getBag().setBag(i, PotionManager.getClone(id));
-					player.getBag().getNumberStack().put(player.getBag().getBag(i), number);
+					player.getBag().getBag(i).setAmount(number);;
 					numberBagItems++;
 				}
 				else if(WeaponManager.exists(id)) {
@@ -237,7 +237,7 @@ public class ItemManager {
 						connection.writeInt(i);
 						connection.writeInt(player.getBag().getBag(i).getId());
 						connection.writeChar(player.getBag().getBag(i).getItemType().getValue());
-						connection.writeInt(player.getBag().getNumberBagItem(player.getBag().getBag(i)));
+						connection.writeInt(player.getBag().getBag(i).getAmount());
 					}
 					else if(player.getBag().getBag(i).isStuff() || player.getBag().getBag(i).isWeapon()) {
 						connection.writeInt(i);
@@ -321,21 +321,11 @@ public class ItemManager {
 					setBagItem.putInt(0);
 				}
 				else if(tempBag.isItem() || tempBag.isPotion()) {
-					if(player.getBag().getNumberStack().containsKey(tempBag)) {
 						setBagItem.putInt(tempBag.getId());
-						setBagItem.putInt(player.getBag().getNumberStack().get(tempBag));
+						setBagItem.putInt(tempBag.getAmount());
 						setBagItem.putInt(0);
 						setBagItem.putInt(0);
 						setBagItem.putInt(0);
-					}
-					else {
-						System.out.println("Error CharacterStuff/setBagItems");
-						setBagItem.putInt(0);
-						setBagItem.putInt(0);
-						setBagItem.putInt(0);
-						setBagItem.putInt(0);
-						setBagItem.putInt(0);
-					}
 				}
 			}
 			else {
@@ -364,8 +354,8 @@ public class ItemManager {
 		if(getEquippedBag.fetch()) {
 			while(i < player.getBag().getEquippedBag().length) {
 				id = getEquippedBag.getInt();
-				if(BagManager.exists(id)) {
-					player.getBag().setEquippedBag(i, BagManager.getClone(id));
+				if(ContainerManager.exists(id)) {
+					player.getBag().setEquippedBag(i, ContainerManager.getClone(id));
 					//connection.writeContainer(BagManager.getContainer(id));
 				}
 				else {

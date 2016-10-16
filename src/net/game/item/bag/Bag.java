@@ -10,9 +10,9 @@ public class Bag extends Item implements Cloneable {
 	private Item[] bag = new Item[16];
 	private Container[] equippedBag = new Container[4];
 	private boolean bagChange = true;
+	private int numberFreeSlotBag;
 	
-	private static HashMap<Item, Integer> numberStack = new HashMap<Item, Integer>();
-	private static HashMap<Integer, Integer> itemList = new HashMap<Integer, Integer>();
+	private HashMap<Integer, Integer> itemList = new HashMap<Integer, Integer>();
 	
 	public Bag() {}
 	
@@ -22,6 +22,40 @@ public class Bag extends Item implements Cloneable {
 	
 	public void setBag(Item[] bag) {
 		this.bag = bag;
+	}
+	
+	public void updateBagItem() {
+		this.numberFreeSlotBag = 0;
+		this.itemList.clear();
+		int i = 0;
+		while(i < this.bag.length) {
+			if(this.bag[i] != null) {
+				if(this.itemList.containsKey(this.bag[i].getId())) {
+					if(this.bag[i].isStackable()) {
+						this.itemList.put(this.bag[i].getId(), this.bag[i].getAmount()+this.itemList.get(this.bag[i].getId()));
+					}
+					else {
+						this.itemList.put(this.bag[i].getId(), this.itemList.get(this.bag[i].getId())+1);
+					}
+				}
+				else {
+					if(this.bag[i].isStackable()) {
+						this.itemList.put(this.bag[i].getId(), this.bag[i].getAmount());
+					}
+					else {
+						this.itemList.put(this.bag[i].getId(), 1);
+					}
+				}
+			}
+			else {
+				this.numberFreeSlotBag++;
+			}
+			i++;
+		}
+	}
+	
+	public int getNumberFreeSlotBag() {
+		return this.numberFreeSlotBag;
 	}
 	
 	public Container[] getEquippedBag() {
@@ -56,49 +90,21 @@ public class Bag extends Item implements Cloneable {
 	}
 	
 	public int getNumberItemInBags(int id) {
-		if(itemList.containsKey(id)) {
-			return itemList.get(id);
+		if(this.itemList.containsKey(id)) {
+			return this.itemList.get(id);
 		}
 		return 0;
-	}
-	
-	public HashMap<Item, Integer> getNumberStack() {
-		return numberStack;
 	}
 	
 	public HashMap<Integer, Integer> getItemList() {
-		return itemList;
+		return this.itemList;
 	}
 	
 	public int getItemNumber(Item item) {
-		if(itemList.containsKey(item.getId())) {
-			return itemList.get(item.getId());
+		if(this.itemList.containsKey(item.getId())) {
+			return this.itemList.get(item.getId());
 		}
 		return 0;
-	}
-	
-	public Item getEquals(Item item) {
-		int i = 0;
-		while(i < numberStack.size()) {
-			if(numberStack.get(i) != null && numberStack.get(i).equals(item)) {
-				return getKey(item);
-			}
-			i++;
-		}
-		return null;
-	}
-	
-	public static Item getKey(Item item){
-	    for(Item key : numberStack.keySet()) {
-	       if(key.getId() == item.getId()) {
-	        	return key;
-	        }
-	    }
-	    return null;
-	}
-	
-	public int getNumberBagItem(Item item) {
-		return numberStack.get(item);
 	}
 	
 	public Item getBag(int i) {
@@ -118,11 +124,10 @@ public class Bag extends Item implements Cloneable {
 		if(i >= 0 && i < this.bag.length) {
 			if(number <= 0) {
 				this.bag[i] = null;
-				numberStack.remove(stuff);
 			}
 			else {
 				this.bag[i] = stuff;
-				numberStack.put(stuff, number);
+				this.bag[i].setAmount(number);
 			}
 		}
 	}

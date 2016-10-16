@@ -70,4 +70,8 @@ public class PacketID {
 	public static final byte TRADE_CLOSE = 66;
 	public static final byte TRADE_UNACCEPT = 67;
 	public static final byte TRADE_REMOVE_ITEM = 68;
+	public static final byte TRADE_ADD_ITEM_ERROR = 69;
+	public static final byte TRADE_SEND_ALL_ITEMS = 70;
+	public static final byte FRIEND = 71;
+	public static final byte FRIEND_SEND_INFO = 72;
 }

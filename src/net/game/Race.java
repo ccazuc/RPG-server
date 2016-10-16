@@ -2,30 +2,23 @@ package net.game;
 
 public enum Race {
 
-HUMAN("Human", new Classe[]{Classe.WARRIOR, Classe.PALADIN, Classe.ROGUE, Classe.PRIEST, Classe.MAGE, Classe.WARLOCK}),
-DWARF("Dward", new Classe[]{Classe.WARRIOR, Classe.PALADIN, Classe.HUNTER, Classe.ROGUE, Classe.PRIEST}),
-NIGHTELF("Night elf", new Classe[]{Classe.WARRIOR, Classe.HUNTER, Classe.ROGUE, Classe.PRIEST, Classe.DRUID}),
-GNOME("Gnome", new Classe[]{Classe.WARRIOR, Classe.ROGUE, Classe.MAGE, Classe.WARLOCK}),
-DRAENEI("Draenei", new Classe[]{Classe.WARRIOR, Classe.PALADIN, Classe.HUNTER, Classe.PRIEST, Classe.SHAMAN, Classe.MAGE}),
-ORC("Orc", new Classe[]{Classe.WARRIOR, Classe.HUNTER, Classe.ROGUE, Classe.SHAMAN, Classe.WARLOCK}),
-UNDEAD("Undead", new Classe[]{Classe.WARRIOR, Classe.ROGUE, Classe.PRIEST, Classe.MAGE, Classe.WARLOCK}),
-TAUREN("Tauren", new Classe[]{Classe.WARRIOR, Classe.HUNTER, Classe.SHAMAN, Classe.DRUID}),
-TROLL("Troll", new Classe[]{Classe.WARRIOR, Classe.HUNTER, Classe.ROGUE, Classe.PRIEST, Classe.SHAMAN, Classe.MAGE}),
-BLOODELF("Blood elf", new Classe[]{Classe.PALADIN, Classe.HUNTER, Classe.ROGUE, Classe.PRIEST, Classe.MAGE, Classe.WARLOCK});
+HUMAN((char)0),
+DWARF((char)1),
+NIGHTELF((char)2),
+GNOME((char)3),
+DRAENEI((char)4),
+ORC((char)5),
+UNDEAD((char)6),
+TAUREN((char)7),
+TROLL((char)8),
+BLOODELF((char)9);
 
-    private final Classe[] classe;
-    private final String name;
-    
-    Race(String name, Classe[] classe) {
-        this.classe = classe;
-        this.name = name;
+    private final char value;
+    Race(char value) {
+    	this.value = value;
     }
     
-    public Classe[] getClasse() {
-    	return this.classe;
-    }
-    
-    public String getName() {
-    	return this.name;
+    public char getValue() {
+    	return this.value;
     }
 }

@@ -1,6 +1,6 @@
 package net.game.item;
 
-import net.game.item.bag.BagManager;
+import net.game.item.bag.ContainerManager;
 import net.game.item.gem.GemManager;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
@@ -95,8 +95,8 @@ public class Item implements Cloneable {
 	}
 	
 	public static Item getItem(int id) {
-		if(BagManager.exists(id)) {
-			return BagManager.getClone(id);
+		if(ContainerManager.exists(id)) {
+			return ContainerManager.getClone(id);
 		}
 		if(StuffManager.exists(id)) {
 			return StuffManager.getClone(id);
@@ -114,7 +114,7 @@ public class Item implements Cloneable {
 	}
 	
 	public static boolean exists(int id) {
-		if(BagManager.exists(id)) {
+		if(ContainerManager.exists(id)) {
 			return true;
 		}
 		if(StuffManager.exists(id)) {

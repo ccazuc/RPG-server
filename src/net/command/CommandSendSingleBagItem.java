@@ -32,8 +32,7 @@ public class CommandSendSingleBagItem extends Command {
 		}
 		else if(item.isItem() || item.isPotion()) {
 			int amount = this.connection.readInt();
-			this.player.getBag().setBag(i, item);
-			this.player.getBag().getNumberStack().put(item, amount);
+			this.player.getBag().setBag(i, item, amount);
 		}
 	}
 	

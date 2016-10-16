@@ -14,7 +14,7 @@ import jdo.JDO;
 import jdo.wrapper.MariaDB;
 import net.game.Player;
 import net.game.item.ItemManager;
-import net.game.item.bag.BagManager;
+import net.game.item.bag.ContainerManager;
 import net.game.item.gem.GemManager;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
@@ -48,7 +48,7 @@ public class Server {
 		PotionManager.loadPotions();
 		WeaponManager.loadWeapons();
 		GemManager.loadGems();
-		BagManager.loadBags();
+		ContainerManager.loadContainer();
 		SpellManager.loadSpells();
 		runnable = new MyRunnable();
 		sqlRequest = new Thread(runnable);

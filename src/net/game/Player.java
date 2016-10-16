@@ -36,6 +36,10 @@ public class Player extends Unit {
 	private ItemManager itemManager = new ItemManager();
 	private HashMap<Integer, Spell> spellUnlocked;
 	private ConnectionManager connectionManager;
+	//private ArrayList<Player> friendList;
+	//private ArrayList<Player> ignoreList;
+	private ArrayList<Integer> friendList;
+	private ArrayList<Integer> ignoreList;
 	private Profession secondProfession;
 	private Profession firstProfession;
 	private boolean hasAcceptedTrade;
@@ -57,6 +61,7 @@ public class Player extends Unit {
 	private int accountId;
 	private Stuff[] stuff;
 	private float armor;
+	private Trade trade;
 	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
 	private int level;
 	private Race race;
@@ -108,6 +113,17 @@ public class Player extends Unit {
 		this.characterId = id;
 	}
 	
+	public Trade getTrade() {
+		return this.trade;
+	}
+	
+	public void setTrade(Trade trade) {
+		this.trade = trade;
+	}
+	
+	public void initTrade(Player self, Player other) {
+		this.trade = new Trade(self, other);
+	}
 	public int getAccountId() {
 		return this.accountId;
 	}
@@ -157,6 +173,10 @@ public class Player extends Unit {
 		this.spells = new Shortcut[36];
 		this.stuff = new Stuff[19];
 		this.spellUnlocked = new HashMap<Integer, Spell>();
+		//this.friendList = new ArrayList<Player>();
+		//this.ignoreList = new ArrayList<Player>();
+		this.friendList = new ArrayList<Integer>();
+		this.ignoreList = new ArrayList<Integer>();
 	}
 	
 	public void loadBagItemSQL() {
@@ -251,7 +271,7 @@ public class Player extends Unit {
 			if(this.bag.getBag(i) != null) {
 				if(this.bag.getItemList().containsKey(this.bag.getBag(i).getId())) {
 					if(this.bag.getBag(i).isStackable()) {
-						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getNumberBagItem(this.bag.getBag(i))+this.bag.getItemList().get(this.bag.getBag(i).getId()));
+						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getBag(i).getAmount()+this.bag.getItemList().get(this.bag.getBag(i).getId()));
 					}
 					else {
 						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getItemList().get(this.bag.getBag(i).getId())+1);
@@ -259,7 +279,7 @@ public class Player extends Unit {
 				}
 				else {
 					if(this.bag.getBag(i).isStackable()) {
-						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getNumberBagItem(this.bag.getBag(i)));
+						this.bag.getItemList().put(this.bag.getBag(i).getId(), this.bag.getBag(i).getAmount());
 					}
 					else {
 						this.bag.getItemList().put(this.bag.getBag(i).getId(), 1);
@@ -284,6 +304,30 @@ public class Player extends Unit {
 	
 	public boolean hasAcceptedTrade() {
 		return this.hasAcceptedTrade;
+	}
+	
+	/*public ArrayList<Player> getFriendList() {
+		return this.friendList;
+	}
+	
+	public ArrayList<Player> getIgnoreList() {
+		return this.ignoreList;
+	}*/
+	
+	public ArrayList<Integer> getFriendList() {
+		return this.friendList;
+	}
+	
+	public ArrayList<Integer> getIgnoreList() {
+		return this.ignoreList;
+	}
+	
+	public void addFriend(int id) {
+		this.friendList.add(id);
+	}
+	
+	public void addIgnore(int id) {
+		this.ignoreList.add(id);
 	}
 	
 	public void setHasAcceptedTrade(boolean we) {
@@ -338,7 +382,7 @@ public class Player extends Unit {
 		else {
 			while(i < this.bag.getBag().length) {
 				if(this.bag.getBag(i) != null && this.bag.getBag(i).equals(item)) {
-					this.bag.setBag(i, item, this.bag.getNumberBagItem(this.bag.getBag(i))+amount);
+					this.bag.setBag(i, item, this.bag.getBag(i).getAmount()+amount);
 					this.bag.setBagChange(true);
 					this.itemManager.setBagItems(this);
 					return true;
@@ -438,8 +482,8 @@ public class Player extends Unit {
 			while(i < this.bag.getBag().length && amount > 0) {
 				if(this.bag.getBag(i) != null && this.bag.getBag(i).equals(item)) {
 					int temp = amount;
-					amount = amount-this.bag.getNumberBagItem(this.bag.getBag(i));
-					this.bag.setBag(i, this.bag.getBag(i), Math.max(0, this.bag.getNumberBagItem(this.bag.getBag(i))-temp));
+					amount = amount-this.bag.getBag(i).getAmount();
+					this.bag.setBag(i, this.bag.getBag(i), Math.max(0, this.bag.getBag(i).getAmount())-temp);
 					this.bag.setBagChange(true);
 				}
 				i++;
@@ -670,19 +714,6 @@ public class Player extends Unit {
 	
 	public int getDefaultArmor() {
 		return this.defaultArmor;
-	}
-	
-	public int getNumberItem(Item item) {
-		if(item.isStackable() && this.bag.getNumberStack().containsKey(item)) {
-			return this.bag.getNumberStack().get(item);
-		}
-		return 0;
-	}
-	
-	public void setNumberItem(Item item, int number) {
-		if(item.isStackable()) {
-			this.bag.getNumberStack().put(item, number);
-		}
 	}
 
 	public boolean canEquipStuff(Stuff stuff) {
