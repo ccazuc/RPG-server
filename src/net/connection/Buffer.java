@@ -65,6 +65,7 @@ public class Buffer {
 	}
 	
 	protected final void writeItem(final Item item) {
+		this.player.addItemSentToClient(item.getId());
 		writeChar(item.getItemType().getValue());
 		if(item.getItemType() == ItemType.CONTAINER) {
 			writeContainer((Container)item);
@@ -87,6 +88,7 @@ public class Buffer {
 	}
 	
 	protected final void writeStuff(final Stuff stuff) {
+		this.player.addItemSentToClient(stuff.getId());
 		int i = 0;
 		writeChar(stuff.getType().getValue());
 		writeInt(stuff.getClassType().length);
@@ -114,6 +116,7 @@ public class Buffer {
 	}
 	
 	protected final void writeGem(final Gem gem) {
+		this.player.addItemSentToClient(gem.getId());
 		writeInt(gem.getId());
 		writeString(gem.getSpriteId());
 		writeString(gem.getStuffName());
@@ -128,6 +131,7 @@ public class Buffer {
 	}
 	
 	protected final void writePotion(final Potion potion) {
+		this.player.addItemSentToClient(potion.getId());
 		writeInt(potion.getId());
 		writeString(potion.getSpriteId());
 		writeString(potion.getStuffName());
@@ -135,9 +139,11 @@ public class Buffer {
 		writeInt(potion.getPotionHeal());
 		writeInt(potion.getPotionMana());
 		writeInt(potion.getSellPrice());
+		writeInt(potion.getAmount());
 	}
 	
 	protected final void writeWeapon(final Stuff weapon) {
+		this.player.addItemSentToClient(weapon.getId());
 		int i = 0;
 		writeInt(weapon.getId());
 		writeString(weapon.getStuffName());
@@ -165,6 +171,7 @@ public class Buffer {
 	}
 	
 	protected final void writeContainer(final Container bag) {
+		this.player.addItemSentToClient(bag.getId());
 		writeInt(bag.getId());
 		writeString(bag.getStuffName());
 		writeString(bag.getSpriteId());

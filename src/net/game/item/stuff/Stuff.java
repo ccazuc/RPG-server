@@ -35,7 +35,7 @@ public class Stuff extends Item {
 	private int mana;
 
 	public Stuff(Stuff stuff) {
-		super(stuff.id, stuff.sprite_id, stuff.itemType, stuff.name, stuff.quality, stuff.sellPrice, stuff.maxStack);
+		super(stuff.id, stuff.sprite_id, stuff.itemType, stuff.name, stuff.quality, stuff.sellPrice, 1, 1);
 		this.gemBonusValue = stuff.gemBonusValue;
 		this.gemBonusType = stuff.gemBonusType;
 		this.classType = stuff.classType;
@@ -53,7 +53,7 @@ public class Stuff extends Item {
 	}
 	
 	public Stuff(StuffType type, ClassType[] classType, String sprite_id, int id, String name, int quality, GemColor color1, GemColor color2, GemColor color3, GemBonusType gemBonusType, int gemBonusValue, int level, Wear wear, int critical, int strength, int stamina, int armor, int mana, int sellPrice) {
-		super(id, sprite_id, ItemType.STUFF, name, quality, sellPrice, 1);
+		super(id, sprite_id, ItemType.STUFF, name, quality, sellPrice, 1, 1);
 		this.gemBonusValue = gemBonusValue;
 		this.gemBonusType = gemBonusType;
 		this.classType = classType;
@@ -71,7 +71,7 @@ public class Stuff extends Item {
 	}
 
 	public Stuff(Stuff weapon, @SuppressWarnings("unused") int i) { //weapon constructor
-		super(weapon.id, weapon.sprite_id, weapon.itemType, weapon.name, weapon.quality, weapon.sellPrice, weapon.maxStack);
+		super(weapon.id, weapon.sprite_id, weapon.itemType, weapon.name, weapon.quality, weapon.sellPrice, 1, 1);
 		this.gemBonusValue = weapon.gemBonusValue;
 		this.gemBonusType = weapon.gemBonusType;
 		this.weaponType = weapon.weaponType;
@@ -89,7 +89,7 @@ public class Stuff extends Item {
 	}
 	
 	public Stuff(int id, String name, String sprite_id, ClassType[] classType, WeaponType weaponType, WeaponSlot weaponSlot, int quality, GemColor color1, GemColor color2, GemColor color3, GemBonusType gemBonusType, int gemBonusValue, int level, int armor, int stamina, int mana, int critical, int strength, int sellPrice) {
-		super(id, sprite_id, ItemType.WEAPON, name, quality, sellPrice, 1);
+		super(id, sprite_id, ItemType.WEAPON, name, quality, sellPrice, 1, 1);
 		this.gemBonusValue = gemBonusValue;
 		this.gemBonusType = gemBonusType;
 		this.weaponType = weaponType;

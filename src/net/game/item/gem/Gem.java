@@ -13,7 +13,7 @@ public class Gem extends Item {
 	private GemColor color;
 
 	public Gem(Gem gem) {
-		super(gem.id, gem.sprite_id, gem.itemType, gem.name, gem.quality, gem.sellPrice, 1);
+		super(gem.id, gem.sprite_id, gem.itemType, gem.name, gem.quality, gem.sellPrice, 1, 1);
 		this.strength = gem.strength;
 		this.critical = gem.critical;
 		this.stamina = gem.stamina;
@@ -23,7 +23,7 @@ public class Gem extends Item {
 	}
 	
 	public Gem(int id, String sprite_id, String name, int quality, GemColor color, int strength, int stamina, int armor, int mana, int critical, int sellPrice) {
-		super(id, sprite_id, ItemType.GEM, name, quality, sellPrice, 1);
+		super(id, sprite_id, ItemType.GEM, name, quality, sellPrice, 1, 1);
 		this.strength = strength;
 		this.critical = critical;
 		this.stamina = stamina;

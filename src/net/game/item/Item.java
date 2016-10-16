@@ -15,8 +15,9 @@ public class Item implements Cloneable {
 	protected String name;
 	protected int quality;
 	protected int id;
+	protected int amount;
 	
-	public Item(int id, String sprite_id, ItemType itemType, String name, int quality, int sellPrice, int maxStack) {
+	public Item(int id, String sprite_id, ItemType itemType, String name, int quality, int sellPrice, int maxStack, int amount) {
 		this.sellPrice = sellPrice;
 		this.sprite_id = sprite_id;
 		this.maxStack = maxStack;
@@ -24,12 +25,21 @@ public class Item implements Cloneable {
 		this.quality = quality;
 		this.name = name;
 		this.id = id;
+		this.amount = amount;
 	}
 	
 	public Item() {}
 
 	public int getId() {
 		return this.id;
+	}
+	
+	public void setAmount(int amount) {
+		this.amount = amount;
+	}
+	
+	public int getAmount() {
+		return this.amount;
 	}
 	
 	public String getSpriteId() {

@@ -11,7 +11,7 @@ public class Container extends Item {
 	private int size;
 	
 	public Container(Container bag) {
-		super(bag.id, bag.sprite_id, bag.itemType, bag.name, bag.quality, bag.sellPrice, bag.maxStack);
+		super(bag.id, bag.sprite_id, bag.itemType, bag.name, bag.quality, bag.sellPrice, 1, 1);
 		this.sprite_id = bag.sprite_id;
 		this.name = bag.name;
 		this.size = bag.size;
@@ -19,7 +19,7 @@ public class Container extends Item {
 	}
 	
 	public Container(int id,  String name, String sprite_id, int quality, int size, int sellPrice) {
-		super(id, sprite_id, ItemType.CONTAINER, name, quality, sellPrice, 1);
+		super(id, sprite_id, ItemType.CONTAINER, name, quality, sellPrice, 1, 1);
 		this.sprite_id = sprite_id;
 		this.name = name;
 		this.size = size;
