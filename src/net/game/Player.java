@@ -42,7 +42,6 @@ public class Player extends Unit {
 	private ArrayList<Integer> ignoreList;
 	private Profession secondProfession;
 	private Profession firstProfession;
-	private boolean hasAcceptedTrade;
 	private WeaponType[] weaponType;
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
@@ -302,10 +301,6 @@ public class Player extends Unit {
 		return number;
 	}*/
 	
-	public boolean hasAcceptedTrade() {
-		return this.hasAcceptedTrade;
-	}
-	
 	/*public ArrayList<Player> getFriendList() {
 		return this.friendList;
 	}
@@ -328,10 +323,6 @@ public class Player extends Unit {
 	
 	public void addIgnore(int id) {
 		this.ignoreList.add(id);
-	}
-	
-	public void setHasAcceptedTrade(boolean we) {
-		this.hasAcceptedTrade = we;
 	}
 	
 	public Unit getTarget() {

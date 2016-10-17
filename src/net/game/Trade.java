@@ -7,12 +7,15 @@ public class Trade {
 
 	private Player tradeInit;
 	private Player tradeTarget;
+	private boolean tradeInitAccepted;
+	private boolean tradeTargetAccepted;
 	private Item[] tradeInitTable;
 	private Item[] tradeTargetTable;
 	
 	public Trade(Player tradeInit, Player tradeTarget) {
 		this.tradeInit = tradeInit;
 		this.tradeTarget = tradeTarget;
+		init();
 	}
 	
 	public void init() {
@@ -34,6 +37,15 @@ public class Trade {
 					this.tradeTargetTable[slot].setAmount(amount);
 				}
 			}
+		}
+	}
+	
+	public void setTradeState(Player player, boolean we) {
+		if(player == this.tradeInit) {
+			this.tradeInitAccepted = we;
+		}
+		else if(player == this.tradeTarget) {
+			this.tradeTargetAccepted = we;
 		}
 	}
 	
@@ -71,5 +83,13 @@ public class Trade {
 	
 	public Item[] getTradeTargetTable() {
 		return this.tradeTargetTable;
+	}
+	
+	public boolean getTradeInitState() {
+		return this.tradeInitAccepted;
+	}
+	
+	public boolean getTradeTargetState() {
+		return this.tradeTargetAccepted;
 	}
  }

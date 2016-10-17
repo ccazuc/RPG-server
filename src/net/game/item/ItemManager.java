@@ -266,6 +266,7 @@ public class ItemManager {
 				i++;
 			}
 			connection.send();
+			player.getBag().updateBagItem();
 		}
 	}
 	
