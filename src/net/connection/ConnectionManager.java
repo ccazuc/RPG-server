@@ -3,13 +3,16 @@ package net.connection;
 import static net.connection.PacketID.*;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
+import net.Server;
 import net.command.Command;
 import net.command.CommandAddItem;
 import net.command.CommandCreateCharacter;
 import net.command.CommandDeleteCharacter;
+import net.command.CommandFriend;
 import net.command.CommandLoadCharacter;
 import net.command.CommandLogin;
 import net.command.CommandLogout;
@@ -36,9 +39,13 @@ public class ConnectionManager {
 	
 	private Player player;
 	private Connection connection;
+	private static SocketChannel authSocket;
+	private static Connection authConnection;
 	private HashMap<Integer, Command> commandList = new HashMap<Integer, Command>();
 	private final static int TIMEOUT_TIMER = 10000;
 	private byte lastPacketReaded;
+	private final static String AUTH_SERVER_IP = "127.0.0.1";
+	private final static int AUTH_SERVER_PORT = 5721;
 	
 	public ConnectionManager(Player player, SocketChannel socket) {
 		this.player = player;
@@ -66,6 +73,29 @@ public class ConnectionManager {
 		this.commandList.put((int)UPDATE_STATS, new CommandUpdateStats(this));
 		this.commandList.put((int)CHARACTER_LOGOUT, new CommandLogoutCharacter(this));
 		this.commandList.put((int)TRADE, new CommandTrade(this));
+		this.commandList.put((int)FRIEND, new CommandFriend(this));
+	}
+	
+	public final boolean connectAuthServer() {
+		try {
+			authSocket = SocketChannel.open();
+			authSocket.socket().connect(new InetSocketAddress(AUTH_SERVER_IP, AUTH_SERVER_PORT), 5000);
+			if(authSocket.isConnected()) {
+				authSocket.socket().setTcpNoDelay(true);
+				authSocket.configureBlocking(false);
+				if(authConnection == null) {
+					authConnection = new Connection(authSocket);
+				}
+				else {
+					authConnection.setSocket(authSocket);
+				}
+				return true;
+			}
+		}
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public void read() {
@@ -80,6 +110,17 @@ public class ConnectionManager {
 		catch (IOException e) {
 			e.printStackTrace();
 			this.player.close();
+		}
+	}
+	
+	public static void readAuthServer() {
+		try {
+			if(authConnection.read() == 1) {
+				readAuthPacket();
+			}
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 	
@@ -108,6 +149,17 @@ public class ConnectionManager {
 			}
 			else {
 				System.out.println("Unknown packet: "+(int)packetId+", last packet readed: "+this.lastPacketReaded+" for player "+this.player.getAccountId());
+			}
+		}
+	}
+	
+	private static void readAuthPacket() {
+		while(authConnection != null && authConnection.hasRemaining()) {
+			byte packetId = authConnection.readByte();
+			if(packetId == PacketID.LOGIN) {
+				double key = authConnection.readDouble();
+				String ip = authConnection.readString();
+				Server.addKey(key, ip);
 			}
 		}
 	}

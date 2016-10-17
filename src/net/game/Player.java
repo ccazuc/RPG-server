@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.Server;
+import net.command.CommandTrade;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
@@ -33,6 +34,7 @@ public class Player extends Unit {
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private CharacterManager characterManager = new CharacterManager();
 	private SpellBarManager spellBarManager = new SpellBarManager();
+	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
 	private ItemManager itemManager = new ItemManager();
 	private HashMap<Integer, Spell> spellUnlocked;
 	private ConnectionManager connectionManager;
@@ -259,6 +261,7 @@ public class Player extends Unit {
 	
 	public void close() {
 		this.connectionManager.getConnection().close();
+		CommandTrade.closeTrade(this);
 		Server.removeNonLoggedPlayer(this);
 		Server.removeLoggedPlayer(this);
 	}
@@ -317,8 +320,12 @@ public class Player extends Unit {
 		return this.ignoreList;
 	}
 	
-	public void addFriend(int id) {
-		this.friendList.add(id);
+	public boolean addFriend(int id) {
+		if(this.friendList.size() < MAXIMUM_AMOUNT_FRIENDS) {
+			this.friendList.add(id);
+			return true;
+		}
+		return false;
 	}
 	
 	public void addIgnore(int id) {

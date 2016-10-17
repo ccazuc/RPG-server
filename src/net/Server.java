@@ -12,6 +12,7 @@ import java.util.Map;
 
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
+import net.connection.ConnectionManager;
 import net.game.Player;
 import net.game.item.ItemManager;
 import net.game.item.bag.ContainerManager;
@@ -25,7 +26,6 @@ import net.sql.SQLRequest;
 
 public class Server {
 	
-	
 	private final static int PORT = 5720;
 	private static JDO jdo;
 	private static ServerSocketChannel serverSocketChannel;
@@ -35,6 +35,7 @@ public class Server {
 	private static ArrayList<Integer> playerWaitingForKick = new ArrayList<Integer>();
 	private static Thread sqlRequest;
 	private static MyRunnable runnable;
+	private static HashMap<Double, String> authList = new HashMap<Double, String>();
 	
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
@@ -61,6 +62,7 @@ public class Server {
 			}
 			time = System.currentTimeMillis();
 			read();
+			readAuthServer();
 			kickPlayers();
 			if((System.currentTimeMillis()-time)/1000d >= 0.05) {
 				System.out.println("Loop too long: "+(System.currentTimeMillis()-time)/1000d);
@@ -70,6 +72,10 @@ public class Server {
 	
 	public static void addNewRequest(SQLRequest request) {
 		runnable.addRequest(request);
+	}
+	
+	private static void readAuthServer() {
+		ConnectionManager.readAuthServer();
 	}
 	
 	private static void kickPlayers() {
@@ -94,6 +100,17 @@ public class Server {
 				player.getConnectionManager().read();
 			}
 		}
+	}
+	
+	public static boolean keyMatch(double key, String ip) {
+		if(authList.containsKey(key)) {
+			return authList.get(key).equals(ip);
+		}
+		return false;
+	}
+	
+	public static void addKey(double key, String ip) {
+		authList.put(key, ip);
 	}
 	
 	public static Map<Integer, Player> getPlayerList() {

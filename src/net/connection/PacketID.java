@@ -74,4 +74,6 @@ public class PacketID {
 	public static final byte TRADE_SEND_ALL_ITEMS = 70;
 	public static final byte FRIEND = 71;
 	public static final byte FRIEND_SEND_INFO = 72;
+	public static final byte FRIEND_ADD = 73;
+	public static final byte LOGIN_NEW_KEY = 74;
 }

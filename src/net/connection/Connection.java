@@ -21,6 +21,16 @@ public class Connection {
 		this.wBuffer = new Buffer(socket, player);
 		this.rBuffer = new Buffer(socket, player);
 	}
+	
+	public Connection(SocketChannel socket) {
+		this.socket = socket;
+		this.wBuffer = new Buffer(socket);
+		this.rBuffer = new Buffer(socket);
+	}
+	
+	public void setSocket(SocketChannel socket) {
+		this.socket = socket;
+	}
 
 	public final void close() {
 		try {

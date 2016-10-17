@@ -116,13 +116,15 @@ public class CommandTrade extends Command {
 		}
 	}
 	
-	private static void closeTrade(Player player) {
+	public static void closeTrade(Player player) {
 		tradeCancel(player);
 		tradeCancel(player.getPlayerTrade());
 		player.setTrade(null);
-		player.getPlayerTrade().setTrade(null);
-		player.getPlayerTrade().setPlayerTrade(null);
-		player.setPlayerTrade(null);
+		if(player.getPlayerTrade() != null) {
+			player.getPlayerTrade().setTrade(null);
+			player.getPlayerTrade().setPlayerTrade(null);
+			player.setPlayerTrade(null);
+		}
 	}
 	
 	public static void sendTradeItems(Player tradeInit) {
@@ -251,8 +253,10 @@ public class CommandTrade extends Command {
 	}
 	
 	private static void tradeCancel(Player player) {
-		player.getConnection().writeByte(PacketID.TRADE);
-		player.getConnection().writeByte(PacketID.TRADE_CLOSE);
-		player.getConnection().send();
+		if(player != null) {
+			player.getConnection().writeByte(PacketID.TRADE);
+			player.getConnection().writeByte(PacketID.TRADE_CLOSE);
+			player.getConnection().send();
+		}
 	}
 }

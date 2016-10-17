@@ -26,6 +26,10 @@ public class Buffer {
 		this.socket = socket;
 		this.player = player;
 	}
+	public Buffer(SocketChannel socket) {
+		this.buffer = ByteBuffer.allocateDirect(16000);
+		this.socket = socket;
+	}
 	
 	protected final void send() throws IOException {
 		if(this.socket.isOpen()) {

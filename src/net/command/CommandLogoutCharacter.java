@@ -11,5 +11,6 @@ public class CommandLogoutCharacter extends Command {
 	@Override
 	public void read() {
 		this.player.resetDatas();
+		CommandTrade.closeTrade(this.player);
 	}
 }
