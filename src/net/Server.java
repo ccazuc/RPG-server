@@ -1,9 +1,9 @@
 package net;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +14,7 @@ import java.util.Map;
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
 import net.connection.ConnectionManager;
+import net.connection.Key;
 import net.game.Player;
 import net.game.item.ItemManager;
 import net.game.item.bag.ContainerManager;
@@ -24,7 +25,6 @@ import net.game.item.weapon.WeaponManager;
 import net.game.spell.SpellManager;
 import net.sql.MyRunnable;
 import net.sql.SQLRequest;
-import net.utils.Hash;
 
 public class Server {
 	
@@ -36,7 +36,7 @@ public class Server {
 	private static ArrayList<Integer> playerWaitingForKick = new ArrayList<Integer>();
 	private static Thread sqlRequest;
 	private static MyRunnable runnable;
-	private static HashMap<Double, String> authList = new HashMap<Double, String>();
+	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
 	
 	private final static String REALM_NAME = "Main Server";
 	private final static int REALM_ID = 10;
@@ -64,6 +64,7 @@ public class Server {
 		System.out.println("Init took "+(System.currentTimeMillis()-time)+" ms.");
 		ConnectionManager.connectAuthServer();
 		ConnectionManager.registerToAuthServer();
+		ConnectionManager.initAuthCommand();
 		while(true) {
 			if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);
@@ -109,17 +110,6 @@ public class Server {
 				player.getConnectionManager().read();
 			}
 		}
-	}
-	
-	public static boolean keyMatch(double key, String ip) {
-		if(authList.containsKey(key)) {
-			return authList.get(key).equals(ip);
-		}
-		return false;
-	}
-	
-	public static void addKey(double key, String ip) {
-		authList.put(key, ip);
 	}
 	
 	public static Map<Integer, Player> getPlayerList() {
@@ -187,6 +177,23 @@ public class Server {
 			}
 		}
 		return null;
+	}
+	
+	public static void addKey(Key key) {
+		keyList.put(key.getValue(), key);
+	}
+	
+	public static boolean hasKey(double key, int account_id) {
+		if(keyList.containsKey(key)) {
+			if(keyList.get(key).getAccountId() == account_id) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static void removeKey(double key) {
+		keyList.remove(key);
 	}
 	
 	public static String getRealmName() {

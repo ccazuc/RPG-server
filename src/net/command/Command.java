@@ -14,6 +14,10 @@ public class Command {
 		this.player = connectionManager.getPlayer();
 	}
 	
+	public Command(final Connection connection) {
+		this.connection = connection;
+	}
+	
 	public void read() {}
 	public void write() {}
 }

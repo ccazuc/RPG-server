@@ -7,7 +7,6 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
-import net.Server;
 import net.command.Command;
 import net.command.CommandAddItem;
 import net.command.CommandCreateCharacter;
@@ -15,6 +14,7 @@ import net.command.CommandDeleteCharacter;
 import net.command.CommandFriend;
 import net.command.CommandLoadCharacter;
 import net.command.CommandLogin;
+import net.command.CommandLoginRealm;
 import net.command.CommandLogout;
 import net.command.CommandLogoutCharacter;
 import net.command.CommandPing;
@@ -43,6 +43,7 @@ public class ConnectionManager {
 	private static SocketChannel authSocket;
 	private static Connection authConnection;
 	private HashMap<Integer, Command> commandList = new HashMap<Integer, Command>();
+	private static HashMap<Integer, Command> authCommand = new HashMap<Integer, Command>();
 	private final static int TIMEOUT_TIMER = 10000;
 	private byte lastPacketReaded;
 	private final static String AUTH_SERVER_IP = "127.0.0.1";
@@ -75,8 +76,12 @@ public class ConnectionManager {
 		this.commandList.put((int)CHARACTER_LOGOUT, new CommandLogoutCharacter(this));
 		this.commandList.put((int)TRADE, new CommandTrade(this));
 		this.commandList.put((int)FRIEND, new CommandFriend(this));
+		this.commandList.put((int)LOGIN_REALM, new CommandLoginRealm(this));
 	}
 	
+	public static void initAuthCommand() {
+		authCommand.put((int)LOGIN_REALM, new CommandLoginRealm(authConnection));
+	}
 	public static final boolean connectAuthServer() {
 		try {
 			authSocket = SocketChannel.open();
@@ -166,10 +171,11 @@ public class ConnectionManager {
 	private static void readAuthPacket() {
 		while(authConnection != null && authConnection.hasRemaining()) {
 			byte packetId = authConnection.readByte();
-			if(packetId == PacketID.LOGIN) {
-				double key = authConnection.readDouble();
-				String ip = authConnection.readString();
-				Server.addKey(key, ip);
+			if(authCommand.containsKey((int)packetId)) {
+				authCommand.get((int)packetId).read();
+			}
+			else {
+				System.out.println("Unknown packet: "+(int)packetId+" for authServer");
 			}
 		}
 	}

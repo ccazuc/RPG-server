@@ -77,4 +77,9 @@ public class PacketID {
 	public static final byte FRIEND_ADD = 73;
 	public static final byte LOGIN_NEW_KEY = 74;
 	public static final byte REGISTER_WORLD_SERVER = 75;
+	public static final byte SEND_REALM_LIST = 76;
+	public static final byte LOGIN_REALM = 77;
+	public static final byte LOGIN_REALM_ACCEPTED = 78;
+	public static final byte LOGIN_REALM_REQUEST = 79;
+	public static final byte LOGIN_REALM_SUCCESS = 80;
 }
