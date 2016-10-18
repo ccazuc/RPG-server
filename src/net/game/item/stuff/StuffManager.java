@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 import jdo.JDOStatement;
-import net.Servers;
+import net.Server;
 import net.game.ClassType;
 import net.game.Wear;
 import net.game.item.gem.GemBonusType;
@@ -19,7 +19,7 @@ public class StuffManager {
 	
 	public static void loadStuffs() throws SQLException {
 		if(loadStuff == null) {
-			loadStuff = Servers.getJDO().prepare("SELECT id, type, name, class, wear, sprite_id, quality, gem_slot1, gem_slot2, gem_slot3, gem_bonus_type, gem_bonus_value, level, armor, stamina, mana, critical, strength, sellprice FROM item_stuff");
+			loadStuff = Server.getJDO().prepare("SELECT id, type, name, class, wear, sprite_id, quality, gem_slot1, gem_slot2, gem_slot3, gem_bonus_type, gem_bonus_value, level, armor, stamina, mana, critical, strength, sellprice FROM item_stuff");
 		}
 		loadStuff.clear();
 		loadStuff.execute();

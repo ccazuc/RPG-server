@@ -3,7 +3,7 @@ package net.command;
 import java.sql.SQLException;
 
 import jdo.JDOStatement;
-import net.Servers;
+import net.Server;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.Player;
@@ -26,7 +26,7 @@ public class CommandSelectScreenLoadCharacters extends Command {
 	private void write(int accountId) {
 		try {
 			if(write_statement == null) {
-				write_statement = Servers.getJDO().prepare("SELECT character_id, name, experience, class, race FROM `character` WHERE account_id = ?");
+				write_statement = Server.getJDO().prepare("SELECT character_id, name, experience, class, race FROM `character` WHERE account_id = ?");
 			}
 			boolean hasSendId = true;
 			write_statement.clear();

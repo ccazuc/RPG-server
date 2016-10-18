@@ -1,6 +1,6 @@
 package net.command;
 
-import net.Servers;
+import net.Server;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.Player;
@@ -16,7 +16,7 @@ public class CommandFriend extends Command {
 		byte packetId = this.connection.readByte();
 		if(packetId == PacketID.FRIEND_ADD) {
 			String name = this.connection.readString();
-			Player player = Servers.getCharacter(name);
+			Player player = Server.getCharacter(name);
 			if(player != null) {
 				if(!name.equals(this.player.getName())) {
 					if(this.player.addFriend(player.getCharacterId())) {

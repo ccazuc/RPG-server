@@ -3,7 +3,7 @@ package net.command;
 import java.sql.SQLException;
 
 import jdo.JDOStatement;
-import net.Servers;
+import net.Server;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 
@@ -19,7 +19,7 @@ public class CommandDeleteCharacter extends Command {
 	public void read() {
 		if(delete_character == null) {
 			try {
-				delete_character = Servers.getJDO().prepare("DELETE FROM `character` WHERE character_id = ?");
+				delete_character = Server.getJDO().prepare("DELETE FROM `character` WHERE character_id = ?");
 			} 
 			catch (SQLException e) {
 				e.printStackTrace();

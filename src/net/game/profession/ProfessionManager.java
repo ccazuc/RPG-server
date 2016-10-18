@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import jdo.JDOStatement;
-import net.Servers;
+import net.Server;
 import net.game.Player;
 import net.game.item.Item;
 
@@ -24,7 +24,7 @@ public class ProfessionManager {
 	
 	public void loadUnlockedCraft(Player player) throws SQLException {
 		if(loadUnlockedCraft == null) {
-			loadUnlockedCraft = Servers.getJDO().prepare("SELECT craft_id FROM craft_unlocked WHERE character_id = ?");
+			loadUnlockedCraft = Server.getJDO().prepare("SELECT craft_id FROM craft_unlocked WHERE character_id = ?");
 		}
 		loadUnlockedCraft.clear();
 		loadUnlockedCraft.putInt(player.getCharacterId());
@@ -38,7 +38,7 @@ public class ProfessionManager {
 	public void addUnlockedCraft(Player player, int id) throws SQLException {
 		if(!this.unlockedCraftList.contains(id)) {
 			if(addUnlockedCraft == null) {
-				addUnlockedCraft = Servers.getJDO().prepare("INSERT INTO craft_unlocked (character_id, craft_id) VALUES (?, ?)");
+				addUnlockedCraft = Server.getJDO().prepare("INSERT INTO craft_unlocked (character_id, craft_id) VALUES (?, ?)");
 			}
 			this.unlockedCraftList.add(id);
 			addUnlockedCraft.clear();
@@ -50,7 +50,7 @@ public class ProfessionManager {
 
 	public static void LoadAllCraft() throws SQLException {	
 		if(loadAllCraft == null) {
-			loadAllCraft = Servers.getJDO().prepare("SELECT id, level, craft_time, item1, item2, item3, item4, item5, item6 FROM craft_item");
+			loadAllCraft = Server.getJDO().prepare("SELECT id, level, craft_time, item1, item2, item3, item4, item5, item6 FROM craft_item");
 		}
 		loadAllCraft.clear();
 		loadAllCraft.execute();
@@ -119,7 +119,7 @@ public class ProfessionManager {
 			//craftableList.add(new CraftableItem(id, level, item, ressource1, ressource1Amount, ressource2, ressource2Amount, ressource3, ressource3Amount, ressource4, ressource4Amount, ressource5, ressource5Amount, ressource6, ressource6Amount));
 		}
 		if(loadCraftableItem == null) {
-			loadCraftableItem = Servers.getJDO().prepare("SELECT id, name, item1, item2, item3, item4, item5, item6, item7, item8, item9, item10 FROM craft_category");
+			loadCraftableItem = Server.getJDO().prepare("SELECT id, name, item1, item2, item3, item4, item5, item6, item7, item8, item9, item10 FROM craft_category");
 		}
 		loadCraftableItem.clear();
 		loadCraftableItem.execute();
@@ -139,7 +139,7 @@ public class ProfessionManager {
 			categoryList.add(new Category(id, name, item1, item2, item3, item4, item5, item6, item7, item8, item9, item10));
 		}
 		if(loadCategory == null) {
-			loadCategory = Servers.getJDO().prepare("SELECT name, id, category1, category2, category3, category4, category5, category6, category7, category8 FROM craft_profession");
+			loadCategory = Server.getJDO().prepare("SELECT name, id, category1, category2, category3, category4, category5, category6, category7, category8 FROM craft_profession");
 		}
 		loadCategory.clear();
 		loadCategory.execute();

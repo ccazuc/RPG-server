@@ -3,7 +3,7 @@ package net.command;
 import java.sql.SQLException;
 
 import jdo.JDOStatement;
-import net.Servers;
+import net.Server;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 
@@ -20,7 +20,7 @@ public class CommandCreateCharacter extends Command {
 	public void read() {
 		if(create_character == null) {
 			try {
-				create_character = Servers.getJDO().prepare("INSERT INTO `character` (account_id, name, level, class, race) VALUES (?, ?, 1, ?, ?)");
+				create_character = Server.getJDO().prepare("INSERT INTO `character` (account_id, name, level, class, race) VALUES (?, ?, 1, ?, ?)");
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
@@ -74,7 +74,7 @@ public class CommandCreateCharacter extends Command {
 			return false;
 		}
 		if(check_character == null) {
-			check_character = Servers.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
+			check_character = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
 		}
 		check_character.clear();
 		check_character.putString(name);

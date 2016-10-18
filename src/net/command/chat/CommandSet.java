@@ -1,6 +1,6 @@
 package net.command.chat;
 
-import net.Servers;
+import net.Server;
 import net.command.Command;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
@@ -17,7 +17,7 @@ public class CommandSet extends Command {
 		byte packetID = this.connection.readByte();
 		int id = this.connection.readInt();
 		int value = this.connection.readInt();
-		Player player = id == this.player.getCharacterId() ? this.player : Servers.getCharacter(id);
+		Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
 		if(this.player.getAccountRank() >= 1) {
 			if(packetID == PacketID.CHAT_SET_STAMINA) {
 				if(value >= 0 && value <= this.player.getMaxStamina()) {

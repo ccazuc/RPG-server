@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 import jdo.JDOStatement;
-import net.Servers;
+import net.Server;
 
 public class GemManager {
 
@@ -13,7 +13,7 @@ public class GemManager {
 	
 	public static void loadGems() throws SQLException {
 		if(loadGems == null) {
-			loadGems = Servers.getJDO().prepare("SELECT id, sprite_id, name, quality, color, sellprice, pa, intellect, stamina, defense, mp5, mana, critical, spell_critical, spell_damage, heal FROM item_gem");
+			loadGems = Server.getJDO().prepare("SELECT id, sprite_id, name, quality, color, sellprice, pa, intellect, stamina, defense, mp5, mana, critical, spell_critical, spell_damage, heal FROM item_gem");
 		}
 		loadGems.clear();
 		loadGems.execute();

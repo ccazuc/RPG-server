@@ -1,6 +1,6 @@
 package net.command.chat;
 
-import net.Servers;
+import net.Server;
 import net.command.Command;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
@@ -20,7 +20,7 @@ public class CommandPlayerInfo extends Command {
 				write(this.player);
 			}
 			else {
-				write(Servers.getPlayerList().get(id));
+				write(Server.getPlayerList().get(id));
 			}
 		}
 		else {

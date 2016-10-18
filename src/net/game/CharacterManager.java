@@ -3,7 +3,7 @@ package net.game;
 import java.sql.SQLException;
 
 import jdo.JDOStatement;
-import net.Servers;
+import net.Server;
 
 public class CharacterManager {
 
@@ -33,7 +33,7 @@ public class CharacterManager {
 	
 	public void loadCharacterInfo(Player player) throws SQLException {
 		if(loadCharacterInfo == null) {
-			loadCharacterInfo = Servers.getJDO().prepare("SELECT name, class, race, experience, gold FROM `character` WHERE character_id = ?");
+			loadCharacterInfo = Server.getJDO().prepare("SELECT name, class, race, experience, gold FROM `character` WHERE character_id = ?");
 		}
 		loadCharacterInfo.clear();
 		loadCharacterInfo.putInt(player.getCharacterId());
@@ -60,7 +60,7 @@ public class CharacterManager {
 	
 	public void loadSpellUnlocked(Player player) throws SQLException {
 		if(loadSpellUnlocked == null) {
-			loadSpellUnlocked = Servers.getJDO().prepare("SELECT id FROM character_spell_unlocked WHERE character_id = ?");
+			loadSpellUnlocked = Server.getJDO().prepare("SELECT id FROM character_spell_unlocked WHERE character_id = ?");
 		}
 		loadSpellUnlocked.clear();
 		loadSpellUnlocked.putInt(player.getCharacterId());

@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
-import net.Servers;
+import net.Server;
 import net.command.Command;
 import net.command.CommandAddItem;
 import net.command.CommandCreateCharacter;
@@ -19,6 +19,7 @@ import net.command.CommandLogout;
 import net.command.CommandLogoutCharacter;
 import net.command.CommandPing;
 import net.command.CommandPingConfirmed;
+import net.command.CommandRegisterToAuthServer;
 import net.command.CommandSelectScreenLoadCharacters;
 import net.command.CommandSendSingleBagItem;
 import net.command.CommandSpellCast;
@@ -122,7 +123,14 @@ public class ConnectionManager {
 			} 
 			catch (IOException e) {
 				e.printStackTrace();
+				authConnection = null;
 			}
+		}
+	}
+	
+	public static void registerToAuthServer() {
+		if(authConnection != null) {
+			CommandRegisterToAuthServer.write(authConnection);
 		}
 	}
 	
@@ -161,7 +169,7 @@ public class ConnectionManager {
 			if(packetId == PacketID.LOGIN) {
 				double key = authConnection.readDouble();
 				String ip = authConnection.readString();
-				Servers.addKey(key, ip);
+				Server.addKey(key, ip);
 			}
 		}
 	}

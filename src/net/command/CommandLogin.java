@@ -2,7 +2,7 @@ package net.command;
 import java.sql.SQLException;
 
 import jdo.JDOStatement;
-import net.Servers;
+import net.Server;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.sql.SQLRequest;
@@ -45,7 +45,7 @@ public class CommandLogin extends Command {
 						if((ban == 0 && banDuration > 0) || (ban == 1 && banDuration < System.currentTimeMillis())) {
 							updateBan(id, ban, banDuration);
 						}
-						if(Servers.getPlayerList().containsKey(id)) {
+						if(Server.getPlayerList().containsKey(id)) {
 							this.player.getConnectionManager().getConnection().writeByte(PacketID.LOGIN);
 							this.player.getConnectionManager().getConnection().writeByte(PacketID.ALREADY_LOGGED);
 							this.player.getConnectionManager().getConnection().send();
@@ -59,8 +59,8 @@ public class CommandLogin extends Command {
 						this.player.getConnectionManager().getConnection().send();
 						this.player.setAccountId(id);
 						this.player.setAccountRank(rank);
-						Servers.removeNonLoggedPlayer(this.player);
-						Servers.addLoggedPlayer(this.player);
+						Server.removeNonLoggedPlayer(this.player);
+						Server.addLoggedPlayer(this.player);
 						return;
 					}
 					else {
@@ -93,12 +93,12 @@ public class CommandLogin extends Command {
 		loginRequest.setPlayer(this.player);
 		loginRequest.setUserName(this.connection.readString().toLowerCase());
 		loginRequest.setPassword(this.connection.readString());
-		Servers.addNewRequest(loginRequest);
+		Server.addNewRequest(loginRequest);
 	}
 	
 	static void updateBan(int id, int ban, int banDuration) throws SQLException {
 		if(write_statement == null) {
-			write_statement = Servers.getJDO().prepare("UPDATE banned, ban_duration FROM acount WHERE id = ?");
+			write_statement = Server.getJDO().prepare("UPDATE banned, ban_duration FROM acount WHERE id = ?");
 		}
 		write_statement.clear();
 		write_statement.putInt(id);

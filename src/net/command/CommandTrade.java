@@ -1,6 +1,6 @@
 package net.command;
 
-import net.Servers;
+import net.Server;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.Player;
@@ -17,7 +17,7 @@ public class CommandTrade extends Command {
 		byte packetID = this.connection.readByte();
 		if(packetID == PacketID.TRADE_NEW) { //declare a new trade
 			int traded = this.connection.readInt();
-			Player trade = Servers.getCharacter(traded);
+			Player trade = Server.getCharacter(traded);
 			//System.out.println(trade.getName()+" "+this.player.getPlayerTrade()+" "+trade.getPlayerTrade());
 			if(trade != null) {
 				if(this.player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading

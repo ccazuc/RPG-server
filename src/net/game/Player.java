@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import net.Servers;
+import net.Server;
 import net.command.CommandTrade;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
@@ -262,8 +262,8 @@ public class Player extends Unit {
 	public void close() {
 		this.connectionManager.getConnection().close();
 		CommandTrade.closeTrade(this);
-		Servers.removeNonLoggedPlayer(this);
-		Servers.removeLoggedPlayer(this);
+		Server.removeNonLoggedPlayer(this);
+		Server.removeLoggedPlayer(this);
 	}
 	
 	public void updateBagItem() {

@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,7 +28,6 @@ import net.utils.Hash;
 
 public class Server {
 	
-	private final static int PORT = 5720;
 	private static JDO jdo;
 	private static ServerSocketChannel serverSocketChannel;
 	private static SocketChannel clientSocket;
@@ -38,7 +38,13 @@ public class Server {
 	private static MyRunnable runnable;
 	private static HashMap<Double, String> authList = new HashMap<Double, String>();
 	
+	private final static String REALM_NAME = "Main Server";
+	private final static int REALM_ID = 10;
+	private final static int PORT = 5720;
+	
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		System.out.println("WORLD SERVER");
+		long time = System.currentTimeMillis();
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
 		nonLoggedPlayer = Collections.synchronizedList(nonLoggedPlayer);
 		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(PORT);
@@ -55,7 +61,9 @@ public class Server {
 		runnable = new MyRunnable();
 		sqlRequest = new Thread(runnable);
 		sqlRequest.start();
-		long time;
+		System.out.println("Init took "+(System.currentTimeMillis()-time)+" ms.");
+		ConnectionManager.connectAuthServer();
+		ConnectionManager.registerToAuthServer();
 		while(true) {
 			if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);
@@ -179,5 +187,17 @@ public class Server {
 			}
 		}
 		return null;
+	}
+	
+	public static String getRealmName() {
+		return REALM_NAME;
+	}
+	
+	public static int getRealmId() {
+		return REALM_ID;
+	}
+	
+	public static int getPort() {
+		return PORT;
 	}
 }
