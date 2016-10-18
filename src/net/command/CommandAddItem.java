@@ -1,6 +1,6 @@
 package net.command;
 
-import net.Server;
+import net.Servers;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.Player;
@@ -22,7 +22,7 @@ public class CommandAddItem extends Command {
 		int item_id = this.connection.readInt();
 		int number = this.connection.readInt();
 		if(this.player.getAccountRank() >= 1 && Item.exists(item_id)) {
-			Player player = character_id == this.player.getCharacterId() ? this.player : Server.getCharacter(character_id);
+			Player player = character_id == this.player.getCharacterId() ? this.player : Servers.getCharacter(character_id);
 			if(player != null) {
 				if(player.itemHasBeenSendToClient(item_id)) {
 					writeKnownItem(player, item_id, number);

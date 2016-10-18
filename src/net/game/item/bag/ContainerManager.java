@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 import jdo.JDOStatement;
-import net.Server;
+import net.Servers;
 
 public class ContainerManager {
 	
@@ -13,7 +13,7 @@ public class ContainerManager {
 	
 	public static void loadContainer() throws SQLException {
 		if(loadBags == null) {
-			loadBags = Server.getJDO().prepare("SELECT id, sprite_id, name, quality, size, sellprice FROM item_container");
+			loadBags = Servers.getJDO().prepare("SELECT id, sprite_id, name, quality, size, sellprice FROM item_container");
 		}
 		loadBags.clear();
 		loadBags.execute();

@@ -1,6 +1,6 @@
 package net.command.chat;
 
-import net.Server;
+import net.Servers;
 import net.command.Command;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
@@ -20,9 +20,9 @@ public class CommandListPlayer extends Command {
 	@Override
 	public void write() {
 		this.connection.writeByte(PacketID.CHAT_LIST_PLAYER);
-		int number = Server.getPlayerList().size();
+		int number = Servers.getPlayerList().size();
 		this.connection.writeInt(number);
-		for(Player player : Server.getPlayerList().values()) {
+		for(Player player : Servers.getPlayerList().values()) {
 			this.connection.writeString(player.getName()+" "+Player.convClassTypeToString(player.getClasse())+" level "+player.getLevel());
 			this.connection.writeChar(player.getClasse().getValue());
 		}

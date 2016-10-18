@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import jdo.JDOStatement;
-import net.Server;
+import net.Servers;
 import net.command.CommandUpdateStats;
 import net.connection.PacketID;
 import net.game.Unit;
@@ -25,7 +25,7 @@ public class SpellManager {
 	
 	public static void loadSpells() throws SQLException {
 		if(loadSpells == null) {
-			loadSpells = Server.getJDO().prepare("SELECT type, id FROM spell");
+			loadSpells = Servers.getJDO().prepare("SELECT type, id FROM spell");
 		}
 		loadSpells.clear();
 		loadSpells.execute();
@@ -34,7 +34,7 @@ public class SpellManager {
 			int id = loadSpells.getInt();
 			if(type.equals("DAMAGE")) {
 				if(loadDamageSpells == null) {
-					loadDamageSpells = Server.getJDO().prepare("SELECT sprite_id, name, damage, manaCost, cd, cast_time, stun_duration, stun_rate FROM SPELL WHERE id = ?");
+					loadDamageSpells = Servers.getJDO().prepare("SELECT sprite_id, name, damage, manaCost, cd, cast_time, stun_duration, stun_rate FROM SPELL WHERE id = ?");
 				}
 				loadDamageSpells.clear();
 				loadDamageSpells.putInt(id);
@@ -64,7 +64,7 @@ public class SpellManager {
 			}
 			else if(type.equals("HEAL")) {
 				if(loadHealSpells == null) {
-					loadHealSpells = Server.getJDO().prepare("SELECT sprite_id, name, heal, manaCost, cd, cast_time FROM SPELL WHERE id = ?");
+					loadHealSpells = Servers.getJDO().prepare("SELECT sprite_id, name, heal, manaCost, cd, cast_time FROM SPELL WHERE id = ?");
 				}
 				loadHealSpells.clear();
 				loadHealSpells.putInt(id);

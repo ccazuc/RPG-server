@@ -7,7 +7,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
-import net.Server;
+import net.Servers;
 import net.command.Command;
 import net.command.CommandAddItem;
 import net.command.CommandCreateCharacter;
@@ -45,7 +45,7 @@ public class ConnectionManager {
 	private final static int TIMEOUT_TIMER = 10000;
 	private byte lastPacketReaded;
 	private final static String AUTH_SERVER_IP = "127.0.0.1";
-	private final static int AUTH_SERVER_PORT = 5721;
+	private final static int AUTH_SERVER_PORT = 5725;
 	
 	public ConnectionManager(Player player, SocketChannel socket) {
 		this.player = player;
@@ -76,7 +76,7 @@ public class ConnectionManager {
 		this.commandList.put((int)FRIEND, new CommandFriend(this));
 	}
 	
-	public final boolean connectAuthServer() {
+	public static final boolean connectAuthServer() {
 		try {
 			authSocket = SocketChannel.open();
 			authSocket.socket().connect(new InetSocketAddress(AUTH_SERVER_IP, AUTH_SERVER_PORT), 5000);
@@ -114,13 +114,15 @@ public class ConnectionManager {
 	}
 	
 	public static void readAuthServer() {
-		try {
-			if(authConnection.read() == 1) {
-				readAuthPacket();
+		if(authConnection != null) {
+			try {
+				if(authConnection.read() == 1) {
+					readAuthPacket();
+				}
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
 			}
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -159,7 +161,7 @@ public class ConnectionManager {
 			if(packetId == PacketID.LOGIN) {
 				double key = authConnection.readDouble();
 				String ip = authConnection.readString();
-				Server.addKey(key, ip);
+				Servers.addKey(key, ip);
 			}
 		}
 	}

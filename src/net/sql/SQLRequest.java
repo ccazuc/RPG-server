@@ -3,7 +3,7 @@ package net.sql;
 import java.sql.SQLException;
 
 import jdo.JDOStatement;
-import net.Server;
+import net.Servers;
 import net.game.Player;
 
 public class SQLRequest {
@@ -16,7 +16,7 @@ public class SQLRequest {
 	
 	public SQLRequest(String request) {
 		try {
-			this.statement = Server.getJDO().prepare(request);
+			this.statement = Servers.getJDO().prepare(request);
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();

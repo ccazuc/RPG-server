@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 
 import jdo.JDOStatement;
-import net.Server;
+import net.Servers;
 
 public class PotionManager {
 	
@@ -14,7 +14,7 @@ public class PotionManager {
 	
 	public static void loadPotions() throws SQLException {
 		if(loadPotions == null) {
-			loadPotions = Server.getJDO().prepare("SELECT id, sprite_id, name, level, heal, mana, sellprice FROM item_potion");
+			loadPotions = Servers.getJDO().prepare("SELECT id, sprite_id, name, level, heal, mana, sellprice FROM item_potion");
 		}
 		loadPotions.clear();
 		loadPotions.execute();

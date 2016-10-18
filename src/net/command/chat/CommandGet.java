@@ -3,7 +3,7 @@ package net.command.chat;
 import java.sql.SQLException;
 
 import jdo.JDOStatement;
-import net.Server;
+import net.Servers;
 import net.command.Command;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
@@ -21,28 +21,28 @@ public class CommandGet extends Command {
 		byte packetID = this.connection.readByte();
 		if(packetID == PacketID.CHAT_GET_STAMINA) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Servers.getCharacter(id);
 			if(player != null) {
 				write(player.getStamina());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_MANA) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Servers.getCharacter(id);
 			if(player != null) {
 				write(player.getMana());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_EXPERIENCE) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Servers.getCharacter(id);
 			if(player != null) {
 				write(player.getExp());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_GOLD) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Servers.getCharacter(id);
 			if(player != null) {
 				write(player.getGold());
 			}
@@ -51,7 +51,7 @@ public class CommandGet extends Command {
 			String name = this.connection.readString();
 			try {
 				if(statement == null) {
-					statement = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
+					statement = Servers.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
 				}
 				statement.clear();
 				statement.putString(name);
@@ -66,7 +66,7 @@ public class CommandGet extends Command {
 		}
 		else if(packetID == PacketID.CHAT_GET_IP) {
 			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
+			Player player = id == this.player.getCharacterId() ? this.player : Servers.getCharacter(id);
 			if(player != null) {
 				write(player.getIpAdresse().substring(1));
 			}
