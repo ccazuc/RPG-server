@@ -23,6 +23,7 @@ import net.game.item.weapon.WeaponManager;
 import net.game.spell.SpellManager;
 import net.sql.MyRunnable;
 import net.sql.SQLRequest;
+import net.utils.Hash;
 
 public class Server {
 	
