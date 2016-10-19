@@ -68,7 +68,7 @@ public class CommandGet extends Command {
 			int id = this.connection.readInt();
 			Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
 			if(player != null) {
-				write(player.getIpAdresse().substring(1));
+				write(player.getIpAdress().substring(1));
 			}
 		}
 	}

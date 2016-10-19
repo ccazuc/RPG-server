@@ -86,7 +86,7 @@ public class Player extends Unit {
 		this.connectionManager = new ConnectionManager(this, socket);
 	}
 	
-	public String getIpAdresse() {
+	public String getIpAdress() {
 		return this.connectionManager.getIpAdress();
 	}
 	
@@ -167,6 +167,7 @@ public class Player extends Unit {
 		this.connectionManager.getConnection().writeByte(PacketID.LOAD_STATS);
 		this.connectionManager.getConnection().writeInt(this.exp);
 		this.connectionManager.getConnection().writeInt(this.gold);
+		this.connectionManager.getConnection().writeInt(this.accountRank);
 		this.connectionManager.getConnection().send();
 	}
 	
@@ -546,6 +547,10 @@ public class Player extends Unit {
 		this.spellUnlocked.clear();
 		this.target = null;
 		this.wear = null;
+	}
+	
+	public void setWeaponType(WeaponType[] type) {
+		this.weaponType = type;
 	}
 	
 	public Player getPlayerTrade() {

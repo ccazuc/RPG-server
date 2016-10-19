@@ -2,7 +2,6 @@ package net.game.spell;
 
 import net.game.Player;
 import net.game.Unit;
-import net.game.UnitType;
 
 public class Spell {
 	
@@ -58,6 +57,7 @@ public class Spell {
 		this.heal = heal;
 	}
 	
+	@SuppressWarnings("unused")
 	public void action(Unit caster, Unit target) {}
 	
 	public boolean doDamage(Unit target, Unit caster) {

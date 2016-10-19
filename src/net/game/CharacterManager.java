@@ -4,11 +4,14 @@ import java.sql.SQLException;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.game.item.weapon.WeaponType;
 
 public class CharacterManager {
 
 	private static JDOStatement loadCharacterInfo;
 	private static JDOStatement loadSpellUnlocked;
+	private static JDOStatement loadRank;
+	private static JDOStatement loadWeaponType;
 	
 	private static String rogue = "ROGUE";
 	private static String mage = "MAGE";
@@ -34,6 +37,8 @@ public class CharacterManager {
 	public void loadCharacterInfo(Player player) throws SQLException {
 		if(loadCharacterInfo == null) {
 			loadCharacterInfo = Server.getJDO().prepare("SELECT name, class, race, experience, gold FROM `character` WHERE character_id = ?");
+			loadRank = Server.getJDO().prepare("SELECT rank FROM account WHERE id = ?");
+			loadWeaponType = Server.getJDO().prepare("SELECT weapon_type FROM player WHERE id = ?");
 		}
 		loadCharacterInfo.clear();
 		loadCharacterInfo.putInt(player.getCharacterId());
@@ -44,6 +49,19 @@ public class CharacterManager {
 			player.setRace(convStringToRace(loadCharacterInfo.getString()));
 			player.setExperience(loadCharacterInfo.getInt());
 			player.setGold(loadCharacterInfo.getInt());
+		}
+		loadRank.clear();
+		loadRank.putInt(player.getAccountId());
+		loadRank.execute();
+		if(loadRank.fetch()) {
+			player.setAccountRank(loadRank.getInt());
+		}
+		loadWeaponType.clear();
+		loadWeaponType.putString(convClasseToString(player.getClasse()));
+		loadWeaponType.execute();
+		if(loadWeaponType.fetch()) {
+			int weaponType = loadWeaponType.getInt();
+			player.setWeaponType(getWeaponTypes((short)weaponType));
 		}
 		int i = 0;
 		while(i < player.getStuff().length) {
@@ -56,6 +74,84 @@ public class CharacterManager {
 			}
 			i++;
 		}
+	}
+	
+	public static WeaponType[] getWeaponTypes(short type) {
+		int i = 0;
+		int count = 0;
+		while(i < 15) {
+			if((type & (1 << i)) != 0) {
+				count++;
+			}
+			i++;
+		}
+		WeaponType[] tempWeaponsType = new WeaponType[count];
+		count = 0;
+		if((type & (1 << 0)) != 0) {
+			tempWeaponsType[count] = WeaponType.DAGGER;
+			count++;
+		}
+		if((type & (1 << 1)) != 0) {
+			tempWeaponsType[count] = WeaponType.FISTWEAPON;
+			count++;
+		}
+		if((type & (1 << 2)) != 0) {
+			tempWeaponsType[count] = WeaponType.ONEHANDEDAXE;
+			count++;
+		}
+		if((type & (1 << 3)) != 0) {
+			tempWeaponsType[count] = WeaponType.TWOHANDEDAXE;
+			count++;
+		}
+		if((type & (1 << 4)) != 0) {
+			tempWeaponsType[count] = WeaponType.ONEHANDEDMACE;
+			count++;
+		}
+		if((type & (1 << 5)) != 0) {
+			tempWeaponsType[count] = WeaponType.TWOHANDEDMACE;
+			count++;
+		}
+		if((type & (1 << 6)) != 0) {
+			tempWeaponsType[count] = WeaponType.ONEHANDEDSWORD;
+			count++;
+		}
+		if((type & (1 << 7)) != 0) {
+			tempWeaponsType[count] = WeaponType.TWOHANDEDSWORD;
+			count++;
+		}
+		if((type & (1 << 8)) != 0) {
+			tempWeaponsType[count] = WeaponType.POLEARM;
+			count++;
+		}
+		if((type & (1 << 9)) != 0) {
+			tempWeaponsType[count] = WeaponType.STAFF;
+			count++;
+		}
+		if((type & (1 << 10)) != 0) {
+			tempWeaponsType[count] = WeaponType.BOW;
+			count++;
+		}
+		if((type & (1 << 11)) != 0) {
+			tempWeaponsType[count] = WeaponType.CROSSBOW;
+			count++;
+		}
+		if((type & (1 << 12)) != 0) {
+			tempWeaponsType[count] = WeaponType.GUN;
+			count++;
+		}
+		if((type & (1 << 13)) != 0) {
+			tempWeaponsType[count] = WeaponType.WAND;
+			count++;
+		}
+		if((type & (1 << 14)) != 0) {
+			tempWeaponsType[count] = WeaponType.THROWN;
+			count++;
+		}
+		i = 0;
+		while(i < count) {
+			i++;
+		}
+		return tempWeaponsType;
 	}
 	
 	public void loadSpellUnlocked(Player player) throws SQLException {
@@ -133,5 +229,36 @@ public class CharacterManager {
 			return Race.NIGHTELF;
 		}
 		return null;
+	}
+	
+	private static String convClasseToString(ClassType classe) {
+		if(classe == ClassType.DRUID) {
+			return "Druid";
+		}
+		if(classe == ClassType.GUERRIER) {
+			return  "Guerrier";
+		}
+		if(classe == ClassType.HUNTER) {
+			return "Hunter";
+		}
+		if(classe == ClassType.MAGE) {
+			return "Mage";
+		}
+		if(classe == ClassType.PALADIN) {
+			return "Paladin";
+		}
+		if(classe == ClassType.PRIEST) {
+			return "Priest";
+		}
+		if(classe == ClassType.ROGUE) {
+			return "Rogue";
+		}
+		if(classe == ClassType.SHAMAN) {
+			return "Shaman";
+		}
+		if(classe == ClassType.WARLOCK) {
+			return "Warlock";
+		}
+		return "";
 	}
 }

@@ -33,7 +33,7 @@ public class CommandPlayerInfo extends Command {
 		this.connection.writeString(player.getName());
 		this.connection.writeInt(player.getAccountId());
 		this.connection.writeInt(player.getAccountRank());
-		this.connection.writeString(player.getIpAdresse());
+		this.connection.writeString(player.getIpAdress());
 		this.connection.send();
 	}
 }

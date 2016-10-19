@@ -31,6 +31,7 @@ public class CommandLoginRealm extends Command {
 			if(Server.hasKey(key, account_id)) {
 				connectionAccepted(this.connection);
 				Server.removeKey(key);
+				this.player.setAccountId(account_id);
 			}
 			else {
 				this.player.close();

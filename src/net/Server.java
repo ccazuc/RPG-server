@@ -37,6 +37,7 @@ public class Server {
 	private static Thread sqlRequest;
 	private static MyRunnable runnable;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
+	private static HashMap<Integer, ArrayList<Player>> friendMap = new HashMap<Integer, ArrayList<Player>>();
 	
 	private final static String REALM_NAME = "Main Server";
 	private final static int REALM_ID = 10;
@@ -80,12 +81,31 @@ public class Server {
 		}
 	}
 	
-	public static void addNewRequest(SQLRequest request) {
-		runnable.addRequest(request);
+	public static void loadFriendMap(int id) {
+		ArrayList<Player> tempList = new ArrayList<Player>();
+		int i = 0;
+		for(Player player : playerList.values()) {
+			while(i < player.getFriendList().size()) {
+				if(player.getFriendList().get(i) == id) {
+					tempList.add(player);
+					break;
+				}
+				i++;
+			}
+		}
+		friendMap.put(id, tempList);
 	}
 	
-	private static void readAuthServer() {
-		ConnectionManager.readAuthServer();
+	public static void addValueToFriendMapList(Player player, int id) {
+		if(friendMap.containsKey(id)) {
+			friendMap.get(id).add(player);
+		}
+	}
+	
+	public static void removeValueToFriendMapList(Player player, int id) {
+		if(friendMap.containsKey(id)) {
+			friendMap.get(id).remove(player);
+		}
 	}
 	
 	private static void kickPlayers() {
@@ -116,10 +136,6 @@ public class Server {
 		synchronized(playerList) {
 			return playerList;
 		}
-	}
-	
-	public static JDO getJDO() {
-		return jdo;
 	}
 	
 	public static Player getNonLoggedPlayer(int id) {
@@ -179,10 +195,6 @@ public class Server {
 		return null;
 	}
 	
-	public static void addKey(Key key) {
-		keyList.put(key.getValue(), key);
-	}
-	
 	public static boolean hasKey(double key, int account_id) {
 		if(keyList.containsKey(key)) {
 			if(keyList.get(key).getAccountId() == account_id) {
@@ -190,6 +202,22 @@ public class Server {
 			}
 		}
 		return false;
+	}
+	
+	public static void addNewRequest(SQLRequest request) {
+		runnable.addRequest(request);
+	}
+	
+	public static JDO getJDO() {
+		return jdo;
+	}
+	
+	public static void addKey(Key key) {
+		keyList.put(key.getValue(), key);
+	}
+	
+	private static void readAuthServer() {
+		ConnectionManager.readAuthServer();
 	}
 	
 	public static void removeKey(double key) {
