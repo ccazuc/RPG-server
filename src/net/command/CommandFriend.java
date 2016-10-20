@@ -34,11 +34,15 @@ public class CommandFriend extends Command {
 				//send character not found
 			}
 		}
+		else if(packetId == PacketID.FRIEND_REMOVE) {
+			
+		}
 	}
 	
 	private static void writeAddFriend(Player player, Player friend) {
 		player.getConnection().writeByte(PacketID.FRIEND);
 		player.getConnection().writeByte(PacketID.FRIEND_ADD);
+		player.getConnection().writeInt(friend.getCharacterId());
 		player.getConnection().writeString(friend.getName());
 		player.getConnection().writeInt(friend.getLevel());
 		player.getConnection().writeChar(friend.getRace().getValue());

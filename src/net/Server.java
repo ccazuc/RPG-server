@@ -15,6 +15,7 @@ import jdo.JDO;
 import jdo.wrapper.MariaDB;
 import net.connection.ConnectionManager;
 import net.connection.Key;
+import net.game.CharacterManager;
 import net.game.Player;
 import net.game.item.ItemManager;
 import net.game.item.bag.ContainerManager;
@@ -34,10 +35,11 @@ public class Server {
 	private static Map<Integer, Player> playerList = Collections.synchronizedMap(new HashMap<Integer, Player>());
 	private static List<Player> nonLoggedPlayer = Collections.synchronizedList(new ArrayList<Player>());
 	private static ArrayList<Integer> playerWaitingForKick = new ArrayList<Integer>();
+	private static HashMap<Integer, Player> inGamePlayerList = new HashMap<Integer, Player>();
 	private static Thread sqlRequest;
 	private static MyRunnable runnable;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
-	private static HashMap<Integer, ArrayList<Player>> friendMap = new HashMap<Integer, ArrayList<Player>>();
+	private static HashMap<Integer, ArrayList<Integer>> friendMap = new HashMap<Integer, ArrayList<Integer>>();
 	
 	private final static String REALM_NAME = "Main Server";
 	private final static int REALM_ID = 10;
@@ -47,6 +49,7 @@ public class Server {
 		System.out.println("WORLD SERVER");
 		long time = System.currentTimeMillis();
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
+		CharacterManager.checkOnlinePlayers();
 		nonLoggedPlayer = Collections.synchronizedList(nonLoggedPlayer);
 		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(PORT);
 		serverSocketChannel = ServerSocketChannel.open();
@@ -72,34 +75,24 @@ public class Server {
 				nonLoggedPlayer.add(new Player(clientSocket));
 			}
 			time = System.currentTimeMillis();
+			kickPlayers();
+			readOnlinePlayers();
 			read();
 			readAuthServer();
-			kickPlayers();
 			if((System.currentTimeMillis()-time)/1000d >= 0.05) {
 				System.out.println("Loop too long: "+(System.currentTimeMillis()-time)/1000d);
 			}
 		}
 	}
 	
-	public static void loadFriendMap(int id) {
-		ArrayList<Player> tempList = new ArrayList<Player>();
-		int i = 0;
-		for(Player player : playerList.values()) {
-			while(i < player.getFriendList().size()) {
-				if(player.getFriendList().get(i) == id) {
-					tempList.add(player);
-					break;
-				}
-				i++;
-			}
+	private static void readOnlinePlayers() {
+		for(Player player : inGamePlayerList.values()) {
+			player.getConnectionManager().read();
 		}
-		friendMap.put(id, tempList);
 	}
 	
-	public static void addValueToFriendMapList(Player player, int id) {
-		if(friendMap.containsKey(id)) {
-			friendMap.get(id).add(player);
-		}
+	public static HashMap<Integer, ArrayList<Integer>> getFriendMap() {
+		return friendMap;
 	}
 	
 	public static void removeValueToFriendMapList(Player player, int id) {
@@ -149,6 +142,18 @@ public class Server {
 			}
 		}
 		return null;
+	}
+	
+	public static void addInGamePlayer(Player player) {
+		inGamePlayerList.put(player.getCharacterId(), player);
+	}
+	
+	public static void removeInGamePlayer(Player player) {
+		inGamePlayerList.remove(player.getCharacterId());
+	}
+	
+	public static HashMap<Integer, Player> getInGamePlayerList() {
+		return inGamePlayerList;
 	}
 	
 	public static void removeNonLoggedPlayer(Player player) {

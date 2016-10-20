@@ -82,4 +82,7 @@ public class PacketID {
 	public static final byte LOGIN_REALM_ACCEPTED = 78;
 	public static final byte LOGIN_REALM_REQUEST = 79;
 	public static final byte LOGIN_REALM_SUCCESS = 80;
+	public static final byte FRIEND_OFFLINE = 81;
+	public static final byte FRIEND_ONLINE = 82;
+	public static final byte FRIEND_REMOVE = 83;
 }

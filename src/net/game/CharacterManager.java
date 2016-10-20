@@ -1,6 +1,7 @@
 package net.game;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import jdo.JDOStatement;
 import net.Server;
@@ -12,6 +13,10 @@ public class CharacterManager {
 	private static JDOStatement loadSpellUnlocked;
 	private static JDOStatement loadRank;
 	private static JDOStatement loadWeaponType;
+	private static JDOStatement setOnline;
+	private static JDOStatement loadPlayerFriend;
+	private static JDOStatement loadFriend;
+	private static JDOStatement checkOnlinePlayers;
 	
 	private static String rogue = "ROGUE";
 	private static String mage = "MAGE";
@@ -39,6 +44,7 @@ public class CharacterManager {
 			loadCharacterInfo = Server.getJDO().prepare("SELECT name, class, race, experience, gold FROM `character` WHERE character_id = ?");
 			loadRank = Server.getJDO().prepare("SELECT rank FROM account WHERE id = ?");
 			loadWeaponType = Server.getJDO().prepare("SELECT weapon_type FROM player WHERE id = ?");
+			setOnline = Server.getJDO().prepare("UPDATE `character` SET online = 1 WHERE character_id = ?");
 		}
 		loadCharacterInfo.clear();
 		loadCharacterInfo.putInt(player.getCharacterId());
@@ -63,6 +69,9 @@ public class CharacterManager {
 			int weaponType = loadWeaponType.getInt();
 			player.setWeaponType(getWeaponTypes((short)weaponType));
 		}
+		setOnline.clear();
+		setOnline.putInt(player.getCharacterId());
+		setOnline.execute();
 		int i = 0;
 		while(i < player.getStuff().length) {
 			if(player.getStuff(i) != null) {
@@ -74,6 +83,41 @@ public class CharacterManager {
 			}
 			i++;
 		}
+	}
+	
+	public void loadFriendList(Player player) throws SQLException {
+		if(loadPlayerFriend == null) {
+			//loadPlayerFriend = Server.getJDO().prepare("SELECT character_id FROM friend WHERE friend_id = ? AND online = 1");
+			loadPlayerFriend = Server.getJDO().prepare("SELECT `friend`.`character_id`, online FROM `friend`, `character` WHERE `friend`.`friend_id` = ? AND `character`.`character_id` = `friend`.`friend_id` AND `character`.`online` = 1");
+			loadFriend = Server.getJDO().prepare("SELECT friend_id FROM friend WHERE character_id = ?");
+		}
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		loadPlayerFriend.clear();
+		loadPlayerFriend.putInt(player.getCharacterId());
+		loadPlayerFriend.execute();
+		while(loadPlayerFriend.fetch()) {
+			temp.add(loadPlayerFriend.getInt());
+		}
+		Server.getFriendMap().put(player.getCharacterId(), temp);
+		
+		loadFriend.clear();
+		loadFriend.putInt(player.getCharacterId());
+		loadFriend.execute();
+		while(loadFriend.fetch()) {
+			int id = loadFriend.getInt();
+			player.getFriendList().add(id);
+			if(Server.getInGamePlayerList().containsKey(id)) {
+				Server.getFriendMap().get(id).add(player.getCharacterId());
+			}
+		}
+	}
+	
+	public static void checkOnlinePlayers() throws SQLException {
+		if(checkOnlinePlayers == null) {
+			checkOnlinePlayers = Server.getJDO().prepare("UPDATE `character` SET online = 0 WHERE online = 1");
+		}
+		checkOnlinePlayers.clear();
+		checkOnlinePlayers.execute();
 	}
 	
 	public static WeaponType[] getWeaponTypes(short type) {

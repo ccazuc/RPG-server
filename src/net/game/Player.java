@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.Server;
+import net.command.CommandLogoutCharacter;
 import net.command.CommandTrade;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
@@ -179,6 +180,7 @@ public class Player extends Unit {
 		//this.ignoreList = new ArrayList<Player>();
 		this.friendList = new ArrayList<Integer>();
 		this.ignoreList = new ArrayList<Integer>();
+		this.bag = new Bag();
 	}
 	
 	public void loadBagItemSQL() {
@@ -244,6 +246,15 @@ public class Player extends Unit {
 		}
 	}
 	
+	public void loadFriendList() {
+		try {
+			this.characterManager.loadFriendList(this);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void loadSpellUnlocked() {
 		try {
 			this.characterManager.loadSpellUnlocked(this);
@@ -261,10 +272,15 @@ public class Player extends Unit {
 	}
 	
 	public void close() {
+		CommandLogoutCharacter.write(this);
 		this.connectionManager.getConnection().close();
 		CommandTrade.closeTrade(this);
 		Server.removeNonLoggedPlayer(this);
 		Server.removeLoggedPlayer(this);
+		if(Server.getInGamePlayerList().containsKey(this.characterId)) {
+			CommandLogoutCharacter.sendOfflineToFriend(this);
+		}
+		Server.removeInGamePlayer(this);
 	}
 	
 	public void updateBagItem() {

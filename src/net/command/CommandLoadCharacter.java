@@ -1,5 +1,6 @@
 package net.command;
 
+import net.Server;
 import net.connection.ConnectionManager;
 
 public class CommandLoadCharacter extends Command {
@@ -17,8 +18,11 @@ public class CommandLoadCharacter extends Command {
 		this.player.loadEquippedItemSQL();
 		this.player.loadBagItemSQL();
 		this.player.loadCharacterInfoSQL();
+		this.player.loadFriendList();
 		//this.player.loadSpellUnlocked();
 		this.player.sendStats();
+		Server.addLoggedPlayer(this.player);
+		Server.removeLoggedPlayer(this.player);
 	}
 	
 	@Override
