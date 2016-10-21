@@ -78,7 +78,7 @@ public class StuffManager {
 	public static ClassType[] getClasses(short type) {
 		int i = 0;
 		int count = 0;
-		while(i < 10) {
+		while(i < 9) {
 			if((type & (1 << i)) != 0) {
 				count++;
 			}
@@ -86,35 +86,39 @@ public class StuffManager {
 		}
 		ClassType[] tempClasses = new ClassType[count];
 		count = 0;
-		if((type & (1 << 1)) != 0) {
+		if((type & (1 << 0)) != 0) {
 			tempClasses[count] = ClassType.GUERRIER;
 			count++;
 		}
-		if((type & (1 << 2)) != 0) {
+		if((type & (1 << 1)) != 0) {
 			tempClasses[count] = ClassType.HUNTER;
 			count++;
 		}
-		if((type & (1 << 3)) != 0) {
+		if((type & (1 << 2)) != 0) {
 			tempClasses[count] = ClassType.MAGE;
 			count++;
 		}
-		if((type & (1 << 5)) != 0) {
+		if((type & (1 << 3)) != 0) {
+			tempClasses[count] = ClassType.DRUID;
+			count++;
+		}
+		if((type & (1 << 4)) != 0) {
 			tempClasses[count] = ClassType.PALADIN;
 			count++;
 		}
-		if((type & (1 << 6)) != 0) {
+		if((type & (1 << 5)) != 0) {
 			tempClasses[count] = ClassType.PRIEST;
 			count++;
 		}
-		if((type & (1 << 7)) != 0) {
+		if((type & (1 << 6)) != 0) {
 			tempClasses[count] = ClassType.ROGUE;
 			count++;
 		}
-		if((type & (1 << 8)) != 0) {
+		if((type & (1 << 7)) != 0) {
 			tempClasses[count] = ClassType.SHAMAN;
 			count++;
 		}
-		if((type & (1 << 9)) != 0) {
+		if((type & (1 << 8)) != 0) {
 			tempClasses[count] = ClassType.WARLOCK;
 			count++;
 		}

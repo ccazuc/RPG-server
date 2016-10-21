@@ -19,7 +19,7 @@ public class CommandLogoutCharacter extends Command {
 	@Override
 	public void read() {
 		sendOfflineToFriend(this.player);
-		write(this.player);
+		setPlayerOfflineInDB(this.player);
 		Server.addLoggedPlayer(this.player);
 		Server.removeInGamePlayer(this.player);
 		this.player.resetDatas();
@@ -44,7 +44,7 @@ public class CommandLogoutCharacter extends Command {
 		player.getConnection().send();
 	}
 	
-	public static void write(Player player) {
+	public static void setPlayerOfflineInDB(Player player) {
 		if(player.getCharacterId() != 0) {
 			try {
 				if(setOffline == null) {

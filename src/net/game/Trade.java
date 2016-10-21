@@ -1,5 +1,7 @@
 package net.game;
 
+import java.sql.SQLException;
+
 import net.command.CommandTrade;
 import net.game.item.Item;
 
@@ -49,7 +51,7 @@ public class Trade {
 		}
 	}
 	
-	public void exchangeItem() {
+	public void exchangeItem() throws SQLException {
 		int i = 0;
 		int number = 0;
 		while(i < this.tradeInitTable.length-1) {
@@ -74,6 +76,7 @@ public class Trade {
 			//player has not enough free space
 			return;
 		}
+		System.out.println("Exchange Item");
 		CommandTrade.sendTradeItems(this.tradeInit);
 	}
 	

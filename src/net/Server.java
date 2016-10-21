@@ -32,10 +32,12 @@ public class Server {
 	private static JDO jdo;
 	private static ServerSocketChannel serverSocketChannel;
 	private static SocketChannel clientSocket;
-	private static Map<Integer, Player> playerList = Collections.synchronizedMap(new HashMap<Integer, Player>());
-	private static List<Player> nonLoggedPlayer = Collections.synchronizedList(new ArrayList<Player>());
-	private static ArrayList<Integer> playerWaitingForKick = new ArrayList<Integer>();
+	private static Map<Integer, Player> loggedPlayerList = Collections.synchronizedMap(new HashMap<Integer, Player>());
+	private static ArrayList<Integer> loggedPlayerKickList = new ArrayList<Integer>();
+	private static List<Player> nonLoggedPlayerList = Collections.synchronizedList(new ArrayList<Player>());
+	private static ArrayList<Player> nonLoggedPlayerKickList = new ArrayList<Player>();
 	private static HashMap<Integer, Player> inGamePlayerList = new HashMap<Integer, Player>();
+	private static ArrayList<Integer> inGamePlayerKickList = new ArrayList<Integer>();
 	private static Thread sqlRequest;
 	private static MyRunnable runnable;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
@@ -50,7 +52,7 @@ public class Server {
 		long time = System.currentTimeMillis();
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
 		CharacterManager.checkOnlinePlayers();
-		nonLoggedPlayer = Collections.synchronizedList(nonLoggedPlayer);
+		nonLoggedPlayerList = Collections.synchronizedList(nonLoggedPlayerList);
 		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(PORT);
 		serverSocketChannel = ServerSocketChannel.open();
 		serverSocketChannel.configureBlocking(false);
@@ -72,13 +74,14 @@ public class Server {
 		while(true) {
 			if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);
-				nonLoggedPlayer.add(new Player(clientSocket));
+				nonLoggedPlayerList.add(new Player(clientSocket));
 			}
 			time = System.currentTimeMillis();
 			kickPlayers();
 			readOnlinePlayers();
 			read();
 			readAuthServer();
+			//System.out.println(nonLoggedPlayerList.size()+" "+loggedPlayerList.size()+" "+inGamePlayerList.size());
 			if((System.currentTimeMillis()-time)/1000d >= 0.05) {
 				System.out.println("Loop too long: "+(System.currentTimeMillis()-time)/1000d);
 			}
@@ -91,10 +94,6 @@ public class Server {
 		}
 	}
 	
-	public static HashMap<Integer, ArrayList<Integer>> getFriendMap() {
-		return friendMap;
-	}
-	
 	public static void removeValueToFriendMapList(Player player, int id) {
 		if(friendMap.containsKey(id)) {
 			friendMap.get(id).remove(player);
@@ -103,40 +102,43 @@ public class Server {
 	
 	private static void kickPlayers() {
 		int i = 0;
-		while(i < playerWaitingForKick.size()) {
-			playerList.remove(playerWaitingForKick.get(i));
-			i++;
+		while(i < nonLoggedPlayerKickList.size()) {
+			nonLoggedPlayerList.remove(nonLoggedPlayerKickList.get(i)); 
+			nonLoggedPlayerKickList.remove(i);
 		}
-		playerWaitingForKick.clear();
+		i = 0;
+		while(i < loggedPlayerKickList.size()) {
+			loggedPlayerList.remove(loggedPlayerKickList.get(i));
+			loggedPlayerKickList.remove(i);
+		}
+		i = 0;
+		while(i < inGamePlayerKickList.size()) {
+			inGamePlayerList.remove(inGamePlayerKickList.get(i));
+			inGamePlayerKickList.remove(i);
+		}
 	}
 	
 	private static void read() {
 		int i = 0;
-		synchronized(nonLoggedPlayer) {
-			while(i < nonLoggedPlayer.size()) {
-				nonLoggedPlayer.get(i).getConnectionManager().read();
+		synchronized(nonLoggedPlayerList) {
+			while(i < nonLoggedPlayerList.size()) {
+				nonLoggedPlayerList.get(i).getConnectionManager().read();
 				i++;
 			}
 		}
-		synchronized(playerList) {
-			for(Player player : playerList.values()) {
+		synchronized(loggedPlayerList) {
+			for(Player player : loggedPlayerList.values()) {
 				player.getConnectionManager().read();
 			}
 		}
 	}
 	
-	public static Map<Integer, Player> getPlayerList() {
-		synchronized(playerList) {
-			return playerList;
-		}
-	}
-	
 	public static Player getNonLoggedPlayer(int id) {
 		int i = 0;
-		synchronized(nonLoggedPlayer) {
-			while(i < nonLoggedPlayer.size()) {
-				if(nonLoggedPlayer.get(i).getAccountId() == id) {
-					return nonLoggedPlayer.get(i);
+		synchronized(nonLoggedPlayerList) {
+			while(i < nonLoggedPlayerList.size()) {
+				if(nonLoggedPlayerList.get(i).getAccountId() == id) {
+					return nonLoggedPlayerList.get(i);
 				}
 				i++;
 			}
@@ -149,38 +151,32 @@ public class Server {
 	}
 	
 	public static void removeInGamePlayer(Player player) {
-		inGamePlayerList.remove(player.getCharacterId());
-	}
-	
-	public static HashMap<Integer, Player> getInGamePlayerList() {
-		return inGamePlayerList;
+		inGamePlayerKickList.add(player.getCharacterId());
 	}
 	
 	public static void removeNonLoggedPlayer(Player player) {
 		if(player != null) {
-			synchronized(nonLoggedPlayer) {
-				nonLoggedPlayer.remove(player);
-			}
+			nonLoggedPlayerKickList.add(player);
 		}
 	}
 	
 	public static void addLoggedPlayer(Player player) {
 		if(player != null) {
-			synchronized(playerList) {
-				playerList.put(player.getAccountId(), player);
+			synchronized(loggedPlayerList) {
+				loggedPlayerList.put(player.getAccountId(), player);
 			}
 		}
 	}
 	
 	public static void removeLoggedPlayer(Player player) {
 		if(player != null) {
-			playerWaitingForKick.add(player.getAccountId());
+			loggedPlayerKickList.add(player.getAccountId());
 		}
 	}
 	
 	public static Player getCharacter(int id) {
-		synchronized(playerList) {
-			for(Player player : playerList.values()) {
+		synchronized(loggedPlayerList) {
+			for(Player player : loggedPlayerList.values()) {
 				if(player.getCharacterId() == id) {
 					return player;
 				}
@@ -189,9 +185,27 @@ public class Server {
 		return null;
 	}
 	
+	public static Player getInGameCharacter(int id) {
+			for(Player player : inGamePlayerList.values()) {
+				if(player.getCharacterId() == id) {
+					return player;
+				}
+			}
+		return null;
+	}
+	
+	public static Player getInGameCharacter(String name) {
+			for(Player player : inGamePlayerList.values()) {
+				if(player.getName().toLowerCase().equals(name) || player.getName().equals(name)) {
+					return player;
+				}
+			}
+		return null;
+	}
+	
 	public static Player getCharacter(String name) {
-		synchronized(playerList) {
-			for(Player player : playerList.values()) {
+		synchronized(loggedPlayerList) {
+			for(Player player : loggedPlayerList.values()) {
 				if(player.getName().equals(name)) {
 					return player;
 				}
@@ -213,10 +227,6 @@ public class Server {
 		runnable.addRequest(request);
 	}
 	
-	public static JDO getJDO() {
-		return jdo;
-	}
-	
 	public static void addKey(Key key) {
 		keyList.put(key.getValue(), key);
 	}
@@ -225,12 +235,30 @@ public class Server {
 		ConnectionManager.readAuthServer();
 	}
 	
+	public static Map<Integer, Player> getPlayerList() {
+		synchronized(loggedPlayerList) {
+			return loggedPlayerList;
+		}
+	}
+	
+	public static HashMap<Integer, Player> getInGamePlayerList() {
+		return inGamePlayerList;
+	}
+	
+	public static HashMap<Integer, ArrayList<Integer>> getFriendMap() {
+		return friendMap;
+	}
+	
 	public static void removeKey(double key) {
 		keyList.remove(key);
 	}
 	
 	public static String getRealmName() {
 		return REALM_NAME;
+	}
+	
+	public static JDO getJDO() {
+		return jdo;
 	}
 	
 	public static int getRealmId() {

@@ -20,9 +20,8 @@ public class CommandListPlayer extends Command {
 	@Override
 	public void write() {
 		this.connection.writeByte(PacketID.CHAT_LIST_PLAYER);
-		int number = Server.getPlayerList().size();
-		this.connection.writeInt(number);
-		for(Player player : Server.getPlayerList().values()) {
+		this.connection.writeInt(Server.getInGamePlayerList().size());
+		for(Player player : Server.getInGamePlayerList().values()) {
 			this.connection.writeString(player.getName()+" "+Player.convClassTypeToString(player.getClasse())+" level "+player.getLevel());
 			this.connection.writeChar(player.getClasse().getValue());
 		}

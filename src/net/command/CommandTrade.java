@@ -1,6 +1,11 @@
 package net.command;
 
+import java.sql.SQLException;
+
 import net.Server;
+import net.command.chat.CommandPlayerNotFound;
+import net.command.chat.CommandSendMessage;
+import net.command.chat.MessageType;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.Player;
@@ -16,23 +21,25 @@ public class CommandTrade extends Command {
 	public void read() {
 		byte packetID = this.connection.readByte();
 		if(packetID == PacketID.TRADE_NEW) { //declare a new trade
-			int traded = this.connection.readInt();
-			Player trade = Server.getCharacter(traded);
+			String traded = this.connection.readString();
+			Player trade = Server.getInGameCharacter(traded);
 			//System.out.println(trade.getName()+" "+this.player.getPlayerTrade()+" "+trade.getPlayerTrade());
 			if(trade != null) {
-				if(this.player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading
+				if(trade != this.player) {
+					if(this.player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading
+					}
+					else { //cancel current trade
+						tradeCancel(trade.getPlayerTrade());
+						trade.getPlayerTrade().setPlayerTrade(null);
+					}
+					trade.setPlayerTrade(this.player);
+					this.player.setPlayerTrade(trade);
+					write(PacketID.TRADE_REQUEST, trade, this.player.getName());
 				}
-				else { //cancel current trade
-					tradeCancel(trade.getPlayerTrade());
-					trade.getPlayerTrade().setPlayerTrade(null);
-				}
-				trade.setPlayerTrade(this.player);
-				this.player.setPlayerTrade(trade);
-				write(PacketID.TRADE_REQUEST, trade, this.player.getName());
+				CommandSendMessage.write(this.connection, "Can't trade with yourself.", MessageType.SELF);
 			}
 			else {
-				//send yellow message player not found
-				//CommandAddLocalMessage("aucun joueur bla bla");
+				CommandPlayerNotFound.write(this.connection, traded);
 			}
 		}
 		else if(packetID == PacketID.TRADE_NEW_CONFIRM) { //confirm the trade
@@ -83,6 +90,7 @@ public class CommandTrade extends Command {
 				else {
 					if(this.player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
 						sendUnknownItem(this.player.getPlayerTrade(), id, slot, amount);
+						System.out.println(id+" "+slot);
 					}
 					else {
 						writeAddItemError(this.player, slot); //c po b1 2 modifié lé paké
@@ -107,7 +115,12 @@ public class CommandTrade extends Command {
 			this.player.getPlayerTrade().getConnection().send();
 			this.player.getTrade().setTradeState(this.player, true);
 			if(this.player.getTrade().getTradeInitState() && this.player.getTrade().getTradeTargetState()) {
-				this.player.getTrade().exchangeItem();
+				try {
+					this.player.getTrade().exchangeItem();
+				} 
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
 				closeTrade(this.player);
 			}
 		}
@@ -127,12 +140,12 @@ public class CommandTrade extends Command {
 		}
 	}
 	
-	public static void sendTradeItems(Player tradeInit) {
+	public static void sendTradeItems(Player tradeInit) throws SQLException {
 		tradeItem(tradeInit, tradeInit.getTrade().getTradeTargetTable());
 		tradeItem(tradeInit.getPlayerTrade(), tradeInit.getTrade().getTradeInitTable());
 	}
 	
-	private static void tradeItem(Player player, Item[] table) {
+	private static void tradeItem(Player player, Item[] table) throws SQLException {
 		player.getConnection().writeByte(PacketID.TRADE);
 		player.getConnection().writeByte(PacketID.TRADE_SEND_ALL_ITEMS);
 		int i = 0;
@@ -148,6 +161,7 @@ public class CommandTrade extends Command {
 					player.getConnection().writeItem(table[i]);
 					player.getConnection().writeInt(table[i].getAmount());
 				}
+				player.addItem(table[i], table[i].getAmount());
 			}
 			else {
 				player.getConnection().writeByte((byte)-1);
@@ -191,7 +205,7 @@ public class CommandTrade extends Command {
 			player.getConnection().writeInt(gem2Id);
 			player.getConnection().writeInt(gem3Id);
 			player.getConnection().send();
-			player.getTrade().addItem(player, slot, amount, Item.getItem(id));
+			player.getTrade().addItem(player.getPlayerTrade(), slot, amount, Item.getItem(id));
 			tradeUnaccept(player.getPlayerTrade());
 			player.getTrade().setTradeState(player, false);
 			player.getTrade().setTradeState(player.getPlayerTrade(), false);
@@ -208,7 +222,7 @@ public class CommandTrade extends Command {
 			player.getConnection().writeInt(amount);
 			player.getConnection().writeBoolean(false);
 			player.getConnection().send();
-			player.getTrade().addItem(player, slot, amount, Item.getItem(id));
+			player.getTrade().addItem(player.getPlayerTrade(), slot, amount, Item.getItem(id));
 			tradeUnaccept(player.getPlayerTrade());
 			player.getTrade().setTradeState(player, false);
 			player.getTrade().setTradeState(player.getPlayerTrade(), false);
@@ -225,7 +239,7 @@ public class CommandTrade extends Command {
 			player.getConnection().writeInt(amount);
 			player.getConnection().writeBoolean(false);
 			player.getConnection().send();
-			player.getTrade().addItem(player, slot, amount, Item.getItem(id));
+			player.getTrade().addItem(player.getPlayerTrade(), slot, amount, Item.getItem(id));
 			tradeUnaccept(player.getPlayerTrade());
 			player.getTrade().setTradeState(player, false);
 			player.getTrade().setTradeState(player.getPlayerTrade(), false);
@@ -245,7 +259,7 @@ public class CommandTrade extends Command {
 			player.getConnection().writeInt(gem2Id);
 			player.getConnection().writeInt(gem3Id);
 			player.getConnection().send();
-			player.getTrade().addItem(player, slot, amount, Item.getItem(id));
+			player.getTrade().addItem(player.getPlayerTrade(), slot, amount, Item.getItem(id));
 			tradeUnaccept(player.getPlayerTrade());
 			player.getTrade().setTradeState(player, false);
 			player.getTrade().setTradeState(player.getPlayerTrade(), false);

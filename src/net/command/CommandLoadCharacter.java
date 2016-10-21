@@ -21,7 +21,7 @@ public class CommandLoadCharacter extends Command {
 		this.player.loadFriendList();
 		//this.player.loadSpellUnlocked();
 		this.player.sendStats();
-		Server.addLoggedPlayer(this.player);
+		Server.addInGamePlayer(this.player);
 		Server.removeLoggedPlayer(this.player);
 	}
 	

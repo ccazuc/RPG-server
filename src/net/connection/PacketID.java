@@ -85,4 +85,6 @@ public class PacketID {
 	public static final byte FRIEND_OFFLINE = 81;
 	public static final byte FRIEND_ONLINE = 82;
 	public static final byte FRIEND_REMOVE = 83;
+	public static final byte PLAYER_NOT_FOUND = 84;
+	public static final byte SEND_MESSAGE = 85;
 }

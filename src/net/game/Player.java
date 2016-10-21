@@ -65,7 +65,6 @@ public class Player extends Unit {
 	private float armor;
 	private Trade trade;
 	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
-	private int level;
 	private Race race;
 	private Wear wear;
 	private int gold;
@@ -166,6 +165,7 @@ public class Player extends Unit {
 	
 	public void sendStats() {
 		this.connectionManager.getConnection().writeByte(PacketID.LOAD_STATS);
+		this.connectionManager.getConnection().writeInt(this.characterId);
 		this.connectionManager.getConnection().writeInt(this.exp);
 		this.connectionManager.getConnection().writeInt(this.gold);
 		this.connectionManager.getConnection().writeInt(this.accountRank);
@@ -272,14 +272,16 @@ public class Player extends Unit {
 	}
 	
 	public void close() {
-		CommandLogoutCharacter.write(this);
-		this.connectionManager.getConnection().close();
-		CommandTrade.closeTrade(this);
-		Server.removeNonLoggedPlayer(this);
-		Server.removeLoggedPlayer(this);
+		CommandLogoutCharacter.setPlayerOfflineInDB(this);
+		if(this.trade != null || this.playerTrade != null) {
+			CommandTrade.closeTrade(this);
+		}
 		if(Server.getInGamePlayerList().containsKey(this.characterId)) {
 			CommandLogoutCharacter.sendOfflineToFriend(this);
 		}
+		this.connectionManager.getConnection().close();
+		Server.removeNonLoggedPlayer(this);
+		Server.removeLoggedPlayer(this);
 		Server.removeInGamePlayer(this);
 	}
 	

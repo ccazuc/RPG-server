@@ -28,6 +28,7 @@ import net.command.CommandUpdateStats;
 import net.command.chat.CommandGet;
 import net.command.chat.CommandListPlayer;
 import net.command.chat.CommandPlayerInfo;
+import net.command.chat.CommandSendMessage;
 import net.command.chat.CommandSet;
 import net.command.item.CommandGem;
 import net.command.item.CommandPotion;
@@ -77,6 +78,7 @@ public class ConnectionManager {
 		this.commandList.put((int)TRADE, new CommandTrade(this));
 		this.commandList.put((int)FRIEND, new CommandFriend(this));
 		this.commandList.put((int)LOGIN_REALM, new CommandLoginRealm(this));
+		this.commandList.put((int)SEND_MESSAGE, new CommandSendMessage(this));
 	}
 	
 	public static void initAuthCommand() {

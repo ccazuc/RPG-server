@@ -20,7 +20,7 @@ public class CommandPlayerInfo extends Command {
 				write(this.player);
 			}
 			else {
-				write(Server.getPlayerList().get(id));
+				write(Server.getInGameCharacter(id));
 			}
 		}
 		else {
@@ -30,10 +30,12 @@ public class CommandPlayerInfo extends Command {
 	}
 	
 	public void write(Player player) {
-		this.connection.writeString(player.getName());
-		this.connection.writeInt(player.getAccountId());
-		this.connection.writeInt(player.getAccountRank());
-		this.connection.writeString(player.getIpAdress());
-		this.connection.send();
+		if(player != null) {
+			this.connection.writeString(player.getName());
+			this.connection.writeInt(player.getAccountId());
+			this.connection.writeInt(player.getAccountRank());
+			this.connection.writeString(player.getIpAdress());
+			this.connection.send();
+		}
 	}
 }

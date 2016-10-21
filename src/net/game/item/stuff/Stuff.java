@@ -310,7 +310,10 @@ public class Stuff extends Item {
 	}
 	
 	public ClassType getClassType(int i) {
-		return this.classType[i];
+		if(i >= 0 && i < this.classType.length) {
+			return this.classType[i];
+		}
+		return null;
 	}
 	
 	public String convStuffTypeToString() {

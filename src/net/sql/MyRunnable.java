@@ -6,9 +6,10 @@ import java.util.List;
 
 public class MyRunnable implements Runnable {
 	
-	private ArrayList<SQLRequest> list = new ArrayList<SQLRequest>();
+	private List<SQLRequest> list = new ArrayList<SQLRequest>();
 	
 	public MyRunnable() {
+		this.list = Collections.synchronizedList(this.list);
 	}
 	
 	@Override
@@ -18,6 +19,8 @@ public class MyRunnable implements Runnable {
 			if(this.list.size() > 0) {
 				this.list.get(0).execute();
 				this.list.remove(0);
+			}
+			if(this.list.size() > 0) {
 			}
 		}
 	}

@@ -16,7 +16,7 @@ public class CommandFriend extends Command {
 		byte packetId = this.connection.readByte();
 		if(packetId == PacketID.FRIEND_ADD) {
 			String name = this.connection.readString();
-			Player player = Server.getCharacter(name);
+			Player player = Server.getCharacter(name); //TODO: search character in DB
 			if(player != null) {
 				if(!name.equals(this.player.getName())) {
 					if(this.player.addFriend(player.getCharacterId())) {

@@ -17,7 +17,7 @@ public class CommandSet extends Command {
 		byte packetID = this.connection.readByte();
 		int id = this.connection.readInt();
 		int value = this.connection.readInt();
-		Player player = id == this.player.getCharacterId() ? this.player : Server.getCharacter(id);
+		Player player = id == this.player.getCharacterId() ? this.player : Server.getInGameCharacter(id);
 		if(player != null) {
 			if(this.player.getAccountRank() >= 1) {
 				if(packetID == PacketID.CHAT_SET_STAMINA) {
