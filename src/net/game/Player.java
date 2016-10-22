@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import net.Server;
 import net.command.CommandLogoutCharacter;
+import net.command.CommandParty;
 import net.command.CommandTrade;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
@@ -31,6 +32,7 @@ import net.game.spell.SpellManager;
 
 public class Player extends Unit {
 
+	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
 	//private ProfessionManager professionManager = new ProfessionManager();
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private CharacterManager characterManager = new CharacterManager();
@@ -46,12 +48,14 @@ public class Player extends Unit {
 	private Profession secondProfession;
 	private Profession firstProfession;
 	private WeaponType[] weaponType;
+	private boolean hasInitParty;
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
 	private Bag bag = new Bag();
 	private boolean pingStatus;
-	private int numberBlueGem;
 	private Player playerTrade;
+	private Player playerParty;
+	private int numberBlueGem;
 	private Shortcut[] spells;
 	private int defaultArmor;
 	private ClassType classe;
@@ -63,8 +67,8 @@ public class Player extends Unit {
 	private int accountId;
 	private Stuff[] stuff;
 	private float armor;
+	private Party party;
 	private Trade trade;
-	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
 	private Race race;
 	private Wear wear;
 	private int gold;
@@ -84,6 +88,10 @@ public class Player extends Unit {
 	public Player(SocketChannel socket) {
 		super(UnitType.PLAYER);
 		this.connectionManager = new ConnectionManager(this, socket);
+		this.stamina = 5000;
+		this.maxStamina = 8000;
+		this.mana = 8000;
+		this.maxMana = 11000;
 	}
 	
 	public String getIpAdress() {
@@ -275,6 +283,9 @@ public class Player extends Unit {
 		CommandLogoutCharacter.setPlayerOfflineInDB(this);
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);
+		}
+		if(this.party != null || this.playerParty != null) {
+			CommandParty.leaveParty(this);
 		}
 		if(Server.getInGamePlayerList().containsKey(this.characterId)) {
 			CommandLogoutCharacter.sendOfflineToFriend(this);
@@ -565,6 +576,30 @@ public class Player extends Unit {
 		this.spellUnlocked.clear();
 		this.target = null;
 		this.wear = null;
+	}
+	
+	public void setHasInitParty(boolean we) {
+		this.hasInitParty = we;
+	}
+	
+	public boolean hasInitParty() {
+		return this.hasInitParty;
+	}
+	
+	public void setPlayerParty(Player player) {
+		this.playerParty = player;
+	}
+	
+	public Player getPlayerParty() {
+		return this.playerParty;
+	}
+	
+	public void setParty(Party party) {
+		this.party = party;
+	}
+	
+	public Party getParty() {
+		return this.party;
 	}
 	
 	public void setWeaponType(WeaponType[] type) {

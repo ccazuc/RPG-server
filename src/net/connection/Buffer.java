@@ -1,6 +1,7 @@
 package net.connection;
 
 import java.io.IOException;
+import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ClosedChannelException;
@@ -189,7 +190,13 @@ public class Buffer {
 		writeShort((short)s.length());
 		int i = -1;
 		while(++i < s.length()) {
+			try {
 			writeChar(s.charAt(i));
+			}
+			catch(BufferOverflowException e) {
+				e.printStackTrace();
+				System.out.println("String that caused overflow: "+s+" "+this.buffer.remaining());
+			}
 		}
 		this.written = true;
 	}
@@ -321,7 +328,13 @@ public class Buffer {
 	}
 	
 	protected final void writeChar(final char c) {
-		this.buffer.putChar((char)(Character.MAX_VALUE-c));
+		try {
+			this.buffer.putChar((char)(Character.MAX_VALUE-c));
+		}
+		catch(BufferOverflowException e) {
+			e.printStackTrace();
+			System.out.println("Char that caused the overflow exception; "+c);
+		}
 		this.written = true;
 	}
 	

@@ -87,4 +87,13 @@ public class PacketID {
 	public static final byte FRIEND_REMOVE = 83;
 	public static final byte PLAYER_NOT_FOUND = 84;
 	public static final byte SEND_MESSAGE = 85;
+	public static final byte PARTY = 86;
+	public static final byte PARTY_ADD_MEMBER = 87;
+	public static final byte PARTY_DECLINE_REQUEST = 88;
+	public static final byte PARTY_ACCEPT_REQUEST = 89;
+	public static final byte PARTY_MEMBER_JOINED = 90;
+	public static final byte PARTY_NEW = 91;
+	public static final byte PARTY_DISBAND = 92;
+	public static final byte PARTY_LEFT = 93;
+	public static final byte PARTY_MEMBER_LEFT = 94;
 }

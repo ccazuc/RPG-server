@@ -17,6 +17,7 @@ import net.command.CommandLogin;
 import net.command.CommandLoginRealm;
 import net.command.CommandLogout;
 import net.command.CommandLogoutCharacter;
+import net.command.CommandParty;
 import net.command.CommandPing;
 import net.command.CommandPingConfirmed;
 import net.command.CommandRegisterToAuthServer;
@@ -49,6 +50,7 @@ public class ConnectionManager {
 	private byte lastPacketReaded;
 	private final static String AUTH_SERVER_IP = "127.0.0.1";
 	private final static int AUTH_SERVER_PORT = 5725;
+	private int numberException = 0;
 	
 	public ConnectionManager(Player player, SocketChannel socket) {
 		this.player = player;
@@ -79,6 +81,7 @@ public class ConnectionManager {
 		this.commandList.put((int)FRIEND, new CommandFriend(this));
 		this.commandList.put((int)LOGIN_REALM, new CommandLoginRealm(this));
 		this.commandList.put((int)SEND_MESSAGE, new CommandSendMessage(this));
+		this.commandList.put((int)PARTY, new CommandParty(this));
 	}
 	
 	public static void initAuthCommand() {

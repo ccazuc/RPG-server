@@ -10,7 +10,8 @@ public enum ClassType {
 	PRIEST((char)5),
 	ROGUE((char)6),
 	SHAMAN((char)7),
-	WARLOCK((char)8);
+	WARLOCK((char)8),
+	NPC((char)9);
 	
 	private char value;
 	

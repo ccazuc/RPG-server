@@ -196,7 +196,7 @@ public class Server {
 	
 	public static Player getInGameCharacter(String name) {
 			for(Player player : inGamePlayerList.values()) {
-				if(player.getName().toLowerCase().equals(name) || player.getName().equals(name)) {
+				if(player.getName().equals(name)) {
 					return player;
 				}
 			}
