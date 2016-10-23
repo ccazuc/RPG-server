@@ -47,15 +47,25 @@ public class Buffer {
 	public final int remaining() {
 		return this.buffer.remaining();
 	}
+	
+	public final int capacity() {
+		return this.buffer.capacity();
+	}
 
-	private final void send(final ByteBuffer buffer) throws IOException {
+	private final void send(final ByteBuffer buffer) {
 		buffer.flip();
-		System.out.println("FLIPPED BUFFER");
-		while(buffer.hasRemaining()) {
-			this.socket.write(buffer);
-			System.out.println("WRITE IN BUFFER");
+		//System.out.println("FLIPPED BUFFER");
+		try {
+			while(buffer.hasRemaining()) {
+				this.socket.write(buffer);
+				//System.out.println("WRITE IN BUFFER");
+			}
 		}
-		System.out.println("CLEARED BUFFER");
+		catch(IOException e) {
+			buffer.clear();
+			e.printStackTrace();
+		}
+		//System.out.println("CLEARED BUFFER");
 		buffer.clear();
 	}
 

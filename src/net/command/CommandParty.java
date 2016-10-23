@@ -162,7 +162,7 @@ public class CommandParty extends Command {
 				player.getParty().getPlayerList()[i].getConnection().writeByte(PacketID.PARTY);
 				player.getParty().getPlayerList()[i].getConnection().writeByte(PacketID.PARTY_DISBAND);
 				player.getParty().getPlayerList()[i].getConnection().send();
-				System.out.println(player.getConnection().wBufferRemaining()+" remaining");
+				System.out.println(player.getConnection().wBufferRemaining()+" remaining, capacity: "+player.getConnection().wBufferCapacity()+" "+player.getConnection());
 				CommandSendMessage.write(player.getParty().getPlayerList()[i].getConnection(), "You left the party.", MessageType.SELF);
 			}
 			i++;

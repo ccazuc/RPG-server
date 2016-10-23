@@ -35,12 +35,12 @@ public class CommandSendMessage extends Command {
 				int i = 0;
 				while(i < this.player.getParty().getPlayerList().length) {
 					if(this.player.getParty().getPlayerList()[i] != null) {
-						/*if(this.player.getParty().isPartyLeader(this.player)) {
-							//write(this.player.getParty().getPlayerList()[i].getConnection(), message, this.player.getName(), MessageType.PARTY_LEADER);
-						}*/
-						//else {
+						if(this.player.getParty().isPartyLeader(this.player)) {
+							write(this.player.getParty().getPlayerList()[i].getConnection(), message, this.player.getName(), MessageType.PARTY_LEADER);
+						}
+						else {
 							write(this.player.getParty().getPlayerList()[i].getConnection(), message, this.player.getName(), MessageType.PARTY);
-						//}
+						}
 					}
 					i++;
 				}
@@ -77,7 +77,7 @@ public class CommandSendMessage extends Command {
 		connection.writeString(message);
 		connection.writeString(author);
 		connection.send();
-		System.out.println(message+" "+author+" "+type);
+		//System.out.println(message+" "+author+" "+type);
 	}
 	
 	public static void write(Connection connection, String message, MessageType type) { //used for self
