@@ -13,7 +13,8 @@ public class Party {
 	}
 	
 	public boolean isPartyLeader(Player player) {
-		return player.getCharacterId() == this.playerTable[0].getCharacterId();
+		System.out.println(player+" "+this.partyLeader);
+		return player.getCharacterId() == this.partyLeader.getCharacterId();
 	}
 	
 	public boolean addMember(Player player) {

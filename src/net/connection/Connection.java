@@ -32,6 +32,9 @@ public class Connection {
 		this.socket = socket;
 	}
 
+	public int wBufferRemaining() {
+		return this.wBuffer.remaining();
+	}
 	public final void close() {
 		try {
 			this.socket.close();

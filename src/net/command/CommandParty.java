@@ -39,7 +39,7 @@ public class CommandParty extends Command {
 						}
 					}
 					else {
-						System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
+						//System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
 						CommandSendMessage.write(this.connection, "You are not the party leader.", MessageType.SELF);
 					}
 				}
@@ -69,7 +69,7 @@ public class CommandParty extends Command {
 					this.player.setPlayerParty(null);
 				}
 				else {
-					System.out.println(this.player.hasInitParty()+" "+this.player.getPlayerParty().hasInitParty());
+					//System.out.println(this.player.hasInitParty()+" "+this.player.getPlayerParty().hasInitParty());
 					System.out.println("CommandParty:PARTY_ACCEPT_REQUEST ERROR.");
 				}
 			}
@@ -95,7 +95,7 @@ public class CommandParty extends Command {
 					}
 				}
 				else {
-					System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
+					//System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
 					CommandSendMessage.write(this.player.getPlayerParty().getConnection(), "You are not the party leader.", MessageType.SELF);
 				}
 			}
@@ -162,6 +162,7 @@ public class CommandParty extends Command {
 				player.getParty().getPlayerList()[i].getConnection().writeByte(PacketID.PARTY);
 				player.getParty().getPlayerList()[i].getConnection().writeByte(PacketID.PARTY_DISBAND);
 				player.getParty().getPlayerList()[i].getConnection().send();
+				System.out.println(player.getConnection().wBufferRemaining()+" remaining");
 				CommandSendMessage.write(player.getParty().getPlayerList()[i].getConnection(), "You left the party.", MessageType.SELF);
 			}
 			i++;

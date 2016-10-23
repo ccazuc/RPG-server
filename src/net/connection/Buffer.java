@@ -43,12 +43,19 @@ public class Buffer {
 			throw new ClosedChannelException();
 		}
 	}
+	
+	public final int remaining() {
+		return this.buffer.remaining();
+	}
 
 	private final void send(final ByteBuffer buffer) throws IOException {
 		buffer.flip();
+		System.out.println("FLIPPED BUFFER");
 		while(buffer.hasRemaining()) {
 			this.socket.write(buffer);
+			System.out.println("WRITE IN BUFFER");
 		}
+		System.out.println("CLEARED BUFFER");
 		buffer.clear();
 	}
 
@@ -90,6 +97,7 @@ public class Buffer {
 		else if(item.getItemType() == ItemType.WEAPON) {
 			writeWeapon((Stuff)item);
 		}
+		this.written = true;
 	}
 	
 	protected final void writeStuff(final Stuff stuff) {
@@ -118,6 +126,7 @@ public class Buffer {
 		writeInt(stuff.getArmor());
 		writeInt(stuff.getMana());
 		writeInt(stuff.getSellPrice());
+		this.written = true;
 	}
 	
 	protected final void writeGem(final Gem gem) {
@@ -133,6 +142,7 @@ public class Buffer {
 		writeInt(gem.getMana());
 		writeInt(gem.getCritical());
 		writeInt(gem.getSellPrice());
+		this.written = true;
 	}
 	
 	protected final void writePotion(final Potion potion) {
@@ -145,6 +155,7 @@ public class Buffer {
 		writeInt(potion.getPotionMana());
 		writeInt(potion.getSellPrice());
 		writeInt(potion.getAmount());
+		this.written = true;
 	}
 	
 	protected final void writeWeapon(final Stuff weapon) {
@@ -174,6 +185,7 @@ public class Buffer {
 		writeInt(weapon.getCritical());
 		writeInt(weapon.getStrength());
 		writeInt(weapon.getSellPrice());
+		this.written = true;
 	}
 	
 	protected final void writeContainer(final Container bag) {
@@ -184,6 +196,7 @@ public class Buffer {
 		writeInt(bag.getQuality());
 		writeInt(bag.getSize());
 		writeInt(bag.getSellPrice());
+		this.written = true;
 	}
 
 	protected final void writeString(final String s) {
@@ -191,11 +204,11 @@ public class Buffer {
 		int i = -1;
 		while(++i < s.length()) {
 			try {
-			writeChar(s.charAt(i));
+				writeChar(s.charAt(i));
 			}
 			catch(BufferOverflowException e) {
 				e.printStackTrace();
-				System.out.println("String that caused overflow: "+s+" "+this.buffer.remaining());
+				System.out.println("String that caused overflow: "+s+" remaining: "+this.buffer.remaining()+" position: "+this.buffer.position());
 			}
 		}
 		this.written = true;
@@ -248,7 +261,13 @@ public class Buffer {
 	}
 	
 	protected final void writeShort(final short s) {
-		this.buffer.putShort(s);
+		try {
+			this.buffer.putShort(s);
+		}
+		catch(BufferOverflowException e) {
+			e.printStackTrace();
+				System.out.println("Short that caused overflow: "+s+" remaining: "+this.buffer.remaining()+" position: "+this.buffer.position());
+		}
 		this.written = true;
 	}
 	
@@ -333,7 +352,7 @@ public class Buffer {
 		}
 		catch(BufferOverflowException e) {
 			e.printStackTrace();
-			System.out.println("Char that caused the overflow exception; "+c);
+			System.out.println("Char that caused the overflow exception; "+c+" "+(int)c+" remaining: "+this.buffer.remaining()+" position: "+this.buffer.position());
 		}
 		this.written = true;
 	}

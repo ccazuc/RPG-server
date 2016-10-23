@@ -10,7 +10,11 @@ public enum MessageType {
 	YELL((char)5),
 	DISCUSSION((char)6),
 	SELF((char)7),
-	WHISPER((char)8);
+	WHISPER((char)8),
+	EMOTE((char)9),
+	PARTY_LEADER((char)10),
+	OFFICER_CHAT((char)11),
+	GM_ANNOUNCE((char)12);
 	
 	private char value;
 	
