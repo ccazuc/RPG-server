@@ -69,6 +69,10 @@ public class Party {
 		}
 	}
 	
+	public void setLeader(Player player) {
+		this.partyLeader = player;
+	}
+	
 	public Player[] getPlayerList() {
 		return this.playerTable;
 	}

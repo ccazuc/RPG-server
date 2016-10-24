@@ -176,7 +176,6 @@ public class Buffer {
 		writeString(weapon.getSpriteId());
 		writeInt(weapon.getClassType().length);
 		while(i < weapon.getClassType().length) {
-			System.out.println(weapon.getClassType(i)+" classType");
 			writeChar(weapon.getClassType(i).getValue());
 			i++;
 		}

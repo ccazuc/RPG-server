@@ -89,7 +89,7 @@ public class CommandParty extends Command {
 							else {
 								memberJoinedParty(this.connection, this.player.getParty().getPlayerList()[i]); //send datas about everyone to this.player
 							}
-							CommandSendMessage.write(this.player.getParty().getPlayerList()[i].getConnection(), this.player.getName()+" joined the party.", MessageType.SELF);
+							CommandSendMessage.write(this.player.getParty().getPlayerList()[i].getConnection(), this.player.getName()+" joined your party.", MessageType.SELF);
 						}
 						i++;
 					}
@@ -132,6 +132,17 @@ public class CommandParty extends Command {
 	}
 	
 	private static void kickPlayer(Player player) {
+		boolean wasLeader = false;
+		if(player.getParty().isPartyLeader(player)) {
+			int i = 0;
+			while(i < player.getParty().getPlayerList().length) {
+				if(player.getParty().getPlayerList()[i] != null && player.getParty().getPlayerList()[i].getCharacterId() != player.getCharacterId()) {
+					player.getParty().setLeader(player.getParty().getPlayerList()[i]);
+					break;
+				}
+				i++;
+			}
+		}
 		int i = 0;
 		while(i < player.getParty().getPlayerList().length) {
 			if(player.getParty().getPlayerList()[i] == player) {
@@ -146,6 +157,9 @@ public class CommandParty extends Command {
 				player.getParty().getPlayerList()[i].getConnection().writeInt(player.getCharacterId());
 				player.getParty().getPlayerList()[i].getConnection().send();
 				CommandSendMessage.write(player.getParty().getPlayerList()[i].getConnection(), player.getName()+" left the party.", MessageType.SELF);
+				if(wasLeader) {
+					setLeader(player.getParty().getPlayerList()[i].getConnection(), player.getCharacterId());
+				}
 			}
 			i++;
 		}
@@ -176,6 +190,13 @@ public class CommandParty extends Command {
 			}
 			i++;
 		}
+	}
+	
+	private static void setLeader(Connection connection, int id) {
+		connection.writeByte(PacketID.PARTY);
+		connection.writeByte(PacketID.PARTY_SET_LEADER);
+		connection.writeInt(id);
+		connection.send();
 	}
 	
 	private static void memberJoinedParty(Connection connection, Player joined) {
