@@ -275,7 +275,7 @@ public class Buffer {
 		}
 		catch(BufferOverflowException e) {
 			e.printStackTrace();
-				System.out.println("Short that caused overflow: "+s+" remaining: "+this.buffer.remaining()+" position: "+this.buffer.position());
+			System.out.println("Short that caused overflow: "+s+" remaining: "+this.buffer.remaining()+" position: "+this.buffer.position());
 		}
 		this.written = true;
 	}

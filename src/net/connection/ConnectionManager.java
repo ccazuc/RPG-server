@@ -119,7 +119,8 @@ public class ConnectionManager {
 			}
 		} 
 		catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("IOException on read.");
 			this.player.close();
 		}
 	}
