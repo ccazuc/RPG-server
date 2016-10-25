@@ -23,7 +23,6 @@ public class CommandTrade extends Command {
 		if(packetID == PacketID.TRADE_NEW) { //declare a new trade
 			String traded = this.connection.readString();
 			Player trade = Server.getInGameCharacter(traded);
-			//System.out.println(trade.getName()+" "+this.player.getPlayerTrade()+" "+trade.getPlayerTrade());
 			if(trade != null) {
 				if(trade != this.player) {
 					if(this.player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading
@@ -36,7 +35,9 @@ public class CommandTrade extends Command {
 					this.player.setPlayerTrade(trade);
 					write(PacketID.TRADE_REQUEST, trade, this.player.getName());
 				}
-				CommandSendMessage.write(this.connection, "Can't trade with yourself.", MessageType.SELF);
+				else {
+					CommandSendMessage.write(this.connection, "Can't trade with yourself.", MessageType.SELF);
+				}
 			}
 			else {
 				CommandPlayerNotFound.write(this.connection, traded);
@@ -50,7 +51,6 @@ public class CommandTrade extends Command {
 			this.player.setTrade(this.player.getPlayerTrade().getTrade());
 		}
 		else if(packetID == PacketID.TRADE_ADD_ITEM) { //add an item on trade's frame
-			//System.out.println("Raw item received");
 			int id = this.connection.readInt();
 			int slot = this.connection.readInt();
 			int amount = this.connection.readInt();
@@ -65,7 +65,6 @@ public class CommandTrade extends Command {
 					else {
 						writeAddItemError(this.player, slot); //c po b1 2 modifié lé paké
 					}
-					//System.out.println("Item received: has gem, known");
 				}
 				else {
 					if(this.player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
@@ -74,7 +73,6 @@ public class CommandTrade extends Command {
 					else {
 						writeAddItemError(this.player, slot); //c po b1 2 modifié lé paké
 					}
-					//System.out.println("Item received: has gem, unknown");
 				}
 			}
 			else {
@@ -85,17 +83,14 @@ public class CommandTrade extends Command {
 					else {
 						writeAddItemError(this.player, slot); //c po b1 2 modifié lé paké
 					}
-					//System.out.println("Item received: no gem, known");
 				}
 				else {
 					if(this.player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
 						sendUnknownItem(this.player.getPlayerTrade(), id, slot, amount);
-						System.out.println(id+" "+slot);
 					}
 					else {
 						writeAddItemError(this.player, slot); //c po b1 2 modifié lé paké
 					}
-					//System.out.println("Item received: no gem, unknown");
 				}
 			}
 		}
@@ -189,7 +184,6 @@ public class CommandTrade extends Command {
 		player.getConnection().writeByte(PacketID.TRADE_ADD_ITEM_ERROR);
 		player.getConnection().writeInt(slot);
 		player.getConnection().send();
-		System.out.println("trade error: "+slot);
 	}
 	
 	private static void sendUnknownItem(Player player, int id, int slot, int amount, int gem1Id, int gem2Id, int gem3Id) {
