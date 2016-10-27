@@ -22,6 +22,7 @@ public class CommandTrade extends Command {
 		byte packetID = this.connection.readByte();
 		if(packetID == PacketID.TRADE_NEW) { //declare a new trade
 			String traded = this.connection.readString();
+			traded = traded.substring(0, 1).toUpperCase()+traded.substring(1).toLowerCase();
 			Player trade = Server.getInGameCharacter(traded);
 			if(trade != null) {
 				if(trade != this.player) {
