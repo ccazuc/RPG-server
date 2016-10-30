@@ -14,13 +14,13 @@ public class CommandLoadCharacter extends Command {
 		int id = this.connection.readInt();
 		this.player.setCharacterId(id);
 		this.player.initTable();
+		this.player.loadCharacterInfoSQL();
+		this.player.sendStats();
 		this.player.loadEquippedBagSQL();
 		this.player.loadEquippedItemSQL();
 		this.player.loadBagItemSQL();
-		this.player.loadCharacterInfoSQL();
 		this.player.loadFriendList();
 		//this.player.loadSpellUnlocked();
-		this.player.sendStats();
 		Server.addInGamePlayer(this.player);
 		Server.removeLoggedPlayer(this.player);
 	}

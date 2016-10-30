@@ -452,9 +452,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isHead() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(0, temp);
@@ -465,9 +469,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isNecklace() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(1, temp);
@@ -478,9 +486,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isShoulders() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(2, temp);
@@ -491,9 +503,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isBack() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(3, temp);
@@ -504,9 +520,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isChest() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(4, temp);
@@ -517,9 +537,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isWrists() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(7, temp);
@@ -530,9 +554,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isGloves() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(8, temp);
@@ -543,9 +571,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isBelt() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(9, temp);
@@ -556,9 +588,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isLeggings() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(10, temp);
@@ -569,9 +605,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(StuffManager.exists(id) && StuffManager.getStuff(id).isBoots() && player.canEquipStuff(StuffManager.getStuff(id))) {
 				temp = StuffManager.getClone(id);
 				player.setStuff(11, temp);
@@ -602,9 +642,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(WeaponManager.exists(id) && player.canEquipWeapon(WeaponManager.getWeapon(id))) {
 				temp = WeaponManager.getClone(id);
 				player.setStuff(16, temp);
@@ -615,9 +659,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(WeaponManager.exists(id) && player.canEquipWeapon(WeaponManager.getWeapon(id))) {
 				temp = WeaponManager.getClone(id);
 				player.setStuff(17, temp);
@@ -628,9 +676,13 @@ public class ItemManager {
 			gem2Id = getEquippedItem.getInt();
 			gem3Id = getEquippedItem.getInt();
 			connection.writeInt(id);
-			connection.writeInt(gem1Id);
-			connection.writeInt(gem2Id);
-			connection.writeInt(gem3Id);
+			if(gem1Id != 0 || gem2Id != 0 || gem3Id != 0) {
+				connection.writeBoolean(true);
+				connection.writeInt(gem1Id);
+				connection.writeInt(gem2Id);
+				connection.writeInt(gem3Id);
+			}
+			connection.writeBoolean(false);
 			if(WeaponManager.exists(id) && WeaponManager.getWeapon(id).isRanged() && player.canEquipWeapon(WeaponManager.getWeapon(id))) {
 				temp = WeaponManager.getClone(id);
 				player.setStuff(18, temp);
