@@ -12,17 +12,22 @@ public class CommandLoadCharacter extends Command {
 	@Override
 	public void read() {
 		int id = this.connection.readInt();
-		this.player.setCharacterId(id);
-		this.player.initTable();
-		this.player.loadCharacterInfoSQL();
-		this.player.sendStats();
-		this.player.loadEquippedBagSQL();
-		this.player.loadEquippedItemSQL();
-		this.player.loadBagItemSQL();
-		this.player.loadFriendList();
-		//this.player.loadSpellUnlocked();
-		Server.addInGamePlayer(this.player);
-		Server.removeLoggedPlayer(this.player);
+		if(Server.getLoggedPlayerList().containsKey(id)) {
+			this.player.setCharacterId(id);
+			this.player.initTable();
+			this.player.loadCharacterInfoSQL();
+			this.player.sendStats();
+			this.player.loadEquippedBagSQL();
+			this.player.loadEquippedItemSQL();
+			this.player.loadBagItemSQL();
+			this.player.loadFriendList();
+			//this.player.loadSpellUnlocked();
+			Server.addInGamePlayer(this.player);
+			Server.removeLoggedPlayer(this.player);
+		}
+		else {
+			//player is using WPE
+		}
 	}
 	
 	@Override

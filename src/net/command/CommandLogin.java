@@ -45,7 +45,7 @@ public class CommandLogin extends Command {
 						if((ban == 0 && banDuration > 0) || (ban == 1 && banDuration < System.currentTimeMillis())) {
 							updateBan(id, ban, banDuration);
 						}
-						if(Server.getPlayerList().containsKey(id)) {
+						if(Server.getLoggedPlayerList().containsKey(id)) {
 							this.player.getConnectionManager().getConnection().writeByte(PacketID.LOGIN);
 							this.player.getConnectionManager().getConnection().writeByte(PacketID.ALREADY_LOGGED);
 							this.player.getConnectionManager().getConnection().send();
@@ -90,10 +90,16 @@ public class CommandLogin extends Command {
 
 	@Override
 	public void read() {
-		loginRequest.setPlayer(this.player);
-		loginRequest.setUserName(this.connection.readString().toLowerCase());
-		loginRequest.setPassword(this.connection.readString());
-		Server.addNewRequest(loginRequest);
+		if(!Server.getInGamePlayerList().containsKey(this.player.getCharacterId()) && !Server.getLoggedPlayerList().containsKey(this.player.getCharacterId())) {
+			loginRequest.setPlayer(this.player);
+			loginRequest.setUserName(this.connection.readString().toLowerCase());
+			loginRequest.setPassword(this.connection.readString());
+			Server.addNewRequest(loginRequest);
+		}
+		else {
+			//player is using WPE
+		}
+		
 	}
 	
 	static void updateBan(int id, int ban, int banDuration) throws SQLException {

@@ -235,7 +235,7 @@ public class Server {
 		ConnectionManager.readAuthServer();
 	}
 	
-	public static Map<Integer, Player> getPlayerList() {
+	public static Map<Integer, Player> getLoggedPlayerList() {
 		synchronized(loggedPlayerList) {
 			return loggedPlayerList;
 		}

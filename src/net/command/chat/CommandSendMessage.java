@@ -77,7 +77,6 @@ public class CommandSendMessage extends Command {
 		connection.writeString(message);
 		connection.writeString(author);
 		connection.send();
-		//System.out.println(message+" "+author+" "+type);
 	}
 	
 	public static void write(Connection connection, String message, MessageType type) { //used for self

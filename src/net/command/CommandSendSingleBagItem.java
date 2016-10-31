@@ -25,9 +25,9 @@ public class CommandSendSingleBagItem extends Command {
 			int gem2Id = this.connection.readInt();
 			int gem3Id = this.connection.readInt();
 			if(this.player.getBag().getBag(i) != null) {
-				((Stuff)this.player.getBag().getBag(i)).setEquippedGem1(GemManager.getClone(gem1Id));
-				((Stuff)this.player.getBag().getBag(i)).setEquippedGem1(GemManager.getClone(gem2Id));
-				((Stuff)this.player.getBag().getBag(i)).setEquippedGem1(GemManager.getClone(gem3Id));
+				((Stuff)this.player.getBag().getBag(i)).setEquippedGem(0, GemManager.getClone(gem1Id));
+				((Stuff)this.player.getBag().getBag(i)).setEquippedGem(1, GemManager.getClone(gem2Id));
+				((Stuff)this.player.getBag().getBag(i)).setEquippedGem(2, GemManager.getClone(gem3Id));
 			}
 		}
 		else if(item.isItem() || item.isPotion()) {

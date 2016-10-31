@@ -98,4 +98,5 @@ public class PacketID {
 	public static final byte PARTY_MEMBER_LEFT = 94;
 	public static final byte PARTY_SET_LEADER = 95;
 	public static final byte PARTY_KICK_PLAYER = 96;
+	public static final byte CONTAINER = 97;
 }

@@ -18,12 +18,17 @@ public class CommandLogoutCharacter extends Command {
 
 	@Override
 	public void read() {
-		sendOfflineToFriend(this.player);
-		setPlayerOfflineInDB(this.player);
-		Server.addLoggedPlayer(this.player);
-		Server.removeInGamePlayer(this.player);
-		this.player.resetDatas();
-		CommandTrade.closeTrade(this.player);
+		if(Server.getInGamePlayerList().containsKey(this.player.getCharacterId())) {
+			sendOfflineToFriend(this.player);
+			setPlayerOfflineInDB(this.player);
+			Server.addLoggedPlayer(this.player);
+			Server.removeInGamePlayer(this.player);
+			this.player.resetDatas();
+			CommandTrade.closeTrade(this.player);
+		}
+		else {
+			//player is using WPE
+		}
 	}
 	
 	public static void sendOfflineToFriend(Player player) {

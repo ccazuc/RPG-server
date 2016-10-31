@@ -19,8 +19,12 @@ public class CommandSelectScreenLoadCharacters extends Command {
 
 	@Override
 	public void read() {
-		int accountId = this.connection.readInt();
-		write(accountId);
+		if(!Server.getInGamePlayerList().containsKey(this.player.getCharacterId())) {
+			write(this.player.getAccountId());
+		}
+		else {
+			//player is using WPE
+		}
 	}
 	
 	private void write(int accountId) {

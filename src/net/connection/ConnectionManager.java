@@ -31,6 +31,7 @@ import net.command.chat.CommandListPlayer;
 import net.command.chat.CommandPlayerInfo;
 import net.command.chat.CommandSendMessage;
 import net.command.chat.CommandSet;
+import net.command.item.CommandContainer;
 import net.command.item.CommandGem;
 import net.command.item.CommandPotion;
 import net.command.item.CommandRequestItem;
@@ -74,6 +75,7 @@ public class ConnectionManager {
 		this.commandList.put((int)STUFF, new CommandStuff(this));
 		this.commandList.put((int)PING, new CommandPing(this));
 		this.commandList.put((int)GEM, new CommandGem(this));
+		this.commandList.put((int)CONTAINER, new CommandContainer(this));
 		this.commandList.put((int)SPELL_CAST, new CommandSpellCast(this));
 		this.commandList.put((int)UPDATE_STATS, new CommandUpdateStats(this));
 		this.commandList.put((int)CHARACTER_LOGOUT, new CommandLogoutCharacter(this));

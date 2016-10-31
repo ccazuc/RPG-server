@@ -12,15 +12,13 @@ import net.game.item.weapon.WeaponType;
 
 public class Stuff extends Item {
 
+	private Gem[] equippedGem = new Gem[3];
 	private boolean gemBonusActivated;
 	private GemBonusType gemBonusType;
 	private ClassType[] classType;
 	private WeaponType weaponType;
 	private WeaponSlot weaponSlot;
 	private int gemBonusValue;
-	private Gem equippedGem1;
-	private Gem equippedGem2;
-	private Gem equippedGem3;
 	private GemColor color1;
 	private GemColor color2;
 	private GemColor color3;
@@ -108,11 +106,11 @@ public class Stuff extends Item {
 	
 	public boolean checkBonusTypeActivated() {
 		if(this.color1 != GemColor.NONE || this.color2 != GemColor.NONE || this.color3 != GemColor.NONE) {
-			if(this.equippedGem1 != null && isBonusActivated(this.equippedGem1.getColor(), this.color1)) {
+			if(this.equippedGem[0] != null && isBonusActivated(this.equippedGem[0].getColor(), this.color1)) {
 				if(this.color2 != GemColor.NONE) {
-					if(this.equippedGem2 != null && isBonusActivated(this.equippedGem2.getColor(), this.color2)) {
+					if(this.equippedGem[1] != null && isBonusActivated(this.equippedGem[1].getColor(), this.color2)) {
 						if(this.color3 != GemColor.NONE) {
-							if(this.equippedGem3 != null && isBonusActivated(this.equippedGem3.getColor(), this.color3)) {
+							if(this.equippedGem[2] != null && isBonusActivated(this.equippedGem[2].getColor(), this.color3)) {
 								this.gemBonusActivated = true;
 								return true;
 							}
@@ -135,14 +133,14 @@ public class Stuff extends Item {
 	
 	public int getStatsFromGems(GemBonusType type) {
 		int stats = 0;
-		if(this.equippedGem1 != null ) {
-			stats+= this.equippedGem1.getBonusValue(type);
+		if(this.equippedGem[0] != null ) {
+			stats+= this.equippedGem[0].getBonusValue(type);
 		}
-		if(this.equippedGem2 != null) {
-			stats+= this.equippedGem2.getBonusValue(type);
+		if(this.equippedGem[1] != null) {
+			stats+= this.equippedGem[1].getBonusValue(type);
 		}
-		if(this.equippedGem3 != null) {
-			stats+= this.equippedGem3.getBonusValue(type);
+		if(this.equippedGem[2] != null) {
+			stats+= this.equippedGem[2].getBonusValue(type);
 		}
 		return stats;
 	}
@@ -178,28 +176,16 @@ public class Stuff extends Item {
 	public int getGemBonusValue() {
 		return this.gemBonusValue;
 	}
-	public void setEquippedGem1(Gem gem) {
-		this.equippedGem1 = gem;
+	
+	public void setEquippedGem(int slot, Gem gem) {
+		this.equippedGem[slot] = gem;
+		if(gem != null) {
+			checkBonusTypeActivated();
+		}
 	}
 	
-	public void setEquippedGem2(Gem gem) {
-		this.equippedGem2 = gem;
-	}
-	
-	public void setEquippedGem3(Gem gem) {
-		this.equippedGem3 = gem;
-	}
-	
-	public Gem getEquippedGem1() {
-		return this.equippedGem1;
-	}
-	
-	public Gem getEquippedGem2() {
-		return this.equippedGem2;
-	}
-	
-	public Gem getEquippedGem3() {
-		return this.equippedGem3;
+	public Gem getEquippedGem(int slot) {
+		return this.equippedGem[slot];
 	}
 	
 	public boolean isBonusActivated(GemColor gemColor, GemColor slotColor) {
