@@ -15,6 +15,7 @@ import net.game.Player;
 public class CommandFriend extends Command {
 
 	private static JDOStatement searchPlayer;
+	private static JDOStatement removeFriendFromDB;
 	
 	public CommandFriend(ConnectionManager connectionManager) {
 		super(connectionManager);
@@ -26,10 +27,10 @@ public class CommandFriend extends Command {
 		if(packetId == PacketID.FRIEND_ADD) {
 			String name = this.connection.readString();
 			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-			Player player = Server.getCharacter(name); //TODO: search character in DB
+			Player player = Server.getCharacter(name);
 			int character_id = 0;
 			if(player == null) { //player is offline or doesn't exist
-				character_id = checkPlayerInDB(name);
+				character_id = checkPlayerInDB(name); //player is offline
 			}
 			if(player != null || character_id != 0) {
 				if(!name.equals(this.player.getName())) {
@@ -59,7 +60,18 @@ public class CommandFriend extends Command {
 			}
 		}
 		else if(packetId == PacketID.FRIEND_REMOVE) {
-			
+			int id = this.connection.readInt();
+			if(id != this.player.getCharacterId()) {
+				if(this.player.removeFriend(id)) {
+					removeFriendFromDB(this.player.getCharacterId(), id);
+				}
+				else {
+					CommandSendMessage.write(this.connection, "This player is not in your friendlist.", MessageType.SELF);
+				}
+			}
+			else {
+				CommandSendMessage.write(this.connection, "You can't delete yourself.", MessageType.SELF);
+			}
 		}
 	}
 	
@@ -81,6 +93,21 @@ public class CommandFriend extends Command {
 			e.printStackTrace();
 		}
 		return id;
+	}
+	
+	private static void removeFriendFromDB(int character_id, int friend_id) {
+		try {
+			if(removeFriendFromDB == null) {
+				removeFriendFromDB = Server.getJDO().prepare("DELETE FROM friend WHERE character_id = ?, friend_id = ?");
+			}
+			removeFriendFromDB.clear();
+			removeFriendFromDB.putInt(character_id);
+			removeFriendFromDB.putInt(friend_id);
+			removeFriendFromDB.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static void addOnlineFriend(Player player, Player friend) {

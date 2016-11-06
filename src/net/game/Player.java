@@ -358,6 +358,18 @@ public class Player extends Unit {
 		return false;
 	}
 	
+	public boolean removeFriend(int id) {
+		int i = 0;
+		while(i < this.friendList.size()) {
+			if(this.friendList.get(i) == id) {
+				this.friendList.remove(i);
+				return true;
+			}
+			i++;
+		}
+		return false;
+	}
+	
 	public void addIgnore(int id) {
 		this.ignoreList.add(id);
 	}

@@ -43,12 +43,12 @@ public class Server {
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
 	private static HashMap<Integer, ArrayList<Integer>> friendMap = new HashMap<Integer, ArrayList<Integer>>();
 	
-	private final static String REALM_NAME = "Main Server";
-	private final static int REALM_ID = 10;
-	private final static int PORT = 5720;
+	private final static String REALM_NAME = "Main Server Test";
+	private final static int REALM_ID = 15;
+	private final static int PORT = 5721;
 	
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
-		System.out.println("WORLD SERVER");
+		System.out.println("WORLD SERVER TEST");
 		long time = System.currentTimeMillis();
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
 		CharacterManager.checkOnlinePlayers();
