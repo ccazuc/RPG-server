@@ -12,7 +12,7 @@ public class CommandLoadCharacter extends Command {
 	@Override
 	public void read() {
 		int id = this.connection.readInt();
-		if(Server.getLoggedPlayerList().containsKey(id)) {
+		if(Server.getLoggedPlayerList().containsKey(this.player.getAccountId())) {
 			this.player.setCharacterId(id);
 			this.player.initTable();
 			this.player.loadCharacterInfoSQL();
@@ -21,6 +21,8 @@ public class CommandLoadCharacter extends Command {
 			this.player.loadEquippedItemSQL();
 			this.player.loadBagItemSQL();
 			this.player.loadFriendList();
+			CommandFriend.loadFriendList(this.player);
+			this.player.notifyFriendOnline();
 			//this.player.loadSpellUnlocked();
 			Server.addInGamePlayer(this.player);
 			Server.removeLoggedPlayer(this.player);

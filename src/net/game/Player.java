@@ -6,9 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.Server;
+import net.command.CommandFriend;
 import net.command.CommandLogoutCharacter;
 import net.command.CommandParty;
 import net.command.CommandTrade;
+import net.command.chat.CommandSendMessage;
+import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
@@ -40,9 +43,8 @@ public class Player extends Unit {
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
 	private ItemManager itemManager = new ItemManager();
 	private HashMap<Integer, Spell> spellUnlocked;
+	private ArrayList<Integer> playerWhoAreFriend;
 	private ConnectionManager connectionManager;
-	//private ArrayList<Player> friendList;
-	//private ArrayList<Player> ignoreList;
 	private ArrayList<Integer> friendList;
 	private ArrayList<Integer> ignoreList;
 	private Profession secondProfession;
@@ -184,8 +186,7 @@ public class Player extends Unit {
 		this.spells = new Shortcut[36];
 		this.stuff = new Stuff[19];
 		this.spellUnlocked = new HashMap<Integer, Spell>();
-		//this.friendList = new ArrayList<Player>();
-		//this.ignoreList = new ArrayList<Player>();
+		this.playerWhoAreFriend = new ArrayList<Integer>();
 		this.friendList = new ArrayList<Integer>();
 		this.ignoreList = new ArrayList<Integer>();
 		this.bag = new Bag();
@@ -279,16 +280,43 @@ public class Player extends Unit {
 		}
 	}
 	
+	public void notifyFriendOnline() {
+		int i = 0;
+		if(Server.getFriendMap().containsKey(this.characterId)) {
+			int length = Server.getFriendMap().get(this.characterId).size();
+			while(i < length) {
+				if(Server.getInGamePlayerList().containsKey(Server.getFriendMap().get(this.characterId).get(i))) {
+					CommandFriend.notifyFriendOnline(Server.getInGameCharacter(Server.getFriendMap().get(this.characterId).get(i)), this);
+				}
+				i++;
+			}
+		}
+	}
+	
+	public void notifyFriendOffline() {
+		int i = 0;
+		if(Server.getFriendMap().containsKey(this.characterId)) {
+			int length = Server.getFriendMap().get(this.characterId).size();
+			while(i < length) {
+				if(Server.getInGamePlayerList().containsKey(Server.getFriendMap().get(this.characterId).get(i))) {
+					CommandFriend.notifyFriendOffline(Server.getInGameCharacter(Server.getFriendMap().get(this.characterId).get(i)), this);
+				}
+				i++;
+			}
+		}
+	}
+	
 	public void close() {
+		if(Server.getInGamePlayerList().containsKey(this.characterId)) {
+			notifyFriendOffline();
+		}
+		Server.getFriendMap().remove(this.characterId);
 		CommandLogoutCharacter.setPlayerOfflineInDB(this);
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);
 		}
 		if(this.party != null || this.playerParty != null) {
 			CommandParty.leaveParty(this);
-		}
-		if(Server.getInGamePlayerList().containsKey(this.characterId)) {
-			CommandLogoutCharacter.sendOfflineToFriend(this);
 		}
 		this.connectionManager.getConnection().close();
 		Server.removeNonLoggedPlayer(this);
@@ -348,6 +376,10 @@ public class Player extends Unit {
 	
 	public ArrayList<Integer> getIgnoreList() {
 		return this.ignoreList;
+	}
+	
+	public ArrayList<Integer> getPlayerWhoAreFriend() {
+		return this.playerWhoAreFriend;
 	}
 	
 	public boolean addFriend(int id) {

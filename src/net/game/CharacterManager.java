@@ -85,10 +85,10 @@ public class CharacterManager {
 		}
 	}
 	
-	public void loadFriendList(Player player) throws SQLException {
+	/*public void loadFriendList(Player player) throws SQLException {
 		if(loadPlayerFriend == null) {
 			//loadPlayerFriend = Server.getJDO().prepare("SELECT character_id FROM friend WHERE friend_id = ? AND online = 1");
-			loadPlayerFriend = Server.getJDO().prepare("SELECT `friend`.`character_id`, online FROM `friend`, `character` WHERE `friend`.`friend_id` = ? AND `character`.`character_id` = `friend`.`friend_id` AND `character`.`online` = 1");
+			loadPlayerFriend = Server.getJDO().prepare("SELECT `friend`.`character_id`, `character`.`online` FROM `friend`, `character` WHERE `friend`.`friend_id` = ? AND `character`.`character_id` = `friend`.`friend_id` AND `character`.`online` = 1");
 			loadFriend = Server.getJDO().prepare("SELECT friend_id FROM friend WHERE character_id = ?");
 		}
 		ArrayList<Integer> temp = new ArrayList<Integer>();
@@ -96,7 +96,9 @@ public class CharacterManager {
 		loadPlayerFriend.putInt(player.getCharacterId());
 		loadPlayerFriend.execute();
 		while(loadPlayerFriend.fetch()) {
-			temp.add(loadPlayerFriend.getInt());
+			int id = loadPlayerFriend.getInt();
+			temp.add(id);
+			System.out.println("Friend id: "+id);
 		}
 		Server.getFriendMap().put(player.getCharacterId(), temp);
 		
@@ -109,6 +111,32 @@ public class CharacterManager {
 			if(Server.getInGamePlayerList().containsKey(id)) {
 				Server.getFriendMap().get(id).add(player.getCharacterId());
 			}
+		}
+	}*/
+	
+	public void loadFriendList(Player player) throws SQLException {
+		if(loadPlayerFriend == null) {
+			loadPlayerFriend = Server.getJDO().prepare("SELECT character_id FROM friend WHERE friend_id = ?");
+			loadFriend = Server.getJDO().prepare("SELECT friend_id FROM friend WHERE character_id = ?");
+		}
+		loadPlayerFriend.clear();
+		loadPlayerFriend.putInt(player.getCharacterId());
+		loadPlayerFriend.execute();
+		while(loadPlayerFriend.fetch()) {
+			int id = loadPlayerFriend.getInt();
+			if(!Server.getFriendMap().containsKey(player.getCharacterId())) {
+				Server.getFriendMap().put(player.getCharacterId(), new ArrayList<Integer>());
+			}
+			Server.getFriendMap().get(player.getCharacterId()).add(id);
+			//System.out.println("Friended id: "+id);
+		}
+		
+		loadFriend.clear();
+		loadFriend.putInt(player.getCharacterId());
+		loadFriend.execute();
+		while(loadFriend.fetch()) {
+			int id = loadFriend.getInt();
+			player.getFriendList().add(id);
 		}
 	}
 	

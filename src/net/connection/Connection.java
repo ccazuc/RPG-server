@@ -66,7 +66,8 @@ public class Connection {
 			this.wBuffer.send();
 		} 
 		catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println("IOException on send");
 		}
 	}
 	

@@ -19,8 +19,8 @@ public class CommandLogoutCharacter extends Command {
 	@Override
 	public void read() {
 		if(Server.getInGamePlayerList().containsKey(this.player.getCharacterId())) {
-			sendOfflineToFriend(this.player);
 			setPlayerOfflineInDB(this.player);
+			this.player.notifyFriendOffline();
 			Server.addLoggedPlayer(this.player);
 			Server.removeInGamePlayer(this.player);
 			this.player.resetDatas();
@@ -29,24 +29,6 @@ public class CommandLogoutCharacter extends Command {
 		else {
 			//player is using WPE
 		}
-	}
-	
-	public static void sendOfflineToFriend(Player player) {
-		int i = 0;
-		while(i < Server.getFriendMap().get(player.getCharacterId()).size()) {
-			if(Server.getInGamePlayerList().containsKey(Server.getFriendMap().get(player.getCharacterId()).get(i))) {
-				writeOfflineMessage(Server.getInGamePlayerList().get(Server.getFriendMap().get(player.getCharacterId()).get(i)), player.getName());
-				Server.getFriendMap().get(player.getCharacterId()).remove(i);
-			}
-			i++;
-		}
-	}
-	
-	private static void writeOfflineMessage(Player player, String name) {
-		player.getConnection().writeByte(PacketID.FRIEND);
-		player.getConnection().writeByte(PacketID.FRIEND_OFFLINE);
-		player.getConnection().writeString(name);
-		player.getConnection().send();
 	}
 	
 	public static void setPlayerOfflineInDB(Player player) {
