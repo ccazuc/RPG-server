@@ -45,6 +45,10 @@ public class GuildRank {
 		return this.permissionList[CAN_INVITE_MEMBER];
 	}
 	
+	public boolean canSeeOfficerNote() {
+		return this.permissionList[CAN_SEE_OFFICER_NOTE];
+	}
+	
 	public int getOrder() {
 		return this.order;
 	}

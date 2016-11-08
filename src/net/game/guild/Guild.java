@@ -33,6 +33,10 @@ public class Guild {
 		return null;
 	}
 	
+	public int getLeaderId() {
+		return this.leader_id;
+	}
+	
 	public boolean isLeader(int id) {
 		return this.leader_id == id;
 	}

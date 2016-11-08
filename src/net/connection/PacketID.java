@@ -103,4 +103,5 @@ public class PacketID {
 	public static final byte GUILD = 99;
 	public static final byte GUILD_UPDATE_PERMISSION = 100;
 	public static final byte GUILD_INVITE_PLAYER = 101;
+	public static final byte GUILD_INIT = 102;
 }

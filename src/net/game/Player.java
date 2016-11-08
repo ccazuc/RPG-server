@@ -10,12 +10,11 @@ import net.command.CommandFriend;
 import net.command.CommandLogoutCharacter;
 import net.command.CommandParty;
 import net.command.CommandTrade;
-import net.command.chat.CommandSendMessage;
-import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.guild.Guild;
+import net.game.guild.GuildManager;
 import net.game.item.Item;
 import net.game.item.ItemManager;
 import net.game.item.ItemType;
@@ -41,6 +40,7 @@ public class Player extends Unit {
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private CharacterManager characterManager = new CharacterManager();
 	private SpellBarManager spellBarManager = new SpellBarManager();
+	private GuildManager guildManager = new GuildManager();
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
 	private ItemManager itemManager = new ItemManager();
 	private HashMap<Integer, Spell> spellUnlocked;
@@ -192,6 +192,15 @@ public class Player extends Unit {
 		this.friendList = new ArrayList<Integer>();
 		this.ignoreList = new ArrayList<Integer>();
 		this.bag = new Bag();
+	}
+	
+	public void loadGuild() {
+		try {
+			this.guildManager.loadGuild(this);
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void loadBagItemSQL() {
@@ -963,6 +972,37 @@ public class Player extends Unit {
 		}
 		if(type == ClassType.WARLOCK) {
 			return warlock;
+		}
+		return null;
+	}
+	
+	public static ClassType convStringToClassType(String classType) {
+		if(classType.equals(warrior)) {
+			return ClassType.GUERRIER;
+		}
+		if(classType.equals(druid)) {
+			return ClassType.DRUID;
+		}
+		if(classType.equals(hunter)) {
+			return ClassType.HUNTER;
+		}
+		if(classType.equals(mage)) {
+			return ClassType.MAGE;
+		}
+		if(classType.equals(paladin)) {
+			return ClassType.PALADIN;
+		}
+		if(classType.equals(priest)) {
+			return ClassType.PRIEST;
+		}
+		if(classType.equals(rogue)) {
+			return ClassType.ROGUE;
+		}
+		if(classType.equals(shaman)) {
+			return ClassType.SHAMAN;
+		}
+		if(classType.equals(warlock)) {
+			return ClassType.WARLOCK;
 		}
 		return null;
 	}

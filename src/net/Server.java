@@ -17,6 +17,7 @@ import net.connection.ConnectionManager;
 import net.connection.Key;
 import net.game.CharacterManager;
 import net.game.Player;
+import net.game.guild.Guild;
 import net.game.item.ItemManager;
 import net.game.item.bag.ContainerManager;
 import net.game.item.gem.GemManager;
@@ -42,6 +43,7 @@ public class Server {
 	private static MyRunnable runnable;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
 	private static HashMap<Integer, ArrayList<Integer>> friendMap = new HashMap<Integer, ArrayList<Integer>>();
+	private static HashMap<Integer, Guild> guildList = new HashMap<Integer, Guild>();
 	
 	private final static String REALM_NAME = "Main Server Test";
 	private final static int REALM_ID = 15;
@@ -221,6 +223,20 @@ public class Server {
 			}
 		}
 		return false;
+	}
+	
+	public static HashMap<Integer, Guild> getGuildList() {
+		return guildList;
+	}
+	
+	public static Guild getGuildList(int id) {
+		return guildList.get(id);
+	}
+	
+	public static void addGuild(Guild guild) {
+		if(guild != null) {
+			guildList.put(guild.getId(), guild);
+		}
 	}
 	
 	public static void addNewRequest(SQLRequest request) {
