@@ -18,11 +18,11 @@ public class Unit {
 	private int goldGained;
 	
 	public Unit(UnitType unitType, int id, int stamina, int maxStamina, int mana, int maxMana, int level, String name, int armor, int critical, int strength, int expGained, int goldGained) {
-		/*this.stamina = stamina;
+		this.stamina = stamina;
 		this.maxStamina = maxStamina;
 		this.mana = mana;
-		this.maxMana = maxMana;*/
-		this.stamina = 3500;
+		this.maxMana = maxMana;
+		this.stamina = 3500;       //debug
 		this.maxStamina = 5000;
 		this.mana = 6000;
 		this.maxMana = 7500;

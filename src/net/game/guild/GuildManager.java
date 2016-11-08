@@ -21,8 +21,8 @@ public class GuildManager {
 			loadPlayerGuild = Server.getJDO().prepare("SELECT guild_id FROM guild_member WHERE member_id = ?");
 			loadRank = Server.getJDO().prepare("SELECT rank_order, permission, name FROM guild_rank WHERE guild_id = ?");
 			loadMember = Server.getJDO().prepare("SELECT member_id, rank, note, officer_note FROM guild_member WHERE guild_id = ?");
-			loadGuildInformation = Server.getJDO().prepare("SELECT name, leader_id, information, motd FROM guild WHERE guild_id = ?");
-			loadMemberInformation = Server.getJDO().prepare("SELECT name, online, level, class FROM `character` WHERE character_id = ?");
+			loadGuildInformation = Server.getJDO().prepare("SELECT name, leader_id, information, motd FROM guild WHERE id = ?");
+			loadMemberInformation = Server.getJDO().prepare("SELECT name, online, experience, class FROM `character` WHERE character_id = ?");
 		}
 		int guildId = 0;
 		loadPlayerGuild.clear();
@@ -70,7 +70,7 @@ public class GuildManager {
 				if(loadMemberInformation.fetch()) {
 					String name = loadMemberInformation.getString();
 					boolean isOnline = loadMemberInformation.getInt() == 0 ? false : true;
-					int level = loadMemberInformation.getInt();
+					int level = Player.getLevel(loadMemberInformation.getInt());
 					ClassType type = Player.convStringToClassType(loadMemberInformation.getString());
 					memberList.add(new GuildMember(member_id, name, level, guildRank, isOnline, note, officerNote, type));
 				}

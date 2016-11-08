@@ -18,6 +18,9 @@ public class CommandSendMessage extends Command {
 	public void read() {
 		String message = this.connection.readString();
 		MessageType type = MessageType.values()[this.connection.readChar()];
+		if(message.length() > MAXIMUM_LENGTH) {
+			message = message.substring(0, MAXIMUM_LENGTH);
+		}
 		if(type == MessageType.WHISPER) {
 			String target = this.connection.readString();
 			target = target.substring(0, 1).toUpperCase()+target.substring(1).toLowerCase();
@@ -49,10 +52,27 @@ public class CommandSendMessage extends Command {
 				write(this.connection, "You are not in a party.", MessageType.SELF);
 			}
 		}
-		else {
-			if(message.length() < MAXIMUM_LENGTH) {
-				sendMessageToUsers(message, this.player.getName(), type);
+		else if(type == MessageType.GUILD) {
+			if(this.player.getGuild() != null) {
+				if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().canTalkInGuildChannel()) {
+					int i = 0;
+					while(i < this.player.getGuild().getMemberList().size()) {
+						if(this.player.getGuild().getMemberList().get(i).isOnline()) {
+							write(Server.getInGameCharacter(this.player.getGuild().getMemberList().get(i).getId()).getConnection(), message, this.player.getName(), MessageType.GUILD);
+						}
+						i++;
+					}
+				}
+				else {
+					write(this.connection, "You don't have the right to do this.", MessageType.SELF);
+				}
 			}
+			else {
+				write(this.connection, "You are not in a guild.", MessageType.SELF);
+			}
+		}
+		else {
+			sendMessageToUsers(message, this.player.getName(), type);
 		}
 	}
 	

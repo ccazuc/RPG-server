@@ -49,6 +49,11 @@ public class GuildRank {
 		return this.permissionList[CAN_SEE_OFFICER_NOTE];
 	}
 	
+	public boolean canTalkInGuildChannel() {
+		//return this.permissionList[CAN_TALK_GUILD_CHANNEL];
+		return true;
+	}
+	
 	public int getOrder() {
 		return this.order;
 	}

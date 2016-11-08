@@ -7,6 +7,7 @@ import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
+import net.game.ClassType;
 import net.game.Player;
 import net.game.guild.GuildRank;
 
@@ -119,6 +120,7 @@ public class CommandGuild extends Command {
 					connection.writeString(player.getGuild().getMemberList().get(i).getOfficerNote());
 					connection.writeInt(player.getGuild().getMemberList().get(i).getRank().getOrder());
 					connection.writeBoolean(Server.getInGamePlayerList().containsKey(player.getGuild().getMemberList().get(i).getId()));
+					i++;
 				}
 			}
 			else {
@@ -126,10 +128,12 @@ public class CommandGuild extends Command {
 					connection.writeInt(player.getGuild().getMemberList().get(i).getId());
 					connection.writeInt(player.getGuild().getMemberList().get(i).getLevel());
 					connection.writeString(player.getGuild().getMemberList().get(i).getName());
-					connection.writeChar(player.getGuild().getMemberList().get(i).getClassType().getValue());
+					//connection.writeChar(player.getGuild().getMemberList().get(i).getClassType().getValue());
+					connection.writeChar(ClassType.GUERRIER.getValue());
 					connection.writeString(player.getGuild().getMemberList().get(i).getNote());
 					connection.writeInt(player.getGuild().getMemberList().get(i).getRank().getOrder());
 					connection.writeBoolean(Server.getInGamePlayerList().containsKey(player.getGuild().getMemberList().get(i).getId()));
+					i++;
 				}
 			}
 			connection.send();
