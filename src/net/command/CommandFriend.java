@@ -29,30 +29,35 @@ public class CommandFriend extends Command {
 		if(packetId == PacketID.FRIEND_ADD) {
 			String name = this.connection.readString();
 			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-			Player player = Server.getCharacter(name);
+			Player player = Server.getInGameCharacter(name);
 			int character_id = 0;
 			if(player == null) { //player is offline or doesn't exist
 				character_id = checkPlayerInDB(name); //player is offline
 			}
 			if(player != null || character_id != 0) {
 				if(!name.equals(this.player.getName())) {
-					if(player != null) {
-						if(this.player.addFriend(player.getCharacterId())) {
-							addOnlineFriend(this.player, player);
-							addFriendInDB(this.player, player.getCharacterId());
+					if((player != null && !this.player.isFriendWith(player)) || (character_id != 0 && !this.player.isFriendWith(character_id))) {
+						if(player != null) {
+							if(this.player.addFriend(player.getCharacterId())) {
+								addOnlineFriend(this.player, player);
+								addFriendInDB(this.player, player.getCharacterId());
+							}
+							else {
+								CommandSendMessage.write(this.connection, "Your friendlist is full.", MessageType.SELF);
+							}
 						}
-						else {
-							CommandSendMessage.write(this.connection, "Your friendlist is full.", MessageType.SELF);
+						else if(character_id != 0) {
+							if(this.player.addFriend(character_id)) {
+								addOfflineFriend(this.connection, character_id, name);
+								addFriendInDB(this.player, character_id);
+							}
+							else {
+								CommandSendMessage.write(this.connection, "Your friendlist is full.", MessageType.SELF);
+							}
 						}
 					}
-					else if(character_id != 0) {
-						if(this.player.addFriend(character_id)) {
-							addOfflineFriend(this.connection, character_id, name);
-							addFriendInDB(this.player, character_id);
-						}
-						else {
-							CommandSendMessage.write(this.connection, "Your friendlist is full.", MessageType.SELF);
-						}
+					else {
+						CommandSendMessage.write(this.connection, name+" is already in your friendlist.", MessageType.SELF);
 					}
 				}
 				else {

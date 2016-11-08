@@ -100,4 +100,7 @@ public class PacketID {
 	public static final byte PARTY_KICK_PLAYER = 96;
 	public static final byte CONTAINER = 97;
 	public static final byte FRIEND_LOAD_ALL = 98;
+	public static final byte GUILD = 99;
+	public static final byte GUILD_UPDATE_PERMISSION = 100;
+	public static final byte GUILD_INVITE_PLAYER = 101;
 }

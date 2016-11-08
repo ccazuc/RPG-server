@@ -15,6 +15,7 @@ import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
+import net.game.guild.Guild;
 import net.game.item.Item;
 import net.game.item.ItemManager;
 import net.game.item.ItemType;
@@ -68,6 +69,7 @@ public class Player extends Unit {
 	private boolean logged;
 	private int accountId;
 	private Stuff[] stuff;
+	private Guild guild;
 	private float armor;
 	private Party party;
 	private Trade trade;
@@ -304,6 +306,28 @@ public class Player extends Unit {
 				i++;
 			}
 		}
+	}
+	
+	public boolean isFriendWith(Player player) {
+		int i = 0;
+		while(i < this.friendList.size()) {
+			if(this.friendList.get(i) == player.getCharacterId()) {
+				return true;
+			}
+			i++;
+		}
+		return false;
+	}
+	
+	public boolean isFriendWith(int character_id) {
+		int i = 0;
+		while(i < this.friendList.size()) {
+			if(this.friendList.get(i) == character_id) {
+				return true;
+			}
+			i++;
+		}
+		return false;
 	}
 	
 	public void close() {
@@ -620,6 +644,14 @@ public class Player extends Unit {
 		this.spellUnlocked.clear();
 		this.target = null;
 		this.wear = null;
+	}
+	
+	public Guild getGuild() {
+		return this.guild;
+	}
+	
+	public void setGuild(Guild guild) {
+		this.guild = guild;
 	}
 	
 	public void setHasInitParty(boolean we) {
