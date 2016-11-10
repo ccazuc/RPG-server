@@ -188,20 +188,15 @@ public class Server {
 	}
 	
 	public static Player getInGameCharacter(int id) {
-			for(Player player : inGamePlayerList.values()) {
-				if(player.getCharacterId() == id) {
-					return player;
-				}
-			}
-		return null;
+		return inGamePlayerList.get(id);
 	}
 	
 	public static Player getInGameCharacter(String name) {
-			for(Player player : inGamePlayerList.values()) {
-				if(player.getName().equals(name)) {
-					return player;
-				}
+		for(Player player : inGamePlayerList.values()) {
+			if(player.getName().equals(name)) {
+				return player;
 			}
+		}
 		return null;
 	}
 	

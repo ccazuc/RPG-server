@@ -60,6 +60,7 @@ public class Player extends Unit {
 	private Player playerParty;
 	private int numberBlueGem;
 	private Shortcut[] spells;
+	private int guildRequest;
 	private int defaultArmor;
 	private ClassType classe;
 	private int numberRedGem;
@@ -653,6 +654,14 @@ public class Player extends Unit {
 		this.spellUnlocked.clear();
 		this.target = null;
 		this.wear = null;
+	}
+	
+	public void setGuildRequest(int id) {
+		this.guildRequest = id;
+	}
+	
+	public int getGuildRequest() {
+		return this.guildRequest;
 	}
 	
 	public Guild getGuild() {

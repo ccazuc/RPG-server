@@ -12,6 +12,7 @@ import net.command.CommandAddItem;
 import net.command.CommandCreateCharacter;
 import net.command.CommandDeleteCharacter;
 import net.command.CommandFriend;
+import net.command.CommandGuild;
 import net.command.CommandLoadCharacter;
 import net.command.CommandLogin;
 import net.command.CommandLoginRealm;
@@ -84,6 +85,7 @@ public class ConnectionManager {
 		this.commandList.put((int)LOGIN_REALM, new CommandLoginRealm(this));
 		this.commandList.put((int)SEND_MESSAGE, new CommandSendMessage(this));
 		this.commandList.put((int)PARTY, new CommandParty(this));
+		this.commandList.put((int)GUILD, new CommandGuild(this));
 	}
 	
 	public static void initAuthCommand() {

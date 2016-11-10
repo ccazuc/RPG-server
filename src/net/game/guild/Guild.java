@@ -2,6 +2,8 @@ package net.game.guild;
 
 import java.util.ArrayList;
 
+import net.command.CommandGuild;
+
 public class Guild {
 
 	private int id;
@@ -31,6 +33,11 @@ public class Guild {
 			i++;
 		}
 		return null;
+	}
+	
+	public void addMember(GuildMember member) {
+		this.memberList.add(member);
+		CommandGuild.notifyNewMember(this, member);
 	}
 	
 	public int getLeaderId() {

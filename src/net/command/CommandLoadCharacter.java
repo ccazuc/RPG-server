@@ -25,7 +25,7 @@ public class CommandLoadCharacter extends Command {
 			this.player.notifyFriendOnline();
 			this.player.loadGuild();
 			if(this.player.getGuild() != null) {
-				CommandGuild.initGuildWhenLoggin(this.connection, this.player);
+				CommandGuild.initGuildWhenLogin(this.connection, this.player);
 			}
 			//this.player.loadSpellUnlocked();
 			Server.addInGamePlayer(this.player);
