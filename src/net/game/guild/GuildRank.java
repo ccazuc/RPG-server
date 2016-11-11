@@ -21,7 +21,7 @@ public class GuildRank {
 	public final static int CAN_KICK_MEMBER = 10;
 	public final static int CAN_EDIT_PUBLIC_NOTE = 11;
 	public final static int CAN_EDIT_OFFICER_NOTE = 12;
-	public final static int CAN_TAKE_GOLD = 13;
+	public final static int CAN_WITHDRAW_GOLD = 13;
 	public final static int CAN_USE_GOLD_REPARATION = 14;
 	
 	public GuildRank(int order, int permission, String name) {
@@ -41,17 +41,64 @@ public class GuildRank {
 		}
 	}
 	
+	public boolean canListenGuildChannel() {
+		return this.permissionList[CAN_LISTEN_GUILD_CHANNEL];
+	}
+	
+	public boolean canListenOfficerChannel() {
+		return this.permissionList[CAN_LISTEN_OFFICER_CHANNEL];
+	}
+	
+	public boolean canPromote() {
+		return this.permissionList[CAN_PROMOTE];
+	}
+	
 	public boolean canInvitePlayer() {
 		return this.permissionList[CAN_INVITE_MEMBER];
+	}
+	
+	public boolean canModifyMotd() {
+		return this.permissionList[CAN_SET_MOTD];
 	}
 	
 	public boolean canSeeOfficerNote() {
 		return this.permissionList[CAN_SEE_OFFICER_NOTE];
 	}
 	
+	public boolean canModifyGuildInformation() {
+		return this.permissionList[CAN_MODIFY_GUILD_INFORMATION];
+	}
+	
 	public boolean canTalkInGuildChannel() {
-		//return this.permissionList[CAN_TALK_GUILD_CHANNEL];
-		return true;
+		return this.permissionList[CAN_TALK_GUILD_CHANNEL];
+	}
+	
+	public boolean canTalkInOfficerChannel() {
+		return this.permissionList[CAN_TALK_OFFICER_CHANNEL];
+	}
+	
+	public boolean canDemote() {
+		return this.permissionList[CAN_DEMOTE];
+	}
+	
+	public boolean canKickMember() {
+		return this.permissionList[CAN_KICK_MEMBER];
+	}
+	
+	public boolean canEditPublicNote() {
+		return this.permissionList[CAN_EDIT_PUBLIC_NOTE];
+	}
+	
+	public boolean canEditOfficerNote() {
+		return this.permissionList[CAN_EDIT_OFFICER_NOTE];
+	}
+	
+	public boolean canWithdrawGold() {
+		return this.permissionList[CAN_WITHDRAW_GOLD];
+	}
+	
+	public boolean canUseGoldForReparation() {
+		return this.permissionList[CAN_USE_GOLD_REPARATION];
 	}
 	
 	public int getOrder() {

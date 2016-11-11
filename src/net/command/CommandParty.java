@@ -21,30 +21,35 @@ public class CommandParty extends Command {
 		byte packetId = this.connection.readByte();
 		if(packetId == PacketID.PARTY_ADD_MEMBER) {
 			String name = this.connection.readString();
-			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-			Player player = Server.getInGameCharacter(name);
-			if(player != null) {
-				if(player.getCharacterId() != this.player.getCharacterId()) {
-					if(this.player.getParty() == null || (this.player.getParty() != null && this.player.getParty().isPartyLeader(this.player))) {
-						if(player.getParty() == null) {
-							inviteRequest(player.getConnection(), this.player.getName());
-							this.player.setPlayerParty(player);
-							player.setPlayerParty(this.player);
-							this.player.setHasInitParty(true);
-							CommandSendMessage.write(this.connection, "You invited "+name+" to join your party.", MessageType.SELF);
+			if(name.length() > 2) {
+				name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
+				Player player = Server.getInGameCharacter(name);
+				if(player != null) {
+					if(player.getCharacterId() != this.player.getCharacterId()) {
+						if(this.player.getParty() == null || (this.player.getParty() != null && this.player.getParty().isPartyLeader(this.player))) {
+							if(player.getParty() == null) {
+								inviteRequest(player.getConnection(), this.player.getName());
+								this.player.setPlayerParty(player);
+								player.setPlayerParty(this.player);
+								this.player.setHasInitParty(true);
+								CommandSendMessage.write(this.connection, "You invited "+name+" to join your party.", MessageType.SELF);
+							}
+							else {
+								CommandSendMessage.write(this.connection, name+" is already in a party.", MessageType.SELF);
+								CommandSendMessage.write(player.getConnection(), this.player.getName()+" tried to invite you in a party.", MessageType.SELF);
+							}
 						}
 						else {
-							CommandSendMessage.write(this.connection, name+" is already in a party.", MessageType.SELF);
-							CommandSendMessage.write(player.getConnection(), this.player.getName()+" tried to invite you in a party.", MessageType.SELF);
+							//System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
+							CommandSendMessage.write(this.connection, "You are not the party leader.", MessageType.SELF);
 						}
 					}
 					else {
-						//System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
-						CommandSendMessage.write(this.connection, "You are not the party leader.", MessageType.SELF);
+						CommandSendMessage.write(this.connection, "You can't invite yourself in a party.", MessageType.SELF);
 					}
 				}
 				else {
-					CommandSendMessage.write(this.connection, "You can't invite yourself in a party.", MessageType.SELF);
+					CommandPlayerNotFound.write(this.connection, name);
 				}
 			}
 			else {

@@ -15,6 +15,8 @@ public class GuildManager {
 	private static JDOStatement loadMember;
 	private static JDOStatement loadMemberInformation;
 	private static JDOStatement loadPlayerGuild;
+	private static JDOStatement removeMemberFromDB;
+	private static JDOStatement addMemberInDB;
 	
 	public void loadGuild(Player player) throws SQLException {
 		if(loadPlayerGuild == null) {
@@ -89,6 +91,37 @@ public class GuildManager {
 				Server.addGuild(new Guild(guildId, leaderId, guildName, information, motd, memberList, rankList));
 				player.setGuild(Server.getGuildList(guildId));
 			}
+		}
+	}
+	
+	public static void removeMemberFromDB(Guild guild, int id) {
+		try {
+			if(removeMemberFromDB == null) {
+				removeMemberFromDB = Server.getJDO().prepare("REMOVE FROM guild_member WHERE member_id = ? AND guild_id = ?");
+			}
+			removeMemberFromDB.execute();
+			removeMemberFromDB.putInt(id);
+			removeMemberFromDB.putInt(guild.getId());
+			removeMemberFromDB.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void addMemberInDB(Guild guild, int id) {
+		try {
+			if(addMemberInDB == null) {
+				addMemberInDB = Server.getJDO().prepare("INSERT INTO guild_member (member_id, guild_id, rank) VALUES (?, ?, ?)");
+			}
+			addMemberInDB.clear();
+			addMemberInDB.putInt(id);
+			addMemberInDB.putInt(guild.getId());
+			addMemberInDB.putInt(guild.getRankList().size()-1);
+			addMemberInDB.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }

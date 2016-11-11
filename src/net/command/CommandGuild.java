@@ -46,22 +46,46 @@ public class CommandGuild extends Command {
 		}
 		else if(packetId == PacketID.GUILD_INVITE_PLAYER) {
 			String name = this.connection.readString();
-			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-			if(this.player.getGuild() != null) {
-				if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().canInvitePlayer() || true) {
-					Player player = Server.getInGameCharacter(name);
-					if(player != null) {
-						if(player.getGuild() == null) {
-							CommandSendMessage.write(this.connection, "You invited "+name+" to join your guild.", MessageType.SELF);
-							joinGuildRequest(player.getConnection(), this.player.getName(), this.player.getGuild().getName());
-							player.setGuildRequest(this.player.getGuild().getId());
+			if(name.length() > 2) {
+				name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
+				if(this.player.getGuild() != null) {
+					if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().canInvitePlayer()) {
+						Player player = Server.getInGameCharacter(name);
+						if(player != null) {
+							if(player.getGuild() == null) {
+								CommandSendMessage.write(this.connection, "You invited "+name+" to join your guild.", MessageType.SELF);
+								joinGuildRequest(player.getConnection(), this.player.getName(), this.player.getGuild().getName());
+								player.setGuildRequest(this.player.getGuild().getId());
+							}
+							else {
+								CommandSendMessage.write(this.connection, name+" is already in a guild.", MessageType.SELF);
+							}
 						}
 						else {
-							CommandSendMessage.write(this.connection, name+" is already in a guild.", MessageType.SELF);
+							CommandPlayerNotFound.write(this.connection, name);
 						}
 					}
 					else {
-						CommandPlayerNotFound.write(this.connection, name);
+						CommandSendMessage.write(this.connection, "You don't have the right to do this.", MessageType.SELF);
+					}
+				}
+				else {
+					CommandSendMessage.write(this.connection, "You are not in a guild.", MessageType.SELF);
+				}
+			}
+			else {
+				CommandPlayerNotFound.write(this.connection, name);
+			}
+		}
+		else if(packetId == PacketID.GUILD_KICK_MEMBER) {
+			int id = this.connection.readInt();
+			if(this.player.getGuild() != null) {
+				if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().canKickMember()) {
+					if(this.player.getGuild().getMember(id) != null) {
+						this.player.getGuild().removeMember(id, this.player.getName());
+					}
+					else {
+						CommandSendMessage.write(this.connection, "This player is not in your guild.", MessageType.SELF);
 					}
 				}
 				else {
@@ -119,6 +143,23 @@ public class CommandGuild extends Command {
 				connection.writeInt(member.getLevel());
 				connection.writeBoolean(member.isOnline());
 				connection.writeChar(member.getClassType().getValue());
+				connection.send();
+			}
+			i++;
+		}
+	}
+	
+	public static void notifyKickedMember(Guild guild, GuildMember member, String name) {
+		int i = 0;
+		Connection connection = null;
+		while(i < guild.getMemberList().size()) {
+			if(Server.getInGameCharacter(guild.getMemberList().get(i).getId()) != null) {
+				connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
+				connection.writeByte(PacketID.GUILD);
+				connection.writeByte(PacketID.GUILD_KICK_MEMBER);
+				connection.writeInt(member.getId());
+				connection.writeString(member.getName());
+				connection.writeString(name);
 				connection.send();
 			}
 			i++;

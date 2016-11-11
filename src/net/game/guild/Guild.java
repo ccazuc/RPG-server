@@ -1,6 +1,7 @@
 package net.game.guild;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import net.command.CommandGuild;
 
@@ -12,32 +13,43 @@ public class Guild {
 	private String information;
 	private String motd;
 	private ArrayList<GuildMember> memberList;
+	private HashMap<Integer, GuildMember> memberMap;
 	private ArrayList<GuildRank> rankList;
 	
 	public Guild(int id, int leader_id, String name, String information, String motd, ArrayList<GuildMember> memberList, ArrayList<GuildRank> rankList) {
 		this.information = information;
 		this.memberList = memberList;
+		this.memberMap = new HashMap<Integer, GuildMember>();
 		this.leader_id = leader_id;
 		this.rankList = rankList;
 		this.name = name;
 		this.motd = motd;
 		this.id = id;
+		initMemberMap();
 	}
 	
 	public GuildMember getMember(int id) {
-		int i = 0;
-		while(i < this.memberList.size()) {
-			if(this.memberList.get(i).getId() == id) {
-				return this.memberList.get(i);
-			}
-			i++;
-		}
-		return null;
+		return this.memberMap.get(id);
 	}
 	
 	public void addMember(GuildMember member) {
 		this.memberList.add(member);
+		this.memberMap.put(member.getId(), member);
 		CommandGuild.notifyNewMember(this, member);
+		GuildManager.addMemberInDB(this, member.getId());
+	}
+	
+	public void removeMember(int id, String name) {
+		CommandGuild.notifyKickedMember(this, this.memberMap.get(id), name);
+		int i = 0;
+		while(i < this.memberList.size()) {
+			if(this.memberList.get(i).getId() == id) {
+				this.memberList.remove(i);
+				break;
+			}
+		}
+		this.memberMap.remove(id);
+		GuildManager.removeMemberFromDB(this, id);
 	}
 	
 	public int getLeaderId() {
@@ -57,6 +69,14 @@ public class Guild {
 			i++;
 		}
 		return null;
+	}
+	
+	private void initMemberMap() {
+		int i = 0;
+		while(i < this.memberList.size()) {
+			this.memberMap.put(this.memberList.get(i).getId(), this.memberList.get(i));
+			i++;
+		}
 	}
 	
 	public int getId() {
@@ -83,7 +103,7 @@ public class Guild {
 		return this.rankList;
 	}
 	
-	public void sortMemberByName() {
+	/*public void sortMemberByName() {
 		int i = 0;
 		int j = 0;
 		GuildMember temp;
@@ -153,5 +173,5 @@ public class Guild {
 			}
 			i++;
 		}
-	}
+	}*/
 }
