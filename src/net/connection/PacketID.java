@@ -108,4 +108,8 @@ public class PacketID {
 	public static final byte GUILD_DECLINE_REQUEST = 104;
 	public static final byte GUILD_NEW_MEMBER = 105;
 	public static final byte GUILD_KICK_MEMBER = 106;
+	public static final byte GUILD_ONLINE_PLAYER = 107;
+	public static final byte GUILD_OFFLINE_PLAYER = 108;
+	public static final byte GUILD_SET_INFORMATION = 109;
+	public static final byte GUILD_SET_MOTD = 110;
 }

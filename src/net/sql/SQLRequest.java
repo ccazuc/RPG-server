@@ -10,6 +10,7 @@ public class SQLRequest {
 	
 	protected JDOStatement statement;
 	protected int id;
+	protected String msg;
 	protected Player player;
 	protected String userName;
 	protected String password;
@@ -33,6 +34,10 @@ public class SQLRequest {
 	
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	public void setMsg(String msg) {
+		this.msg = msg;
 	}
 	
 	public void setPlayer(Player message) {

@@ -16,6 +16,10 @@ public class Guild {
 	private HashMap<Integer, GuildMember> memberMap;
 	private ArrayList<GuildRank> rankList;
 	
+	public final static int MOTD_MAX_LENGTH = 200;
+	public final static int INFORMATION_MAX_LENGTH = 300;
+	public final static int GUILD_MASTER_PERMISSION = 32767;
+	
 	public Guild(int id, int leader_id, String name, String information, String motd, ArrayList<GuildMember> memberList, ArrayList<GuildRank> rankList) {
 		this.information = information;
 		this.memberList = memberList;
@@ -79,6 +83,19 @@ public class Guild {
 		}
 	}
 	
+	public void setRankPermission(int rank_order, int permission, String name) {
+		int i = 0;
+		while(i < this.rankList.size()) {
+			if(this.rankList.get(i).getOrder() == rank_order) {
+				this.rankList.get(i).setPermission(permission);
+				this.rankList.get(i).setName(name);
+				GuildManager.updatePermission(this, rank_order, permission, name);
+				return;
+			}
+			i++;
+		}
+	}
+	
 	public int getId() {
 		return this.id;
 	}
@@ -91,8 +108,16 @@ public class Guild {
 		return this.information;
 	}
 	
+	public void setInformation(String msg) {
+		this.information = msg;
+	}
+	
 	public String getMotd() {
 		return this.motd;
+	}
+	
+	public void setMotd(String msg) {
+		this.motd = msg;
 	}
 	
 	public ArrayList<GuildMember> getMemberList() {

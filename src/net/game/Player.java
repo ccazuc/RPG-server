@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import net.Server;
 import net.command.CommandFriend;
+import net.command.CommandGuild;
 import net.command.CommandLogoutCharacter;
 import net.command.CommandParty;
 import net.command.CommandTrade;
@@ -343,6 +344,9 @@ public class Player extends Unit {
 	public void close() {
 		if(Server.getInGamePlayerList().containsKey(this.characterId)) {
 			notifyFriendOffline();
+			if(this.guild != null) {
+				CommandGuild.notifyOfflinePlayer(this);
+			}
 		}
 		Server.getFriendMap().remove(this.characterId);
 		CommandLogoutCharacter.setPlayerOfflineInDB(this);

@@ -1,12 +1,14 @@
 package net.game.guild;
 
 import java.sql.SQLException;
+import java.sql.SQLTimeoutException;
 import java.util.ArrayList;
 
 import jdo.JDOStatement;
 import net.Server;
 import net.game.ClassType;
 import net.game.Player;
+import net.sql.SQLRequest;
 
 public class GuildManager {
 
@@ -17,6 +19,43 @@ public class GuildManager {
 	private static JDOStatement loadPlayerGuild;
 	private static JDOStatement removeMemberFromDB;
 	private static JDOStatement addMemberInDB;
+	private static JDOStatement updateRank;
+	private static SQLRequest updateInformation = new SQLRequest("UPDATE guild SET information = ? WHERE id = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				this.statement.putString(this.msg);
+				this.statement.putInt(this.id);
+				this.statement.execute();
+			} 
+			catch (SQLTimeoutException e) {
+				e.printStackTrace();
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private static SQLRequest updateMotd = new SQLRequest("UPDATE guild SET motd = ? WHERE id = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				this.statement.putString(this.msg);
+				this.statement.putInt(this.id);
+				this.statement.execute();
+			} 
+			catch (SQLTimeoutException e) {
+				e.printStackTrace();
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	
 	public void loadGuild(Player player) throws SQLException {
 		if(loadPlayerGuild == null) {
@@ -123,5 +162,34 @@ public class GuildManager {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void updatePermission(Guild guild, int rank_order, int permission, String name) {
+		try {
+			if(updateRank == null) {
+				updateRank = Server.getJDO().prepare("UPDATE guild_rank SET permission = ?, name = ? WHERE guild_id = ? AND rank_order = ?");
+			}
+			updateRank.clear();
+			updateRank.putInt(permission);
+			updateRank.putString(name);
+			updateRank.putInt(guild.getId());
+			updateRank.putInt(rank_order);
+			updateRank.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void updateInformation(Guild guild) {
+		updateInformation.setId(guild.getId());
+		updateInformation.setMsg(guild.getInformation());
+		Server.addNewRequest(updateInformation);
+	}
+	
+	public static void updateMotd(Guild guild) {
+		updateMotd.setId(guild.getId());
+		updateMotd.setMsg(guild.getMotd());
+		Server.addNewRequest(updateMotd);
 	}
 }

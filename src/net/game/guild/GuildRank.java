@@ -29,16 +29,24 @@ public class GuildRank {
 		this.permission = permission;
 		this.name = name;
 		this.permissionList = new boolean[15];
+		parsePermission();
 	}
 	
 	private void parsePermission() {
 		int i = 0;
+		//System.out.println("Start parse for rank : "+this.name);
 		while(i < this.permissionList.length) {
+			//System.out.println("i: "+i+", binary value: "+(this.permission & (1 << i)));
 			if((this.permission & (1 << i)) != 0) {
 				this.permissionList[i] = true;
 			}
+			else {
+				this.permissionList[i] = false;
+			}
+			//System.out.println("i: "+i+", value: "+this.permissionList[i]);
 			i++;
 		}
+		//System.out.println("Finished parse for rank : "+this.name);
 	}
 	
 	public boolean canListenGuildChannel() {
