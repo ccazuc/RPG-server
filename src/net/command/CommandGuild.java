@@ -86,8 +86,14 @@ public class CommandGuild extends Command {
 			int id = this.connection.readInt();
 			if(this.player.getGuild() != null) {
 				if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().canKickMember()) {
-					if(this.player.getGuild().getMember(id) != null) {
-						this.player.getGuild().removeMember(id, this.player.getName());
+					GuildMember member = this.player.getGuild().getMember(id);
+					if(member != null) {
+						if(member.getRank().getOrder() > this.player.getGuild().getMember(this.player.getCharacterId()).getRank().getOrder()) {
+							this.player.getGuild().removeMember(id, this.player.getName());
+						}
+						else {
+							
+						}
 					}
 					else {
 						CommandSendMessage.write(this.connection, "This player is not in your guild.", MessageType.SELF);
@@ -112,6 +118,7 @@ public class CommandGuild extends Command {
 			}
 		}
 		else if(packetId == PacketID.GUILD_DECLINE_REQUEST) {
+			System.out.println("REQUEST DECLINED");
 			this.player.setGuildRequest(0);
 		}
 		else if(packetId == PacketID.GUILD_SET_MOTD) {
@@ -145,13 +152,92 @@ public class CommandGuild extends Command {
 					GuildManager.updateInformation(this.player.getGuild());
 				}
 				else {
-
 					CommandSendMessage.write(this.connection, "You don't have the right to do this.", MessageType.SELF);
 				}
 			}
 			else {
 				CommandSendMessage.write(this.connection, "You are not in a guild.", MessageType.SELF);
 			}
+		}
+		else if(packetId == PacketID.GUILD_PROMOTE_PLAYER) {
+			int id = this.connection.readInt();
+			if(this.player.getGuild() != null) {
+				if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().canPromote()) {
+					GuildMember member = this.player.getGuild().getMember(id);
+					if(member != null) {
+						if(member.getRank().getOrder() < 2) {
+							if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder()) {
+								member.setRank(this.player.getGuild().getRank(member.getRank().getOrder()-1));
+								promotePlayer(this.player.getGuild(), member);
+							}
+							else {
+								CommandSendMessage.write(this.connection, "You don't have the right to do this.", MessageType.SELF);
+							}
+						}
+						else {
+							CommandSendMessage.write(this.connection, member.getName()+"'s rank is too high.", MessageType.SELF);
+						}
+					}
+					else {
+						CommandSendMessage.write(this.connection, "This player is not in your guild.", MessageType.SELF);
+					}
+				}
+				else {
+					CommandSendMessage.write(this.connection, "You don't have the right to do this.", MessageType.SELF);
+				}
+			}
+			else {
+				CommandSendMessage.write(this.connection, "You are not in a guild.", MessageType.SELF);
+			}
+		}
+		else if(packetId == PacketID.GUILD_DEMOTE_PLAYER) {
+			int id = this.connection.readInt();
+			if(this.player.getGuild() != null) {
+				if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().canDemote()) {
+					GuildMember member = this.player.getGuild().getMember(id);
+					if(member != null) {
+						if(member.getRank().getOrder() < this.player.getGuild().getRankList().size()) {
+							if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder()) {
+								member.setRank(this.player.getGuild().getRank(member.getRank().getOrder()+1));
+								promotePlayer(this.player.getGuild(), member);
+							}
+							else {
+								CommandSendMessage.write(this.connection, "You don't have the right to do this.", MessageType.SELF);
+							}
+						}
+						else {
+							CommandSendMessage.write(this.connection, member.getName()+" has already the lowest rank.", MessageType.SELF);
+						}
+					}
+					else {
+						CommandSendMessage.write(this.connection, "This player is not in your guild.", MessageType.SELF);
+					}
+				}
+				else {
+					CommandSendMessage.write(this.connection, "You don't have the right to do this.", MessageType.SELF);
+				}
+			}
+			else {
+				CommandSendMessage.write(this.connection, "You are not in a guild.", MessageType.SELF);
+			}
+		}
+	}
+	
+	public static void promotePlayer(Guild guild, GuildMember member) {
+		int i = 0;
+		GuildMember temp;
+		Connection connection;
+		while(i < guild.getMemberList().size()) {
+			temp = guild.getMemberList().get(i);
+			if(Server.getInGameCharacter(temp.getId()) != null) {
+				connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.writeByte(PacketID.GUILD);
+				connection.writeByte(PacketID.GUILD_PROMOTE_PLAYER);
+				connection.writeInt(member.getId());
+				connection.writeInt(member.getRank().getOrder());
+				connection.send();
+			}
+			i++;
 		}
 	}
 	
@@ -215,7 +301,7 @@ public class CommandGuild extends Command {
 			Connection connection;
 			while(i < player.getGuild().getMemberList().size()) {
 				member = player.getGuild().getMemberList().get(i);
-				if(Server.getInGameCharacter(member.getId()) != null) {
+				if(Server.getInGameCharacter(member.getId()) != null && member.getId() != player.getCharacterId()) {
 					connection = Server.getInGameCharacter(member.getId()).getConnection();
 					connection.writeByte(PacketID.GUILD);
 					connection.writeByte(PacketID.GUILD_OFFLINE_PLAYER);

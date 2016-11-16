@@ -34,6 +34,7 @@ public class CommandTrade extends Command {
 					}
 					trade.setPlayerTrade(this.player);
 					this.player.setPlayerTrade(trade);
+					CommandSendMessage.write(trade.getConnection(), '['+this.player.getName()+"] wants to trade with you.", this.player.getName(), MessageType.SELF);
 					write(PacketID.TRADE_REQUEST, trade, this.player.getName());
 				}
 				else {

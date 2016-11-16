@@ -347,6 +347,7 @@ public class Player extends Unit {
 			if(this.guild != null) {
 				CommandGuild.notifyOfflinePlayer(this);
 			}
+			Server.getFriendMap().remove(this.getCharacterId());
 		}
 		Server.getFriendMap().remove(this.characterId);
 		CommandLogoutCharacter.setPlayerOfflineInDB(this);

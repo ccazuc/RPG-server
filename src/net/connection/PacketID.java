@@ -112,4 +112,6 @@ public class PacketID {
 	public static final byte GUILD_OFFLINE_PLAYER = 108;
 	public static final byte GUILD_SET_INFORMATION = 109;
 	public static final byte GUILD_SET_MOTD = 110;
+	public static final byte GUILD_PROMOTE_PLAYER = 111;
+	public static final byte GUILD_DEMOTE_PLAYER = 112;
 }

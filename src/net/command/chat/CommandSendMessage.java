@@ -91,7 +91,7 @@ public class CommandSendMessage extends Command {
 		}
 	}
 	
-	public static void write(Connection connection, String message, String author, MessageType type) { //us
+	public static void write(Connection connection, String message, String author, MessageType type) { //used 
 		connection.writeByte(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
