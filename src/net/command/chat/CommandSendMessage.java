@@ -3,76 +3,75 @@ package net.command.chat;
 import net.Server;
 import net.command.Command;
 import net.connection.Connection;
-import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.Player;
 
 public class CommandSendMessage extends Command {
 
 	private final static int MAXIMUM_LENGTH = 255;
-	public CommandSendMessage(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	
+	public CommandSendMessage() {}
 	
 	@Override
-	public void read() {
-		String message = this.connection.readString();
-		MessageType type = MessageType.values()[this.connection.readChar()];
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		String message = connection.readString();
+		MessageType type = MessageType.values()[connection.readChar()];
 		if(message.length() > MAXIMUM_LENGTH) {
 			message = message.substring(0, MAXIMUM_LENGTH);
 		}
 		if(type == MessageType.WHISPER) {
-			String target = this.connection.readString();
+			String target = connection.readString();
 			target = target.substring(0, 1).toUpperCase()+target.substring(1).toLowerCase();
-			Player player = Server.getInGameCharacter(target);
-			if(player != null) {
-				writeWhisper(this.connection, player.getName(), message, false);
-				writeWhisper(player.getConnection(), this.player.getName(), message, true);
+			Player temp = Server.getInGameCharacter(target);
+			if(temp != null) {
+				writeWhisper(connection, temp.getName(), message, false);
+				writeWhisper(temp.getConnection(), temp.getName(), message, true);
 			}
 			else {
-				CommandPlayerNotFound.write(this.connection, target);
+				CommandPlayerNotFound.write(connection, target);
 			}
 		}
 		else if(type == MessageType.PARTY) {
-			if(this.player.getParty() != null) {
+			if(player.getParty() != null) {
 				int i = 0;
-				while(i < this.player.getParty().getPlayerList().length) {
-					if(this.player.getParty().getPlayerList()[i] != null) {
-						if(this.player.getParty().isPartyLeader(this.player)) {
-							write(this.player.getParty().getPlayerList()[i].getConnection(), message, this.player.getName(), MessageType.PARTY_LEADER);
+				while(i < player.getParty().getPlayerList().length) {
+					if(player.getParty().getPlayerList()[i] != null) {
+						if(player.getParty().isPartyLeader(player)) {
+							write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY_LEADER);
 						}
 						else {
-							write(this.player.getParty().getPlayerList()[i].getConnection(), message, this.player.getName(), MessageType.PARTY);
+							write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY);
 						}
 					}
 					i++;
 				}
 			}
 			else {
-				write(this.connection, "You are not in a party.", MessageType.SELF);
+				write(connection, "You are not in a party.", MessageType.SELF);
 			}
 		}
 		else if(type == MessageType.GUILD) {
-			if(this.player.getGuild() != null) {
-				if(this.player.getGuild().getMember(this.player.getCharacterId()).getRank().canTalkInGuildChannel()) {
+			if(player.getGuild() != null) {
+				if(player.getGuild().getMember(player.getCharacterId()).getRank().canTalkInGuildChannel()) {
 					int i = 0;
-					while(i < this.player.getGuild().getMemberList().size()) {
-						if(this.player.getGuild().getMemberList().get(i).isOnline()) {
-							write(Server.getInGameCharacter(this.player.getGuild().getMemberList().get(i).getId()).getConnection(), message, this.player.getName(), MessageType.GUILD);
+					while(i < player.getGuild().getMemberList().size()) {
+						if(player.getGuild().getMemberList().get(i).isOnline()) {
+							write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD);
 						}
 						i++;
 					}
 				}
 				else {
-					write(this.connection, "You don't have the right to do this.", MessageType.SELF);
+					write(connection, "You don't have the right to do this.", MessageType.SELF);
 				}
 			}
 			else {
-				write(this.connection, "You are not in a guild.", MessageType.SELF);
+				write(connection, "You are not in a guild.", MessageType.SELF);
 			}
 		}
 		else {
-			sendMessageToUsers(message, this.player.getName(), type);
+			sendMessageToUsers(message, player.getName(), type);
 		}
 	}
 	

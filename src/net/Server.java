@@ -73,6 +73,7 @@ public class Server {
 		ConnectionManager.connectAuthServer();
 		ConnectionManager.registerToAuthServer();
 		ConnectionManager.initAuthCommand();
+		ConnectionManager.initPlayerCommand();
 		while(true) {
 			if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);

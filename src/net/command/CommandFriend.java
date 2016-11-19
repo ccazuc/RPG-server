@@ -8,7 +8,6 @@ import net.command.chat.CommandPlayerNotFound;
 import net.command.chat.CommandSendMessage;
 import net.command.chat.MessageType;
 import net.connection.Connection;
-import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.Player;
 
@@ -19,73 +18,71 @@ public class CommandFriend extends Command {
 	private static JDOStatement loadCharacterNameFromID;
 	private static JDOStatement addFriendToDB;
 	
-	public CommandFriend(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandFriend() {}
 	
 	@Override
-	public void read() {
-		byte packetId = this.connection.readByte();
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		byte packetId = connection.readByte();
 		if(packetId == PacketID.FRIEND_ADD) {
-			String name = this.connection.readString();
+			String name = connection.readString();
 			if(name.length() > 2) {
 				name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-				Player player = Server.getInGameCharacter(name);
+				Player member = Server.getInGameCharacter(name);
 				int character_id = 0;
-				if(player == null) { //player is offline or doesn't exist
+				if(member == null) { //player is offline or doesn't exist
 					character_id = checkPlayerInDB(name); //player is offline
 				}
-				if(player != null || character_id != 0) {
-					if(!name.equals(this.player.getName())) {
-						if((player != null && !this.player.isFriendWith(player)) || (character_id != 0 && !this.player.isFriendWith(character_id))) {
-							if(player != null) {
-								if(this.player.addFriend(player.getCharacterId())) {
-									addOnlineFriend(this.player, player);
-									addFriendInDB(this.player, player.getCharacterId());
+				if(member != null || character_id != 0) {
+					if(!name.equals(player.getName())) {
+						if((member != null && !player.isFriendWith(member)) || (character_id != 0 && !player.isFriendWith(character_id))) {
+							if(member != null) {
+								if(player.addFriend(member.getCharacterId())) {
+									addOnlineFriend(player, member);
+									addFriendInDB(player, member.getCharacterId());
 								}
 								else {
-									CommandSendMessage.write(this.connection, "Your friendlist is full.", MessageType.SELF);
+									CommandSendMessage.write(connection, "Your friendlist is full.", MessageType.SELF);
 								}
 							}
 							else if(character_id != 0) {
-								if(this.player.addFriend(character_id)) {
-									addOfflineFriend(this.connection, character_id, name);
-									addFriendInDB(this.player, character_id);
+								if(player.addFriend(character_id)) {
+									addOfflineFriend(connection, character_id, name);
+									addFriendInDB(player, character_id);
 								}
 								else {
-									CommandSendMessage.write(this.connection, "Your friendlist is full.", MessageType.SELF);
+									CommandSendMessage.write(connection, "Your friendlist is full.", MessageType.SELF);
 								}
 							}
 						}
 						else {
-							CommandSendMessage.write(this.connection, name+" is already in your friendlist.", MessageType.SELF);
+							CommandSendMessage.write(connection, name+" is already in your friendlist.", MessageType.SELF);
 						}
 					}
 					else {
-						CommandSendMessage.write(this.connection, "You can't add yourself as friend.", MessageType.SELF);
+						CommandSendMessage.write(connection, "You can't add yourself as friend.", MessageType.SELF);
 					}
 				}
 				else {
-					CommandPlayerNotFound.write(this.connection, name);
+					CommandPlayerNotFound.write(connection, name);
 				}
 			}
 			else {
-				CommandPlayerNotFound.write(this.connection, name);
+				CommandPlayerNotFound.write(connection, name);
 			}
 		}
 		else if(packetId == PacketID.FRIEND_REMOVE) {
-			int id = this.connection.readInt();
-			if(id != this.player.getCharacterId()) {
-				if(this.player.removeFriend(id)) {
-					System.out.println("Friend removed from list");
-					removeFriendFromDB(this.player.getCharacterId(), id);
+			int id = connection.readInt();
+			if(id != player.getCharacterId()) {
+				if(player.removeFriend(id)) {
+					removeFriendFromDB(player.getCharacterId(), id);
 				}
 				else {
-					CommandSendMessage.write(this.connection, "This player is not in your friendlist.", MessageType.SELF);
+					CommandSendMessage.write(connection, "This player is not in your friendlist.", MessageType.SELF);
 				}
 			}
 			else {
-				CommandSendMessage.write(this.connection, "You can't delete yourself.", MessageType.SELF);
+				CommandSendMessage.write(connection, "You can't delete yourself.", MessageType.SELF);
 			}
 		}
 	}

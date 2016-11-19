@@ -2,48 +2,48 @@ package net.command.chat;
 
 import net.Server;
 import net.command.Command;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 
 public class CommandSet extends Command {
 	
-	public CommandSet(ConnectionManager connectionManager) {
-		super(connectionManager);
+	public CommandSet() {
 	}
 	
 	@Override
-	public void read() {
-		byte packetID = this.connection.readByte();
-		int id = this.connection.readInt();
-		int value = this.connection.readInt();
-		Player player = id == this.player.getCharacterId() ? this.player : Server.getInGameCharacter(id);
-		if(player != null) {
-			if(this.player.getAccountRank() >= 1) {
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		byte packetID = connection.readByte();
+		int id = connection.readInt();
+		int value = connection.readInt();
+		Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+		if(member != null) {
+			if(player.getAccountRank() >= 1) {
 				if(packetID == PacketID.CHAT_SET_STAMINA) {
-					if(value >= 0 && value <= this.player.getMaxStamina()) {
-						player.setStamina(value);
+					if(value >= 0 && value <= player.getMaxStamina()) {
+						member.setStamina(value);
 					}
 				}
 				else if(packetID == PacketID.CHAT_SET_MANA) {
-					if(value >= 0 && value <= this.player.getMaxMana()) {
-						player.setMana(value);
+					if(value >= 0 && value <= player.getMaxMana()) {
+						member.setMana(value);
 					}
 				}
 				else if(packetID == PacketID.CHAT_SET_EXPERIENCE) {
 					if(value >= 0) {
-						player.setExperience(value);
+						member.setExperience(value);
 					}
 				}
 				else if(packetID == PacketID.CHAT_SET_GOLD) {
 					if(value >= 0) {
-						player.setGold(value);
+						member.setGold(value);
 					}
 				}
 			}
 			else {
-				this.connection.writeByte(PacketID.CHAT_NOT_ALLOWED);
-				this.connection.send();
+				connection.writeByte(PacketID.CHAT_NOT_ALLOWED);
+				connection.send();
 			}
 		}
 	}

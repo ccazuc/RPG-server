@@ -3,8 +3,9 @@ import java.sql.SQLException;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.Player;
 import net.sql.SQLRequest;
 
 public class CommandLogin extends Command {
@@ -84,16 +85,15 @@ public class CommandLogin extends Command {
 		}
 	};
 	
-	public CommandLogin(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandLogin() {}
 
 	@Override
-	public void read() {
-		if(!Server.getInGamePlayerList().containsKey(this.player.getCharacterId()) && !Server.getLoggedPlayerList().containsKey(this.player.getCharacterId())) {
-			loginRequest.setPlayer(this.player);
-			loginRequest.setUserName(this.connection.readString().toLowerCase());
-			loginRequest.setPassword(this.connection.readString());
+	public void read(Player player) {
+		if(!Server.getInGamePlayerList().containsKey(player.getCharacterId()) && !Server.getLoggedPlayerList().containsKey(player.getCharacterId())) {
+			Connection connection = player.getConnection();
+			loginRequest.setPlayer(player);
+			loginRequest.setUserName(connection.readString().toLowerCase());
+			loginRequest.setPassword(connection.readString());
 			Server.addNewRequest(loginRequest);
 		}
 		else {

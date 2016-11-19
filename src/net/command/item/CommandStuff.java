@@ -1,23 +1,23 @@
 package net.command.item;
 
 import net.command.Command;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.Player;
 import net.game.item.stuff.StuffManager;
 
 public class CommandStuff extends Command {
 
-	public CommandStuff(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandStuff() {}
 
 	@Override
-	public void read() {
-		int id = this.connection.readInt();
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		int id = connection.readInt();
 		if(StuffManager.exists(id)) {
-			this.connection.writeByte(PacketID.STUFF);
-			this.connection.writeStuff(StuffManager.getStuff(id));
-			this.connection.send();
+			connection.writeByte(PacketID.STUFF);
+			connection.writeStuff(StuffManager.getStuff(id));
+			connection.send();
 		}
 	}
 }

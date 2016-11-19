@@ -6,123 +6,122 @@ import net.Server;
 import net.command.chat.CommandPlayerNotFound;
 import net.command.chat.CommandSendMessage;
 import net.command.chat.MessageType;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 import net.game.item.Item;
 
 public class CommandTrade extends Command {
 	
-	public CommandTrade(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandTrade() {}
 
 	@Override
-	public void read() {
-		byte packetID = this.connection.readByte();
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		byte packetID = connection.readByte();
 		if(packetID == PacketID.TRADE_NEW) { //declare a new trade
-			String traded = this.connection.readString();
+			String traded = connection.readString();
 			traded = traded.substring(0, 1).toUpperCase()+traded.substring(1).toLowerCase();
 			Player trade = Server.getInGameCharacter(traded);
 			if(trade != null) {
-				if(trade != this.player) {
-					if(this.player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading
+				if(trade != player) {
+					if(player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading
 					}
 					else { //cancel current trade
 						tradeCancel(trade.getPlayerTrade());
 						trade.getPlayerTrade().setPlayerTrade(null);
 					}
-					trade.setPlayerTrade(this.player);
-					this.player.setPlayerTrade(trade);
-					CommandSendMessage.write(trade.getConnection(), '['+this.player.getName()+"] wants to trade with you.", this.player.getName(), MessageType.SELF);
-					write(PacketID.TRADE_REQUEST, trade, this.player.getName());
+					trade.setPlayerTrade(player);
+					player.setPlayerTrade(trade);
+					CommandSendMessage.write(trade.getConnection(), '['+player.getName()+"] wants to trade with you.", player.getName(), MessageType.SELF);
+					write(PacketID.TRADE_REQUEST, trade, player.getName());
 				}
 				else {
-					CommandSendMessage.write(this.connection, "Can't trade with yourself.", MessageType.SELF);
+					CommandSendMessage.write(connection, "Can't trade with yourself.", MessageType.SELF);
 				}
 			}
 			else {
-				CommandPlayerNotFound.write(this.connection, traded);
+				CommandPlayerNotFound.write(connection, traded);
 			}
 		}
 		else if(packetID == PacketID.TRADE_NEW_CONFIRM) { //confirm the trade
-			this.player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE);
-			this.player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE_NEW_CONFIRM);
-			this.player.getPlayerTrade().getConnection().send();
-			this.player.getPlayerTrade().initTrade(this.player.getPlayerTrade(), this.player);
-			this.player.setTrade(this.player.getPlayerTrade().getTrade());
+			player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE);
+			player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE_NEW_CONFIRM);
+			player.getPlayerTrade().getConnection().send();
+			player.getPlayerTrade().initTrade(player.getPlayerTrade(), player);
+			player.setTrade(player.getPlayerTrade().getTrade());
 		}
 		else if(packetID == PacketID.TRADE_ADD_ITEM) { //add an item on trade's frame
-			int id = this.connection.readInt();
-			int slot = this.connection.readInt();
-			int amount = this.connection.readInt();
-			if(this.connection.readBoolean()) {
-				if(this.player.getPlayerTrade().itemHasBeenSendToClient(id)) {
-					int gem1Id = this.connection.readInt();
-					int gem2Id = this.connection.readInt();
-					int gem3Id = this.connection.readInt();
-					if(this.player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
-						sendKnownItem(this.player.getPlayerTrade(), id, slot, amount, gem1Id, gem2Id, gem3Id);
+			int id = connection.readInt();
+			int slot = connection.readInt();
+			int amount = connection.readInt();
+			if(connection.readBoolean()) {
+				if(player.getPlayerTrade().itemHasBeenSendToClient(id)) {
+					int gem1Id = connection.readInt();
+					int gem2Id = connection.readInt();
+					int gem3Id = connection.readInt();
+					if(player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
+						sendKnownItem(player.getPlayerTrade(), id, slot, amount, gem1Id, gem2Id, gem3Id);
 					}
 					else {
-						writeAddItemError(this.player, slot); //c po b1 2 modifié lé paké
+						writeAddItemError(player, slot); //c po b1 2 modifié lé paké
 					}
 				}
 				else {
-					if(this.player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
-						sendUnknownItem(this.player.getPlayerTrade(), id, slot, amount, this.connection.readInt(), this.connection.readInt(), this.connection.readInt());
+					if(player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
+						sendUnknownItem(player.getPlayerTrade(), id, slot, amount, connection.readInt(), connection.readInt(), connection.readInt());
 					}
 					else {
-						writeAddItemError(this.player, slot); //c po b1 2 modifié lé paké
+						writeAddItemError(player, slot); //c po b1 2 modifié lé paké
 					}
 				}
 			}
 			else {
-				if(this.player.getPlayerTrade().itemHasBeenSendToClient(id)) {
-					if(this.player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
-						sendKnownItem(this.player.getPlayerTrade(), id, slot, amount);
+				if(player.getPlayerTrade().itemHasBeenSendToClient(id)) {
+					if(player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
+						sendKnownItem(player.getPlayerTrade(), id, slot, amount);
 					}
 					else {
-						writeAddItemError(this.player, slot); //c po b1 2 modifié lé paké
+						writeAddItemError(player, slot); //c po b1 2 modifié lé paké
 					}
 				}
 				else {
-					if(this.player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
-						sendUnknownItem(this.player.getPlayerTrade(), id, slot, amount);
+					if(player.getBag().getNumberItemInBags(id) >= amount && Item.exists(id)) {
+						sendUnknownItem(player.getPlayerTrade(), id, slot, amount);
 					}
 					else {
-						writeAddItemError(this.player, slot); //c po b1 2 modifié lé paké
+						writeAddItemError(player, slot); //c po b1 2 modifié lé paké
 					}
 				}
 			}
 		}
 		else if(packetID == PacketID.TRADE_REMOVE_ITEM) {
-			int slot = this.connection.readInt();
+			int slot = connection.readInt();
 			if(slot >= 0 && slot <= 6) {
-				this.player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE);
-				this.player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE_REMOVE_ITEM);
-				this.player.getPlayerTrade().getConnection().writeInt(slot);
-				this.player.getPlayerTrade().getConnection().send();
-				tradeUnaccept(this.player.getPlayerTrade());
+				player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE);
+				player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE_REMOVE_ITEM);
+				player.getPlayerTrade().getConnection().writeInt(slot);
+				player.getPlayerTrade().getConnection().send();
+				tradeUnaccept(player.getPlayerTrade());
 			}
 		}
 		else if(packetID == PacketID.TRADE_ACCEPT) { //lock the trade
-			this.player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE);
-			this.player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE_ACCEPT);
-			this.player.getPlayerTrade().getConnection().send();
-			this.player.getTrade().setTradeState(this.player, true);
-			if(this.player.getTrade().getTradeInitState() && this.player.getTrade().getTradeTargetState()) {
+			player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE);
+			player.getPlayerTrade().getConnection().writeByte(PacketID.TRADE_ACCEPT);
+			player.getPlayerTrade().getConnection().send();
+			player.getTrade().setTradeState(player, true);
+			if(player.getTrade().getTradeInitState() && player.getTrade().getTradeTargetState()) {
 				try {
-					this.player.getTrade().exchangeItem();
+					player.getTrade().exchangeItem();
 				} 
 				catch (SQLException e) {
 					e.printStackTrace();
 				}
-				closeTrade(this.player);
+				closeTrade(player);
 			}
 		}
 		else if(packetID == PacketID.TRADE_CLOSE) { //cancel the trade
-			closeTrade(this.player);
+			closeTrade(player);
 		}
 	}
 	

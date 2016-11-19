@@ -1,23 +1,23 @@
 package net.command.item;
 
 import net.command.Command;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.Player;
 import net.game.item.weapon.WeaponManager;
 
 public class CommandWeapon extends Command {
 
-	public CommandWeapon(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandWeapon() {}
 
 	@Override
-	public void read() {
-		int id = this.connection.readInt();
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		int id = connection.readInt();
 		if(WeaponManager.exists(id)) {
-			this.connection.writeByte(PacketID.WEAPON);
-			this.connection.writeWeapon(WeaponManager.getWeapon(id));
-			this.connection.send();
+			connection.writeByte(PacketID.WEAPON);
+			connection.writeWeapon(WeaponManager.getWeapon(id));
+			connection.send();
 		}
 	}
 }

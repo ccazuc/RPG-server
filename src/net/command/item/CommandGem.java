@@ -1,23 +1,23 @@
 package net.command.item;
 
 import net.command.Command;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.Player;
 import net.game.item.gem.GemManager;;
 
 public class CommandGem extends Command {
 
-	public CommandGem(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandGem() {}
 
 	@Override
-	public void read() {
-		int id = this.connection.readInt();
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		int id = connection.readInt();
 		if(GemManager.exists(id)) {
-			this.connection.writeByte(PacketID.GEM);
-			this.connection.writeGem(GemManager.getGem(id));
-			this.connection.send();
+			connection.writeByte(PacketID.GEM);
+			connection.writeGem(GemManager.getGem(id));
+			connection.send();
 		}
 	}
 }

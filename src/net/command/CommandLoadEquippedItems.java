@@ -1,15 +1,13 @@
 package net.command;
 
-import net.connection.ConnectionManager;
+import net.game.Player;
 
 public class CommandLoadEquippedItems extends Command {
 	
-	public CommandLoadEquippedItems(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandLoadEquippedItems() {}
 
 	@Override
-	public void read() {}
+	public void read(Player player) {}
 	
 	@Override
 	public void write() {}

@@ -1,15 +1,13 @@
 package net.command;
 
-import net.connection.ConnectionManager;
+import net.game.Player;
 
 public class CommandPingConfirmed extends Command {
 
-	public CommandPingConfirmed(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandPingConfirmed() {}
 	
 	@Override
-	public void read() {
-		this.player.setPingStatus(false);
+	public void read(Player player) {
+		player.setPingStatus(false);
 	}
 }

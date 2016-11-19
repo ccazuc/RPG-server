@@ -1,24 +1,21 @@
 package net.command;
 
-import net.connection.ConnectionManager;
 import net.connection.PacketID;
+import net.game.Player;
 
 public class CommandPing extends Command {
 
-	public CommandPing(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandPing() {}
 	
 	@Override
-	public void read() {
-		this.player.setPingTimer(System.currentTimeMillis());
-		this.player.setPingStatus(true);
-		write();
+	public void read(Player player) {
+		player.setPingTimer(System.currentTimeMillis());
+		player.setPingStatus(true);
+		write(player);
 	}
-	
-	@Override
-	public void write() {
-		this.connection.writeByte(PacketID.PING);
-		this.connection.send();
+
+	public static void write(Player player) {
+		player.getConnection().writeByte(PacketID.PING);
+		player.getConnection().send();
 	}
 }

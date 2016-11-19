@@ -4,8 +4,9 @@ import java.sql.SQLException;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.Player;
 
 public class CommandDeleteCharacter extends Command {
 	
@@ -16,12 +17,11 @@ public class CommandDeleteCharacter extends Command {
 	private static JDOStatement delete_spellbar;
 	private static JDOStatement check_character_account;
 	
-	public CommandDeleteCharacter(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandDeleteCharacter() {}
 	
 	@Override
-	public void read() {
+	public void read(Player player) {
+		Connection connection = player.getConnection();
 		if(delete_character == null) {
 			try {
 				delete_character = Server.getJDO().prepare("DELETE FROM `character` WHERE character_id = ?");
@@ -36,17 +36,17 @@ public class CommandDeleteCharacter extends Command {
 			}
 		}
 		delete_character.clear();
-		int id = this.connection.readInt();
+		int id = connection.readInt();
 		try {
 			check_character_account.clear();
 			check_character_account.putInt(id);
 			check_character_account.execute();
 			if(check_character_account.fetch()) {
-				if(this.player.getAccountId() == check_character_account.getInt()) {
+				if(player.getAccountId() == check_character_account.getInt()) {
 					delete_character.putInt(id);
 					delete_character.execute();
-					this.connection.writeByte(PacketID.DELETE_CHARACTER);
-					this.connection.send();
+					connection.writeByte(PacketID.DELETE_CHARACTER);
+					connection.send();
 					delete_bag.clear();
 					delete_bag.putInt(id);
 					delete_bag.execute();

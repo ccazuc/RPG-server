@@ -1,15 +1,13 @@
 package net.command;
 
-import net.connection.ConnectionManager;
+import net.game.Player;
 
 public class CommandAddIgnore extends Command {
 
-	public CommandAddIgnore(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandAddIgnore() {}
 	
 	@Override
-	public void read() {
+	public void read(Player player) {
 		
 	}
 }

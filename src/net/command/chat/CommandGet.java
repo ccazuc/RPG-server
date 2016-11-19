@@ -5,50 +5,48 @@ import java.sql.SQLException;
 import jdo.JDOStatement;
 import net.Server;
 import net.command.Command;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 
 public class CommandGet extends Command {
 
 	private static JDOStatement statement;
-	public CommandGet(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
 	
 	@Override
-	public void read() {
-		byte packetID = this.connection.readByte();
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		byte packetID = connection.readByte();
 		if(packetID == PacketID.CHAT_GET_STAMINA) {
-			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getInGameCharacter(id);
-			if(player != null) {
-				write(player.getStamina());
+			int id = connection.readInt();
+			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			if(member != null) {
+				write(connection, member.getStamina());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_MANA) {
-			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getInGameCharacter(id);
-			if(player != null) {
-				write(player.getMana());
+			int id = connection.readInt();
+			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			if(member != null) {
+				write(connection, member.getMana());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_EXPERIENCE) {
-			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getInGameCharacter(id);
-			if(player != null) {
-				write(player.getExp());
+			int id = connection.readInt();
+			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			if(member != null) {
+				write(connection, member.getExp());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_GOLD) {
-			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getInGameCharacter(id);
-			if(player != null) {
-				write(player.getGold());
+			int id = connection.readInt();
+			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			if(member != null) {
+				write(connection, member.getGold());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_ID) {
-			String name = this.connection.readString();
+			String name = connection.readString();
 			try {
 				if(statement == null) {
 					statement = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
@@ -57,7 +55,7 @@ public class CommandGet extends Command {
 				statement.putString(name);
 				statement.execute();
 				if(statement.fetch()) {
-					write(statement.getInt());
+					write(connection, statement.getInt());
 				}
 			}
 			catch(SQLException e) {
@@ -65,26 +63,25 @@ public class CommandGet extends Command {
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_IP) {
-			int id = this.connection.readInt();
-			Player player = id == this.player.getCharacterId() ? this.player : Server.getInGameCharacter(id);
-			if(player != null) {
-				write(player.getIpAdress().substring(1));
+			int id = connection.readInt();
+			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			if(member != null) {
+				write(connection, member.getIpAdress().substring(1));
 			}
 		}
 	}
 	
-	public void write(int value) {
-		this.connection.writeByte(PacketID.CHAT_GET);
-		this.connection.writeByte(PacketID.INT);
-		this.connection.writeInt(value);
-		this.connection.send();
+	public void write(Connection connection, int value) {
+		connection.writeByte(PacketID.CHAT_GET);
+		connection.writeByte(PacketID.INT);
+		connection.writeInt(value);
+		connection.send();
 	}
 	
-	public void write(String msg) {
-		this.connection.writeByte(PacketID.CHAT_GET);
-		this.connection.writeByte(PacketID.STRING);
-		this.connection.writeString(msg);
-		this.connection.send();
-		
+	public void write(Connection connection, String msg) {
+		connection.writeByte(PacketID.CHAT_GET);
+		connection.writeByte(PacketID.STRING);
+		connection.writeString(msg);
+		connection.send();
 	}
 }

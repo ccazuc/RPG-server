@@ -4,8 +4,9 @@ import java.sql.SQLException;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.Player;
 import net.sql.SQLRequest;
 
 public class CommandCreateCharacter extends Command {
@@ -70,12 +71,11 @@ public class CommandCreateCharacter extends Command {
 		}
 	};
 	
-	public CommandCreateCharacter(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandCreateCharacter() {}
 	
 	@Override
-	public void read() {
+	public void read(Player player) {
+		Connection connection = player.getConnection();
 		if(create_character == null) {
 			try {
 				create_character = Server.getJDO().prepare("INSERT INTO `character` (account_id, name, class, race, experience, gold) VALUES (?, ?, ?, ?, 0, 1000000)");
@@ -86,21 +86,21 @@ public class CommandCreateCharacter extends Command {
 			}
 		}
 		create_character.clear();
-		String name = this.connection.readString();
-		int accountId = this.connection.readInt();
-		String classe = this.connection.readString();
-		String race = this.connection.readString();
+		String name = connection.readString();
+		int accountId = connection.readInt();
+		String classe = connection.readString();
+		String race = connection.readString();
 		int characterId = 0;
 		try {
-			if(checkCharacterName(name)) {
+			if(checkCharacterName(connection, name)) {
 				create_character.putInt(accountId);
 				create_character.putString(name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase());
 				create_character.putString(classe);
 				create_character.putString(race);
 				create_character.execute();
-				this.connection.writeByte(PacketID.CREATE_CHARACTER);
-				this.connection.writeByte(PacketID.CHARACTER_CREATED);
-				this.connection.send();
+				connection.writeByte(PacketID.CREATE_CHARACTER);
+				connection.writeByte(PacketID.CHARACTER_CREATED);
+				connection.send();
 				
 				character_id.clear();
 				character_id.putString(name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase());
@@ -126,15 +126,15 @@ public class CommandCreateCharacter extends Command {
 		}
 	}
 	
-	private boolean checkCharacterName(String name) throws SQLException {
+	private boolean checkCharacterName(Connection connection, String name) throws SQLException {
 		int i = 0;
 		if(name.length() >= 2 && name.length() <= 10) {
 			while(i < name.length()) {
 				char temp = name.charAt(i);
 				if(!((temp >= 'A' && temp <= 'Z') || (temp >= 'a' && temp <= 'z')) && temp != 'é' && temp != 'è' && temp != 'ç' && temp != 'à' && temp != 'ê' && temp != 'â' && temp != 'û' && temp != 'ë' && temp != 'ä' && temp != 'ü') {
-					this.connection.writeByte(PacketID.CREATE_CHARACTER);
-					this.connection.writeByte(PacketID.ERROR_NAME_ALPHABET);
-					this.connection.send();
+					connection.writeByte(PacketID.CREATE_CHARACTER);
+					connection.writeByte(PacketID.ERROR_NAME_ALPHABET);
+					connection.send();
 					return false;
 				}
 				if(i < name.length()-3) {
@@ -146,9 +146,9 @@ public class CommandCreateCharacter extends Command {
 			}
 		}
 		else {
-			this.connection.writeByte(PacketID.CREATE_CHARACTER);
-			this.connection.writeByte(PacketID.ERROR_NAME_LENGTH);
-			this.connection.send();
+			connection.writeByte(PacketID.CREATE_CHARACTER);
+			connection.writeByte(PacketID.ERROR_NAME_LENGTH);
+			connection.send();
 			return false;
 		}
 		if(check_character == null) {
@@ -160,9 +160,9 @@ public class CommandCreateCharacter extends Command {
 		if(check_character.fetch()) {
 			int id = check_character.getInt();
 			if(id != 0) {	
-				this.connection.writeByte(PacketID.CREATE_CHARACTER);
-				this.connection.writeByte(PacketID.ERROR_NAME_ALREADY_TAKEN);
-				this.connection.send();
+				connection.writeByte(PacketID.CREATE_CHARACTER);
+				connection.writeByte(PacketID.ERROR_NAME_ALREADY_TAKEN);
+				connection.send();
 				return false;
 			}
 		}

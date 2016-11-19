@@ -2,17 +2,15 @@ package net.command.chat;
 
 import net.command.Command;
 import net.connection.Connection;
-import net.connection.ConnectionManager;
 import net.connection.PacketID;
+import net.game.Player;
 
 public class CommandPlayerNotFound extends Command {
 
-	public CommandPlayerNotFound(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandPlayerNotFound() {}
 	
 	@Override
-	public void read() {
+	public void read(Player player) {
 		
 	}
 	

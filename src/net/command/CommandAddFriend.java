@@ -2,29 +2,28 @@ package net.command;
 
 import net.Server;
 import net.command.chat.CommandPlayerNotFound;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 
 public class CommandAddFriend extends Command {
 
-	public CommandAddFriend(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandAddFriend() {}
 	
 	@Override
-	public void read() {
-		String name = this.connection.readString();
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		String name = connection.readString();
 		if(name.length() > 2) {
 			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-			Player player = Server.getCharacter(name);
-			if(player != null) {
-				this.player.addFriend(player.getCharacterId());
-				writeAddFriend(this.player, player);
+			Player member = Server.getCharacter(name);
+			if(member != null) {
+				player.addFriend(member.getCharacterId());
+				writeAddFriend(player, member);
 			}
 		}
 		else {
-			CommandPlayerNotFound.write(this.connection, name);
+			CommandPlayerNotFound.write(connection, name);
 		}
 	}
 	

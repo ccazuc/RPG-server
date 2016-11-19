@@ -1,37 +1,37 @@
 package net.command;
 
 import net.Server;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
+import net.game.Player;
 
 public class CommandLoadCharacter extends Command {
 	
-	public CommandLoadCharacter(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandLoadCharacter() {}
 
 	@Override
-	public void read() {
-		int id = this.connection.readInt();
-		if(Server.getLoggedPlayerList().containsKey(this.player.getAccountId())) {
-			this.player.setCharacterId(id);
-			this.player.initTable();
-			this.player.loadCharacterInfoSQL();
-			this.player.sendStats();
-			this.player.loadEquippedBagSQL();
-			this.player.loadEquippedItemSQL();
-			this.player.loadBagItemSQL();
-			this.player.loadFriendList();
-			CommandFriend.loadFriendList(this.player);
-			this.player.notifyFriendOnline();
-			this.player.loadGuild();
-			if(this.player.getGuild() != null) {
-				CommandGuild.initGuildWhenLogin(this.connection, this.player);
-				this.player.getGuild().getMember(this.player.getCharacterId()).setOnlineStatus(true);
-				CommandGuild.notifyOnlinePlayer(this.player);
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		int id = connection.readInt();
+		if(Server.getLoggedPlayerList().containsKey(player.getAccountId())) {
+			player.setCharacterId(id);
+			player.initTable();
+			player.loadCharacterInfoSQL();
+			player.sendStats();
+			player.loadEquippedBagSQL();
+			player.loadEquippedItemSQL();
+			player.loadBagItemSQL();
+			player.loadFriendList();
+			CommandFriend.loadFriendList(player);
+			player.notifyFriendOnline();
+			player.loadGuild();
+			if(player.getGuild() != null) {
+				CommandGuild.initGuildWhenLogin(connection, player);
+				player.getGuild().getMember(player.getCharacterId()).setOnlineStatus(true);
+				CommandGuild.notifyOnlinePlayer(player);
 			}
 			//this.player.loadSpellUnlocked();
-			Server.addInGamePlayer(this.player);
-			Server.removeLoggedPlayer(this.player);
+			Server.addInGamePlayer(player);
+			Server.removeLoggedPlayer(player);
 		}
 		else {
 			//player is using WPE

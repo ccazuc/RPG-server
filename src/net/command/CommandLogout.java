@@ -1,15 +1,13 @@
 package net.command;
 
-import net.connection.ConnectionManager;
+import net.game.Player;
 
 public class CommandLogout extends Command {
 	
-	public CommandLogout(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandLogout() {}
 
 	@Override
-	public final void read() {
-		this.player.close();
+	public final void read(Player player) {
+		player.close();
 	}
 }

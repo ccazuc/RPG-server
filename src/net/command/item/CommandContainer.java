@@ -1,23 +1,23 @@
 package net.command.item;
 
 import net.command.Command;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.Player;
 import net.game.item.bag.ContainerManager;
 
 public class CommandContainer extends Command {
 
-	public CommandContainer(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandContainer() {}
 
 	@Override
-	public void read() {
-		int id = this.connection.readInt();
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		int id = connection.readInt();
 		if(ContainerManager.exists(id)) {
-			this.connection.writeByte(PacketID.CONTAINER);
-			this.connection.writeContainer(ContainerManager.getContainer(id));
-			this.connection.send();
+			connection.writeByte(PacketID.CONTAINER);
+			connection.writeContainer(ContainerManager.getContainer(id));
+			connection.send();
 		}
 	}
 }

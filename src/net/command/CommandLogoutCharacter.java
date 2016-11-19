@@ -4,32 +4,28 @@ import java.sql.SQLException;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.connection.ConnectionManager;
-import net.connection.PacketID;
 import net.game.Player;
 
 public class CommandLogoutCharacter extends Command {
 	
 	private static JDOStatement setOffline;
 	
-	public CommandLogoutCharacter(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandLogoutCharacter() {}
 
 	@Override
-	public void read() {
-		if(Server.getInGamePlayerList().containsKey(this.player.getCharacterId())) {
-			setPlayerOfflineInDB(this.player);
-			this.player.notifyFriendOffline();
-			this.player.setGuildRequest(0);
-			if(this.player.getGuild() != null) {
-				CommandGuild.notifyOfflinePlayer(this.player);
+	public void read(Player player) {
+		if(Server.getInGamePlayerList().containsKey(player.getCharacterId())) {
+			setPlayerOfflineInDB(player);
+			player.notifyFriendOffline();
+			player.setGuildRequest(0);
+			if(player.getGuild() != null) {
+				CommandGuild.notifyOfflinePlayer(player);
 			}
-			Server.addLoggedPlayer(this.player);
-			Server.removeInGamePlayer(this.player);
-			Server.getFriendMap().remove(this.player.getCharacterId());
-			this.player.resetDatas();
-			CommandTrade.closeTrade(this.player);
+			Server.addLoggedPlayer(player);
+			Server.removeInGamePlayer(player);
+			Server.getFriendMap().remove(player.getCharacterId());
+			player.resetDatas();
+			CommandTrade.closeTrade(player);
 		}
 		else {
 			//player is using WPE

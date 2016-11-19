@@ -1,18 +1,18 @@
 package net.command;
 
-import net.connection.ConnectionManager;
+import net.connection.Connection;
+import net.game.Player;
 
 public class CommandSpellCast extends Command {
 
-	public CommandSpellCast(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandSpellCast() {}
 	
 	@Override
-	public void read() {
-		int spellId = this.connection.readInt();
-		if(this.player.getSpellUnlocked().containsKey((spellId))) {
-			this.player.getSpellUnlocked(spellId).action(this.player, this.player.getTarget());
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		int spellId = connection.readInt();
+		if(player.getSpellUnlocked().containsKey((spellId))) {
+			player.getSpellUnlocked(spellId).action(player, player.getTarget());
 		}
 	}
 }

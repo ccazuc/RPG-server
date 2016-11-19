@@ -1,7 +1,7 @@
 package net.command;
 
 import net.Server;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 import net.game.item.Item;
@@ -12,23 +12,22 @@ import net.game.item.stuff.Stuff;
 
 public class CommandAddItem extends Command {
 	
-	public CommandAddItem(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandAddItem() {}
 	
 	@Override
-	public void read() {
-		int character_id = this.connection.readInt();
-		int item_id = this.connection.readInt();
-		int number = this.connection.readInt();
-		if(this.player.getAccountRank() >= 1 && Item.exists(item_id)) {
-			Player player = character_id == this.player.getCharacterId() ? this.player : Server.getInGameCharacter(character_id);
-			if(player != null) {
-				if(player.itemHasBeenSendToClient(item_id)) {
-					writeKnownItem(player, item_id, number);
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		int character_id = connection.readInt();
+		int item_id = connection.readInt();
+		int number = connection.readInt();
+		if(player.getAccountRank() >= 1 && Item.exists(item_id)) {
+			Player member = character_id == player.getCharacterId() ? player : Server.getInGameCharacter(character_id);
+			if(member != null) {
+				if(member.itemHasBeenSendToClient(item_id)) {
+					writeKnownItem(member, item_id, number);
 				}
 				else {
-					writeUnknownItem(player, item_id, number);
+					writeUnknownItem(member, item_id, number);
 				}
 			}
 		}

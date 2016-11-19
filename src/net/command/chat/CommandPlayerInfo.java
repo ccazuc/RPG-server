@@ -2,40 +2,40 @@ package net.command.chat;
 
 import net.Server;
 import net.command.Command;
-import net.connection.ConnectionManager;
+import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 
 public class CommandPlayerInfo extends Command {
 
-	public CommandPlayerInfo(ConnectionManager connectionManager) {
-		super(connectionManager);
-	}
+	public CommandPlayerInfo() {}
 
 	@Override
-	public void read() {
-		int id = this.connection.readInt();
-		if(this.player.getAccountRank() >= 1) {
-			if(id == this.player.getCharacterId()) {
-				write(this.player);
+	public void read(Player player) {
+		Connection connection = player.getConnection();
+		int id = connection.readInt();
+		if(player.getAccountRank() >= 1) {
+			if(id == player.getCharacterId()) {
+				write(player);
 			}
 			else {
 				write(Server.getInGameCharacter(id));
 			}
 		}
 		else {
-			this.connection.writeByte(PacketID.CHAT_NOT_ALLOWED);
-			this.connection.send();
+			connection.writeByte(PacketID.CHAT_NOT_ALLOWED);
+			connection.send();
 		}
 	}
 	
 	public void write(Player player) {
 		if(player != null) {
-			this.connection.writeString(player.getName());
-			this.connection.writeInt(player.getAccountId());
-			this.connection.writeInt(player.getAccountRank());
-			this.connection.writeString(player.getIpAdress());
-			this.connection.send();
+			Connection connection = player.getConnection();
+			connection.writeString(player.getName());
+			connection.writeInt(player.getAccountId());
+			connection.writeInt(player.getAccountRank());
+			connection.writeString(player.getIpAdress());
+			connection.send();
 		}
 	}
 }
