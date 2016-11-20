@@ -102,6 +102,7 @@ public class CommandSendMessage extends Command {
 		connection.writeByte(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
+		connection.writeBoolean(false);
 		connection.send();
 	}
 }

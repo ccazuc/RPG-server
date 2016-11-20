@@ -55,7 +55,9 @@ public class CommandParty extends Command {
 			}
 		}
 		else if(packetId == PacketID.PARTY_DECLINE_REQUEST) {
-			requestDeclined(player.getPlayerParty().getConnection(), player.getName());
+			if(player.getPlayerParty() != null && player.getPlayerParty().getConnection() != null) {
+				requestDeclined(player.getPlayerParty().getConnection(), player.getName());
+			}
 			player.getPlayerParty().setParty(null);
 			player.setPlayerParty(null);
 		}
