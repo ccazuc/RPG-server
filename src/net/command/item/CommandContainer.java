@@ -8,8 +8,6 @@ import net.game.item.bag.ContainerManager;
 
 public class CommandContainer extends Command {
 
-	public CommandContainer() {}
-
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

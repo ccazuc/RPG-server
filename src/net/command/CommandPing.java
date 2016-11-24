@@ -4,8 +4,6 @@ import net.connection.PacketID;
 import net.game.Player;
 
 public class CommandPing extends Command {
-
-	public CommandPing() {}
 	
 	@Override
 	public void read(Player player) {

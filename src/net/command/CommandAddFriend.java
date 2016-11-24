@@ -7,8 +7,6 @@ import net.connection.PacketID;
 import net.game.Player;
 
 public class CommandAddFriend extends Command {
-
-	public CommandAddFriend() {}
 	
 	@Override
 	public void read(Player player) {

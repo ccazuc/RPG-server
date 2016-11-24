@@ -7,7 +7,7 @@ public class Command {
 	
 	public Command() {}
 	
-	public void read(Player player) {}
-	public void read(Connection connection) {}
+	public void read(@SuppressWarnings("unused") Player player) {}
+	public void read(@SuppressWarnings("unused") Connection connection) {}
 	public void write() {}
 }

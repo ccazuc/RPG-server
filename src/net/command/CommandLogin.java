@@ -1,16 +1,8 @@
 package net.command;
-import java.sql.SQLException;
 
-import jdo.JDOStatement;
-import net.Server;
-import net.connection.Connection;
-import net.connection.PacketID;
-import net.game.Player;
-import net.sql.SQLRequest;
-
-public class CommandLogin extends Command {
+public class CommandLogin extends Command { //UNUSED
 	
-	static JDOStatement read_statement;
+	/*static JDOStatement read_statement;
 	private static JDOStatement write_statement;
 	private static SQLRequest loginRequest = new SQLRequest("SELECT name, password, id, rank, banned, ban_duration FROM account WHERE name = ?") {
 		@Override
@@ -84,8 +76,6 @@ public class CommandLogin extends Command {
 			}
 		}
 	};
-	
-	public CommandLogin() {}
 
 	@Override
 	public void read(Player player) {
@@ -128,5 +118,5 @@ public class CommandLogin extends Command {
 				write_statement.putInt(0);
 			}
 		}
-	}
+	}*/
 }

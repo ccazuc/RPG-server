@@ -3,7 +3,6 @@ package net;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,22 +24,26 @@ import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 import net.game.spell.SpellManager;
-import net.sql.MyRunnable;
-import net.sql.SQLRequest;
+import net.thread.socket.SocketRunnable;
+import net.thread.sql.SQLRequest;
+import net.thread.sql.SQLRunnable;
 
 public class Server {
 	
 	private static JDO jdo;
+	private static JDO asyncJdo;
 	private static ServerSocketChannel serverSocketChannel;
-	private static SocketChannel clientSocket;
+	//private static SocketChannel clientSocket;
 	private static Map<Integer, Player> loggedPlayerList = Collections.synchronizedMap(new HashMap<Integer, Player>());
 	private static ArrayList<Integer> loggedPlayerKickList = new ArrayList<Integer>();
 	private static List<Player> nonLoggedPlayerList = Collections.synchronizedList(new ArrayList<Player>());
 	private static ArrayList<Player> nonLoggedPlayerKickList = new ArrayList<Player>();
 	private static HashMap<Integer, Player> inGamePlayerList = new HashMap<Integer, Player>();
 	private static ArrayList<Integer> inGamePlayerKickList = new ArrayList<Integer>();
-	private static Thread sqlRequest;
-	private static MyRunnable runnable;
+	private static Thread SQLRequestThread;
+	private static SQLRunnable SQLRunnable;
+	private static SocketRunnable socketRunnable;
+	private static Thread socketThread;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
 	private static HashMap<Integer, ArrayList<Integer>> friendMap = new HashMap<Integer, ArrayList<Integer>>();
 	private static HashMap<Integer, Guild> guildList = new HashMap<Integer, Guild>();
@@ -48,16 +51,19 @@ public class Server {
 	private final static String REALM_NAME = "Main Server Test";
 	private final static int REALM_ID = 15;
 	private final static int PORT = 5721;
+	private final static int LOOP_TIMER = 15;
 	
-	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, InterruptedException {
 		System.out.println("WORLD SERVER TEST");
 		long time = System.currentTimeMillis();
+		float delta;
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
+		asyncJdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
 		CharacterManager.checkOnlinePlayers();
 		nonLoggedPlayerList = Collections.synchronizedList(nonLoggedPlayerList);
 		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(PORT);
 		serverSocketChannel = ServerSocketChannel.open();
-		serverSocketChannel.configureBlocking(false);
+		//serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.bind(iNetSocketAdress);
 		ItemManager.initSQLRequest();
 		StuffManager.loadStuffs();
@@ -66,27 +72,36 @@ public class Server {
 		GemManager.loadGems();
 		ContainerManager.loadContainer();
 		SpellManager.loadSpells();
-		runnable = new MyRunnable();
-		sqlRequest = new Thread(runnable);
-		sqlRequest.start();
+		SQLRunnable = new SQLRunnable();
+		SQLRequestThread = new Thread(SQLRunnable);
+		SQLRequestThread.start();
+		socketRunnable = new SocketRunnable(serverSocketChannel);
+		socketThread = new Thread(socketRunnable);
+		socketThread.start();
 		System.out.println("Init took "+(System.currentTimeMillis()-time)+" ms.");
 		ConnectionManager.connectAuthServer();
 		ConnectionManager.registerToAuthServer();
 		ConnectionManager.initAuthCommand();
 		ConnectionManager.initPlayerCommand();
 		while(true) {
-			if((clientSocket = serverSocketChannel.accept()) != null) {
+			/*if((clientSocket = serverSocketChannel.accept()) != null) {
 				clientSocket.configureBlocking(false);
 				nonLoggedPlayerList.add(new Player(clientSocket));
-			}
+			}*/
 			time = System.currentTimeMillis();
 			kickPlayers();
 			readOnlinePlayers();
 			read();
 			readAuthServer();
-			//System.out.println(nonLoggedPlayerList.size()+" "+loggedPlayerList.size()+" "+inGamePlayerList.size());
-			if((System.currentTimeMillis()-time)/1000d >= 0.05) {
-				System.out.println("Loop too long: "+(System.currentTimeMillis()-time)/1000d);
+			delta = (System.currentTimeMillis()-time);
+			if(delta < LOOP_TIMER) {
+				Thread.sleep(LOOP_TIMER-(long)delta);
+				//System.out.println("sleep for "+(LOOP_TIMER-delta)+"ms");
+			}
+			else {
+				System.out.print("Loop too long: ");
+				System.out.print(delta);
+				System.out.println("ms.");
 			}
 		}
 	}
@@ -147,6 +162,12 @@ public class Server {
 			}
 		}
 		return null;
+	}
+	
+	public static void addNonLoggedPlayer(Player player) {
+		synchronized(nonLoggedPlayerList) {
+			nonLoggedPlayerList.add(player);
+		}
 	}
 	
 	public static void addInGamePlayer(Player player) {
@@ -236,7 +257,7 @@ public class Server {
 	}
 	
 	public static void addNewRequest(SQLRequest request) {
-		runnable.addRequest(request);
+		SQLRunnable.addRequest(request);
 	}
 	
 	public static void addKey(Key key) {
@@ -271,6 +292,10 @@ public class Server {
 	
 	public static JDO getJDO() {
 		return jdo;
+	}
+	
+	public static JDO getAsynJDO() {
+		return asyncJdo;
 	}
 	
 	public static int getRealmId() {

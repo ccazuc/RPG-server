@@ -10,8 +10,6 @@ import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 
 public class CommandRequestItem extends Command {
-	
-	public CommandRequestItem() {}
 
 	@Override
 	public void read(Player player) {

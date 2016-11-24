@@ -12,10 +12,6 @@ import net.game.Player;
 public class CommandSelectScreenLoadCharacters extends Command {
 	
 	private static JDOStatement write_statement;
-	
-	public CommandSelectScreenLoadCharacters() {
-		
-	}
 
 	@Override
 	public void read(Player player) {

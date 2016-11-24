@@ -10,8 +10,6 @@ public class CommandSendMessage extends Command {
 
 	private final static int MAXIMUM_LENGTH = 255;
 	
-	public CommandSendMessage() {}
-	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();
@@ -56,7 +54,7 @@ public class CommandSendMessage extends Command {
 				if(player.getGuild().getMember(player.getCharacterId()).getRank().canTalkInGuildChannel()) {
 					int i = 0;
 					while(i < player.getGuild().getMemberList().size()) {
-						if(player.getGuild().getMemberList().get(i).isOnline()) {
+						if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel()) {
 							write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD);
 						}
 						i++;

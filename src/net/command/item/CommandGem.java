@@ -8,8 +8,6 @@ import net.game.item.gem.GemManager;;
 
 public class CommandGem extends Command {
 
-	public CommandGem() {}
-
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

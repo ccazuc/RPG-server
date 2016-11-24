@@ -39,9 +39,9 @@ public class Player extends Unit {
 	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
 	//private ProfessionManager professionManager = new ProfessionManager();
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
-	private CharacterManager characterManager = new CharacterManager();
+	private CharacterManager characterManager = new CharacterManager(this);
 	private SpellBarManager spellBarManager = new SpellBarManager();
-	private GuildManager guildManager = new GuildManager();
+	private GuildManager guildManager = new GuildManager(this);
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
 	private ItemManager itemManager = new ItemManager();
 	private HashMap<Integer, Spell> spellUnlocked;
@@ -198,7 +198,7 @@ public class Player extends Unit {
 	
 	public void loadGuild() {
 		try {
-			this.guildManager.loadGuild(this);
+			this.guildManager.loadGuild();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -261,7 +261,7 @@ public class Player extends Unit {
 	
 	public void loadCharacterInfoSQL() {
 		try {
-			this.characterManager.loadCharacterInfo(this);
+			this.characterManager.loadCharacterInfo();
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -270,7 +270,7 @@ public class Player extends Unit {
 	
 	public void loadFriendList() {
 		try {
-			this.characterManager.loadFriendList(this);
+			this.characterManager.loadFriendList();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -279,11 +279,15 @@ public class Player extends Unit {
 	
 	public void loadSpellUnlocked() {
 		try {
-			this.characterManager.loadSpellUnlocked(this);
+			this.characterManager.loadSpellUnlocked();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void updateLastLoginTimer() {
+		this.characterManager.updateLastLoginTimer();
 	}
 	
 	public void event() {

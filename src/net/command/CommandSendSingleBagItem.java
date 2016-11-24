@@ -7,8 +7,6 @@ import net.game.item.gem.GemManager;
 import net.game.item.stuff.Stuff;
 
 public class CommandSendSingleBagItem extends Command {
-
-	public CommandSendSingleBagItem() {}
 	
 	@Override
 	public void read(Player player) {

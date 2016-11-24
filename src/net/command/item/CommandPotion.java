@@ -8,8 +8,6 @@ import net.game.item.potion.PotionManager;
 
 public class CommandPotion extends Command {
 
-	public CommandPotion() {}
-
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

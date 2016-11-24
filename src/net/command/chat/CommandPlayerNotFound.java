@@ -6,8 +6,6 @@ import net.connection.PacketID;
 import net.game.Player;
 
 public class CommandPlayerNotFound extends Command {
-
-	public CommandPlayerNotFound() {}
 	
 	@Override
 	public void read(Player player) {

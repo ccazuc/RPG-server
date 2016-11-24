@@ -8,26 +8,26 @@ import jdo.JDOStatement;
 import net.Server;
 import net.game.ClassType;
 import net.game.Player;
-import net.sql.SQLRequest;
+import net.thread.sql.SQLDatas;
+import net.thread.sql.SQLRequest;
 
 public class GuildManager {
 
+	private Player player;
 	private static JDOStatement loadRank;
 	private static JDOStatement loadGuildInformation;
 	private static JDOStatement loadMember;
 	private static JDOStatement loadMemberInformation;
 	private static JDOStatement loadPlayerGuild;
-	private static JDOStatement removeMemberFromDB;
-	private static JDOStatement addMemberInDB;
-	private static JDOStatement updateRank;
-	private static SQLRequest updateInformation = new SQLRequest("UPDATE guild SET information = ? WHERE id = ?") {
+	private final static SQLRequest updateInformation = new SQLRequest("UPDATE guild SET information = ? WHERE id = ?") {
 		
 		@Override
 		public void gatherData() {
 			try {
+				SQLDatas datas = this.datasList.get(0);
 				this.statement.clear();
-				this.statement.putString(this.msg);
-				this.statement.putInt(this.id);
+				this.statement.putString(datas.getText());
+				this.statement.putInt(datas.getIValue1());
 				this.statement.execute();
 			} 
 			catch (SQLTimeoutException e) {
@@ -38,14 +38,96 @@ public class GuildManager {
 			}
 		}
 	};
-	private static SQLRequest updateMotd = new SQLRequest("UPDATE guild SET motd = ? WHERE id = ?") {
+	private final static SQLRequest updateMotd = new SQLRequest("UPDATE guild SET motd = ? WHERE id = ?") {
 		
 		@Override
 		public void gatherData() {
 			try {
+				SQLDatas datas = this.datasList.get(0);
 				this.statement.clear();
-				this.statement.putString(this.msg);
-				this.statement.putInt(this.id);
+				this.statement.putString(datas.getText());
+				this.statement.putInt(datas.getIValue1());
+				this.statement.execute();
+			} 
+			catch (SQLTimeoutException e) {
+				e.printStackTrace();
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private final static SQLRequest removeMember = new SQLRequest("REMOVE FROM guild_member WHERE member_id = ? AND guild_id = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putInt(datas.getIValue2());
+				this.statement.execute();
+			} 
+			catch (SQLTimeoutException e) {
+				e.printStackTrace();
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private final static SQLRequest updatePermission = new SQLRequest("UPDATE guild_rank SET permission = ?, name = ? WHERE guild_id = ? AND rank_order = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putInt(datas.getIValue3());
+				this.statement.putString(datas.getText());
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putInt(datas.getIValue2());
+				this.statement.execute();
+			} 
+			catch (SQLTimeoutException e) {
+				e.printStackTrace();
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private final static SQLRequest addMemberInDB = new SQLRequest("INSERT INTO guild_member (member_id, guild_id, rank) VALUES (?, ?, ?)") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putInt(datas.getIValue2());
+				this.statement.putInt(datas.getIValue3());
+				this.statement.execute();
+			} 
+			catch (SQLTimeoutException e) {
+				e.printStackTrace();
+			} 
+			catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private final static SQLRequest updateMemberRank = new SQLRequest("UPDATE guild_member SET rank = ? WHERE guild_id = ? AND member_id = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putInt(datas.getIValue2());
+				this.statement.putInt(datas.getIValue3());
+				//System.out.println("EXECUTE : rank: "+datas.getIValue1()+" guildId: "+datas.getIValue2()+" memberId: "+datas.getIValue3());
 				this.statement.execute();
 			} 
 			catch (SQLTimeoutException e) {
@@ -57,7 +139,11 @@ public class GuildManager {
 		}
 	};
 	
-	public void loadGuild(Player player) throws SQLException {
+	public GuildManager(Player player) {
+		this.player = player;
+	}
+	
+	public void loadGuild() throws SQLException {
 		if(loadPlayerGuild == null) {
 			loadPlayerGuild = Server.getJDO().prepare("SELECT guild_id FROM guild_member WHERE member_id = ?");
 			loadRank = Server.getJDO().prepare("SELECT rank_order, permission, name FROM guild_rank WHERE guild_id = ?");
@@ -67,14 +153,14 @@ public class GuildManager {
 		}
 		int guildId = 0;
 		loadPlayerGuild.clear();
-		loadPlayerGuild.putInt(player.getCharacterId());
+		loadPlayerGuild.putInt(this.player.getCharacterId());
 		loadPlayerGuild.execute();
 		if(loadPlayerGuild.fetch()) {
 			guildId = loadPlayerGuild.getInt();
 		}
 		if(guildId != 0) {
 			if(Server.getGuildList().containsKey(guildId)) {
-				player.setGuild(Server.getGuildList(guildId));
+				this.player.setGuild(Server.getGuildList(guildId));
 				return;
 			}
 			ArrayList<GuildRank> rankList = new ArrayList<GuildRank>();
@@ -128,68 +214,52 @@ public class GuildManager {
 				String information = loadGuildInformation.getString();
 				String motd = loadGuildInformation.getString();
 				Server.addGuild(new Guild(guildId, leaderId, guildName, information, motd, memberList, rankList));
-				player.setGuild(Server.getGuildList(guildId));
+				this.player.setGuild(Server.getGuildList(guildId));
 			}
 		}
 	}
 	
 	public static void removeMemberFromDB(Guild guild, int id) {
-		try {
-			if(removeMemberFromDB == null) {
-				removeMemberFromDB = Server.getJDO().prepare("REMOVE FROM guild_member WHERE member_id = ? AND guild_id = ?");
-			}
-			removeMemberFromDB.execute();
-			removeMemberFromDB.putInt(id);
-			removeMemberFromDB.putInt(guild.getId());
-			removeMemberFromDB.execute();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
+		//removeMember.setId(id);
+		//removeMember.setId2(guild.getId());
+		removeMember.addDatas(new SQLDatas(id, guild.getId()));
+		Server.addNewRequest(removeMember);
 	}
 	
 	public static void addMemberInDB(Guild guild, int id) {
-		try {
-			if(addMemberInDB == null) {
-				addMemberInDB = Server.getJDO().prepare("INSERT INTO guild_member (member_id, guild_id, rank) VALUES (?, ?, ?)");
-			}
-			addMemberInDB.clear();
-			addMemberInDB.putInt(id);
-			addMemberInDB.putInt(guild.getId());
-			addMemberInDB.putInt(guild.getRankList().size()-1);
-			addMemberInDB.execute();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
+		/*addMemberInDB.setId(id);
+		addMemberInDB.setId2(guild.getId());
+		addMemberInDB.setValue(guild.getRankList().size()-1);*/
+		addMemberInDB.addDatas(new SQLDatas(id, guild.getId(), guild.getRankList().size()-1));
+		Server.addNewRequest(addMemberInDB);
 	}
 	
 	public static void updatePermission(Guild guild, int rank_order, int permission, String name) {
-		try {
-			if(updateRank == null) {
-				updateRank = Server.getJDO().prepare("UPDATE guild_rank SET permission = ?, name = ? WHERE guild_id = ? AND rank_order = ?");
-			}
-			updateRank.clear();
-			updateRank.putInt(permission);
-			updateRank.putString(name);
-			updateRank.putInt(guild.getId());
-			updateRank.putInt(rank_order);
-			updateRank.execute();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
+		/*updatePermission.setValue(permission);
+		updatePermission.setName(name);
+		updatePermission.setId(guild.getId());
+		updatePermission.setId2(rank_order);*/
+		updatePermission.addDatas(new SQLDatas(guild.getId(), rank_order, permission, name));
+		Server.addNewRequest(updatePermission);
 	}
 	
 	public static void updateInformation(Guild guild) {
-		updateInformation.setId(guild.getId());
-		updateInformation.setMsg(guild.getInformation());
+		//updateInformation.setId(guild.getId());
+		//updateInformation.setMsg(guild.getInformation());
+		updateMotd.addDatas(new SQLDatas(guild.getId(), guild.getInformation()));
 		Server.addNewRequest(updateInformation);
 	}
 	
 	public static void updateMotd(Guild guild) {
-		updateMotd.setId(guild.getId());
-		updateMotd.setMsg(guild.getMotd());
+		//updateMotd.setId(guild.getId());
+		//updateMotd.setMsg(guild.getMotd());
+		updateMotd.addDatas(new SQLDatas(guild.getId(), guild.getMotd()));
 		Server.addNewRequest(updateMotd);
+	}
+	
+	public static void updateMemberRank(int playerId, int guildId, int rank) {
+		updateMemberRank.addDatas(new SQLDatas(rank, guildId, playerId));
+		//System.out.println("PlayerId: "+playerId+" guildId: "+guildId+" rank: "+rank);
+		Server.addNewRequest(updateMemberRank);
 	}
 }

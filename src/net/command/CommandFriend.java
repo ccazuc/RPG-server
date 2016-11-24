@@ -10,15 +10,45 @@ import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
+import net.thread.sql.SQLDatas;
+import net.thread.sql.SQLRequest;
 
 public class CommandFriend extends Command {
 
 	private static JDOStatement searchPlayer;
-	private static JDOStatement removeFriendFromDB;
 	private static JDOStatement loadCharacterNameFromID;
-	private static JDOStatement addFriendToDB;
-	
-	public CommandFriend() {}
+	private final static SQLRequest addFriendInDB = new SQLRequest("INSERT INTO friend (character_id, friend_id) VALUES (?, ?)") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putInt(datas.getIValue2());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private final static SQLRequest removeFriendFromDB = new SQLRequest("DELETE FROM friend WHERE character_id = ? AND friend_id = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putInt(datas.getIValue2());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	
 	@Override
 	public void read(Player player) {
@@ -88,18 +118,10 @@ public class CommandFriend extends Command {
 	}
 	
 	private void addFriendInDB(Player player, int friend_id) {
-		try {
-			if(addFriendToDB == null) {
-				addFriendToDB = Server.getJDO().prepare("INSERT INTO friend (character_id, friend_id) VALUES (?, ?)");
-			}
-			addFriendToDB.clear();
-			addFriendToDB.putInt(player.getCharacterId());
-			addFriendToDB.putInt(friend_id);
-			addFriendToDB.execute();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
+		//addFriendInDB.setId(player.getCharacterId());
+		//addFriendInDB.setId2(friend_id);
+		addFriendInDB.addDatas(new SQLDatas(player.getCharacterId(), friend_id));
+		Server.addNewRequest(addFriendInDB);
 	}
 	
 	public static void loadFriendList(Player player) { //id, name, level, race, classe
@@ -181,18 +203,10 @@ public class CommandFriend extends Command {
 	}
 	
 	private static void removeFriendFromDB(int character_id, int friend_id) {
-		try {
-			if(removeFriendFromDB == null) {
-				removeFriendFromDB = Server.getJDO().prepare("DELETE FROM friend WHERE character_id = ? AND friend_id = ?");
-			}
-			removeFriendFromDB.clear();
-			removeFriendFromDB.putInt(character_id);
-			removeFriendFromDB.putInt(friend_id);
-			removeFriendFromDB.execute();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
+		//removeFriendFromDB.setId(character_id);
+		//removeFriendFromDB.setId2(friend_id);
+		removeFriendFromDB.addDatas(new SQLDatas(character_id, friend_id));
+		Server.addNewRequest(removeFriendFromDB);
 	}
 	
 	private static void addOnlineFriend(Player player, Player friend) {

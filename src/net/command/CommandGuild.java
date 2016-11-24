@@ -1,5 +1,7 @@
 package net.command;
 
+import java.sql.SQLException;
+
 import net.Server;
 import net.command.chat.CommandPlayerNotFound;
 import net.command.chat.CommandSendMessage;
@@ -12,10 +14,27 @@ import net.game.guild.Guild;
 import net.game.guild.GuildManager;
 import net.game.guild.GuildMember;
 import net.game.guild.GuildRank;
+import net.thread.sql.SQLDatas;
+import net.thread.sql.SQLRequest;
 
 public class CommandGuild extends Command {
-
-	public CommandGuild() {}
+	
+	private final static SQLRequest setLeaderInDB = new SQLRequest("UPDATE guild SET leader_id = ? WHERE id = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putInt(datas.getIValue2());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	
 	@Override
 	public void read(Player player) {
@@ -28,15 +47,17 @@ public class CommandGuild extends Command {
 				permission = Guild.GUILD_MASTER_PERMISSION;
 			}
 			String name = connection.readString();
-			if(isInAGuild(player)) {
-				if(hasEnoughRight(player, player.getGuild().isLeader(player.getCharacterId()))) {
-					GuildRank rank = player.getGuild().getRank(rank_order);
-					if(rank != null) {
-						player.getGuild().setRankPermission(rank_order, permission, name);
-						updatePermission(player.getGuild(), rank_order, permission, name);
-					}
-					else {
-						CommandSendMessage.write(connection, "This rank doesn't exist.", MessageType.SELF);
+			if(name.length() > 0) {
+				if(isInAGuild(player)) {
+					if(hasEnoughRight(player, player.getGuild().isLeader(player.getCharacterId()))) {
+						GuildRank rank = player.getGuild().getRank(rank_order);
+						if(rank != null) {
+							player.getGuild().setRankPermission(rank_order, permission, name);
+							updatePermission(player.getGuild(), rank_order, permission, name);
+						}
+						else {
+							CommandSendMessage.write(connection, "This rank doesn't exist.", MessageType.SELF);
+						}
 					}
 				}
 			}
@@ -73,16 +94,11 @@ public class CommandGuild extends Command {
 			if(isInAGuild(player)) {
 				if(hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canKickMember())) {
 					GuildMember member = player.getGuild().getMember(id);
-					if(member != null) {
-						if(member.getRank().getOrder() > player.getGuild().getMember(player.getCharacterId()).getRank().getOrder()) {
+					if(playerIsInTheSameGuild(player, member)) {
+						if(hasEnoughRight(player, member.getRank().getOrder() > player.getGuild().getMember(player.getCharacterId()).getRank().getOrder())) {
 							player.getGuild().removeMember(id, player.getName());
+							removeMember(player.getGuild(), player.getName(), id);
 						}
-						else {
-							
-						}
-					}
-					else {
-						CommandSendMessage.write(connection, "This player is not in your guild.", MessageType.SELF);
 					}
 				}
 			}
@@ -94,11 +110,10 @@ public class CommandGuild extends Command {
 				initGuildWhenLogin(connection, player);
 			}
 			else {
-				//u haxxor
+				CommandSendMessage.write(connection, "Nobody invited you to join their guild.", MessageType.SELF);
 			}
 		}
 		else if(packetId == PacketID.GUILD_DECLINE_REQUEST) {
-			System.out.println("REQUEST DECLINED");
 			player.setGuildRequest(0);
 		}
 		else if(packetId == PacketID.GUILD_SET_MOTD) {
@@ -132,7 +147,7 @@ public class CommandGuild extends Command {
 			if(isInAGuild(player)) {
 				if(hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canPromote())) {
 					GuildMember member = player.getGuild().getMember(id);
-					if(member != null) {
+					if(playerIsInTheSameGuild(player, member)) {
 						if(member.getRank().getOrder() < 2) {
 							if(player.getGuild().getMember(player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder()) {
 								member.setRank(player.getGuild().getRank(member.getRank().getOrder()-1));
@@ -146,9 +161,6 @@ public class CommandGuild extends Command {
 							CommandSendMessage.write(connection, member.getName()+"'s rank is too high.", MessageType.SELF);
 						}
 					}
-					else {
-						CommandSendMessage.write(connection, "This player is not in your guild.", MessageType.SELF);
-					}
 				}
 			}
 		}
@@ -157,25 +169,101 @@ public class CommandGuild extends Command {
 			if(isInAGuild(player)) {
 				if(hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canDemote())) {
 					GuildMember member = player.getGuild().getMember(id);
-					if(member != null) {
+					if(playerIsInTheSameGuild(player, member)) {
 						if(member.getRank().getOrder() < player.getGuild().getRankList().size()) {
-							if(player.getGuild().getMember(player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder()) {
+							if(hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder())) {
 								member.setRank(player.getGuild().getRank(member.getRank().getOrder()+1));
 								promotePlayer(player.getGuild(), member);
-							}
-							else {
-								CommandSendMessage.write(connection, "You don't have the right to do this.", MessageType.SELF);
 							}
 						}
 						else {
 							CommandSendMessage.write(connection, member.getName()+" has already the lowest rank.", MessageType.SELF);
 						}
 					}
-					else {
-						CommandSendMessage.write(connection, "This player is not in your guild.", MessageType.SELF);
-					}
 				}
 			}
+		}
+		else if(packetId == PacketID.GUILD_LEAVE) {
+			if(isInAGuild(player)) {
+				leaveGuild(player.getGuild(), player.getCharacterId());
+				GuildManager.removeMemberFromDB(player.getGuild(), player.getCharacterId());
+				player.setGuild(null);
+			}
+		}
+		else if(packetId == PacketID.GUILD_SET_LEADER) {
+			int id = connection.readInt();
+			if(isInAGuild(player)) {
+				if(player.getGuild().isLeader(player.getCharacterId())) {
+					GuildMember member = player.getGuild().getMember(id);
+					if(playerIsInTheSameGuild(player, member)) {
+						member.setRank(player.getGuild().getRankList().get(0));
+						player.getGuild().getMember(player.getCharacterId()).setRank(player.getGuild().getRankList().get(1));
+						player.getGuild().setLeaderId(id);
+						GuildManager.updateMemberRank(player.getCharacterId(), player.getGuild().getId(), player.getGuild().getMember(player.getCharacterId()).getRank().getOrder());
+						setLeader(player.getGuild(), member.getId());
+						//setLeaderInDB.setId(id);
+						//setLeaderInDB.setId2(player.getGuild().getId());
+						//Server.addNewRequest(setLeaderInDB);
+						setLeaderInDB(id, player.getGuild().getId());
+						GuildManager.updateMemberRank(member.getId(), player.getGuild().getId(), member.getRank().getOrder());
+					}
+				}
+				else {
+					CommandSendMessage.write(connection, "You don't have the right to do this.", MessageType.SELF);
+				}
+			}
+		}
+	}
+	
+	public static void removeMember(Guild guild, String name, int id) {
+		int i = 0;
+		GuildMember temp;
+		Connection connection;
+		while(i < guild.getMemberList().size()) {
+			temp = guild.getMemberList().get(i);
+			if(Server.getInGameCharacter(temp.getId()) != null) {
+				connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.writeByte(PacketID.GUILD);
+				connection.writeByte(PacketID.GUILD_KICK_MEMBER);
+				connection.writeString(name);
+				connection.writeInt(id);
+				connection.send();
+			}
+			i++;
+		}
+	}
+	
+	public static void setLeader(Guild guild, int id) {
+		int i = 0;
+		GuildMember temp;
+		Connection connection;
+		while(i < guild.getMemberList().size()) {
+			temp = guild.getMemberList().get(i);
+			if(Server.getInGameCharacter(temp.getId()) != null) {
+				connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.writeByte(PacketID.GUILD);
+				connection.writeByte(PacketID.GUILD_SET_LEADER);
+				connection.writeInt(id);
+				connection.send();
+			}
+			i++;
+		}
+	}
+	
+	public static void leaveGuild(Guild guild, int id) {
+		int i = 0;
+		GuildMember temp;
+		Connection connection;
+		while(i < guild.getMemberList().size()) {
+			temp = guild.getMemberList().get(i);
+			if(Server.getInGameCharacter(temp.getId()) != null) {
+				connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.writeByte(PacketID.GUILD);
+				connection.writeByte(PacketID.GUILD_MEMBER_LEFT);
+				connection.writeInt(id);
+				connection.send();
+			}
+			i++;
 		}
 	}
 	
@@ -384,6 +472,11 @@ public class CommandGuild extends Command {
 		}
 	}
 	
+	private static void setLeaderInDB(int player_id, int guild_id) {
+		setLeaderInDB.addDatas(new SQLDatas(player_id, guild_id));
+		Server.addNewRequest(setLeaderInDB);
+	}
+	
 	private static boolean isInAGuild(Player player) {
 		if(player.getGuild() != null) {
 			return true;
@@ -400,6 +493,16 @@ public class CommandGuild extends Command {
 		}
 		else {
 			CommandSendMessage.write(player.getConnection(), "You don't have the right to do this.", MessageType.SELF);
+			return false;
+		}
+	}
+	
+	private static boolean playerIsInTheSameGuild(Player player, GuildMember member) {
+		if(member != null) {
+			return true;
+		}
+		else {
+			CommandSendMessage.write(player.getConnection(), "This player is not in your guild.", MessageType.SELF);
 			return false;
 		}
 	}

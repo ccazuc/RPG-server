@@ -114,4 +114,7 @@ public class PacketID {
 	public static final byte GUILD_SET_MOTD = 110;
 	public static final byte GUILD_PROMOTE_PLAYER = 111;
 	public static final byte GUILD_DEMOTE_PLAYER = 112;
+	public static final byte GUILD_LEAVE = 113;
+	public static final byte GUILD_SET_LEADER = 114;
+	public static final byte GUILD_MEMBER_LEFT = 115;
 }

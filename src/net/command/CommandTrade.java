@@ -12,8 +12,6 @@ import net.game.Player;
 import net.game.item.Item;
 
 public class CommandTrade extends Command {
-	
-	public CommandTrade() {}
 
 	@Override
 	public void read(Player player) {

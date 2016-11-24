@@ -2,15 +2,28 @@ package net.command;
 
 import java.sql.SQLException;
 
-import jdo.JDOStatement;
 import net.Server;
 import net.game.Player;
+import net.thread.sql.SQLDatas;
+import net.thread.sql.SQLRequest;
 
 public class CommandLogoutCharacter extends Command {
 	
-	private static JDOStatement setOffline;
-	
-	public CommandLogoutCharacter() {}
+	private static SQLRequest setOffline = new SQLRequest("UPDATE `character` SET online = 0 WHERE character_id = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				this.statement.putInt(this.datasList.get(0).getIValue1());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	};
 
 	@Override
 	public void read(Player player) {
@@ -34,17 +47,9 @@ public class CommandLogoutCharacter extends Command {
 	
 	public static void setPlayerOfflineInDB(Player player) {
 		if(player.getCharacterId() != 0) {
-			try {
-				if(setOffline == null) {
-					setOffline = Server.getJDO().prepare("UPDATE `character` SET online = 0 WHERE character_id = ?");
-				}
-				setOffline.clear();
-				setOffline.putInt(player.getCharacterId());
-				setOffline.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
+			//setOffline.setId(player.getCharacterId());
+			setOffline.addDatas(new SQLDatas(player.getCharacterId()));
+			Server.addNewRequest(setOffline);
 		}
 	}
 }

@@ -8,8 +8,6 @@ import net.game.item.weapon.WeaponManager;
 
 public class CommandWeapon extends Command {
 
-	public CommandWeapon() {}
-
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

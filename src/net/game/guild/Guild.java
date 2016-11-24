@@ -64,6 +64,10 @@ public class Guild {
 		return this.leader_id == id;
 	}
 	
+	public void setLeaderId(int id) {
+		this.leader_id = id;
+	}
+	
 	public GuildRank getRank(int order) {
 		int i = 0;
 		while(i < this.rankList.size()) { 

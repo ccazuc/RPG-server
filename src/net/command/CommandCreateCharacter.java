@@ -7,7 +7,8 @@ import net.Server;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
-import net.sql.SQLRequest;
+import net.thread.sql.SQLDatas;
+import net.thread.sql.SQLRequest;
 
 public class CommandCreateCharacter extends Command {
 	
@@ -19,7 +20,7 @@ public class CommandCreateCharacter extends Command {
 		public void gatherData() {
 			this.statement.clear();
 			try {
-				this.statement.putInt(this.id);
+				this.statement.putInt(this.datasList.get(0).getIValue1());
 				this.statement.execute();
 			} 
 			catch (SQLException e) {
@@ -33,7 +34,7 @@ public class CommandCreateCharacter extends Command {
 		public void gatherData() {
 			this.statement.clear();
 			try {
-				this.statement.putInt(this.id);
+				this.statement.putInt(this.datasList.get(0).getIValue1());
 				this.statement.execute();
 			} 
 			catch (SQLException e) {
@@ -47,7 +48,7 @@ public class CommandCreateCharacter extends Command {
 		public void gatherData() {
 			this.statement.clear();
 			try {
-				this.statement.putInt(this.id);
+				this.statement.putInt(this.datasList.get(0).getIValue1());
 				this.statement.execute();
 			} 
 			catch (SQLException e) {
@@ -61,7 +62,7 @@ public class CommandCreateCharacter extends Command {
 		public void gatherData() {
 			this.statement.clear();
 			try {
-				this.statement.putInt(this.id);
+				this.statement.putInt(this.datasList.get(0).getIValue1());
 				this.statement.execute();
 			} 
 			catch (SQLException e) {
@@ -70,8 +71,6 @@ public class CommandCreateCharacter extends Command {
 			
 		}
 	};
-	
-	public CommandCreateCharacter() {}
 	
 	@Override
 	public void read(Player player) {
@@ -109,13 +108,18 @@ public class CommandCreateCharacter extends Command {
 					characterId = character_id.getInt();
 				}
 				if(characterId != 0) {
-					insert_bag.setId(characterId);
+					//insert_bag.setId(characterId);
+					SQLDatas datas = new SQLDatas(characterId);
+					insert_bag.addDatas(datas);
 					Server.addNewRequest(insert_bag);
-					character_containers.setId(characterId);
+					//character_containers.setId(characterId);
+					character_containers.addDatas(datas);
 					Server.addNewRequest(character_containers);
-					character_stuff.setId(characterId);
+					//character_stuff.setId(characterId);
+					character_stuff.addDatas(datas);
 					Server.addNewRequest(character_stuff);
-					spellbar.setId(characterId);
+					//spellbar.setId(characterId);
+					spellbar.addDatas(datas);
 					Server.addNewRequest(spellbar);
 				}
 				

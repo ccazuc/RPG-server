@@ -4,8 +4,6 @@ import net.connection.Connection;
 import net.game.Player;
 
 public class CommandSpellCast extends Command {
-
-	public CommandSpellCast() {}
 	
 	@Override
 	public void read(Player player) {

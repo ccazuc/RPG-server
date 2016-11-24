@@ -8,8 +8,6 @@ import net.game.Player;
 
 public class CommandPlayerInfo extends Command {
 
-	public CommandPlayerInfo() {}
-
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

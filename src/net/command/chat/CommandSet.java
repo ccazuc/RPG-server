@@ -8,9 +8,6 @@ import net.game.Player;
 
 public class CommandSet extends Command {
 	
-	public CommandSet() {
-	}
-	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

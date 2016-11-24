@@ -1,20 +1,20 @@
-package net.sql;
+package net.thread.sql;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class MyRunnable implements Runnable {
+public class SQLRunnable implements Runnable {
 	
 	private List<SQLRequest> list = new ArrayList<SQLRequest>();
 	
-	public MyRunnable() {
+	public SQLRunnable() {
 		this.list = Collections.synchronizedList(this.list);
 	}
 	
 	@Override
 	public void run() {
-		System.out.println("run");
+		System.out.println("SQLRunnable run");
 		while(true) {
 			if(this.list.size() > 0) {
 				this.list.get(0).execute();

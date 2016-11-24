@@ -10,8 +10,6 @@ import net.game.Party;
 import net.game.Player;
 
 public class CommandParty extends Command {
-	
-	public CommandParty() {}
 
 	@Override
 	public void read(Player player) {
@@ -58,7 +56,9 @@ public class CommandParty extends Command {
 			if(player.getPlayerParty() != null && player.getPlayerParty().getConnection() != null) {
 				requestDeclined(player.getPlayerParty().getConnection(), player.getName());
 			}
-			player.getPlayerParty().setParty(null);
+			else if(player.getPlayerParty() != null) {
+				player.getPlayerParty().setParty(null);
+			}
 			player.setPlayerParty(null);
 		}
 		else if(packetId == PacketID.PARTY_KICK_PLAYER) {
@@ -136,47 +136,52 @@ public class CommandParty extends Command {
 			}
 		}
 		else if(packetId == PacketID.PARTY_ACCEPT_REQUEST) {
-			if(player.getPlayerParty().getParty() == null) { //if player who sent request is already in a party
-				if(player.getPlayerParty().hasInitParty()) {
-					Party party = new Party(Server.getInGameCharacter(player.getPlayerParty().getCharacterId()), player);
-					player.getPlayerParty().setParty(party);
-					player.setParty(party);
-					CommandSendMessage.write(player.getPlayerParty().getConnection(), player.getName()+" joined your party.", MessageType.SELF);
-					newParty(player, player.getPlayerParty());
-					newParty(player.getPlayerParty(), player);
-					player.getPlayerParty().setPlayerParty(null);
-					player.setPlayerParty(null);
-				}
-				else {
-					//System.out.println(this.player.hasInitParty()+" "+this.player.getPlayerParty().hasInitParty());
-					System.out.println("CommandParty:PARTY_ACCEPT_REQUEST ERROR.");
-				}
-			}
-			else {
-				if(player.getPlayerParty().getParty().isPartyLeader(player.getPlayerParty())) {
-					player.getPlayerParty().getParty().addMember(player);
-					player.setParty(player.getPlayerParty().getParty());
-					int i = 0;
-					boolean partyInit = false;
-					while(i < player.getParty().getPlayerList().length) {
-						if(player.getParty().getPlayerList()[i] != null && player.getParty().getPlayerList()[i].getCharacterId() != player.getCharacterId()) {
-							memberJoinedParty(player.getParty().getPlayerList()[i].getConnection(), player); //send datas to everyone about this.player
-							if(!partyInit) {
-								newParty(player, player.getParty().getPlayerList()[i]);
-								partyInit = true;
-							}
-							else {
-								memberJoinedParty(connection, player.getParty().getPlayerList()[i]); //send datas about everyone to this.player
-							}
-							CommandSendMessage.write(player.getParty().getPlayerList()[i].getConnection(), player.getName()+" joined your party.", MessageType.SELF);
-						}
-						i++;
+			if(player.getPlayerParty() != null) {
+				if(player.getPlayerParty().getParty() == null) { //if player who sent request is already in a party
+					if(player.getPlayerParty().hasInitParty()) {
+						Party party = new Party(Server.getInGameCharacter(player.getPlayerParty().getCharacterId()), player);
+						player.getPlayerParty().setParty(party);
+						player.setParty(party);
+						CommandSendMessage.write(player.getPlayerParty().getConnection(), player.getName()+" joined your party.", MessageType.SELF);
+						newParty(player, player.getPlayerParty());
+						newParty(player.getPlayerParty(), player);
+						player.getPlayerParty().setPlayerParty(null);
+						player.setPlayerParty(null);
+					}
+					else {
+						//System.out.println(this.player.hasInitParty()+" "+this.player.getPlayerParty().hasInitParty());
+						System.out.println("CommandParty:PARTY_ACCEPT_REQUEST ERROR.");
 					}
 				}
 				else {
-					//System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
-					CommandSendMessage.write(player.getPlayerParty().getConnection(), "You are not the party leader.", MessageType.SELF);
+					if(player.getPlayerParty().getParty().isPartyLeader(player.getPlayerParty())) {
+						player.getPlayerParty().getParty().addMember(player);
+						player.setParty(player.getPlayerParty().getParty());
+						int i = 0;
+						boolean partyInit = false;
+						while(i < player.getParty().getPlayerList().length) {
+							if(player.getParty().getPlayerList()[i] != null && player.getParty().getPlayerList()[i].getCharacterId() != player.getCharacterId()) {
+								memberJoinedParty(player.getParty().getPlayerList()[i].getConnection(), player); //send datas to everyone about this.player
+								if(!partyInit) {
+									newParty(player, player.getParty().getPlayerList()[i]);
+									partyInit = true;
+								}
+								else {
+									memberJoinedParty(connection, player.getParty().getPlayerList()[i]); //send datas about everyone to this.player
+								}
+								CommandSendMessage.write(player.getParty().getPlayerList()[i].getConnection(), player.getName()+" joined your party.", MessageType.SELF);
+							}
+							i++;
+						}
+					}
+					else {
+						//System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
+						CommandSendMessage.write(player.getPlayerParty().getConnection(), "You are not the party leader.", MessageType.SELF);
+					}
 				}
+			}
+			else {
+				CommandSendMessage.write(player.getPlayerParty().getConnection(), "Nobody invited you to join their group.", MessageType.SELF);
 			}
 		}
 	}

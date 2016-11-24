@@ -5,8 +5,6 @@ import net.connection.Connection;
 import net.game.Player;
 
 public class CommandLoadCharacter extends Command {
-	
-	public CommandLoadCharacter() {}
 
 	@Override
 	public void read(Player player) {
@@ -21,6 +19,7 @@ public class CommandLoadCharacter extends Command {
 			player.loadEquippedItemSQL();
 			player.loadBagItemSQL();
 			player.loadFriendList();
+			player.updateLastLoginTimer();
 			CommandFriend.loadFriendList(player);
 			player.notifyFriendOnline();
 			player.loadGuild();

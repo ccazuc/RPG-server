@@ -17,8 +17,6 @@ public class CommandDeleteCharacter extends Command {
 	private static JDOStatement delete_spellbar;
 	private static JDOStatement check_character_account;
 	
-	public CommandDeleteCharacter() {}
-	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();
