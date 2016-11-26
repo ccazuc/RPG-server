@@ -86,7 +86,13 @@ public class IgnoreManager {
 	}
 	
 	public static void addIgnore(int player_id, int ignore_id) {
-		ignoreMap.get(player_id).add(ignore_id);
+		if(ignoreMap.containsKey(player_id)) {
+			ignoreMap.get(player_id).add(ignore_id);
+		}
+		else {
+			ignoreMap.put(player_id, new ArrayList<Integer>());
+			ignoreMap.get(player_id).add(ignore_id);
+		}
 		addIgnoreInDB.addDatas(new SQLDatas(player_id, ignore_id));
 		Server.addNewRequest(addIgnoreInDB);
 	}

@@ -80,17 +80,19 @@ public class Server {
 		ConnectionManager.registerToAuthServer();
 		ConnectionManager.initAuthCommand();
 		ConnectionManager.initPlayerCommand();
+		System.gc();
 		while(true) {
+			//time = System.nanoTime();
 			time = System.currentTimeMillis();
 			kickPlayers();
+			readAuthServer();
 			readOnlinePlayers();
 			read();
-			readAuthServer();
 			delta = (System.currentTimeMillis()-time);
 			if(delta < LOOP_TIMER) {
-				Thread.sleep(LOOP_TIMER-(long)delta);
+				Thread.sleep((LOOP_TIMER-(long)delta));
 			}
-			else {
+			if(delta > 2) {
 				System.out.print("Loop too long: ");
 				System.out.print(delta);
 				System.out.println("ms.");

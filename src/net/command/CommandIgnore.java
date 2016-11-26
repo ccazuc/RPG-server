@@ -28,21 +28,16 @@ public class CommandIgnore extends Command {
 					character_id = CharacterManager.playerExistsInDB(name);
 				}
 				if(ignore != null || character_id != -1) {
-					if(IgnoreManager.containsKey(player.getCharacterId())) {
-						if(ignore != null && !IgnoreManager.isIgnored(player.getCharacterId(), ignore.getCharacterId())) {
-							IgnoreManager.addIgnore(player.getCharacterId(), ignore.getCharacterId());
-							addIgnore(connection, ignore);
-						}
-						else if(character_id != -1 && !IgnoreManager.isIgnored(player.getCharacterId(), character_id)) {
-							IgnoreManager.addIgnore(player.getCharacterId(), character_id);
-							addIgnore(connection, character_id, name);
-						}
-						else {
-							CommandSendMessage.write(connection, name+" is already in your ignore list.", MessageType.SELF);
-						}
+					if(ignore != null && !IgnoreManager.isIgnored(player.getCharacterId(), ignore.getCharacterId())) {
+						IgnoreManager.addIgnore(player.getCharacterId(), ignore.getCharacterId());
+						addIgnore(connection, ignore);
+					}
+					else if(character_id != -1 && !IgnoreManager.isIgnored(player.getCharacterId(), character_id)) {
+						IgnoreManager.addIgnore(player.getCharacterId(), character_id);
+						addIgnore(connection, character_id, name);
 					}
 					else {
-						
+						CommandSendMessage.write(connection, name+" is already in your ignore list.", MessageType.SELF);
 					}
 				}
 				else {
@@ -58,6 +53,9 @@ public class CommandIgnore extends Command {
 			if(IgnoreManager.isIgnored(player.getCharacterId(), id)) {
 				removeIgnore(connection, id);
 				IgnoreManager.removeIgnore(player.getCharacterId(), id);
+			}
+			else {
+				CommandSendMessage.write(connection, "This player is not in your ignore list.", MessageType.SELF);
 			}
 		}
 	}

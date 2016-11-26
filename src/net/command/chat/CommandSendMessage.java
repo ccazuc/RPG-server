@@ -25,7 +25,12 @@ public class CommandSendMessage extends Command {
 			Player temp = Server.getInGameCharacter(target);
 			if(temp != null) {
 				writeWhisper(connection, temp.getName(), message, false);
-				writeWhisper(temp.getConnection(), temp.getName(), message, true);
+				if(!IgnoreManager.isIgnored(player.getCharacterId(), temp.getCharacterId())) {
+					writeWhisper(temp.getConnection(), temp.getName(), message, true);
+				}
+				else {
+					
+				}
 			}
 			else {
 				CommandPlayerNotFound.write(connection, target);
