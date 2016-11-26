@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import net.Server;
 import net.game.Player;
+import net.game.manager.FriendManager;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 
@@ -36,7 +37,7 @@ public class CommandLogoutCharacter extends Command {
 			}
 			Server.addLoggedPlayer(player);
 			Server.removeInGamePlayer(player);
-			Server.getFriendMap().remove(player.getCharacterId());
+			FriendManager.getFriendMap().remove(player.getCharacterId());
 			player.resetDatas();
 			CommandTrade.closeTrade(player);
 		}

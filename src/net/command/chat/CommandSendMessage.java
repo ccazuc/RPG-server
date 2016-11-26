@@ -5,6 +5,7 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
+import net.game.manager.IgnoreManager;
 
 public class CommandSendMessage extends Command {
 
@@ -34,7 +35,7 @@ public class CommandSendMessage extends Command {
 			if(player.getParty() != null) {
 				int i = 0;
 				while(i < player.getParty().getPlayerList().length) {
-					if(player.getParty().getPlayerList()[i] != null) {
+					if(player.getParty().getPlayerList()[i] != null && !IgnoreManager.isIgnored(player.getCharacterId(), player.getParty().getPlayerList()[i].getid())) {
 						if(player.getParty().isPartyLeader(player)) {
 							write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY_LEADER);
 						}
@@ -54,7 +55,7 @@ public class CommandSendMessage extends Command {
 				if(player.getGuild().getMember(player.getCharacterId()).getRank().canTalkInGuildChannel()) {
 					int i = 0;
 					while(i < player.getGuild().getMemberList().size()) {
-						if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel()) {
+						if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel() && !IgnoreManager.isIgnored(player.getCharacterId(), player.getGuild().getMemberList().get(i).getId())) {
 							write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD);
 						}
 						i++;
@@ -69,7 +70,7 @@ public class CommandSendMessage extends Command {
 			}
 		}
 		else {
-			sendMessageToUsers(message, player.getName(), type);
+			sendMessageToUsers(player.getCharacterId(), message, player.getName(), type);
 		}
 	}
 	
@@ -82,9 +83,11 @@ public class CommandSendMessage extends Command {
 		connection.send();
 	}
 	
-	private static void sendMessageToUsers(String message, String author, MessageType type) { //used for say and yell
+	private static void sendMessageToUsers(int id, String message, String author, MessageType type) { //used for say and yell
 		for(Player player : Server.getInGamePlayerList().values()) {
-			write(player.getConnection(), message, author, type);
+			if(!IgnoreManager.isIgnored(id, player.getCharacterId())) {
+				write(player.getConnection(), message, author, type);
+			}
 		}
 	}
 	

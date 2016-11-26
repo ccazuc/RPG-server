@@ -1,8 +1,5 @@
 package net.command;
 
-import java.sql.SQLException;
-
-import jdo.JDOStatement;
 import net.Server;
 import net.command.chat.CommandPlayerNotFound;
 import net.command.chat.CommandSendMessage;
@@ -10,45 +7,10 @@ import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
-import net.thread.sql.SQLDatas;
-import net.thread.sql.SQLRequest;
+import net.game.manager.CharacterManager;
+import net.game.manager.FriendManager;
 
 public class CommandFriend extends Command {
-
-	private static JDOStatement searchPlayer;
-	private static JDOStatement loadCharacterNameFromID;
-	private final static SQLRequest addFriendInDB = new SQLRequest("INSERT INTO friend (character_id, friend_id) VALUES (?, ?)") {
-		
-		@Override
-		public void gatherData() {
-			try {
-				SQLDatas datas = this.datasList.get(0);
-				this.statement.clear();
-				this.statement.putInt(datas.getIValue1());
-				this.statement.putInt(datas.getIValue2());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	};
-	private final static SQLRequest removeFriendFromDB = new SQLRequest("DELETE FROM friend WHERE character_id = ? AND friend_id = ?") {
-		
-		@Override
-		public void gatherData() {
-			try {
-				SQLDatas datas = this.datasList.get(0);
-				this.statement.clear();
-				this.statement.putInt(datas.getIValue1());
-				this.statement.putInt(datas.getIValue2());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	};
 	
 	@Override
 	public void read(Player player) {
@@ -61,15 +23,15 @@ public class CommandFriend extends Command {
 				Player member = Server.getInGameCharacter(name);
 				int character_id = 0;
 				if(member == null) { //player is offline or doesn't exist
-					character_id = checkPlayerInDB(name); //player is offline
+					character_id = CharacterManager.playerExistsInDB(name);
 				}
-				if(member != null || character_id != 0) {
+				if(member != null || character_id != -1) {
 					if(!name.equals(player.getName())) {
 						if((member != null && !player.isFriendWith(member)) || (character_id != 0 && !player.isFriendWith(character_id))) {
 							if(member != null) {
 								if(player.addFriend(member.getCharacterId())) {
 									addOnlineFriend(player, member);
-									addFriendInDB(player, member.getCharacterId());
+									FriendManager.addFriendInDB(player.getCharacterId(), member.getCharacterId());
 								}
 								else {
 									CommandSendMessage.write(connection, "Your friendlist is full.", MessageType.SELF);
@@ -78,7 +40,7 @@ public class CommandFriend extends Command {
 							else if(character_id != 0) {
 								if(player.addFriend(character_id)) {
 									addOfflineFriend(connection, character_id, name);
-									addFriendInDB(player, character_id);
+									FriendManager.addFriendInDB(player.getCharacterId(), character_id);
 								}
 								else {
 									CommandSendMessage.write(connection, "Your friendlist is full.", MessageType.SELF);
@@ -105,7 +67,8 @@ public class CommandFriend extends Command {
 			int id = connection.readInt();
 			if(id != player.getCharacterId()) {
 				if(player.removeFriend(id)) {
-					removeFriendFromDB(player.getCharacterId(), id);
+					FriendManager.removeFriendFromDB(player.getCharacterId(), id);
+					removeFriend(connection, id);
 				}
 				else {
 					CommandSendMessage.write(connection, "This player is not in your friendlist.", MessageType.SELF);
@@ -117,14 +80,14 @@ public class CommandFriend extends Command {
 		}
 	}
 	
-	private void addFriendInDB(Player player, int friend_id) {
-		//addFriendInDB.setId(player.getCharacterId());
-		//addFriendInDB.setId2(friend_id);
-		addFriendInDB.addDatas(new SQLDatas(player.getCharacterId(), friend_id));
-		Server.addNewRequest(addFriendInDB);
+	public static void removeFriend(Connection connection, int id) {
+		connection.writeByte(PacketID.FRIEND);
+		connection.writeByte(PacketID.FRIEND_REMOVE);
+		connection.writeInt(id);
+		connection.send();
 	}
 	
-	public static void loadFriendList(Player player) { //id, name, level, race, classe
+	public static void loadFriendList(Player player) {
 		int i = 0;
 		player.getConnection().writeByte(PacketID.FRIEND);
 		player.getConnection().writeByte(PacketID.FRIEND_LOAD_ALL);
@@ -133,7 +96,7 @@ public class CommandFriend extends Command {
 			player.getConnection().writeInt(player.getFriendList().get(i));
 			player.getConnection().writeBoolean(Server.getInGamePlayerList().containsKey(player.getFriendList().get(i)));
 			if(!Server.getInGamePlayerList().containsKey(player.getFriendList().get(i))) {
-				player.getConnection().writeString(loadCharacterNameFromID(player.getFriendList().get(i)));
+				player.getConnection().writeString(CharacterManager.loadCharacterNameFromID(player.getFriendList().get(i)));
 			}
 			else {
 				player.getConnection().writeString(Server.getInGameCharacter(player.getFriendList().get(i)).getName());
@@ -162,51 +125,6 @@ public class CommandFriend extends Command {
 		player.getConnection().writeChar(friend.getRace().getValue());
 		player.getConnection().writeChar(friend.getClasse().getValue());
 		player.getConnection().send();
-	}
-	
-	private static String loadCharacterNameFromID(int id) {
-		try {
-			if(loadCharacterNameFromID == null) {
-				loadCharacterNameFromID = Server.getJDO().prepare("SELECT name FROM `character` WHERE character_id = ?");
-			}
-			loadCharacterNameFromID.clear();
-			loadCharacterNameFromID.putInt(id);
-			loadCharacterNameFromID.execute();
-			if(loadCharacterNameFromID.fetch()) {
-				return loadCharacterNameFromID.getString();
-			}
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
-	
-	private static int checkPlayerInDB(String name) {
-		int id = 0;
-		try {
-			if(searchPlayer == null) {
-				searchPlayer = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
-			}
-			searchPlayer.clear();
-			searchPlayer.putString(name);
-			searchPlayer.execute();
-			if(searchPlayer.fetch()) {
-				id = searchPlayer.getInt();
-			}
-			return id;
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return id;
-	}
-	
-	private static void removeFriendFromDB(int character_id, int friend_id) {
-		//removeFriendFromDB.setId(character_id);
-		//removeFriendFromDB.setId2(friend_id);
-		removeFriendFromDB.addDatas(new SQLDatas(character_id, friend_id));
-		Server.addNewRequest(removeFriendFromDB);
 	}
 	
 	private static void addOnlineFriend(Player player, Player friend) {

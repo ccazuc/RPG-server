@@ -1,10 +1,13 @@
-package net.game;
+package net.game.manager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.game.ClassType;
+import net.game.Player;
+import net.game.Race;
 import net.game.item.weapon.WeaponType;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
@@ -20,6 +23,8 @@ public class CharacterManager {
 	private static JDOStatement loadPlayerFriend;
 	private static JDOStatement loadFriend;
 	private static JDOStatement checkOnlinePlayers;
+	private static JDOStatement loadCharacterNameFromID;
+	private static JDOStatement searchPlayer;
 	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?") {
 		
 		@Override
@@ -138,18 +143,18 @@ public class CharacterManager {
 	
 	public void loadFriendList() throws SQLException {
 		if(loadPlayerFriend == null) {
-			loadPlayerFriend = Server.getJDO().prepare("SELECT character_id FROM friend WHERE friend_id = ?");
-			loadFriend = Server.getJDO().prepare("SELECT friend_id FROM friend WHERE character_id = ?");
+			loadPlayerFriend = Server.getJDO().prepare("SELECT character_id FROM social_friend WHERE friend_id = ?");
+			loadFriend = Server.getJDO().prepare("SELECT friend_id FROM social_friend WHERE character_id = ?");
 		}
 		loadPlayerFriend.clear();
 		loadPlayerFriend.putInt(this.player.getCharacterId());
 		loadPlayerFriend.execute();
 		while(loadPlayerFriend.fetch()) {
 			int id = loadPlayerFriend.getInt();
-			if(!Server.getFriendMap().containsKey(this.player.getCharacterId())) {
-				Server.getFriendMap().put(this.player.getCharacterId(), new ArrayList<Integer>());
+			if(!FriendManager.containsKey(this.player.getCharacterId())) {
+				FriendManager.getFriendMap().put(this.player.getCharacterId(), new ArrayList<Integer>());
 			}
-			Server.getFriendMap().get(this.player.getCharacterId()).add(id);
+			FriendManager.getFriendMap().get(this.player.getCharacterId()).add(id);
 			//System.out.println("Friended id: "+id);
 		}
 		
@@ -175,6 +180,56 @@ public class CharacterManager {
 		}
 		checkOnlinePlayers.clear();
 		checkOnlinePlayers.execute();
+	}
+	
+	public void loadSpellUnlocked() throws SQLException {
+		if(loadSpellUnlocked == null) {
+			loadSpellUnlocked = Server.getJDO().prepare("SELECT id FROM character_spell_unlocked WHERE character_id = ?");
+		}
+		loadSpellUnlocked.clear();
+		loadSpellUnlocked.putInt(this.player.getCharacterId());
+		loadSpellUnlocked.execute();
+		while(loadSpellUnlocked.fetch()) {
+			this.player.addUnlockedSpell(loadSpellUnlocked.getInt());
+		}
+	}
+	
+	public static String loadCharacterNameFromID(int id) {
+		try {
+			if(loadCharacterNameFromID == null) {
+				loadCharacterNameFromID = Server.getJDO().prepare("SELECT name FROM `character` WHERE character_id = ?");
+			}
+			loadCharacterNameFromID.clear();
+			loadCharacterNameFromID.putInt(id);
+			loadCharacterNameFromID.execute();
+			if(loadCharacterNameFromID.fetch()) {
+				return loadCharacterNameFromID.getString();
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public static int playerExistsInDB(String name) {
+		int id = 0;
+		try {
+			if(searchPlayer == null) {
+				searchPlayer = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
+			}
+			searchPlayer.clear();
+			searchPlayer.putString(name);
+			searchPlayer.execute();
+			if(searchPlayer.fetch()) {
+				id = searchPlayer.getInt();
+			}
+			return id;
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 	
 	public static WeaponType[] getWeaponTypes(short type) {
@@ -253,18 +308,6 @@ public class CharacterManager {
 			i++;
 		}
 		return tempWeaponsType;
-	}
-	
-	public void loadSpellUnlocked() throws SQLException {
-		if(loadSpellUnlocked == null) {
-			loadSpellUnlocked = Server.getJDO().prepare("SELECT id FROM character_spell_unlocked WHERE character_id = ?");
-		}
-		loadSpellUnlocked.clear();
-		loadSpellUnlocked.putInt(this.player.getCharacterId());
-		loadSpellUnlocked.execute();
-		while(loadSpellUnlocked.fetch()) {
-			this.player.addUnlockedSpell(loadSpellUnlocked.getInt());
-		}
 	}
 	
 	private static ClassType convStringToClasse(String classe) {

@@ -1,7 +1,5 @@
 package net.command;
 
-import java.sql.SQLException;
-
 import net.Server;
 import net.command.chat.CommandPlayerNotFound;
 import net.command.chat.CommandSendMessage;
@@ -11,30 +9,11 @@ import net.connection.PacketID;
 import net.game.ClassType;
 import net.game.Player;
 import net.game.guild.Guild;
-import net.game.guild.GuildManager;
 import net.game.guild.GuildMember;
 import net.game.guild.GuildRank;
-import net.thread.sql.SQLDatas;
-import net.thread.sql.SQLRequest;
+import net.game.manager.GuildManager;
 
 public class CommandGuild extends Command {
-	
-	private final static SQLRequest setLeaderInDB = new SQLRequest("UPDATE guild SET leader_id = ? WHERE id = ?") {
-		
-		@Override
-		public void gatherData() {
-			try {
-				SQLDatas datas = this.datasList.get(0);
-				this.statement.clear();
-				this.statement.putInt(datas.getIValue1());
-				this.statement.putInt(datas.getIValue2());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	};
 	
 	@Override
 	public void read(Player player) {
@@ -105,7 +84,7 @@ public class CommandGuild extends Command {
 		}
 		else if(packetId == PacketID.GUILD_ACCEPT_REQUEST) {
 			if(player.getGuildRequest() != 0) {
-				player.setGuild(Server.getGuildList(player.getGuildRequest()));
+				player.setGuild(GuildManager.getGuild(player.getGuildRequest()));
 				player.getGuild().addMember(new GuildMember(player.getCharacterId(), player.getName(), player.getLevel(), player.getGuild().getRankList().get(player.getGuild().getRankList().size()-1), true, "", "", player.getClasse()));
 				initGuildWhenLogin(connection, player);
 			}
@@ -201,10 +180,7 @@ public class CommandGuild extends Command {
 						player.getGuild().setLeaderId(id);
 						GuildManager.updateMemberRank(player.getCharacterId(), player.getGuild().getId(), player.getGuild().getMember(player.getCharacterId()).getRank().getOrder());
 						setLeader(player.getGuild(), member.getId());
-						//setLeaderInDB.setId(id);
-						//setLeaderInDB.setId2(player.getGuild().getId());
-						//Server.addNewRequest(setLeaderInDB);
-						setLeaderInDB(id, player.getGuild().getId());
+						GuildManager.setLeaderInDB(id, player.getGuild().getId());
 						GuildManager.updateMemberRank(member.getId(), player.getGuild().getId(), member.getRank().getOrder());
 					}
 				}
@@ -470,11 +446,6 @@ public class CommandGuild extends Command {
 			}
 			connection.send();
 		}
-	}
-	
-	private static void setLeaderInDB(int player_id, int guild_id) {
-		setLeaderInDB.addDatas(new SQLDatas(player_id, guild_id));
-		Server.addNewRequest(setLeaderInDB);
 	}
 	
 	private static boolean isInAGuild(Player player) {

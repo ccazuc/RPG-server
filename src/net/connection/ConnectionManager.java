@@ -13,6 +13,7 @@ import net.command.CommandCreateCharacter;
 import net.command.CommandDeleteCharacter;
 import net.command.CommandFriend;
 import net.command.CommandGuild;
+import net.command.CommandIgnore;
 import net.command.CommandLoadCharacter;
 import net.command.CommandLogin;
 import net.command.CommandLoginRealmAuth;
@@ -89,6 +90,7 @@ public class ConnectionManager {
 		commandList.put((int)SEND_MESSAGE, new CommandSendMessage());
 		commandList.put((int)PARTY, new CommandParty());
 		commandList.put((int)GUILD, new CommandGuild());
+		commandList.put((int)IGNORE, new CommandIgnore());
 	}
 	
 	public static void initAuthCommand() {

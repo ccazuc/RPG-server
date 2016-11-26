@@ -14,15 +14,14 @@ import jdo.JDO;
 import jdo.wrapper.MariaDB;
 import net.connection.ConnectionManager;
 import net.connection.Key;
-import net.game.CharacterManager;
 import net.game.Player;
-import net.game.guild.Guild;
 import net.game.item.ItemManager;
 import net.game.item.bag.ContainerManager;
 import net.game.item.gem.GemManager;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
+import net.game.manager.CharacterManager;
 import net.game.spell.SpellManager;
 import net.thread.socket.SocketRunnable;
 import net.thread.sql.SQLRequest;
@@ -45,16 +44,14 @@ public class Server {
 	private static SocketRunnable socketRunnable;
 	private static Thread socketThread;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
-	private static HashMap<Integer, ArrayList<Integer>> friendMap = new HashMap<Integer, ArrayList<Integer>>();
-	private static HashMap<Integer, Guild> guildList = new HashMap<Integer, Guild>();
 	
-	private final static String REALM_NAME = "Main Server Test";
+	private final static String REALM_NAME = "World Server";
 	private final static int REALM_ID = 15;
 	private final static int PORT = 5721;
 	private final static int LOOP_TIMER = 15;
 	
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, InterruptedException {
-		System.out.println("WORLD SERVER TEST");
+		System.out.println(REALM_NAME);
 		long time = System.currentTimeMillis();
 		float delta;
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
@@ -84,10 +81,6 @@ public class Server {
 		ConnectionManager.initAuthCommand();
 		ConnectionManager.initPlayerCommand();
 		while(true) {
-			/*if((clientSocket = serverSocketChannel.accept()) != null) {
-				clientSocket.configureBlocking(false);
-				nonLoggedPlayerList.add(new Player(clientSocket));
-			}*/
 			time = System.currentTimeMillis();
 			kickPlayers();
 			readOnlinePlayers();
@@ -96,7 +89,6 @@ public class Server {
 			delta = (System.currentTimeMillis()-time);
 			if(delta < LOOP_TIMER) {
 				Thread.sleep(LOOP_TIMER-(long)delta);
-				//System.out.println("sleep for "+(LOOP_TIMER-delta)+"ms");
 			}
 			else {
 				System.out.print("Loop too long: ");
@@ -109,12 +101,6 @@ public class Server {
 	private static void readOnlinePlayers() {
 		for(Player player : inGamePlayerList.values()) {
 			player.getConnectionManager().read();
-		}
-	}
-	
-	public static void removeValueToFriendMapList(Player player, int id) {
-		if(friendMap.containsKey(id)) {
-			friendMap.get(id).remove(player);
 		}
 	}
 	
@@ -170,17 +156,15 @@ public class Server {
 		}
 	}
 	
-	public static void addInGamePlayer(Player player) {
-		inGamePlayerList.put(player.getCharacterId(), player);
-	}
-	
-	public static void removeInGamePlayer(Player player) {
-		inGamePlayerKickList.add(player.getCharacterId());
-	}
-	
 	public static void removeNonLoggedPlayer(Player player) {
 		if(player != null) {
 			nonLoggedPlayerKickList.add(player);
+		}
+	}
+	
+	public static Map<Integer, Player> getLoggedPlayerList() {
+		synchronized(loggedPlayerList) {
+			return loggedPlayerList;
 		}
 	}
 	
@@ -190,6 +174,14 @@ public class Server {
 				loggedPlayerList.put(player.getAccountId(), player);
 			}
 		}
+	}
+	
+	public static void addInGamePlayer(Player player) {
+		inGamePlayerList.put(player.getCharacterId(), player);
+	}
+	
+	public static void removeInGamePlayer(Player player) {
+		inGamePlayerKickList.add(player.getCharacterId());
 	}
 	
 	public static void removeLoggedPlayer(Player player) {
@@ -242,20 +234,6 @@ public class Server {
 		return false;
 	}
 	
-	public static HashMap<Integer, Guild> getGuildList() {
-		return guildList;
-	}
-	
-	public static Guild getGuildList(int id) {
-		return guildList.get(id);
-	}
-	
-	public static void addGuild(Guild guild) {
-		if(guild != null) {
-			guildList.put(guild.getId(), guild);
-		}
-	}
-	
 	public static void addNewRequest(SQLRequest request) {
 		SQLRunnable.addRequest(request);
 	}
@@ -268,18 +246,8 @@ public class Server {
 		ConnectionManager.readAuthServer();
 	}
 	
-	public static Map<Integer, Player> getLoggedPlayerList() {
-		synchronized(loggedPlayerList) {
-			return loggedPlayerList;
-		}
-	}
-	
 	public static HashMap<Integer, Player> getInGamePlayerList() {
 		return inGamePlayerList;
-	}
-	
-	public static HashMap<Integer, ArrayList<Integer>> getFriendMap() {
-		return friendMap;
 	}
 	
 	public static void removeKey(double key) {
@@ -294,7 +262,7 @@ public class Server {
 		return jdo;
 	}
 	
-	public static JDO getAsynJDO() {
+	public static JDO getAsyncJDO() {
 		return asyncJdo;
 	}
 	

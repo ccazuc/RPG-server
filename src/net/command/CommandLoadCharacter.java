@@ -3,6 +3,7 @@ package net.command;
 import net.Server;
 import net.connection.Connection;
 import net.game.Player;
+import net.game.manager.IgnoreManager;
 
 public class CommandLoadCharacter extends Command {
 
@@ -22,6 +23,8 @@ public class CommandLoadCharacter extends Command {
 			player.updateLastLoginTimer();
 			CommandFriend.loadFriendList(player);
 			player.notifyFriendOnline();
+			IgnoreManager.loadIgnoreList(player.getCharacterId());
+			CommandIgnore.ignoreInit(player.getConnection(), player);
 			player.loadGuild();
 			if(player.getGuild() != null) {
 				CommandGuild.initGuildWhenLogin(connection, player);

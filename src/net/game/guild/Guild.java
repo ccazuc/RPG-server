@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.command.CommandGuild;
+import net.game.manager.GuildManager;
 
 public class Guild {
 

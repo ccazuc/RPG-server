@@ -20,8 +20,6 @@ public class SQLRunnable implements Runnable {
 				this.list.get(0).execute();
 				this.list.remove(0);
 			}
-			if(this.list.size() > 0) {
-			}
 		}
 	}
 	

@@ -21,7 +21,7 @@ public class SQLRequest {
 	
 	public SQLRequest(String request) {
 		try {
-			this.statement = Server.getAsynJDO().prepare(request);
+			this.statement = Server.getAsyncJDO().prepare(request);
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();

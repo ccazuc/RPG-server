@@ -117,4 +117,11 @@ public class PacketID {
 	public static final byte GUILD_LEAVE = 113;
 	public static final byte GUILD_SET_LEADER = 114;
 	public static final byte GUILD_MEMBER_LEFT = 115;
+	public static final byte GUILD_SET_MEMBER_NOTE = 116;
+	public static final byte GUILD_SET_MEMBER_OFFICER_NOTE = 117;
+	public static final byte GUILD_SET_JOURNAL = 118;
+	public static final byte IGNORE = 119;
+	public static final byte IGNORE_INIT = 120;
+	public static final byte IGNORE_ADD = 121;
+	public static final byte IGNORE_REMOVE = 122;
 }
