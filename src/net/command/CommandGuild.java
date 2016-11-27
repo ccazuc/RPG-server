@@ -12,6 +12,7 @@ import net.game.guild.Guild;
 import net.game.guild.GuildMember;
 import net.game.guild.GuildRank;
 import net.game.manager.GuildManager;
+import net.game.manager.IgnoreManager;
 
 public class CommandGuild extends Command {
 	
@@ -49,13 +50,18 @@ public class CommandGuild extends Command {
 					if(hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canInvitePlayer())) {
 						Player member = Server.getInGameCharacter(name);
 						if(member != null) {
-							if(member.getGuild() == null) {
-								CommandSendMessage.write(connection, "You invited "+name+" to join your guild.", MessageType.SELF);
-								joinGuildRequest(member.getConnection(), player.getName(), player.getGuild().getName());
-								member.setGuildRequest(player.getGuild().getId());
+							if(!IgnoreManager.isIgnored(member.getid(), player.getCharacterId())) {
+								if(member.getGuild() == null) {
+									CommandSendMessage.write(connection, "You invited "+name+" to join your guild.", MessageType.SELF);
+									joinGuildRequest(member.getConnection(), player.getName(), player.getGuild().getName());
+									member.setGuildRequest(player.getGuild().getId());
+								}
+								else {
+									CommandSendMessage.write(connection, name+" is already in a guild.", MessageType.SELF);
+								}
 							}
 							else {
-								CommandSendMessage.write(connection, name+" is already in a guild.", MessageType.SELF);
+								CommandSendMessage.write(connection, name+" ignore your message.", MessageType.SELF);
 							}
 						}
 						else {

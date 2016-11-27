@@ -9,14 +9,6 @@ import net.Server;
 public class SQLRequest {
 	
 	protected JDOStatement statement;
-	/*protected int id;
-	protected int id2;
-	protected long value;
-	protected String name;
-	protected String msg;
-	protected Player player;
-	protected String userName;
-	protected String password;*/
 	protected ArrayList<SQLDatas> datasList;
 	
 	public SQLRequest(String request) {
@@ -39,38 +31,6 @@ public class SQLRequest {
 	public void addDatas(SQLDatas datas) {
 		this.datasList.add(datas);
 	}
-	
-	/*public void setValue(long value) {
-		this.value = value;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public void setId(int id) {
-		this.id = id;
-	}
-	
-	public void setId2(int id) {
-		this.id2 = id;
-	}
-	
-	public void setMsg(String msg) {
-		this.msg = msg;
-	}
-	
-	public void setPlayer(Player message) {
-		this.player = message;
-	}
-	
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	
-	public void setPassword(String password) {
-		this.password = password;
-	}*/
 	
 	public void gatherData() {}
 }
