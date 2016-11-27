@@ -213,7 +213,7 @@ public class CharacterManager {
 	}
 	
 	public static int playerExistsInDB(String name) {
-		int id = 0;
+		int id = -1;
 		try {
 			if(searchPlayer == null) {
 				searchPlayer = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
@@ -224,12 +224,11 @@ public class CharacterManager {
 			if(searchPlayer.fetch()) {
 				id = searchPlayer.getInt();
 			}
-			return id;
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return -1;
+		return id;
 	}
 	
 	public static WeaponType[] getWeaponTypes(short type) {

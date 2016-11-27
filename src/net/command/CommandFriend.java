@@ -25,9 +25,10 @@ public class CommandFriend extends Command {
 				if(member == null) { //player is offline or doesn't exist
 					character_id = CharacterManager.playerExistsInDB(name);
 				}
+				System.out.println(name+" "+member+" "+character_id);
 				if(member != null || character_id != -1) {
 					if(!name.equals(player.getName())) {
-						if((member != null && !player.isFriendWith(member)) || (character_id != 0 && !player.isFriendWith(character_id))) {
+						if((member != null && !player.isFriendWith(member)) || (character_id != -1 && !player.isFriendWith(character_id))) {
 							if(member != null) {
 								if(player.addFriend(member.getCharacterId())) {
 									addOnlineFriend(player, member);
@@ -37,7 +38,7 @@ public class CommandFriend extends Command {
 									CommandSendMessage.write(connection, "Your friendlist is full.", MessageType.SELF);
 								}
 							}
-							else if(character_id != 0) {
+							else if(character_id != -1) {
 								if(player.addFriend(character_id)) {
 									addOfflineFriend(connection, character_id, name);
 									FriendManager.addFriendInDB(player.getCharacterId(), character_id);

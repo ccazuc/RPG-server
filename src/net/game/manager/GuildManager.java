@@ -159,6 +159,38 @@ public class GuildManager {
 			}
 		}
 	};
+	private final static SQLRequest setMemberNoteInDB = new SQLRequest("UPDATE guild_member SET note = ? WHERE member_id = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putString(datas.getText());
+				this.statement.putInt(datas.getIValue1());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private final static SQLRequest setMemberOfficerNoteInDB = new SQLRequest("UPDATE guild_member SET officer_note = ? WHERE member_id = ?") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putString(datas.getText());
+				this.statement.putInt(datas.getIValue1());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	
 	public GuildManager(Player player) {
 		this.player = player;
@@ -273,6 +305,16 @@ public class GuildManager {
 	public static void setLeaderInDB(int player_id, int guild_id) {
 		setLeaderInDB.addDatas(new SQLDatas(player_id, guild_id));
 		Server.addNewRequest(setLeaderInDB);
+	}
+	
+	public static void updateMemberNote(int player_id, String note) {
+		setMemberNoteInDB.addDatas(new SQLDatas(player_id, note));
+		Server.addNewRequest(setMemberNoteInDB);
+	}
+	
+	public static void updateMemberOfficerNote(int player_id, String officerNote) {
+		setMemberOfficerNoteInDB.addDatas(new SQLDatas(player_id, officerNote));
+		Server.addNewRequest(setMemberOfficerNoteInDB);
 	}
 	
 	public static HashMap<Integer, Guild> getGuildList() {

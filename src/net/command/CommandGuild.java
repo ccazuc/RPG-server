@@ -128,12 +128,9 @@ public class CommandGuild extends Command {
 					GuildMember member = player.getGuild().getMember(id);
 					if(playerIsInTheSameGuild(player, member)) {
 						if(member.getRank().getOrder() < 2) {
-							if(player.getGuild().getMember(player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder()) {
+							if(hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder())) {
 								member.setRank(player.getGuild().getRank(member.getRank().getOrder()-1));
 								promotePlayer(player.getGuild(), member);
-							}
-							else {
-								CommandSendMessage.write(connection, "You don't have the right to do this.", MessageType.SELF);
 							}
 						}
 						else {
@@ -172,7 +169,7 @@ public class CommandGuild extends Command {
 		else if(packetId == PacketID.GUILD_SET_LEADER) {
 			int id = connection.readInt();
 			if(isInAGuild(player)) {
-				if(player.getGuild().isLeader(player.getCharacterId())) {
+				if(hasEnoughRight(player, player.getGuild().isLeader(player.getCharacterId()))) {
 					GuildMember member = player.getGuild().getMember(id);
 					if(playerIsInTheSameGuild(player, member)) {
 						member.setRank(player.getGuild().getRankList().get(0));
@@ -184,21 +181,82 @@ public class CommandGuild extends Command {
 						GuildManager.updateMemberRank(member.getId(), player.getGuild().getId(), member.getRank().getOrder());
 					}
 				}
-				else {
-					CommandSendMessage.write(connection, "You don't have the right to do this.", MessageType.SELF);
+			}
+		}
+		else if(packetId == PacketID.GUILD_SET_MEMBER_NOTE) {
+			int id = connection.readInt();
+			String note = connection.readString();
+			if(isInAGuild(player)) {
+				if(hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canEditPublicNote())) {
+					GuildMember member = player.getGuild().getMember(id);
+					if(playerIsInTheSameGuild(player, member)) {
+						if(note.length() > Guild.MEMBER_NOTE_MAX_LENGTH) {
+							note = note.substring(0, Guild.MEMBER_NOTE_MAX_LENGTH);
+						}
+						member.setNote(note);
+						updateMemberNote(player.getGuild(), member);
+						GuildManager.updateMemberNote(member.getId(), member.getNote());
+					}
+				}
+			}
+		}
+		else if(packetId == PacketID.GUILD_SET_MEMBER_OFFICER_NOTE) {
+			int id = connection.readInt();
+			String note = connection.readString();
+			if(isInAGuild(player)) {
+				if(hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canEditOfficerNote())) {
+					GuildMember member = player.getGuild().getMember(id);
+					if(playerIsInTheSameGuild(player, member)) {
+						if(note.length() > Guild.MEMBER_OFFICER_NOTE_MAX_LENGTH) {
+							note = note.substring(0, Guild.MEMBER_OFFICER_NOTE_MAX_LENGTH);
+						}
+						member.setOfficerNote(note);
+						updateMemberOfficerNote(player.getGuild(), member);
+						GuildManager.updateMemberOfficerNote(member.getId(), member.getOfficerNote());
+					}
 				}
 			}
 		}
 	}
 	
+	public static void updateMemberNote(Guild guild, GuildMember member) {
+		int i = 0;
+		while(i < guild.getMemberList().size()) {
+			GuildMember temp = guild.getMemberList().get(i);
+			if(Server.getInGameCharacter(temp.getId()) != null) {
+				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.writeByte(PacketID.GUILD);
+				connection.writeByte(PacketID.GUILD_SET_MEMBER_NOTE);
+				connection.writeInt(member.getId());
+				connection.writeString(member.getNote());
+				connection.send();
+			}
+			i++;
+		}
+	}
+	
+	public static void updateMemberOfficerNote(Guild guild, GuildMember member) {
+		int i = 0;
+		while(i < guild.getMemberList().size()) {
+			GuildMember temp = guild.getMemberList().get(i);
+			if(Server.getInGameCharacter(temp.getId()) != null) {
+				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.writeByte(PacketID.GUILD);
+				connection.writeByte(PacketID.GUILD_SET_MEMBER_OFFICER_NOTE);
+				connection.writeInt(member.getId());
+				connection.writeString(member.getOfficerNote());
+				connection.send();
+			}
+			i++;
+		}
+	}
+	
 	public static void removeMember(Guild guild, String name, int id) {
 		int i = 0;
-		GuildMember temp;
-		Connection connection;
 		while(i < guild.getMemberList().size()) {
-			temp = guild.getMemberList().get(i);
+			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
-				connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
 				connection.writeByte(PacketID.GUILD);
 				connection.writeByte(PacketID.GUILD_KICK_MEMBER);
 				connection.writeString(name);
@@ -211,12 +269,10 @@ public class CommandGuild extends Command {
 	
 	public static void setLeader(Guild guild, int id) {
 		int i = 0;
-		GuildMember temp;
-		Connection connection;
 		while(i < guild.getMemberList().size()) {
-			temp = guild.getMemberList().get(i);
+			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
-				connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
 				connection.writeByte(PacketID.GUILD);
 				connection.writeByte(PacketID.GUILD_SET_LEADER);
 				connection.writeInt(id);
@@ -228,12 +284,10 @@ public class CommandGuild extends Command {
 	
 	public static void leaveGuild(Guild guild, int id) {
 		int i = 0;
-		GuildMember temp;
-		Connection connection;
 		while(i < guild.getMemberList().size()) {
-			temp = guild.getMemberList().get(i);
+			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
-				connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
 				connection.writeByte(PacketID.GUILD);
 				connection.writeByte(PacketID.GUILD_MEMBER_LEFT);
 				connection.writeInt(id);
@@ -245,12 +299,10 @@ public class CommandGuild extends Command {
 	
 	public static void promotePlayer(Guild guild, GuildMember member) {
 		int i = 0;
-		GuildMember temp;
-		Connection connection;
 		while(i < guild.getMemberList().size()) {
-			temp = guild.getMemberList().get(i);
+			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
-				connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
 				connection.writeByte(PacketID.GUILD);
 				connection.writeByte(PacketID.GUILD_PROMOTE_PLAYER);
 				connection.writeInt(member.getId());
@@ -263,12 +315,10 @@ public class CommandGuild extends Command {
 	
 	public static void updateMotd(Guild guild) {
 		int i = 0;
-		GuildMember member;
-		Connection connection;
 		while(i < guild.getMemberList().size()) {
-			member = guild.getMemberList().get(i);
+			GuildMember member = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(member.getId()) != null) {
-				connection = Server.getInGameCharacter(member.getId()).getConnection();
+				Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
 				connection.writeByte(PacketID.GUILD);
 				connection.writeByte(PacketID.GUILD_SET_MOTD);
 				connection.writeString(guild.getMotd());
@@ -280,12 +330,10 @@ public class CommandGuild extends Command {
 	
 	public static void updateInformation(Guild guild) {
 		int i = 0;
-		GuildMember member;
-		Connection connection;
 		while(i < guild.getMemberList().size()) {
-			member = guild.getMemberList().get(i);
+			GuildMember member = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(member.getId()) != null) {
-				connection = Server.getInGameCharacter(member.getId()).getConnection();
+				Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
 				connection.writeByte(PacketID.GUILD);
 				connection.writeByte(PacketID.GUILD_SET_INFORMATION);
 				connection.writeString(guild.getInformation());
@@ -298,12 +346,10 @@ public class CommandGuild extends Command {
 	public static void notifyOnlinePlayer(Player player) {
 		if(player.getGuild() != null) {
 			int i = 0;
-			GuildMember member;
-			Connection connection;
 			while(i < player.getGuild().getMemberList().size()) {
-				member = player.getGuild().getMemberList().get(i);
+				GuildMember member = player.getGuild().getMemberList().get(i);
 				if(Server.getInGameCharacter(member.getId()) != null) {
-					connection = Server.getInGameCharacter(member.getId()).getConnection();
+					Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
 					connection.writeByte(PacketID.GUILD);
 					connection.writeByte(PacketID.GUILD_ONLINE_PLAYER);
 					connection.writeInt(player.getCharacterId());
@@ -317,12 +363,10 @@ public class CommandGuild extends Command {
 	public static void notifyOfflinePlayer(Player player) {
 		if(player.getGuild() != null) {
 			int i = 0;
-			GuildMember member;
-			Connection connection;
 			while(i < player.getGuild().getMemberList().size()) {
-				member = player.getGuild().getMemberList().get(i);
+				GuildMember member = player.getGuild().getMemberList().get(i);
 				if(Server.getInGameCharacter(member.getId()) != null && member.getId() != player.getCharacterId()) {
-					connection = Server.getInGameCharacter(member.getId()).getConnection();
+					Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
 					connection.writeByte(PacketID.GUILD);
 					connection.writeByte(PacketID.GUILD_OFFLINE_PLAYER);
 					connection.writeInt(player.getCharacterId());
@@ -343,10 +387,9 @@ public class CommandGuild extends Command {
 	
 	private static void updatePermission(Guild guild, int rank_order, int permission, String name) {
 		int i = 0;
-		Connection connection;
 		while(i < guild.getMemberList().size()) {
 			if(Server.getInGameCharacter(guild.getMemberList().get(i).getId()) != null) {
-				connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
+				Connection connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
 				connection.writeByte(PacketID.GUILD);
 				connection.writeByte(PacketID.GUILD_UPDATE_PERMISSION);
 				connection.writeInt(rank_order);
@@ -360,10 +403,9 @@ public class CommandGuild extends Command {
 	
 	public static void notifyNewMember(Guild guild, GuildMember member) {
 		int i = 0;
-		Connection connection;
 		while(i < guild.getMemberList().size()) {
 			if(Server.getInGameCharacter(guild.getMemberList().get(i).getId()) != null && guild.getMemberList().get(i) != member) {
-				connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
+				Connection connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
 				connection.writeByte(PacketID.GUILD);
 				connection.writeByte(PacketID.GUILD_NEW_MEMBER);
 				connection.writeInt(member.getId());
@@ -382,10 +424,9 @@ public class CommandGuild extends Command {
 	
 	public static void notifyKickedMember(Guild guild, GuildMember member, String name) {
 		int i = 0;
-		Connection connection;
 		while(i < guild.getMemberList().size()) {
 			if(Server.getInGameCharacter(guild.getMemberList().get(i).getId()) != null) {
-				connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
+				Connection connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
 				connection.writeByte(PacketID.GUILD);
 				connection.writeByte(PacketID.GUILD_KICK_MEMBER);
 				connection.writeInt(member.getId());

@@ -22,7 +22,7 @@ public class CommandParty extends Command {
 				Player member = Server.getInGameCharacter(name);
 				if(member != null) {
 					if(member.getCharacterId() != player.getCharacterId()) {
-						if(player.getParty() == null || (player.getParty() != null && player.getParty().isPartyLeader(player))) {
+						if(isPartyLeader(player, player.getParty() == null || (player.getParty() != null && player.getParty().isPartyLeader(player)))) {
 							if(member.getParty() == null) {
 								inviteRequest(member.getConnection(), player.getName());
 								player.setPlayerParty(member);
@@ -34,10 +34,6 @@ public class CommandParty extends Command {
 								CommandSendMessage.write(connection, name+" is already in a party.", MessageType.SELF);
 								CommandSendMessage.write(member.getConnection(), player.getName()+" tried to invite you in a party.", MessageType.SELF);
 							}
-						}
-						else {
-							//System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
-							CommandSendMessage.write(connection, "You are not the party leader.", MessageType.SELF);
 						}
 					}
 					else {
@@ -64,7 +60,7 @@ public class CommandParty extends Command {
 		else if(packetId == PacketID.PARTY_KICK_PLAYER) {
 			int id = connection.readInt();
 			if(player.getParty() != null) {
-				if(player.getParty().isPartyLeader(player)) {
+				if(isPartyLeader(player, player.getParty().isPartyLeader(player))) {
 					if(player.getCharacterId() != id) {
 						Player member = Server.getInGameCharacter(id);
 						if(member != null) {
@@ -83,9 +79,6 @@ public class CommandParty extends Command {
 						CommandSendMessage.write(connection, "You can't kick yourself.", MessageType.SELF);
 					}
 				}
-				else {
-					CommandSendMessage.write(connection, "You are not the party leader.", MessageType.SELF);
-				}
 			}
 			else {
 				CommandSendMessage.write(connection, "You are not member of a party.", MessageType.SELF);
@@ -94,7 +87,7 @@ public class CommandParty extends Command {
 		else if(packetId == PacketID.PARTY_SET_LEADER) {
 			int id = connection.readInt();
 			if(player.getParty() != null) {
-				if(player.getParty().isPartyLeader(player)) {
+				if(isPartyLeader(player, player.getParty().isPartyLeader(player))) {
 					if(player.getCharacterId() != id) {
 						Player member = Server.getInGameCharacter(id);
 						if(member != null) {
@@ -127,9 +120,6 @@ public class CommandParty extends Command {
 						CommandSendMessage.write(connection, "You already are the leader.", MessageType.SELF);
 					}
 				}
-				else {
-					CommandSendMessage.write(connection, "You are not the party leader.", MessageType.SELF);
-				}
 			}
 			else {
 				CommandSendMessage.write(connection, "You are not member of a party.", MessageType.SELF);
@@ -149,12 +139,11 @@ public class CommandParty extends Command {
 						player.setPlayerParty(null);
 					}
 					else {
-						//System.out.println(this.player.hasInitParty()+" "+this.player.getPlayerParty().hasInitParty());
 						System.out.println("CommandParty:PARTY_ACCEPT_REQUEST ERROR.");
 					}
 				}
 				else {
-					if(player.getPlayerParty().getParty().isPartyLeader(player.getPlayerParty())) {
+					if(isPartyLeader(player, player.getPlayerParty().getParty().isPartyLeader(player.getPlayerParty()))) {
 						player.getPlayerParty().getParty().addMember(player);
 						player.setParty(player.getPlayerParty().getParty());
 						int i = 0;
@@ -173,10 +162,6 @@ public class CommandParty extends Command {
 							}
 							i++;
 						}
-					}
-					else {
-						//System.out.println(this.player.getParty().isPartyLeader(this.player)+" "+this.player.getParty().isPartyLeader(this.player.getPlayerParty()));
-						CommandSendMessage.write(player.getPlayerParty().getConnection(), "You are not the party leader.", MessageType.SELF);
 					}
 				}
 			}
@@ -310,5 +295,15 @@ public class CommandParty extends Command {
 		player.getConnection().writeInt(joined.getCharacterId());
 		player.getConnection().writeChar(joined.getClasse().getValue());
 		player.getConnection().send();
+	}
+	
+	private static boolean isPartyLeader(Player player, boolean isLeader) {
+		if(isLeader) {
+			return true;
+		}
+		else {
+			CommandSendMessage.write(player.getPlayerParty().getConnection(), "You are not the party leader.", MessageType.SELF);
+			return false;
+		}
 	}
 }
