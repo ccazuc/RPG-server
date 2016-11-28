@@ -10,7 +10,7 @@ import net.thread.sql.SQLRequest;
 
 public class CommandLogoutCharacter extends Command {
 	
-	private static SQLRequest setOffline = new SQLRequest("UPDATE `character` SET online = 0 WHERE character_id = ?") {
+	private static SQLRequest setOffline = new SQLRequest("UPDATE `character` SET online = 0 WHERE character_id = ?", "Set offline") {
 		
 		@Override
 		public void gatherData() {

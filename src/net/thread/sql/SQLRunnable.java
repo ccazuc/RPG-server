@@ -17,7 +17,14 @@ public class SQLRunnable implements Runnable {
 		System.out.println("SQLRunnable run");
 		while(true) {
 			if(this.list.size() > 0) {
-				this.list.get(0).execute();
+				if(this.list.get(0).debugActive) {
+					long timer = System.nanoTime();
+					this.list.get(0).execute();
+					System.out.println("Request "+this.list.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");
+				}
+				else {
+					this.list.get(0).execute();
+				}
 				this.list.remove(0);
 			}
 		}

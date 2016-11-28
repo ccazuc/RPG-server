@@ -17,8 +17,8 @@ public class Guild {
 	private HashMap<Integer, GuildMember> memberMap;
 	private ArrayList<GuildRank> rankList;
 	
-	public final static int MEMBER_NOTE_MAX_LENGTH = 30;
-	public final static int MEMBER_OFFICER_NOTE_MAX_LENGTH = 30;
+	public final static int MEMBER_NOTE_MAX_LENGTH = 50;
+	public final static int MEMBER_OFFICER_NOTE_MAX_LENGTH = 50;
 	public final static int MOTD_MAX_LENGTH = 200;
 	public final static int INFORMATION_MAX_LENGTH = 300;
 	public final static int GUILD_MASTER_PERMISSION = 32767;

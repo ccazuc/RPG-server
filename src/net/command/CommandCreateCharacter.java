@@ -15,7 +15,7 @@ public class CommandCreateCharacter extends Command {
 	private static JDOStatement create_character;
 	private static JDOStatement check_character;
 	private static JDOStatement character_id;
-	private static SQLRequest insert_bag = new SQLRequest("INSERT INTO `bag` (character_id) VALUES (?)") {
+	private static SQLRequest insert_bag = new SQLRequest("INSERT INTO `bag` (character_id) VALUES (?)", "Create character insert_bag") {
 		@Override
 		public void gatherData() {
 			this.statement.clear();
@@ -29,7 +29,7 @@ public class CommandCreateCharacter extends Command {
 			
 		}
 	};
-	private static SQLRequest character_containers = new SQLRequest("INSERT INTO character_containers (character_id) VALUES (?)") {
+	private static SQLRequest character_containers = new SQLRequest("INSERT INTO character_containers (character_id) VALUES (?)", "Create character character_containers") {
 		@Override
 		public void gatherData() {
 			this.statement.clear();
@@ -43,7 +43,7 @@ public class CommandCreateCharacter extends Command {
 			
 		}
 	};
-	private static SQLRequest character_stuff = new SQLRequest("INSERT INTO character_stuff (character_id) VALUES (?)") {
+	private static SQLRequest character_stuff = new SQLRequest("INSERT INTO character_stuff (character_id) VALUES (?)", "Create character character_stuff") {
 		@Override
 		public void gatherData() {
 			this.statement.clear();
@@ -57,7 +57,7 @@ public class CommandCreateCharacter extends Command {
 			
 		}
 	};
-	private static SQLRequest spellbar = new SQLRequest("INSERT INTO spellbar (character_id) VALUES (?)") {
+	private static SQLRequest spellbar = new SQLRequest("INSERT INTO spellbar (character_id) VALUES (?)", "Create character spellbar") {
 		@Override
 		public void gatherData() {
 			this.statement.clear();

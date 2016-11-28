@@ -13,7 +13,7 @@ public class IgnoreManager {
 
 	private static JDOStatement loadIgnoreList;
 	private final static HashMap<Integer, ArrayList<Integer>> ignoreMap = new HashMap<Integer, ArrayList<Integer>>();
-	private final static SQLRequest addIgnoreInDB = new SQLRequest("INSERT INTO social_ignore (character_id, ignore_id) VALUES (?, ?)") {
+	private final static SQLRequest addIgnoreInDB = new SQLRequest("INSERT INTO social_ignore (character_id, ignore_id) VALUES (?, ?)", "Add ignore") {
 		
 		@Override
 		public void gatherData() {
@@ -29,7 +29,7 @@ public class IgnoreManager {
 			}
 		}
 	};
-	private final static SQLRequest removeIgnoreFromDB = new SQLRequest("DELETE FROM social_ignore WHERE character_id = ? AND ignore_id = ?") {
+	private final static SQLRequest removeIgnoreFromDB = new SQLRequest("DELETE FROM social_ignore WHERE character_id = ? AND ignore_id = ?", "Remove ignore") {
 		
 		@Override
 		public void gatherData() {

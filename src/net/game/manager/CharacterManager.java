@@ -25,7 +25,7 @@ public class CharacterManager {
 	private static JDOStatement checkOnlinePlayers;
 	private static JDOStatement loadCharacterNameFromID;
 	private static JDOStatement searchPlayer;
-	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?") {
+	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?", "Update last online timer") {
 		
 		@Override
 		public void gatherData() {

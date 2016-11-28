@@ -24,7 +24,7 @@ public class GuildManager {
 	private static JDOStatement loadMember;
 	private static JDOStatement loadMemberInformation;
 	private static JDOStatement loadPlayerGuild;
-	private final static SQLRequest updateInformation = new SQLRequest("UPDATE guild SET information = ? WHERE id = ?") {
+	private final static SQLRequest updateInformation = new SQLRequest("UPDATE guild SET information = ? WHERE id = ?", "Update guild information") {
 		
 		@Override
 		public void gatherData() {
@@ -43,7 +43,7 @@ public class GuildManager {
 			}
 		}
 	};
-	private final static SQLRequest updateMotd = new SQLRequest("UPDATE guild SET motd = ? WHERE id = ?") {
+	private final static SQLRequest updateMotd = new SQLRequest("UPDATE guild SET motd = ? WHERE id = ?", "Update guild Motd") {
 		
 		@Override
 		public void gatherData() {
@@ -62,7 +62,7 @@ public class GuildManager {
 			}
 		}
 	};
-	private final static SQLRequest removeMember = new SQLRequest("REMOVE FROM guild_member WHERE member_id = ? AND guild_id = ?") {
+	private final static SQLRequest removeMember = new SQLRequest("REMOVE FROM guild_member WHERE member_id = ? AND guild_id = ?", "Remove guild member") {
 		
 		@Override
 		public void gatherData() {
@@ -81,7 +81,7 @@ public class GuildManager {
 			}
 		}
 	};
-	private final static SQLRequest updatePermission = new SQLRequest("UPDATE guild_rank SET permission = ?, name = ? WHERE guild_id = ? AND rank_order = ?") {
+	private final static SQLRequest updatePermission = new SQLRequest("UPDATE guild_rank SET permission = ?, name = ? WHERE guild_id = ? AND rank_order = ?", "Update guild permission") {
 		
 		@Override
 		public void gatherData() {
@@ -102,7 +102,7 @@ public class GuildManager {
 			}
 		}
 	};
-	private final static SQLRequest addMemberInDB = new SQLRequest("INSERT INTO guild_member (member_id, guild_id, rank) VALUES (?, ?, ?)") {
+	private final static SQLRequest addMemberInDB = new SQLRequest("INSERT INTO guild_member (member_id, guild_id, rank) VALUES (?, ?, ?)", "Add guild member") {
 		
 		@Override
 		public void gatherData() {
@@ -122,7 +122,7 @@ public class GuildManager {
 			}
 		}
 	};
-	private final static SQLRequest updateMemberRank = new SQLRequest("UPDATE guild_member SET rank = ? WHERE guild_id = ? AND member_id = ?") {
+	private final static SQLRequest updateMemberRank = new SQLRequest("UPDATE guild_member SET rank = ? WHERE guild_id = ? AND member_id = ?", "Update guild member rank") {
 		
 		@Override
 		public void gatherData() {
@@ -132,7 +132,6 @@ public class GuildManager {
 				this.statement.putInt(datas.getIValue1());
 				this.statement.putInt(datas.getIValue2());
 				this.statement.putInt(datas.getIValue3());
-				//System.out.println("EXECUTE : rank: "+datas.getIValue1()+" guildId: "+datas.getIValue2()+" memberId: "+datas.getIValue3());
 				this.statement.execute();
 			} 
 			catch (SQLTimeoutException e) {
@@ -143,7 +142,7 @@ public class GuildManager {
 			}
 		}
 	};
-	private final static SQLRequest setLeaderInDB = new SQLRequest("UPDATE guild SET leader_id = ? WHERE id = ?") {
+	private final static SQLRequest setLeaderInDB = new SQLRequest("UPDATE guild SET leader_id = ? WHERE id = ?", "Set guild leader") {
 		
 		@Override
 		public void gatherData() {
@@ -159,7 +158,7 @@ public class GuildManager {
 			}
 		}
 	};
-	private final static SQLRequest setMemberNoteInDB = new SQLRequest("UPDATE guild_member SET note = ? WHERE member_id = ?") {
+	private final static SQLRequest setMemberNoteInDB = new SQLRequest("UPDATE guild_member SET note = ? WHERE member_id = ?", "Set guild member note") {
 		
 		@Override
 		public void gatherData() {
@@ -175,7 +174,7 @@ public class GuildManager {
 			}
 		}
 	};
-	private final static SQLRequest setMemberOfficerNoteInDB = new SQLRequest("UPDATE guild_member SET officer_note = ? WHERE member_id = ?") {
+	private final static SQLRequest setMemberOfficerNoteInDB = new SQLRequest("UPDATE guild_member SET officer_note = ? WHERE member_id = ?", "Set guild member officerNote") {
 		
 		@Override
 		public void gatherData() {
@@ -202,7 +201,7 @@ public class GuildManager {
 			loadRank = Server.getJDO().prepare("SELECT rank_order, permission, name FROM guild_rank WHERE guild_id = ?");
 			loadMember = Server.getJDO().prepare("SELECT member_id, rank, note, officer_note FROM guild_member WHERE guild_id = ?");
 			loadGuildInformation = Server.getJDO().prepare("SELECT name, leader_id, information, motd FROM guild WHERE id = ?");
-			loadMemberInformation = Server.getJDO().prepare("SELECT name, online, experience, class FROM `character` WHERE character_id = ?");
+			loadMemberInformation = Server.getJDO().prepare("SELECT name, online, experience, class, last_login_timer FROM `character` WHERE character_id = ?");
 		}
 		int guildId = 0;
 		loadPlayerGuild.clear();
@@ -252,7 +251,8 @@ public class GuildManager {
 					boolean isOnline = loadMemberInformation.getInt() == 0 ? false : true;
 					int level = Player.getLevel(loadMemberInformation.getInt());
 					ClassType type = Player.convStringToClassType(loadMemberInformation.getString());
-					memberList.add(new GuildMember(member_id, name, level, guildRank, isOnline, note, officerNote, type));
+					long last_login_timer = loadMemberInformation.getLong();
+					memberList.add(new GuildMember(member_id, name, level, guildRank, isOnline, note, officerNote, type, last_login_timer));
 				}
 				else {
 					System.out.println("GuildManager:LoadGuild player not found in table character");
@@ -288,7 +288,7 @@ public class GuildManager {
 	}
 	
 	public static void updateInformation(Guild guild) {
-		updateMotd.addDatas(new SQLDatas(guild.getId(), guild.getInformation()));
+		updateInformation.addDatas(new SQLDatas(guild.getId(), guild.getInformation()));
 		Server.addNewRequest(updateInformation);
 	}
 	

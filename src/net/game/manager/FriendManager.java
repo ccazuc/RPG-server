@@ -12,7 +12,7 @@ import net.thread.sql.SQLRequest;
 public class FriendManager {
 
 	private static HashMap<Integer, ArrayList<Integer>> friendMap = new HashMap<Integer, ArrayList<Integer>>();
-	private final static SQLRequest addFriendInDB = new SQLRequest("INSERT INTO social_friend (character_id, friend_id) VALUES (?, ?)") {
+	private final static SQLRequest addFriendInDB = new SQLRequest("INSERT INTO social_friend (character_id, friend_id) VALUES (?, ?)", "Add friend") {
 		
 		@Override
 		public void gatherData() {
@@ -28,7 +28,7 @@ public class FriendManager {
 			}
 		}
 	};
-	private final static SQLRequest removeFriendFromDB = new SQLRequest("DELETE FROM social_friend WHERE character_id = ? AND friend_id = ?") {
+	private final static SQLRequest removeFriendFromDB = new SQLRequest("DELETE FROM social_friend WHERE character_id = ? AND friend_id = ?", "Remove friend") {
 		
 		@Override
 		public void gatherData() {

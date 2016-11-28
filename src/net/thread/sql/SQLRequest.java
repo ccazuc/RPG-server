@@ -10,8 +10,10 @@ public class SQLRequest {
 	
 	protected JDOStatement statement;
 	protected ArrayList<SQLDatas> datasList;
+	protected String name;
+	protected boolean debugActive;
 	
-	public SQLRequest(String request) {
+	public SQLRequest(String request, String name) {
 		try {
 			this.statement = Server.getAsyncJDO().prepare(request);
 		} 
@@ -19,6 +21,8 @@ public class SQLRequest {
 			e.printStackTrace();
 		}
 		this.datasList = new ArrayList<SQLDatas>();
+		this.name = name;
+		this.debugActive = true;
 	}
 	
 	public void execute() {
@@ -26,6 +30,14 @@ public class SQLRequest {
 		if(this.datasList.size() > 0) {
 			this.datasList.remove(0);
 		}
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public boolean debugActive() {
+		return this.debugActive;
 	}
 	
 	public void addDatas(SQLDatas datas) {

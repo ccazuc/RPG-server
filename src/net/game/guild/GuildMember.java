@@ -12,16 +12,18 @@ public class GuildMember {
 	private String note = "";
 	private String officer_note = "";
 	private ClassType classType;
+	private long lastLoginTimer;
 	
-	public GuildMember(int id, String name, int level, GuildRank rank, boolean isOnline, String note, String officer_note, ClassType classType) {
-		this.id = id;
-		this.name = name;
-		this.level = level;
-		this.rank = rank;
-		this.isOnline = isOnline;
-		this.note = note;
+	public GuildMember(int id, String name, int level, GuildRank rank, boolean isOnline, String note, String officer_note, ClassType classType, long lastLoginTimer) {
+		this.lastLoginTimer = lastLoginTimer;
 		this.officer_note = officer_note;
 		this.classType = classType;
+		this.isOnline = isOnline;
+		this.level = level;
+		this.name = name;
+		this.rank = rank;
+		this.note = note;
+		this.id = id;
 	}
 	
 	public int getId() {
@@ -34,6 +36,14 @@ public class GuildMember {
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public long getLastLoginTimer() {
+		return this.lastLoginTimer;
+	}
+	
+	public void setLastLoginTimer(long lastLoginTimer) {
+		this.lastLoginTimer = lastLoginTimer;
 	}
 	
 	public void setLevel(int level) {
