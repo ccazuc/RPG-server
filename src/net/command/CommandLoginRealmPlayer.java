@@ -19,10 +19,11 @@ public class CommandLoginRealmPlayer extends Command {
 				return;
 			}
 			connectionAccepted(connection);
-			Server.removeKey(key);
+			player.setAccountRank(Server.getKey(key).getAccountRank());
 			player.setAccountId(account_id);
 			Server.addLoggedPlayer(player);
 			Server.removeNonLoggedPlayer(player);
+			Server.removeKey(key);
 		}
 	}
 	

@@ -236,8 +236,8 @@ public class Server {
 		return false;
 	}
 	
-	public static void addNewRequest(SQLRequest request) {
-		SQLRunnable.addRequest(request);
+	public static Key getKey(double key) {
+		return keyList.get(key);
 	}
 	
 	public static void addKey(Key key) {
@@ -246,6 +246,10 @@ public class Server {
 	
 	private static void readAuthServer() {
 		ConnectionManager.readAuthServer();
+	}
+	
+	public static void addNewRequest(SQLRequest request) {
+		SQLRunnable.addRequest(request);
 	}
 	
 	public static HashMap<Integer, Player> getInGamePlayerList() {

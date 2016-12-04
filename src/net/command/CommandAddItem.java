@@ -35,7 +35,7 @@ public class CommandAddItem extends Command {
 		}
 	}
 	
-	private void writeKnownItem(Player player, int id, int number) {
+	private static void writeKnownItem(Player player, int id, int number) {
 		player.getConnection().writeByte(PacketID.ADD_ITEM);
 		player.getConnection().writeByte(PacketID.KNOWN_ITEM);
 		player.getConnection().writeInt(id);
@@ -43,7 +43,7 @@ public class CommandAddItem extends Command {
 		player.getConnection().send();
 	}
 	
-	private void writeUnknownItem(Player player, int id, int number) {
+	private static void writeUnknownItem(Player player, int id, int number) {
 		Item temp = Item.getItem(id);
 		player.getConnection().writeByte(PacketID.ADD_ITEM);
 		player.getConnection().writeByte(PacketID.UNKNOWN_ITEM);

@@ -23,11 +23,8 @@ public class CommandGuild extends Command {
 		if(packetId == PacketID.GUILD_UPDATE_PERMISSION) {
 			int rank_order = connection.readInt();
 			int permission = connection.readInt();
-			if(rank_order == 1) {
-				permission = Guild.GUILD_MASTER_PERMISSION;
-			}
 			String name = connection.readString();
-			if(!(name.length() > 0)) {
+			if(name.length() == 0) {
 				return;
 			}
 			if(!isInAGuild(player)) {
@@ -41,6 +38,9 @@ public class CommandGuild extends Command {
 				CommandSendMessage.write(connection, "This rank doesn't exist.", MessageType.SELF);
 				return;
 			}
+			if(rank_order == 1) {
+				permission = Guild.GUILD_MASTER_PERMISSION;
+			}
 			player.getGuild().setRankPermission(rank_order, permission, name);
 			updatePermission(player.getGuild(), rank_order, permission, name);
 		}
@@ -51,7 +51,7 @@ public class CommandGuild extends Command {
 				return;
 			}
 			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-			if(isInAGuild(player)) {
+			if(!isInAGuild(player)) {
 				return;
 			}
 			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canInvitePlayer())) {
@@ -60,6 +60,9 @@ public class CommandGuild extends Command {
 			Player member = Server.getInGameCharacter(name);
 			if(member == null) {
 				CommandPlayerNotFound.write(connection, name);
+				return;
+			}
+			if(member.getGuildRequest() != 0) {
 				return;
 			}
 			if(IgnoreManager.isIgnored(member.getid(), player.getCharacterId())) {
@@ -100,6 +103,7 @@ public class CommandGuild extends Command {
 			player.setGuild(GuildManager.getGuild(player.getGuildRequest()));
 			player.getGuild().addMember(new GuildMember(player.getCharacterId(), player.getName(), player.getLevel(), player.getGuild().getRankList().get(player.getGuild().getRankList().size()-1), true, "", "", player.getClasse(), System.currentTimeMillis()));
 			initGuildWhenLogin(connection, player);
+			player.setGuildRequest(0);
 		}
 		else if(packetId == PacketID.GUILD_DECLINE_REQUEST) {
 			player.setGuildRequest(0);

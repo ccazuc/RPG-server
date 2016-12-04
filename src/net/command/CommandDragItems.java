@@ -34,5 +34,8 @@ public class CommandDragItems extends Command {
 	
 	private static void swapBagItem(Player player, int slot1, int slot2) {
 		Item temp = player.getBag().getBag(slot2);
+		if(player.getBag().getBag(slot1) != null) {
+			//player.getBag().setBag(i, stuff, number);
+		}
 	}
 }

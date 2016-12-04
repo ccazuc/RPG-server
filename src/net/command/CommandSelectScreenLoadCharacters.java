@@ -23,7 +23,7 @@ public class CommandSelectScreenLoadCharacters extends Command {
 		}
 	}
 	
-	private void write(Player player, int accountId) {
+	private static void write(Player player, int accountId) {
 		try {
 			Connection connection = player.getConnection();
 			if(write_statement == null) {

@@ -127,7 +127,7 @@ public class CommandCreateCharacter extends Command {
 		}
 	}
 	
-	private boolean checkCharacterName(Connection connection, String name) throws SQLException {
+	private static boolean checkCharacterName(Connection connection, String name) throws SQLException {
 		int i = 0;
 		if(name.length() >= 2 && name.length() <= 10) {
 			while(i < name.length()) {

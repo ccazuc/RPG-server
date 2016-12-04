@@ -13,7 +13,8 @@ public class CommandLoginRealmAuth extends Command {
 		if(packetId == PacketID.LOGIN_NEW_KEY) {
 			double key = connection.readDouble();
 			int account_id = connection.readInt();
-			Server.addKey(new Key(account_id, key));
+			int account_rank = connection.readInt();
+			Server.addKey(new Key(account_id, account_rank, key));
 		}
 	}
 }

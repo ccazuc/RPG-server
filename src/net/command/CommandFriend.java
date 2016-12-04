@@ -18,7 +18,7 @@ public class CommandFriend extends Command {
 		byte packetId = connection.readByte();
 		if(packetId == PacketID.FRIEND_ADD) {
 			String name = connection.readString();
-			if(name.length() > 2) {
+			if(!(name.length() > 2)) {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
