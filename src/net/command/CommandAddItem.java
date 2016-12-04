@@ -20,16 +20,18 @@ public class CommandAddItem extends Command {
 		int character_id = connection.readInt();
 		int item_id = connection.readInt();
 		int number = connection.readInt();
-		if(player.getAccountRank() >= 1 && Item.exists(item_id)) {
-			Player member = character_id == player.getCharacterId() ? player : Server.getInGameCharacter(character_id);
-			if(member != null) {
-				if(member.itemHasBeenSendToClient(item_id)) {
-					writeKnownItem(member, item_id, number);
-				}
-				else {
-					writeUnknownItem(member, item_id, number);
-				}
-			}
+		if(!(player.getAccountRank() >= 1 && Item.exists(item_id))) {
+			return;
+		}
+		Player member = character_id == player.getCharacterId() ? player : Server.getInGameCharacter(character_id);
+		if(member == null) {
+			return;
+		}
+		if(member.itemHasBeenSendToClient(item_id)) {
+			writeKnownItem(member, item_id, number);
+		}
+		else {
+			writeUnknownItem(member, item_id, number);
 		}
 	}
 	

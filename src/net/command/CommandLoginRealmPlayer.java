@@ -14,16 +14,15 @@ public class CommandLoginRealmPlayer extends Command {
 		if(packetId == PacketID.LOGIN_REALM_REQUEST) {
 			double key = connection.readDouble();
 			int account_id = connection.readInt();
-			if(Server.hasKey(key, account_id)) {
-				connectionAccepted(connection);
-				Server.removeKey(key);
-				player.setAccountId(account_id);
-				Server.addLoggedPlayer(player);
-				Server.removeNonLoggedPlayer(player);
-			}
-			else {
+			if(!Server.hasKey(key, account_id)) {
 				player.close();
+				return;
 			}
+			connectionAccepted(connection);
+			Server.removeKey(key);
+			player.setAccountId(account_id);
+			Server.addLoggedPlayer(player);
+			Server.removeNonLoggedPlayer(player);
 		}
 	}
 	

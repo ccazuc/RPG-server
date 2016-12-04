@@ -20,43 +20,40 @@ public class CommandIgnore extends Command {
 		byte packetId = connection.readByte();
 		if(packetId == PacketID.IGNORE_ADD) {
 			String name = connection.readString();
-			if(name.length() > 2) {
-				name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-				Player ignore = Server.getInGameCharacter(name);
-				int character_id = 0;
-				if(ignore == null) {
-					character_id = CharacterManager.playerExistsInDB(name);
-				}
-				if(ignore != null || character_id != -1) {
-					if(ignore != null && !IgnoreManager.isIgnored(player.getCharacterId(), ignore.getCharacterId())) {
-						IgnoreManager.addIgnore(player.getCharacterId(), ignore.getCharacterId());
-						addIgnore(connection, ignore);
-					}
-					else if(character_id != -1 && !IgnoreManager.isIgnored(player.getCharacterId(), character_id)) {
-						IgnoreManager.addIgnore(player.getCharacterId(), character_id);
-						addIgnore(connection, character_id, name);
-					}
-					else {
-						CommandSendMessage.write(connection, name+" is already in your ignore list.", MessageType.SELF);
-					}
-				}
-				else {
-					CommandPlayerNotFound.write(connection, name);
-				}
+			if(!(name.length() > 2)) {
+				CommandPlayerNotFound.write(connection, name);
+				return;
+			}
+			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
+			Player ignore = Server.getInGameCharacter(name);
+			int character_id = 0;
+			if(ignore == null) {
+				character_id = CharacterManager.playerExistsInDB(name);
+			}
+			if(!(ignore != null || character_id != -1)) {
+				CommandPlayerNotFound.write(connection, name);
+				return;
+			}
+			if(ignore != null && !IgnoreManager.isIgnored(player.getCharacterId(), ignore.getCharacterId())) {
+				IgnoreManager.addIgnore(player.getCharacterId(), ignore.getCharacterId());
+				addIgnore(connection, ignore);
+			}
+			else if(character_id != -1 && !IgnoreManager.isIgnored(player.getCharacterId(), character_id)) {
+				IgnoreManager.addIgnore(player.getCharacterId(), character_id);
+				addIgnore(connection, character_id, name);
 			}
 			else {
-				CommandPlayerNotFound.write(connection, name);
+				CommandSendMessage.write(connection, name+" is already in your ignore list.", MessageType.SELF);
 			}
 		}
 		else if(packetId == PacketID.IGNORE_REMOVE) {
 			int id = connection.readInt();
-			if(IgnoreManager.isIgnored(player.getCharacterId(), id)) {
-				removeIgnore(connection, id);
-				IgnoreManager.removeIgnore(player.getCharacterId(), id);
-			}
-			else {
+			if(!IgnoreManager.isIgnored(player.getCharacterId(), id)) {
 				CommandSendMessage.write(connection, "This player is not in your ignore list.", MessageType.SELF);
+				return;
 			}
+			removeIgnore(connection, id);
+			IgnoreManager.removeIgnore(player.getCharacterId(), id);
 		}
 	}
 	

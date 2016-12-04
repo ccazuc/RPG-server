@@ -91,39 +91,36 @@ public class CommandCreateCharacter extends Command {
 		String race = connection.readString();
 		int characterId = 0;
 		try {
-			if(checkCharacterName(connection, name)) {
-				create_character.putInt(accountId);
-				create_character.putString(name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase());
-				create_character.putString(classe);
-				create_character.putString(race);
-				create_character.execute();
-				connection.writeByte(PacketID.CREATE_CHARACTER);
-				connection.writeByte(PacketID.CHARACTER_CREATED);
-				connection.send();
-				
-				character_id.clear();
-				character_id.putString(name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase());
-				character_id.execute();
-				if(character_id.fetch()) {
-					characterId = character_id.getInt();
-				}
-				if(characterId != 0) {
-					//insert_bag.setId(characterId);
-					SQLDatas datas = new SQLDatas(characterId);
-					insert_bag.addDatas(datas);
-					Server.addNewRequest(insert_bag);
-					//character_containers.setId(characterId);
-					character_containers.addDatas(datas);
-					Server.addNewRequest(character_containers);
-					//character_stuff.setId(characterId);
-					character_stuff.addDatas(datas);
-					Server.addNewRequest(character_stuff);
-					//spellbar.setId(characterId);
-					spellbar.addDatas(datas);
-					Server.addNewRequest(spellbar);
-				}
-				
+			if(!checkCharacterName(connection, name)) {
+				return;
 			}
+			create_character.putInt(accountId);
+			create_character.putString(name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase());
+			create_character.putString(classe);
+			create_character.putString(race);
+			create_character.execute();
+			connection.writeByte(PacketID.CREATE_CHARACTER);
+			connection.writeByte(PacketID.CHARACTER_CREATED);
+			connection.send();
+			
+			character_id.clear();
+			character_id.putString(name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase());
+			character_id.execute();
+			if(character_id.fetch()) {
+				characterId = character_id.getInt();
+			}
+			if(characterId == 0) {
+				return;
+			}
+			SQLDatas datas = new SQLDatas(characterId);
+			insert_bag.addDatas(datas);
+			Server.addNewRequest(insert_bag);
+			character_containers.addDatas(datas);
+			Server.addNewRequest(character_containers);
+			character_stuff.addDatas(datas);
+			Server.addNewRequest(character_stuff);
+			spellbar.addDatas(datas);
+			Server.addNewRequest(spellbar);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

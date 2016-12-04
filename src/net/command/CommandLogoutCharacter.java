@@ -28,22 +28,20 @@ public class CommandLogoutCharacter extends Command {
 
 	@Override
 	public void read(Player player) {
-		if(Server.getInGamePlayerList().containsKey(player.getCharacterId())) {
-			setPlayerOfflineInDB(player);
-			player.notifyFriendOffline();
-			player.setGuildRequest(0);
-			if(player.getGuild() != null) {
-				CommandGuild.notifyOfflinePlayer(player);
-			}
-			Server.addLoggedPlayer(player);
-			Server.removeInGamePlayer(player);
-			FriendManager.getFriendMap().remove(player.getCharacterId());
-			player.resetDatas();
-			CommandTrade.closeTrade(player);
+		if(!Server.getInGamePlayerList().containsKey(player.getCharacterId())) {
+			return;
 		}
-		else {
-			//player is using WPE
+		setPlayerOfflineInDB(player);
+		player.notifyFriendOffline();
+		player.setGuildRequest(0);
+		if(player.getGuild() != null) {
+			CommandGuild.notifyOfflinePlayer(player);
 		}
+		Server.addLoggedPlayer(player);
+		Server.removeInGamePlayer(player);
+		FriendManager.getFriendMap().remove(player.getCharacterId());
+		player.resetDatas();
+		CommandTrade.closeTrade(player);
 	}
 	
 	public static void setPlayerOfflineInDB(Player player) {
