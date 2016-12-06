@@ -16,7 +16,7 @@ public class CommandGet extends Command {
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();
-		byte packetID = connection.readByte();
+		short packetID = connection.readShort();
 		if(packetID == PacketID.CHAT_GET_STAMINA) {
 			int id = connection.readInt();
 			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
@@ -72,15 +72,15 @@ public class CommandGet extends Command {
 	}
 	
 	public void write(Connection connection, int value) {
-		connection.writeByte(PacketID.CHAT_GET);
-		connection.writeByte(PacketID.INT);
+		connection.writeShort(PacketID.CHAT_GET);
+		connection.writeShort(PacketID.INT);
 		connection.writeInt(value);
 		connection.send();
 	}
 	
 	public void write(Connection connection, String msg) {
-		connection.writeByte(PacketID.CHAT_GET);
-		connection.writeByte(PacketID.STRING);
+		connection.writeShort(PacketID.CHAT_GET);
+		connection.writeShort(PacketID.STRING);
 		connection.writeString(msg);
 		connection.send();
 	}

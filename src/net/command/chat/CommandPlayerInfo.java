@@ -21,7 +21,7 @@ public class CommandPlayerInfo extends Command {
 			}
 		}
 		else {
-			connection.writeByte(PacketID.CHAT_NOT_ALLOWED);
+			connection.writeShort(PacketID.CHAT_NOT_ALLOWED);
 			connection.send();
 		}
 	}

@@ -2,7 +2,7 @@ package net.game;
 
 import java.sql.SQLException;
 
-import net.command.CommandTrade;
+import net.command.player.CommandTrade;
 import net.game.item.Item;
 
 public class Trade {

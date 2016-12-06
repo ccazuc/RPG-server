@@ -8,27 +8,8 @@ import java.nio.channels.SocketChannel;
 import java.util.HashMap;
 
 import net.command.Command;
-import net.command.CommandAddItem;
-import net.command.CommandCreateCharacter;
-import net.command.CommandDeleteCharacter;
-import net.command.CommandFriend;
-import net.command.CommandGuild;
-import net.command.CommandIgnore;
-import net.command.CommandLoadCharacter;
-import net.command.CommandLogin;
-import net.command.CommandLoginRealmAuth;
-import net.command.CommandLoginRealmPlayer;
-import net.command.CommandLogout;
-import net.command.CommandLogoutCharacter;
-import net.command.CommandParty;
-import net.command.CommandPing;
-import net.command.CommandPingConfirmed;
-import net.command.CommandRegisterToAuthServer;
-import net.command.CommandSelectScreenLoadCharacters;
-import net.command.CommandSendSingleBagItem;
-import net.command.CommandSpellCast;
-import net.command.CommandTrade;
-import net.command.CommandUpdateStats;
+import net.command.auth.CommandLoginRealmAuth;
+import net.command.auth.CommandRegisterToAuthServer;
 import net.command.chat.CommandGet;
 import net.command.chat.CommandListPlayer;
 import net.command.chat.CommandPlayerInfo;
@@ -40,6 +21,25 @@ import net.command.item.CommandPotion;
 import net.command.item.CommandRequestItem;
 import net.command.item.CommandStuff;
 import net.command.item.CommandWeapon;
+import net.command.player.CommandAddItem;
+import net.command.player.CommandCreateCharacter;
+import net.command.player.CommandDeleteCharacter;
+import net.command.player.CommandFriend;
+import net.command.player.CommandGuild;
+import net.command.player.CommandIgnore;
+import net.command.player.CommandLoadCharacter;
+import net.command.player.CommandLogin;
+import net.command.player.CommandLoginRealmPlayer;
+import net.command.player.CommandLogout;
+import net.command.player.CommandLogoutCharacter;
+import net.command.player.CommandParty;
+import net.command.player.CommandPing;
+import net.command.player.CommandPingConfirmed;
+import net.command.player.CommandSelectScreenLoadCharacters;
+import net.command.player.CommandSendSingleBagItem;
+import net.command.player.CommandSpellCast;
+import net.command.player.CommandTrade;
+import net.command.player.CommandUpdateStats;
 import net.game.Player;
 
 public class ConnectionManager {
@@ -193,5 +193,9 @@ public class ConnectionManager {
 				System.out.println("Unknown packet: "+(int)packetId+" for authServer");
 			}
 		}
+	}
+	
+	public static Connection getAuthConnection() {
+		return authConnection;
 	}
 }

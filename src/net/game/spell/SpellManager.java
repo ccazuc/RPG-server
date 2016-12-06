@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.command.CommandUpdateStats;
+import net.command.player.CommandUpdateStats;
 import net.connection.PacketID;
 import net.game.Unit;
 import net.game.UnitType;

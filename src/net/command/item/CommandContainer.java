@@ -13,7 +13,7 @@ public class CommandContainer extends Command {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		if(ContainerManager.exists(id)) {
-			connection.writeByte(PacketID.CONTAINER);
+			connection.writeShort(PacketID.CONTAINER);
 			connection.writeContainer(ContainerManager.getContainer(id));
 			connection.send();
 		}

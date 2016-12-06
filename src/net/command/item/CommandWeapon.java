@@ -13,7 +13,7 @@ public class CommandWeapon extends Command {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		if(WeaponManager.exists(id)) {
-			connection.writeByte(PacketID.WEAPON);
+			connection.writeShort(PacketID.WEAPON);
 			connection.writeWeapon(WeaponManager.getWeapon(id));
 			connection.send();
 		}

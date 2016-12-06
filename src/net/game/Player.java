@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.Server;
-import net.command.CommandFriend;
-import net.command.CommandGuild;
-import net.command.CommandLogoutCharacter;
-import net.command.CommandParty;
-import net.command.CommandTrade;
+import net.command.player.CommandFriend;
+import net.command.player.CommandGuild;
+import net.command.player.CommandLogoutCharacter;
+import net.command.player.CommandParty;
+import net.command.player.CommandTrade;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
@@ -180,7 +180,7 @@ public class Player extends Unit {
 	}
 	
 	public void sendStats() {
-		this.connectionManager.getConnection().writeByte(PacketID.LOAD_STATS);
+		this.connectionManager.getConnection().writeShort(PacketID.LOAD_STATS);
 		this.connectionManager.getConnection().writeInt(this.characterId);
 		this.connectionManager.getConnection().writeInt(this.exp);
 		this.connectionManager.getConnection().writeInt(this.gold);

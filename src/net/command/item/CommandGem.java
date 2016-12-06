@@ -13,7 +13,7 @@ public class CommandGem extends Command {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		if(GemManager.exists(id)) {
-			connection.writeByte(PacketID.GEM);
+			connection.writeShort(PacketID.GEM);
 			connection.writeGem(GemManager.getGem(id));
 			connection.send();
 		}

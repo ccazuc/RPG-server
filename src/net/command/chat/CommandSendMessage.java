@@ -80,7 +80,7 @@ public class CommandSendMessage extends Command {
 	}
 	
 	private static void writeWhisper(Connection connection, String name, String message, boolean isTarget) { //used for whisper
-		connection.writeByte(PacketID.SEND_MESSAGE);
+		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(MessageType.WHISPER.getValue());
 		connection.writeString(message);
 		connection.writeString(name);
@@ -97,7 +97,7 @@ public class CommandSendMessage extends Command {
 	}
 	
 	public static void write(Connection connection, String message, String author, MessageType type) { //used 
-		connection.writeByte(PacketID.SEND_MESSAGE);
+		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
 		connection.writeString(author);
@@ -105,7 +105,7 @@ public class CommandSendMessage extends Command {
 	}
 	
 	public static void write(Connection connection, String message, MessageType type) { //used for self
-		connection.writeByte(PacketID.SEND_MESSAGE);
+		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(false);

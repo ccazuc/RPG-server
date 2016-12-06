@@ -13,7 +13,7 @@ public class CommandPlayerNotFound extends Command {
 	}
 	
 	public static void write(Connection connection, String name) {
-		connection.writeByte(PacketID.PLAYER_NOT_FOUND);
+		connection.writeShort(PacketID.PLAYER_NOT_FOUND);
 		connection.writeString(name);
 		connection.send();
 	}

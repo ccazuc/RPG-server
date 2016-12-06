@@ -172,7 +172,7 @@ public class ItemManager {
 		getBagItem.execute();
 		if(getBagItem.fetch()) {
 			Connection connection = player.getConnectionManager().getConnection();
-			connection.writeByte(PacketID.LOAD_BAG_ITEMS);
+			connection.writeShort(PacketID.LOAD_BAG_ITEMS);
 			while(i < player.getBag().getBag().length) {
 				id = getBagItem.getInt();
 				number = getBagItem.getInt();
@@ -452,7 +452,7 @@ public class ItemManager {
 		getEquippedItem.execute();
 		Connection connection = player.getConnectionManager().getConnection();
 		if(getEquippedItem.fetch()) {
-			connection.writeByte(PacketID.LOAD_EQUIPPED_ITEMS);
+			connection.writeShort(PacketID.LOAD_EQUIPPED_ITEMS);
 			id = getEquippedItem.getInt();
 			gem1Id = getEquippedItem.getInt();
 			gem2Id = getEquippedItem.getInt();
