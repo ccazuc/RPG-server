@@ -26,6 +26,7 @@ import net.game.spell.SpellManager;
 import net.thread.socket.SocketRunnable;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRunnable;
+import net.thread.sql.Who;
 
 public class Server {
 	
@@ -250,6 +251,10 @@ public class Server {
 	
 	public static void addNewRequest(SQLRequest request) {
 		SQLRunnable.addRequest(request);
+	}
+	
+	public static void addNewWhoRequest(Who who) {
+		SQLRunnable.addWhoRequest(who);
 	}
 	
 	public static HashMap<Integer, Player> getInGamePlayerList() {

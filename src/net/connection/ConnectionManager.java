@@ -40,6 +40,7 @@ import net.command.player.CommandSendSingleBagItem;
 import net.command.player.CommandSpellCast;
 import net.command.player.CommandTrade;
 import net.command.player.CommandUpdateStats;
+import net.command.player.CommandWho;
 import net.game.Player;
 
 public class ConnectionManager {
@@ -91,6 +92,7 @@ public class ConnectionManager {
 		commandList.put((int)PARTY, new CommandParty());
 		commandList.put((int)GUILD, new CommandGuild());
 		commandList.put((int)IGNORE, new CommandIgnore());
+		commandList.put((int)WHO, new CommandWho());
 	}
 	
 	public static void initAuthCommand() {
