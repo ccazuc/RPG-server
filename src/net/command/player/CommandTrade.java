@@ -11,6 +11,7 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 import net.game.item.Item;
+import net.game.manager.IgnoreManager;
 
 public class CommandTrade extends Command {
 
@@ -31,7 +32,10 @@ public class CommandTrade extends Command {
 				return;
 			}
 			if(trade == player) {
-				CommandSendMessage.write(connection, "Can't trade with yourself.", MessageType.SELF);
+				CommandSendMessage.selfWithouthAuthor(connection, "Can't trade with yourself.", MessageType.SELF);
+				return;
+			}
+			if(IgnoreManager.isIgnored(trade.getCharacterId(), player.getCharacterId())) {
 				return;
 			}
 			if(player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading
@@ -42,7 +46,7 @@ public class CommandTrade extends Command {
 			}
 			trade.setPlayerTrade(player);
 			player.setPlayerTrade(trade);
-			CommandSendMessage.write(trade.getConnection(), '['+player.getName()+"] wants to trade with you.", player.getName(), MessageType.SELF);
+			CommandSendMessage.selfWithAuthor(trade.getConnection(), '['+player.getName()+"] wants to trade with you.", player.getName(), MessageType.SELF);
 			write(PacketID.TRADE_REQUEST, trade, player.getName());
 		}
 		else if(packetID == PacketID.TRADE_NEW_CONFIRM) { //confirm the trade

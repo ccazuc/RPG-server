@@ -6,6 +6,8 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 import net.game.manager.IgnoreManager;
+import net.utils.Color;
+import net.utils.MessageColor;
 
 public class CommandSendMessage extends Command {
 
@@ -23,17 +25,16 @@ public class CommandSendMessage extends Command {
 			String target = connection.readString();
 			target = target.substring(0, 1).toUpperCase()+target.substring(1).toLowerCase();
 			Player temp = Server.getInGameCharacter(target);
-			if(temp != null) {
-				writeWhisper(connection, temp.getName(), message, false);
-				if(!IgnoreManager.isIgnored(player.getCharacterId(), temp.getCharacterId())) {
-					writeWhisper(temp.getConnection(), temp.getName(), message, true);
-				}
-				else {
-					
-				}
+			if(temp == null) {
+				CommandPlayerNotFound.write(connection, target);
+				return;
+			}
+			writeWhisper(connection, temp.getName(), message, false);
+			if(!IgnoreManager.isIgnored(temp.getCharacterId(), player.getCharacterId())) {
+				writeWhisper(temp.getConnection(), temp.getName(), message, true);
 			}
 			else {
-				CommandPlayerNotFound.write(connection, target);
+				selfWithouthAuthor(connection, temp.getName()+IgnoreManager.ignoreMessage, MessageType.SELF, Color.RED);
 			}
 		}
 		else if(type == MessageType.PARTY) {
@@ -52,7 +53,7 @@ public class CommandSendMessage extends Command {
 				}
 			}
 			else {
-				write(connection, "You are not in a party.", MessageType.SELF);
+				selfWithouthAuthor(connection, "You are not in a party.", MessageType.SELF);
 			}
 		}
 		else if(type == MessageType.GUILD) {
@@ -67,11 +68,11 @@ public class CommandSendMessage extends Command {
 					}
 				}
 				else {
-					write(connection, "You don't have the right to do this.", MessageType.SELF);
+					selfWithouthAuthor(connection, "You don't have the right to do this.", MessageType.SELF);
 				}
 			}
 			else {
-				write(connection, "You are not in a guild.", MessageType.SELF);
+				selfWithouthAuthor(connection, "You are not in a guild.", MessageType.SELF);
 			}
 		}
 		else {
@@ -104,11 +105,66 @@ public class CommandSendMessage extends Command {
 		connection.send();
 	}
 	
-	public static void write(Connection connection, String message, MessageType type) { //used for self
+	public static void selfWithAuthor(Connection connection, String message, String author, MessageType type) { //used 
+		connection.writeShort(PacketID.SEND_MESSAGE);
+		connection.writeChar(type.getValue());
+		connection.writeString(message);
+		connection.writeBoolean(true);
+		connection.writeString(author);
+		connection.writeBoolean(true);
+		connection.writeChar(MessageColor.YELLOW.getValue());
+		connection.send();
+	}
+	
+	public static void selfWithAuthor(Connection connection, String message, String author, MessageType type, Color color) { //used 
+		connection.writeShort(PacketID.SEND_MESSAGE);
+		connection.writeChar(type.getValue());
+		connection.writeString(message);
+		connection.writeBoolean(true);
+		connection.writeString(author);
+		connection.writeBoolean(false);
+		connection.writeColor(color);
+		connection.send();
+	}
+	
+	public static void selfWithAuthor(Connection connection, String message, String author, MessageType type, MessageColor color) { //used 
+		connection.writeShort(PacketID.SEND_MESSAGE);
+		connection.writeChar(type.getValue());
+		connection.writeString(message);
+		connection.writeBoolean(true);
+		connection.writeString(author);
+		connection.writeBoolean(true);
+		connection.writeChar(color.getValue());
+		connection.send();
+	}
+	
+	public static void selfWithouthAuthor(Connection connection, String message, MessageType type, Color color) { //used 
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(false);
+		connection.writeBoolean(false);
+		connection.writeColor(color);
+		connection.send();
+	}
+	
+	public static void selfWithouthAuthor(Connection connection, String message, MessageType type, MessageColor color) { //used 
+		connection.writeShort(PacketID.SEND_MESSAGE);
+		connection.writeChar(type.getValue());
+		connection.writeString(message);
+		connection.writeBoolean(false);
+		connection.writeBoolean(true);
+		connection.writeChar(color.getValue());
+		connection.send();
+	}
+	
+	public static void selfWithouthAuthor(Connection connection, String message, MessageType type) { //used 
+		connection.writeShort(PacketID.SEND_MESSAGE);
+		connection.writeChar(type.getValue());
+		connection.writeString(message);
+		connection.writeBoolean(false);
+		connection.writeBoolean(true);
+		connection.writeChar(MessageColor.YELLOW.getValue());
 		connection.send();
 	}
 }

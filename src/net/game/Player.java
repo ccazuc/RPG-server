@@ -63,6 +63,7 @@ public class Player extends Unit {
 	private Player playerParty;
 	private int numberBlueGem;
 	private Shortcut[] spells;
+	private boolean isInGame;
 	private int guildRequest;
 	private int defaultArmor;
 	private ClassType classe;
@@ -665,6 +666,14 @@ public class Player extends Unit {
 		this.spellUnlocked.clear();
 		this.target = null;
 		this.wear = null;
+	}
+	
+	public boolean isInGame() {
+		return this.isInGame;
+	}
+	
+	public void setIsInGame(boolean we) {
+		this.isInGame = we;
 	}
 	
 	public void setGuildRequest(int id) {

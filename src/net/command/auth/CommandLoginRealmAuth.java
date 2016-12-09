@@ -10,7 +10,7 @@ public class CommandLoginRealmAuth extends Command {
 	
 	@Override
 	public void read(Connection connection) {
-		byte packetId = connection.readByte();
+		short packetId = connection.readShort();
 		if(packetId == PacketID.LOGIN_NEW_KEY) {
 			double key = connection.readDouble();
 			int account_id = connection.readInt();

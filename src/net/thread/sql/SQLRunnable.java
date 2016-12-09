@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.Server;
+import net.connection.Buffer;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.ClassType;
@@ -14,6 +15,7 @@ public class SQLRunnable implements Runnable {
 	
 	private List<SQLRequest> SQLList = new ArrayList<SQLRequest>();
 	private List<Who> whoList = new ArrayList<Who>();
+	private static Buffer buffer = new Buffer();
 	
 	public SQLRunnable() {
 		this.SQLList = Collections.synchronizedList(this.SQLList);
@@ -36,25 +38,65 @@ public class SQLRunnable implements Runnable {
 				this.SQLList.remove(0);
 			}
 			if(this.whoList.size() > 0) {
+				Who who = this.whoList.get(0);
 				long timer = System.nanoTime();
-				executeWhoRequest(this.whoList.get(0));
+				executeWhoRequest(who);
 				System.out.println("[WHO] took "+(System.nanoTime()-timer)/1000+" µs to execute.");
 				this.whoList.remove(0);
 			}
 		}
 	}
 	
-	private static void executeWhoRequest(Who who) {
+	private static void bufferMethod(Who who) {
+		String word = parseWho(who.getWord().toLowerCase().trim());
+		Connection connection = who.getConnection();
+		connection.writeShort(PacketID.WHO);
+		int i = 0;
+		buffer.clear();
+		buffer.clear();
+		for(Player player : Server.getInGamePlayerList().values()) {
+			if(word.equals("") || player.getName().contains(word) || (player.getGuild() != null && player.getGuild().getName().contains(word)) || player.getLevelString().contains(word)) {
+				buffer.writeInt(666);
+				buffer.writeString(player.getName());
+				if(player.getGuild() == null) {
+					buffer.writeString("");
+				}
+				else {
+					buffer.writeString(player.getGuild().getName());
+				}
+				buffer.writeChar(player.getRace().getValue());
+				buffer.writeInt(player.getLevel());
+				buffer.writeChar(ClassType.GUERRIER.getValue());
+				i++;
+				
+			}
+		}
+		connection.writeInt(i);
+		buffer.flip();
+		while(buffer.hasRemaining()) {
+			connection.writeInt(buffer.readInt());
+			connection.writeString(buffer.readString());
+			connection.writeString(buffer.readString());
+			connection.writeChar(buffer.readChar());
+			connection.writeInt(buffer.readInt());
+			connection.writeChar(buffer.readChar());
+		}
+	}
+	
+	/*private static void listMethod(Who who) {
 		String word = parseWho(who.getWord().toLowerCase().trim());
 		Connection connection = who.getConnection();
 		ArrayList<Integer> list = new ArrayList<Integer>();
+		int i = 0;
 		for(Player player : Server.getInGamePlayerList().values()) {
 			if(word.equals("") || player.getName().contains(word) || (player.getGuild() != null && player.getGuild().getName().contains(word)) || Integer.toString(player.getLevel()).contains(word)) {
 				list.add(player.getCharacterId());
+				i++;
+				
 			}
 		}
 		if(list.size() > 0) {
-			int i = 0;
+			i = 0;
 			connection.writeShort(PacketID.WHO);
 			connection.writeInt(list.size());
 			while(i < list.size()) {
@@ -74,6 +116,16 @@ public class SQLRunnable implements Runnable {
 			}
 			connection.send();
 		}
+	}*/
+	
+	private static void executeWhoRequest(Who who) {
+		/*long timer = System.nanoTime();
+		bufferMethod(who);
+		System.out.println("[WHO BUFFER] took "+(System.nanoTime()-timer)/1000+" µs to execute.");
+		timer = System.nanoTime();
+		listMethod(who);
+		System.out.println("[WHO LIST] took "+(System.nanoTime()-timer)/1000+" µs to execute.");*/
+		bufferMethod(who);
 	}
 	
 	private static String parseWho(String text) {

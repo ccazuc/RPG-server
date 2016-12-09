@@ -14,6 +14,7 @@ import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
+import net.utils.Color;
 
 public class Buffer {
 
@@ -27,9 +28,14 @@ public class Buffer {
 		this.socket = socket;
 		this.player = player;
 	}
+	
 	public Buffer(SocketChannel socket) {
 		this.buffer = ByteBuffer.allocateDirect(16000);
 		this.socket = socket;
+	}
+	
+	public Buffer() {
+		this.buffer = ByteBuffer.allocateDirect(16000);
 	}
 	
 	protected final void send() throws IOException {
@@ -42,14 +48,6 @@ public class Buffer {
 		else {
 			throw new ClosedChannelException();
 		}
-	}
-	
-	public final int remaining() {
-		return this.buffer.remaining();
-	}
-	
-	public final int capacity() {
-		return this.buffer.capacity();
 	}
 
 	private final void send(final ByteBuffer buffer) {
@@ -82,8 +80,20 @@ public class Buffer {
 		return 2;
 	}
 	
-	protected final boolean hasRemaining() {
+	public final int remaining() {
+		return this.buffer.remaining();
+	}
+	
+	public final int capacity() {
+		return this.buffer.capacity();
+	}
+	
+	public final boolean hasRemaining() {
 		return this.buffer.hasRemaining();
+	}
+	
+	public final void flip() {
+		this.buffer.flip();
 	}
 	
 	protected final void writeItem(final Item item) {
@@ -207,8 +217,16 @@ public class Buffer {
 		writeInt(bag.getSellPrice());
 		this.written = true;
 	}
+	
+	protected final void writeColor(final Color color) {
+		writeFloat(color.getRed());
+		writeFloat(color.getGreen());
+		writeFloat(color.getBlue());
+		writeFloat(color.getAlpha());
+		this.written = true;
+	}
 
-	protected final void writeString(final String s) {
+	public final void writeString(final String s) {
 		writeShort((short)s.length());
 		int i = -1;
 		while(++i < s.length()) {
@@ -223,7 +241,15 @@ public class Buffer {
 		this.written = true;
 	}
 	
-	protected final String readString() {
+	protected final int getPosition() {
+		return this.buffer.position();
+	}
+	
+	protected final void setPosition(int position) {
+		this.buffer.position(position);
+	}
+	
+	public final String readString() {
 		final short length = readShort();
 		final char[] chars = new char[length];
 		int i = -1;
@@ -233,7 +259,7 @@ public class Buffer {
 		return new String(chars);
 	}
 	
-	protected final void clear() {
+	public final void clear() {
 		this.buffer.clear();
 	}
 	
@@ -291,12 +317,12 @@ public class Buffer {
 		}
 	}
 	
-	protected final void writeInt(final int i) {
+	public final void writeInt(final int i) {
 		this.buffer.putInt(i);
 		this.written = true;
 	}
 	
-	protected final int readInt() {
+	public final int readInt() {
 		try {
 			return this.buffer.getInt();
 		}
@@ -355,7 +381,7 @@ public class Buffer {
 		}
 	}
 	
-	protected final void writeChar(final char c) {
+	public final void writeChar(final char c) {
 		try {
 			this.buffer.putChar((char)(Character.MAX_VALUE-c));
 		}
@@ -366,7 +392,7 @@ public class Buffer {
 		this.written = true;
 	}
 	
-	protected final char readChar() {
+	public final char readChar() {
 		try {
 			return (char)(Character.MAX_VALUE-this.buffer.getChar());
 		}

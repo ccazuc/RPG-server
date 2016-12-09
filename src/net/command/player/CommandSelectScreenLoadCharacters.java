@@ -20,12 +20,13 @@ public class CommandSelectScreenLoadCharacters extends Command {
 			write(player, player.getAccountId());
 		}
 		else {
-			//player is using WPE
+			System.out.println("Account "+player.getAccountId()+" tried to load characters while beeing online.");
 		}
 	}
 	
 	private static void write(Player player, int accountId) {
 		try {
+			long timer = System.nanoTime();
 			Connection connection = player.getConnection();
 			if(write_statement == null) {
 				write_statement = Server.getJDO().prepare("SELECT character_id, name, experience, class, race FROM `character` WHERE account_id = ?");
@@ -51,6 +52,7 @@ public class CommandSelectScreenLoadCharacters extends Command {
 				connection.writeString(race);
 			}
 			connection.send();
+			System.out.println("[SQL REQUEST] load characters took "+(System.nanoTime()-timer)/1000+" µs to execute.");
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

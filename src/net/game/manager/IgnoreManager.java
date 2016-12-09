@@ -11,6 +11,7 @@ import net.thread.sql.SQLRequest;
 
 public class IgnoreManager {
 
+	public final static String ignoreMessage = " ignores your messages.";
 	private static JDOStatement loadIgnoreList;
 	private final static HashMap<Integer, ArrayList<Integer>> ignoreMap = new HashMap<Integer, ArrayList<Integer>>();
 	private final static SQLRequest addIgnoreInDB = new SQLRequest("INSERT INTO social_ignore (character_id, ignore_id) VALUES (?, ?)", "Add ignore") {

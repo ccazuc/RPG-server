@@ -50,9 +50,9 @@ public class ConnectionManager {
 	private static SocketChannel authSocket;
 	private static Connection authConnection;
 	private static HashMap<Integer, Command> commandList = new HashMap<Integer, Command>();
-	private static HashMap<Integer, Command> authCommand = new HashMap<Integer, Command>();
+	private static HashMap<Integer, Command> authCommand = new HashMap<Integer, Command>(); //TODO: make InGameCommand HM and selectedScreenCommand HM
 	private final static int TIMEOUT_TIMER = 10000;
-	private byte lastPacketReaded;
+	private short lastPacketReaded;
 	private final static String AUTH_SERVER_IP = "127.0.0.1";
 	private final static int AUTH_SERVER_PORT = 5725;
 	
@@ -174,7 +174,7 @@ public class ConnectionManager {
 	
 	private void readPacket() {
 		while(this.connection != null && this.connection.hasRemaining()) {
-			byte packetId = this.connection.readByte();
+			short packetId = this.connection.readShort();
 			if(commandList.containsKey((int)packetId)) {
 				this.lastPacketReaded = packetId;
 				commandList.get((int)packetId).read(this.player);
@@ -187,7 +187,7 @@ public class ConnectionManager {
 	
 	private static void readAuthPacket() {
 		while(authConnection != null && authConnection.hasRemaining()) {
-			byte packetId = authConnection.readByte();
+			short packetId = authConnection.readShort();
 			if(authCommand.containsKey((int)packetId)) {
 				authCommand.get((int)packetId).read(authConnection);
 			}

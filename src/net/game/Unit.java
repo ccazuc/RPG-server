@@ -16,6 +16,7 @@ public class Unit {
 	protected int id;
 	private int expGained;
 	private int goldGained;
+	protected String levelString;
 	
 	public Unit(UnitType unitType, int id, int stamina, int maxStamina, int mana, int maxMana, int level, String name, int armor, int critical, int strength, int expGained, int goldGained) {
 		this.stamina = stamina;
@@ -26,7 +27,7 @@ public class Unit {
 		this.maxStamina = 5000;
 		this.mana = 6000;
 		this.maxMana = 7500;
-		this.level = level;
+		setLevel(level);
 		this.name = name;
 		this.id = id;
 		this.armor = armor;
@@ -91,6 +92,11 @@ public class Unit {
 	
 	public void setLevel(int level) {
 		this.level = level;
+		this.levelString = Integer.toString(this.level);
+	}
+	
+	public String getLevelString() {
+		return this.levelString;
 	}
 	
 	public int getid() {

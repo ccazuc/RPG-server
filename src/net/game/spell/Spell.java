@@ -8,7 +8,7 @@ public class Spell {
 	private int id;
 	private String sprite_id;
 	private SpellType type;
-	protected String name;
+	private String name;
 	private int damage;
 	private int defaultDamage;
 	private int manaCost;
