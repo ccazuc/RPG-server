@@ -32,10 +32,11 @@ public class CommandTrade extends Command {
 				return;
 			}
 			if(trade == player) {
-				CommandSendMessage.selfWithouthAuthor(connection, "Can't trade with yourself.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, "Can't trade with yourself.", MessageType.SELF);
 				return;
 			}
 			if(IgnoreManager.isIgnored(trade.getCharacterId(), player.getCharacterId())) {
+				CommandSendMessage.selfWithoutAuthor(connection, trade.getName()+IgnoreManager.ignoreMessage, MessageType.SELF);
 				return;
 			}
 			if(player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading

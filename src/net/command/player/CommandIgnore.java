@@ -44,13 +44,13 @@ public class CommandIgnore extends Command {
 				addIgnore(connection, character_id, name);
 			}
 			else {
-				CommandSendMessage.selfWithouthAuthor(connection, name+" is already in your ignore list.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, name+" is already in your ignore list.", MessageType.SELF);
 			}
 		}
 		else if(packetId == PacketID.IGNORE_REMOVE) {
 			int id = connection.readInt();
 			if(!IgnoreManager.isIgnored(player.getCharacterId(), id)) {
-				CommandSendMessage.selfWithouthAuthor(connection, "This player is not in your ignore list.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, "This player is not in your ignore list.", MessageType.SELF);
 				return;
 			}
 			removeIgnore(connection, id);

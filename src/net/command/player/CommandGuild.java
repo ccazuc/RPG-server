@@ -36,7 +36,7 @@ public class CommandGuild extends Command {
 			}
 			GuildRank rank = player.getGuild().getRank(rank_order);
 			if(rank == null) {
-				CommandSendMessage.selfWithouthAuthor(connection, "This rank doesn't exist.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, "This rank doesn't exist.", MessageType.SELF);
 				return;
 			}
 			if(rank_order == 1) {
@@ -67,14 +67,14 @@ public class CommandGuild extends Command {
 				return;
 			}
 			if(IgnoreManager.isIgnored(member.getid(), player.getCharacterId())) {
-				CommandSendMessage.selfWithouthAuthor(connection, name+IgnoreManager.ignoreMessage, MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+IgnoreManager.ignoreMessage, MessageType.SELF);
 				return;
 			}
 			if(member.getGuild() != null) {
-				CommandSendMessage.selfWithouthAuthor(connection, name+" is already in a guild.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, name+" is already in a guild.", MessageType.SELF);
 				return;
 			}
-			CommandSendMessage.selfWithouthAuthor(connection, "You invited "+name+" to join your guild.", MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(connection, "You invited "+name+" to join your guild.", MessageType.SELF);
 			joinGuildRequest(member.getConnection(), player.getName(), player.getGuild().getName());
 			member.setGuildRequest(player.getGuild().getId());
 		}
@@ -98,7 +98,7 @@ public class CommandGuild extends Command {
 		}
 		else if(packetId == PacketID.GUILD_ACCEPT_REQUEST) {
 			if(player.getGuildRequest() == 0) {
-				CommandSendMessage.selfWithouthAuthor(connection, "Nobody invited you to join their guild.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, "Nobody invited you to join their guild.", MessageType.SELF);
 				return;
 			}
 			player.setGuild(GuildManager.getGuild(player.getGuildRequest()));
@@ -152,7 +152,7 @@ public class CommandGuild extends Command {
 				return;
 			}
 			if(!(member.getRank().getOrder() < 2)) {
-				CommandSendMessage.selfWithouthAuthor(connection, member.getName()+"'s rank is too high.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+"'s rank is too high.", MessageType.SELF);
 				return;
 			}
 			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder())) {
@@ -174,7 +174,7 @@ public class CommandGuild extends Command {
 				return;
 			}
 			if(!(member.getRank().getOrder() < player.getGuild().getRankList().size())) {
-				CommandSendMessage.selfWithouthAuthor(connection, member.getName()+" has already the lowest rank.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+" has already the lowest rank.", MessageType.SELF);
 				return;
 			}
 			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder())) {
@@ -533,7 +533,7 @@ public class CommandGuild extends Command {
 		if(player.getGuild() != null) {
 			return true;
 		}
-		CommandSendMessage.selfWithouthAuthor(player.getConnection(), "You are not in a guild.", MessageType.SELF);
+		CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You are not in a guild.", MessageType.SELF);
 		return false;
 	}
 	
@@ -541,7 +541,7 @@ public class CommandGuild extends Command {
 		if(right) {
 			return true;
 		}
-		CommandSendMessage.selfWithouthAuthor(player.getConnection(), "You don't have the right to do this.", MessageType.SELF);
+		CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You don't have the right to do this.", MessageType.SELF);
 		return false;
 	}
 	
@@ -549,7 +549,7 @@ public class CommandGuild extends Command {
 		if(member != null) {
 			return true;
 		}
-		CommandSendMessage.selfWithouthAuthor(player.getConnection(), "This player is not in your guild.", MessageType.SELF);
+		CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This player is not in your guild.", MessageType.SELF);
 		return false;
 	}
 }

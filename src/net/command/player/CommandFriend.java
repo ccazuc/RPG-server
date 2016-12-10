@@ -34,11 +34,11 @@ public class CommandFriend extends Command {
 				return;
 			}
 			if(name.equals(player.getName())) {
-				CommandSendMessage.selfWithouthAuthor(connection, "You can't add yourself as friend.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, "You can't add yourself as friend.", MessageType.SELF);
 				return;
 			}
 			if(!((member != null && !player.isFriendWith(member)) || (character_id != -1 && !player.isFriendWith(character_id)))) {
-				CommandSendMessage.selfWithouthAuthor(connection, name+" is already in your friendlist.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, name+" is already in your friendlist.", MessageType.SELF);
 				return;
 			}
 			if(member != null) {
@@ -47,7 +47,7 @@ public class CommandFriend extends Command {
 					FriendManager.addFriendInDB(player.getCharacterId(), member.getCharacterId());
 				}
 				else {
-					CommandSendMessage.selfWithouthAuthor(connection, "Your friendlist is full.", MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(connection, "Your friendlist is full.", MessageType.SELF);
 				}
 			}
 			else if(character_id != -1) {
@@ -56,18 +56,18 @@ public class CommandFriend extends Command {
 					FriendManager.addFriendInDB(player.getCharacterId(), character_id);
 				}
 				else {
-					CommandSendMessage.selfWithouthAuthor(connection, "Your friendlist is full.", MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(connection, "Your friendlist is full.", MessageType.SELF);
 				}
 			}
 		}
 		else if(packetId == PacketID.FRIEND_REMOVE) {
 			int id = connection.readInt();
 			if(id == player.getCharacterId()) {
-				CommandSendMessage.selfWithouthAuthor(connection, "You can't delete yourself.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, "You can't delete yourself.", MessageType.SELF);
 				return;
 			}
 			if(!player.removeFriend(id)) {
-				CommandSendMessage.selfWithouthAuthor(connection, "This player is not in your friendlist.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, "This player is not in your friendlist.", MessageType.SELF);
 				return;
 			}
 			FriendManager.removeFriendFromDB(player.getCharacterId(), id);

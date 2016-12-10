@@ -25,6 +25,7 @@ public class CharacterManager {
 	private static JDOStatement checkOnlinePlayers;
 	private static JDOStatement loadCharacterNameFromID;
 	private static JDOStatement searchPlayer;
+	private static JDOStatement checkPlayerAccount;
 	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?", "Update last online timer") {
 		
 		@Override
@@ -112,35 +113,6 @@ public class CharacterManager {
 		}
 	}
 	
-	/*public void loadFriendList(Player player) throws SQLException {
-		if(loadPlayerFriend == null) {
-			//loadPlayerFriend = Server.getJDO().prepare("SELECT character_id FROM friend WHERE friend_id = ? AND online = 1");
-			loadPlayerFriend = Server.getJDO().prepare("SELECT `friend`.`character_id`, `character`.`online` FROM `friend`, `character` WHERE `friend`.`friend_id` = ? AND `character`.`character_id` = `friend`.`friend_id` AND `character`.`online` = 1");
-			loadFriend = Server.getJDO().prepare("SELECT friend_id FROM friend WHERE character_id = ?");
-		}
-		ArrayList<Integer> temp = new ArrayList<Integer>();
-		loadPlayerFriend.clear();
-		loadPlayerFriend.putInt(player.getCharacterId());
-		loadPlayerFriend.execute();
-		while(loadPlayerFriend.fetch()) {
-			int id = loadPlayerFriend.getInt();
-			temp.add(id);
-			System.out.println("Friend id: "+id);
-		}
-		Server.getFriendMap().put(player.getCharacterId(), temp);
-		
-		loadFriend.clear();
-		loadFriend.putInt(player.getCharacterId());
-		loadFriend.execute();
-		while(loadFriend.fetch()) {
-			int id = loadFriend.getInt();
-			player.getFriendList().add(id);
-			if(Server.getInGamePlayerList().containsKey(id)) {
-				Server.getFriendMap().get(id).add(player.getCharacterId());
-			}
-		}
-	}*/
-	
 	public void loadFriendList() throws SQLException {
 		if(loadPlayerFriend == null) {
 			loadPlayerFriend = Server.getJDO().prepare("SELECT character_id FROM social_friend WHERE friend_id = ?");
@@ -155,7 +127,6 @@ public class CharacterManager {
 				FriendManager.getFriendMap().put(this.player.getCharacterId(), new ArrayList<Integer>());
 			}
 			FriendManager.getFriendMap().get(this.player.getCharacterId()).add(id);
-			//System.out.println("Friended id: "+id);
 		}
 		
 		loadFriend.clear();
@@ -167,9 +138,26 @@ public class CharacterManager {
 		}
 	}
 	
+	public static boolean checkPlayerAccount(int account_id, int player_id) {
+		try {
+			if(checkPlayerAccount == null) {
+				checkPlayerAccount = Server.getJDO().prepare("SELECT COUNT(character_id) FROM `character` WHERE account_id = ? AND character_id = ?");
+			}
+			checkPlayerAccount.clear();
+			checkPlayerAccount.putInt(account_id);
+			checkPlayerAccount.putInt(player_id);
+			checkPlayerAccount.execute();
+			if(checkPlayerAccount.fetch()) {
+				return true;
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 	public void updateLastLoginTimer() {
-		//updateLastOnlineTimer.setId(player.getCharacterId());
-		//updateLastOnlineTimer.setValue(System.currentTimeMillis());
 		updateLastOnlineTimer.addDatas(new SQLDatas(this.player.getCharacterId(), System.currentTimeMillis()));
 		Server.addNewRequest(updateLastOnlineTimer);
 	}

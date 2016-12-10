@@ -34,7 +34,7 @@ public class CommandSendMessage extends Command {
 				writeWhisper(temp.getConnection(), temp.getName(), message, true);
 			}
 			else {
-				selfWithouthAuthor(connection, temp.getName()+IgnoreManager.ignoreMessage, MessageType.SELF, Color.RED);
+				selfWithoutAuthor(connection, temp.getName()+IgnoreManager.ignoreMessage, MessageType.SELF, MessageColor.RED);
 			}
 		}
 		else if(type == MessageType.PARTY) {
@@ -53,26 +53,24 @@ public class CommandSendMessage extends Command {
 				}
 			}
 			else {
-				selfWithouthAuthor(connection, "You are not in a party.", MessageType.SELF);
+				selfWithoutAuthor(connection, "You are not in a party.", MessageType.SELF);
 			}
 		}
 		else if(type == MessageType.GUILD) {
-			if(player.getGuild() != null) {
-				if(player.getGuild().getMember(player.getCharacterId()).getRank().canTalkInGuildChannel()) {
-					int i = 0;
-					while(i < player.getGuild().getMemberList().size()) {
-						if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel() && !IgnoreManager.isIgnored(player.getCharacterId(), player.getGuild().getMemberList().get(i).getId())) {
-							write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD);
-						}
-						i++;
-					}
-				}
-				else {
-					selfWithouthAuthor(connection, "You don't have the right to do this.", MessageType.SELF);
-				}
+			if(player.getGuild() == null) {
+				selfWithoutAuthor(connection, "You are not in a guild.", MessageType.SELF);
+				return;
 			}
-			else {
-				selfWithouthAuthor(connection, "You are not in a guild.", MessageType.SELF);
+			if(player.getGuild().getMember(player.getCharacterId()).getRank().canTalkInGuildChannel()) {
+				selfWithoutAuthor(connection, "You don't have the right to do this.", MessageType.SELF);
+				return;
+			}
+			int i = 0;
+			while(i < player.getGuild().getMemberList().size()) {
+				if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel() && !IgnoreManager.isIgnored(player.getCharacterId(), player.getGuild().getMemberList().get(i).getId())) {
+					write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD);
+				}
+				i++;
 			}
 		}
 		else {
@@ -138,7 +136,7 @@ public class CommandSendMessage extends Command {
 		connection.send();
 	}
 	
-	public static void selfWithouthAuthor(Connection connection, String message, MessageType type, Color color) { //used 
+	public static void selfWithoutAuthor(Connection connection, String message, MessageType type, Color color) { //used 
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
@@ -148,7 +146,7 @@ public class CommandSendMessage extends Command {
 		connection.send();
 	}
 	
-	public static void selfWithouthAuthor(Connection connection, String message, MessageType type, MessageColor color) { //used 
+	public static void selfWithoutAuthor(Connection connection, String message, MessageType type, MessageColor color) { //used 
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
@@ -158,7 +156,7 @@ public class CommandSendMessage extends Command {
 		connection.send();
 	}
 	
-	public static void selfWithouthAuthor(Connection connection, String message, MessageType type) { //used 
+	public static void selfWithoutAuthor(Connection connection, String message, MessageType type) { //used 
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
