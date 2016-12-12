@@ -56,7 +56,7 @@ public class SQLRunnable implements Runnable {
 		buffer.clear();
 		for(Player player : Server.getInGamePlayerList().values()) {
 			if(word.equals("") || player.getName().contains(word) || (player.getGuild() != null && player.getGuild().getName().contains(word)) || player.getLevelString().contains(word)) {
-				buffer.writeInt(666);
+				buffer.writeInt(player.getCharacterId());
 				buffer.writeString(player.getName());
 				if(player.getGuild() == null) {
 					buffer.writeString("");
@@ -81,6 +81,7 @@ public class SQLRunnable implements Runnable {
 			connection.writeInt(buffer.readInt());
 			connection.writeChar(buffer.readChar());
 		}
+		connection.send();
 	}
 	
 	/*private static void listMethod(Who who) {
