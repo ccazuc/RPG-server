@@ -15,6 +15,8 @@ import jdo.wrapper.MariaDB;
 import net.connection.ConnectionManager;
 import net.connection.Key;
 import net.game.Player;
+import net.game.chat.StoreChatCommand;
+import net.game.guild.GuildManager;
 import net.game.item.ItemManager;
 import net.game.item.bag.ContainerManager;
 import net.game.item.gem.GemManager;
@@ -45,6 +47,7 @@ public class Server {
 	private static SocketRunnable socketRunnable;
 	private static Thread socketThread;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
+	private static long SERVER_START_TIMER;
 	
 	private final static String REALM_NAME = "World Server";
 	private final static int REALM_ID = 15;
@@ -52,12 +55,16 @@ public class Server {
 	private final static int LOOP_TIMER = 15;
 	
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, InterruptedException {
+		SERVER_START_TIMER = System.currentTimeMillis();
 		System.out.println(REALM_NAME);
 		long time = System.currentTimeMillis();
 		float delta;
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
 		asyncJdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
 		CharacterManager.checkOnlinePlayers();
+		GuildManager.removeOrphanedGuildRank();
+		GuildManager.removeOrphanedMember();
+		StoreChatCommand.initChatCommandMap();
 		nonLoggedPlayerList = Collections.synchronizedList(nonLoggedPlayerList);
 		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(PORT);
 		serverSocketChannel = ServerSocketChannel.open();

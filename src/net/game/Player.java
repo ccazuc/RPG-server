@@ -15,6 +15,7 @@ import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.guild.Guild;
+import net.game.guild.GuildManager;
 import net.game.item.Item;
 import net.game.item.ItemManager;
 import net.game.item.ItemType;
@@ -29,7 +30,6 @@ import net.game.item.weapon.WeaponManager;
 import net.game.item.weapon.WeaponType;
 import net.game.manager.CharacterManager;
 import net.game.manager.FriendManager;
-import net.game.manager.GuildManager;
 import net.game.profession.Profession;
 import net.game.shortcut.Shortcut;
 import net.game.spell.Spell;
@@ -69,7 +69,7 @@ public class Player extends Unit {
 	private ClassType classe;
 	private int numberRedGem;
 	private int characterId;
-	private int accountRank;
+	private AccountRank accountRank;
 	private long pingTimer;
 	private boolean logged;
 	private int accountId;
@@ -185,7 +185,7 @@ public class Player extends Unit {
 		this.connectionManager.getConnection().writeInt(this.characterId);
 		this.connectionManager.getConnection().writeInt(this.exp);
 		this.connectionManager.getConnection().writeInt(this.gold);
-		this.connectionManager.getConnection().writeInt(this.accountRank);
+		this.connectionManager.getConnection().writeInt(this.accountRank.getValue());
 		this.connectionManager.getConnection().send();
 	}
 	
@@ -349,6 +349,7 @@ public class Player extends Unit {
 	}
 	
 	public void close() {
+		//long timer = System.nanoTime();
 		if(Server.getInGamePlayerList().containsKey(this.characterId)) {
 			notifyFriendOffline();
 			if(this.guild != null) {
@@ -368,6 +369,7 @@ public class Player extends Unit {
 		Server.removeNonLoggedPlayer(this);
 		Server.removeLoggedPlayer(this);
 		Server.removeInGamePlayer(this);
+		//System.out.println("Player close took "+(System.nanoTime()-timer)/1000+" µs.");
 	}
 	
 	public void updateBagItem() {
@@ -732,11 +734,11 @@ public class Player extends Unit {
 		return this.connectionManager.getConnection();
 	}
 	
-	public void setAccountRank(int rank) {
+	public void setAccountRank(AccountRank rank) {
 		this.accountRank = rank;
 	}
 	
-	public int getAccountRank() {
+	public AccountRank getAccountRank() {
 		return this.accountRank;
 	}
 	

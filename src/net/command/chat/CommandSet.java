@@ -4,6 +4,7 @@ import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.AccountRank;
 import net.game.Player;
 
 public class CommandSet extends Command {
@@ -18,7 +19,7 @@ public class CommandSet extends Command {
 		if(member == null) {
 			return;
 		}
-		if(player.getAccountRank() >= 1) {
+		if(player.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
 			if(packetID == PacketID.CHAT_SET_STAMINA) {
 				if(value >= 0 && value <= player.getMaxStamina()) {
 					member.setStamina(value);

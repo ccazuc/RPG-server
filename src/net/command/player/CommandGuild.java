@@ -10,9 +10,9 @@ import net.connection.PacketID;
 import net.game.ClassType;
 import net.game.Player;
 import net.game.guild.Guild;
+import net.game.guild.GuildManager;
 import net.game.guild.GuildMember;
 import net.game.guild.GuildRank;
-import net.game.manager.GuildManager;
 import net.game.manager.IgnoreManager;
 
 public class CommandGuild extends Command {

@@ -4,6 +4,7 @@ import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.AccountRank;
 import net.game.Player;
 import net.game.item.Item;
 import net.game.item.bag.Container;
@@ -21,7 +22,7 @@ public class CommandAddItem extends Command {
 		int character_id = connection.readInt();
 		int item_id = connection.readInt();
 		int number = connection.readInt();
-		if(!(player.getAccountRank() >= 1 && Item.exists(item_id))) {
+		if(!(player.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue() && Item.exists(item_id))) {
 			return;
 		}
 		Player member = character_id == player.getCharacterId() ? player : Server.getInGameCharacter(character_id);

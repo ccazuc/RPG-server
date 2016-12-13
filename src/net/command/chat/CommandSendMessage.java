@@ -5,6 +5,7 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
+import net.game.chat.ChatCommandHandler;
 import net.game.manager.IgnoreManager;
 import net.utils.Color;
 import net.utils.MessageColor;
@@ -18,6 +19,10 @@ public class CommandSendMessage extends Command {
 		Connection connection = player.getConnection();
 		String message = connection.readString();
 		MessageType type = MessageType.values()[connection.readChar()];
+		if(message.length() > 2 && message.charAt(0) == '.' && message.charAt(1) != '.') {
+			ChatCommandHandler.parse(message);
+			return;
+		}
 		if(message.length() > MAXIMUM_LENGTH) {
 			message = message.substring(0, MAXIMUM_LENGTH);
 		}

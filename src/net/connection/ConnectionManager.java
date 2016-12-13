@@ -121,6 +121,7 @@ public class ConnectionManager {
 	}
 	
 	public void read() {
+		//long timer = System.nanoTime();
 		if(this.player.getPingStatus() && System.currentTimeMillis()-this.player.getPingTimer() >= TIMEOUT_TIMER) {
 			this.player.close();
 		}
@@ -133,6 +134,7 @@ public class ConnectionManager {
 			//e.printStackTrace();
 			System.out.println("IOException on read.");
 			this.player.close();
+			//System.out.println("Read took "+(System.nanoTime()-timer)/1000+" µs");
 		}
 	}
 	

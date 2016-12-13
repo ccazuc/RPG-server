@@ -5,6 +5,7 @@ import net.command.Command;
 import net.command.auth.CommandPlayerIsLoggedOnWorldServer;
 import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.AccountRank;
 import net.game.Player;
 
 public class CommandLoginRealmPlayer extends Command {
@@ -21,7 +22,7 @@ public class CommandLoginRealmPlayer extends Command {
 				return;
 			}
 			connectionAccepted(connection);
-			player.setAccountRank(Server.getKey(key).getAccountRank());
+			player.setAccountRank(AccountRank.values()[Server.getKey(key).getAccountRank()]);
 			player.setAccountId(account_id);
 			Server.addLoggedPlayer(player);
 			Server.removeNonLoggedPlayer(player);

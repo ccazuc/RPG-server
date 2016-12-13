@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.game.AccountRank;
 import net.game.ClassType;
 import net.game.Player;
 import net.game.Race;
@@ -88,7 +89,7 @@ public class CharacterManager {
 		loadRank.putInt(this.player.getAccountId());
 		loadRank.execute();
 		if(loadRank.fetch()) {
-			this.player.setAccountRank(loadRank.getInt());
+			this.player.setAccountRank(AccountRank.values()[loadRank.getInt()]);
 		}
 		loadWeaponType.clear();
 		loadWeaponType.putString(convClasseToString(this.player.getClasse()));
