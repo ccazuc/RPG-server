@@ -41,5 +41,6 @@ public class ChatSubCommand {
 		return this.name;
 	}
 	
+	@SuppressWarnings("unused")
 	public void handle(String[] command, Player player) {}
 }

@@ -15,7 +15,8 @@ public class CommandLoginRealmAuth extends Command {
 			double key = connection.readDouble();
 			int account_id = connection.readInt();
 			int account_rank = connection.readInt();
-			Server.addKey(new Key(account_id, account_rank, key));
+			String account_name = connection.readString();
+			Server.addKey(new Key(account_id, account_rank, account_name, key));
 		}
 	}
 }

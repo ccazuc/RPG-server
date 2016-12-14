@@ -24,6 +24,7 @@ public class CommandLoginRealmPlayer extends Command {
 			connectionAccepted(connection);
 			player.setAccountRank(AccountRank.values()[Server.getKey(key).getAccountRank()-1]);
 			player.setAccountId(account_id);
+			player.setAccountName(Server.getKey(key).getAccountName());
 			Server.addLoggedPlayer(player);
 			Server.removeNonLoggedPlayer(player);
 			Server.removeKey(key);

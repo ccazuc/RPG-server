@@ -27,6 +27,7 @@ public class ChatCommand {
 		return this.name;
 	}
 	
+	@SuppressWarnings("unused")
 	public void handle(String command, Player player) {}
 	
 	public String printSubCommandError() {

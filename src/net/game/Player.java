@@ -58,6 +58,7 @@ public class Player extends Unit {
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
 	private Bag bag = new Bag();
+	private String accountName;
 	private boolean pingStatus;
 	private Player playerTrade;
 	private Player playerParty;
@@ -142,6 +143,7 @@ public class Player extends Unit {
 	public void initTrade(Player self, Player other) {
 		this.trade = new Trade(self, other);
 	}
+	
 	public int getAccountId() {
 		return this.accountId;
 	}
@@ -150,6 +152,13 @@ public class Player extends Unit {
 		this.accountId = id;
 	}
 	
+	public String getAccountName() {
+		return this.accountName;
+	}
+	
+	public void setAccountName(String name) {
+		this.accountName = name;
+	}
 	public void addItemSentToClient(int id) {
 		this.itemSentToClient.add(id);
 	}
