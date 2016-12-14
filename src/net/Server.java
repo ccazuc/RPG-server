@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
@@ -25,6 +26,8 @@ import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 import net.game.manager.CharacterManager;
 import net.game.spell.SpellManager;
+import net.thread.chatcommand.ChatCommandRequest;
+import net.thread.chatcommand.ChatCommandRunnable;
 import net.thread.socket.SocketRunnable;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRunnable;
@@ -46,6 +49,8 @@ public class Server {
 	private static SQLRunnable SQLRunnable;
 	private static SocketRunnable socketRunnable;
 	private static Thread socketThread;
+	private static ChatCommandRunnable chatCommandRunnable;
+	private static Thread chatCommandThread;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
 	private static long SERVER_START_TIMER;
 	
@@ -53,6 +58,8 @@ public class Server {
 	private final static int REALM_ID = 15;
 	private final static int PORT = 5721;
 	private final static int LOOP_TIMER = 15;
+
+	private final static Pattern isInteger = Pattern.compile("-?[0-9]+");
 	
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, InterruptedException {
 		SERVER_START_TIMER = System.currentTimeMillis();
@@ -83,6 +90,9 @@ public class Server {
 		socketRunnable = new SocketRunnable(serverSocketChannel);
 		socketThread = new Thread(socketRunnable);
 		socketThread.start();
+		chatCommandRunnable = new ChatCommandRunnable();
+		chatCommandThread = new Thread(chatCommandRunnable);
+		chatCommandThread.start();
 		System.out.println("Init took "+(System.currentTimeMillis()-time)+" ms.");
 		ConnectionManager.connectAuthServer();
 		ConnectionManager.registerToAuthServer();
@@ -256,12 +266,16 @@ public class Server {
 		ConnectionManager.readAuthServer();
 	}
 	
-	public static void addNewRequest(SQLRequest request) {
+	public static void addNewSQLRequest(SQLRequest request) {
 		SQLRunnable.addRequest(request);
 	}
 	
 	public static void addNewWhoRequest(Who who) {
 		SQLRunnable.addWhoRequest(who);
+	}
+	
+	public static void addNewChatCommandRequest(ChatCommandRequest request) {
+		chatCommandRunnable.addChatCommandRequest(request);
 	}
 	
 	public static HashMap<Integer, Player> getInGamePlayerList() {
@@ -290,5 +304,13 @@ public class Server {
 	
 	public static int getPort() {
 		return PORT;
+	}
+	
+	public static boolean isInteger(String string) {
+		return isInteger.matcher(string).matches();
+	}
+	
+	public static boolean isInteger(char c) {
+		return c >= '0' && c <= '9';
 	}
 }

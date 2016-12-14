@@ -22,7 +22,7 @@ public class CommandLoginRealmPlayer extends Command {
 				return;
 			}
 			connectionAccepted(connection);
-			player.setAccountRank(AccountRank.values()[Server.getKey(key).getAccountRank()]);
+			player.setAccountRank(AccountRank.values()[Server.getKey(key).getAccountRank()-1]);
 			player.setAccountId(account_id);
 			Server.addLoggedPlayer(player);
 			Server.removeNonLoggedPlayer(player);

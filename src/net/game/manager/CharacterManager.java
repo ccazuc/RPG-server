@@ -89,7 +89,7 @@ public class CharacterManager {
 		loadRank.putInt(this.player.getAccountId());
 		loadRank.execute();
 		if(loadRank.fetch()) {
-			this.player.setAccountRank(AccountRank.values()[loadRank.getInt()]);
+			this.player.setAccountRank(AccountRank.values()[loadRank.getInt()-1]);
 		}
 		loadWeaponType.clear();
 		loadWeaponType.putString(convClasseToString(this.player.getClasse()));
@@ -160,7 +160,7 @@ public class CharacterManager {
 	
 	public void updateLastLoginTimer() {
 		updateLastOnlineTimer.addDatas(new SQLDatas(this.player.getCharacterId(), System.currentTimeMillis()));
-		Server.addNewRequest(updateLastOnlineTimer);
+		Server.addNewSQLRequest(updateLastOnlineTimer);
 	}
 	
 	public static void checkOnlinePlayers() throws SQLException {

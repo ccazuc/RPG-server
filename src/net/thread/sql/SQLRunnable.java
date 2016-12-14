@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import net.Server;
-import net.connection.Buffer;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.ClassType;
@@ -15,7 +14,8 @@ public class SQLRunnable implements Runnable {
 	
 	private List<SQLRequest> SQLList = new ArrayList<SQLRequest>();
 	private List<Who> whoList = new ArrayList<Who>();
-	private static Buffer buffer = new Buffer();
+	
+	private final static int LOOP_TIMER = 10;
 	
 	public SQLRunnable() {
 		this.SQLList = Collections.synchronizedList(this.SQLList);
@@ -25,7 +25,10 @@ public class SQLRunnable implements Runnable {
 	@Override
 	public void run() {
 		System.out.println("SQLRunnable run");
+		long time;
+		long delta;
 		while(true) {
+			time = System.currentTimeMillis();
 			if(this.SQLList.size() > 0) {
 				if(this.SQLList.get(0).debugActive) {
 					long timer = System.nanoTime();
@@ -44,64 +47,36 @@ public class SQLRunnable implements Runnable {
 				System.out.println("[WHO] took "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
 				this.whoList.remove(0);
 			}
+			delta = System.currentTimeMillis()-time;
+			if(delta < LOOP_TIMER) {
+				try {
+					Thread.sleep((LOOP_TIMER-delta));
+				} 
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 	
-	private static void bufferMethod(Who who) {
+	private static void endListMethod(Who who) {
+		long timer = System.nanoTime();
 		String word = parseWho(who.getWord().toLowerCase().trim());
+		int wordValue = 0;
+		if(word.length() == 1) {
+			if(Server.isInteger(word.charAt(0))) {
+				wordValue = Integer.parseInt(word);
+			}
+		}
+		else {
+			if(Server.isInteger(word)) {
+				wordValue = Integer.parseInt(word);
+			}
+		}
 		Connection connection = who.getConnection();
 		connection.writeShort(PacketID.WHO);
-		int i = 0;
-		buffer.clear();
-		buffer.clear();
 		for(Player player : Server.getInGamePlayerList().values()) {
-			if(word.equals("") || player.getName().contains(word) || (player.getGuild() != null && player.getGuild().getName().contains(word)) || player.getLevelString().contains(word)) {
-				buffer.writeInt(player.getCharacterId());
-				buffer.writeString(player.getName());
-				if(player.getGuild() == null) {
-					buffer.writeString("");
-				}
-				else {
-					buffer.writeString(player.getGuild().getName());
-				}
-				buffer.writeChar(player.getRace().getValue());
-				buffer.writeInt(player.getLevel());
-				buffer.writeChar(ClassType.GUERRIER.getValue());
-				i++;
-				
-			}
-		}
-		connection.writeInt(i);
-		buffer.flip();
-		while(buffer.hasRemaining()) {
-			connection.writeInt(buffer.readInt());
-			connection.writeString(buffer.readString());
-			connection.writeString(buffer.readString());
-			connection.writeChar(buffer.readChar());
-			connection.writeInt(buffer.readInt());
-			connection.writeChar(buffer.readChar());
-		}
-		connection.send();
-	}
-	
-	/*private static void listMethod(Who who) {
-		String word = parseWho(who.getWord().toLowerCase().trim());
-		Connection connection = who.getConnection();
-		ArrayList<Integer> list = new ArrayList<Integer>();
-		int i = 0;
-		for(Player player : Server.getInGamePlayerList().values()) {
-			if(word.equals("") || player.getName().contains(word) || (player.getGuild() != null && player.getGuild().getName().contains(word)) || Integer.toString(player.getLevel()).contains(word)) {
-				list.add(player.getCharacterId());
-				i++;
-				
-			}
-		}
-		if(list.size() > 0) {
-			i = 0;
-			connection.writeShort(PacketID.WHO);
-			connection.writeInt(list.size());
-			while(i < list.size()) {
-				Player player = Server.getInGameCharacter(list.get(i));
+			if(word.length() == 0 || player.getLevel() == wordValue && player.getName().contains(word) || (player.getGuild() != null && player.getGuild().getName().contains(word))) {
 				connection.writeInt(player.getCharacterId());
 				connection.writeString(player.getName());
 				if(player.getGuild() == null) {
@@ -113,11 +88,45 @@ public class SQLRunnable implements Runnable {
 				connection.writeChar(player.getRace().getValue());
 				connection.writeInt(player.getLevel());
 				connection.writeChar(ClassType.GUERRIER.getValue());
-				i++;
+				
 			}
-			connection.send();
 		}
-	}*/
+		connection.writeInt(-1);
+		System.out.println("[WHO ENDLIST REGEXP] took "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
+		connection.send();
+	}
+	
+	private static void endListMethoda(Who who) {
+		long timer = System.nanoTime();
+		String word = parseWho(who.getWord().toLowerCase().trim());
+		int wordValue = 0;
+		try {
+			wordValue = Integer.parseInt(word);
+		}
+		catch(NumberFormatException e) {
+		}
+		Connection connection = who.getConnection();
+		connection.writeShort(PacketID.WHO);
+		for(Player player : Server.getInGamePlayerList().values()) {
+			if(word.length() == 0 || player.getLevel() == wordValue && player.getName().contains(word) || (player.getGuild() != null && player.getGuild().getName().contains(word))) {
+				connection.writeInt(player.getCharacterId());
+				connection.writeString(player.getName());
+				if(player.getGuild() == null) {
+					connection.writeString("");
+				}
+				else {
+					connection.writeString(player.getGuild().getName());
+				}
+				connection.writeChar(player.getRace().getValue());
+				connection.writeInt(player.getLevel());
+				connection.writeChar(ClassType.GUERRIER.getValue());
+				
+			}
+		}
+		connection.writeInt(-1);
+		System.out.println("[WHO ENDLIST CATCH] took "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
+		connection.send();
+	}
 	
 	private static void executeWhoRequest(Who who) {
 		/*long timer = System.nanoTime();
@@ -126,7 +135,10 @@ public class SQLRunnable implements Runnable {
 		timer = System.nanoTime();
 		listMethod(who);
 		System.out.println("[WHO LIST] took "+(System.nanoTime()-timer)/1000+" 탎 to execute.");*/
-		bufferMethod(who);
+		//bufferMethod(who);
+		endListMethod(who);
+		endListMethoda(who);
+		//bufferMethod(who);
 	}
 	
 	private static String parseWho(String text) {

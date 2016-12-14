@@ -75,6 +75,10 @@ public class CommandCreateCharacter extends Command {
 	
 	@Override
 	public void read(Player player) {
+		if(Server.getInGameCharacter(player.getCharacterId()) != null) {
+			player.close();
+			return;
+		}
 		Connection connection = player.getConnection();
 		if(create_character == null) {
 			try {
@@ -114,13 +118,13 @@ public class CommandCreateCharacter extends Command {
 			}
 			SQLDatas datas = new SQLDatas(characterId);
 			insert_bag.addDatas(datas);
-			Server.addNewRequest(insert_bag);
+			Server.addNewSQLRequest(insert_bag);
 			character_containers.addDatas(datas);
-			Server.addNewRequest(character_containers);
+			Server.addNewSQLRequest(character_containers);
 			character_stuff.addDatas(datas);
-			Server.addNewRequest(character_stuff);
+			Server.addNewSQLRequest(character_stuff);
 			spellbar.addDatas(datas);
-			Server.addNewRequest(spellbar);
+			Server.addNewSQLRequest(spellbar);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

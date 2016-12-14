@@ -49,7 +49,7 @@ public class CommandLogoutCharacter extends Command {
 		if(player.getCharacterId() != 0) {
 			//setOffline.setId(player.getCharacterId());
 			setOffline.addDatas(new SQLDatas(player.getCharacterId()));
-			Server.addNewRequest(setOffline);
+			Server.addNewSQLRequest(setOffline);
 		}
 	}
 }

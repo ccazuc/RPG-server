@@ -2,8 +2,10 @@ package net.command.player;
 
 import net.Server;
 import net.command.Command;
+import net.command.chat.CommandDefaultMessage;
 import net.command.chat.CommandPlayerNotFound;
 import net.command.chat.CommandSendMessage;
+import net.command.chat.DefaultMessage;
 import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
@@ -533,7 +535,7 @@ public class CommandGuild extends Command {
 		if(player.getGuild() != null) {
 			return true;
 		}
-		CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You are not in a guild.", MessageType.SELF);
+		CommandDefaultMessage.write(player, DefaultMessage.NOT_IN_GUILD);
 		return false;
 	}
 	
@@ -541,7 +543,7 @@ public class CommandGuild extends Command {
 		if(right) {
 			return true;
 		}
-		CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You don't have the right to do this.", MessageType.SELF);
+		CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
 		return false;
 	}
 	
@@ -549,7 +551,7 @@ public class CommandGuild extends Command {
 		if(member != null) {
 			return true;
 		}
-		CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This player is not in your guild.", MessageType.SELF);
+		CommandDefaultMessage.write(player, DefaultMessage.PLAYER_NOT_IN_GUILD);
 		return false;
 	}
 }

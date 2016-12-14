@@ -8,7 +8,6 @@ import net.game.Player;
 import net.game.chat.ChatCommandHandler;
 import net.game.manager.IgnoreManager;
 import net.utils.Color;
-import net.utils.MessageColor;
 
 public class CommandSendMessage extends Command {
 
@@ -20,7 +19,7 @@ public class CommandSendMessage extends Command {
 		String message = connection.readString();
 		MessageType type = MessageType.values()[connection.readChar()];
 		if(message.length() > 2 && message.charAt(0) == '.' && message.charAt(1) != '.') {
-			ChatCommandHandler.parse(message);
+			ChatCommandHandler.parse(message, player);
 			return;
 		}
 		if(message.length() > MAXIMUM_LENGTH) {

@@ -299,47 +299,47 @@ public class GuildManager {
 	
 	public static void removeMemberFromDB(Guild guild, int id) {
 		removeMember.addDatas(new SQLDatas(id, guild.getId()));
-		Server.addNewRequest(removeMember);
+		Server.addNewSQLRequest(removeMember);
 	}
 	
 	public static void addMemberInDB(Guild guild, int id) {
 		addMemberInDB.addDatas(new SQLDatas(id, guild.getId(), guild.getRankList().size()-1));
-		Server.addNewRequest(addMemberInDB);
+		Server.addNewSQLRequest(addMemberInDB);
 	}
 	
 	public static void updatePermission(Guild guild, int rank_order, int permission, String name) {
 		updatePermission.addDatas(new SQLDatas(guild.getId(), rank_order, permission, name));
-		Server.addNewRequest(updatePermission);
+		Server.addNewSQLRequest(updatePermission);
 	}
 	
 	public static void updateInformation(Guild guild) {
 		updateInformation.addDatas(new SQLDatas(guild.getId(), guild.getInformation()));
-		Server.addNewRequest(updateInformation);
+		Server.addNewSQLRequest(updateInformation);
 	}
 	
 	public static void updateMotd(Guild guild) {
 		updateMotd.addDatas(new SQLDatas(guild.getId(), guild.getMotd()));
-		Server.addNewRequest(updateMotd);
+		Server.addNewSQLRequest(updateMotd);
 	}
 	
 	public static void updateMemberRank(int playerId, int guildId, int rank) {
 		updateMemberRank.addDatas(new SQLDatas(rank, guildId, playerId));
-		Server.addNewRequest(updateMemberRank);
+		Server.addNewSQLRequest(updateMemberRank);
 	}
 	
 	public static void setLeaderInDB(int player_id, int guild_id) {
 		setLeaderInDB.addDatas(new SQLDatas(player_id, guild_id));
-		Server.addNewRequest(setLeaderInDB);
+		Server.addNewSQLRequest(setLeaderInDB);
 	}
 	
 	public static void updateMemberNote(int player_id, String note) {
 		setMemberNoteInDB.addDatas(new SQLDatas(player_id, note));
-		Server.addNewRequest(setMemberNoteInDB);
+		Server.addNewSQLRequest(setMemberNoteInDB);
 	}
 	
 	public static void updateMemberOfficerNote(int player_id, String officerNote) {
 		setMemberOfficerNoteInDB.addDatas(new SQLDatas(player_id, officerNote));
-		Server.addNewRequest(setMemberOfficerNoteInDB);
+		Server.addNewSQLRequest(setMemberOfficerNoteInDB);
 	}
 	
 	public static HashMap<Integer, Guild> getGuildList() {

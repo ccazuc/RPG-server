@@ -61,11 +61,11 @@ public class FriendManager {
 	
 	public static void addFriendInDB(int character_id, int friend_id) {
 		addFriendInDB.addDatas(new SQLDatas(character_id, friend_id));
-		Server.addNewRequest(addFriendInDB);
+		Server.addNewSQLRequest(addFriendInDB);
 	}
 	
 	public static void removeFriendFromDB(int character_id, int friend_id) {
 		removeFriendFromDB.addDatas(new SQLDatas(character_id, friend_id));
-		Server.addNewRequest(removeFriendFromDB);
+		Server.addNewSQLRequest(removeFriendFromDB);
 	}
 }
