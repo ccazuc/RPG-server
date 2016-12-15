@@ -2,10 +2,10 @@ package net.game;
 
 public enum AccountRank {
 
-	PLAYER((char)0),
-	MODERATOR((char)1),
-	GAMEMASTER((char)2),
-	ADMINISTRATOR((char)3);
+	PLAYER((char)1),
+	MODERATOR((char)2),
+	GAMEMASTER((char)3),
+	ADMINISTRATOR((char)4);
 	
 	private char value;
 	
@@ -15,5 +15,9 @@ public enum AccountRank {
 	
 	public char getValue() {
 		return this.value;
+	}
+	
+	public static AccountRank get(int index) {
+		return values()[index-1];
 	}
 }

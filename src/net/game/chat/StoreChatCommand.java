@@ -9,6 +9,8 @@ import net.command.chat.DefaultMessage;
 import net.command.chat.MessageType;
 import net.game.AccountRank;
 import net.game.Player;
+import net.game.manager.AccountManager;
+import net.game.manager.CharacterManager;
 import net.utils.Color;
 
 public class StoreChatCommand {
@@ -21,7 +23,7 @@ public class StoreChatCommand {
 		public void handle(String command, Player player) {
 			command = command.trim().toLowerCase();
 			if(command.equals('.'+this.name)) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account level : "+(player.getAccountRank().getValue()+1), MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account level : "+(player.getAccountRank().getValue()), MessageType.SELF);
 			}
 			else {
 				String[] value = command.split(" ");
@@ -41,7 +43,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand account_onlinelist = new ChatSubCommand("onlinelist", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand account_onlinelist = new ChatSubCommand("onlinelist", "account", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -56,7 +58,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand account_set = new ChatSubCommand("set", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand account_set = new ChatSubCommand("set", "account", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -79,7 +81,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand account_set_gmlevel = new ChatSubCommand("gmlevel", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand account_set_gmlevel = new ChatSubCommand("gmlevel", "account_set", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -92,8 +94,23 @@ public class StoreChatCommand {
 				return;
 			}
 			if(Server.isInteger(value[4])) {
+				String accountName = value[3];
 				int level = Integer.parseInt(value[4]);
-				//TODO: set accountlevel variable and in DB
+				if(!(level >= 1 && level <= AccountRank.values().length)) {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid value for [account_level] on .account set gmlevel [account_name] [account_level]", MessageType.SELF);
+					return;
+				}
+				int accountId = AccountManager.loadAccountIDFromName(accountName);
+				if(accountId == -1) {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountName+" not found.", MessageType.SELF);
+					return;
+				}
+				AccountManager.updateAccountRank(accountId, level);
+				Player tmp = Server.getInGameCharacterByAccount(accountId);
+				if(tmp == null) {
+					return;
+				}
+				tmp.setAccountRank(AccountRank.get(level));
 			}
 			else {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .account set gmlevel [account_name] [account_level]", MessageType.SELF);
@@ -139,7 +156,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand ban_account = new ChatSubCommand("account", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand ban_account = new ChatSubCommand("account", "ban", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -165,13 +182,25 @@ public class StoreChatCommand {
 					return;
 				}
 			}
-			if(banTimer < 0) {
-				banTimer = -1;
+			int accountId = AccountManager.loadAccountIDFromName(accountName);
+			if(accountId == -1) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountName+" not found.", MessageType.SELF);
+				return;
 			}
-			//TODO: ban account in DB and kick player
+			long timer = System.currentTimeMillis();
+			if(banTimer < 0) {
+				banTimer = -1-System.currentTimeMillis();
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountId+" banned "+banTime+" for : "+reason, MessageType.SELF);
+			AccountManager.banAccount(accountId, timer, banTimer+timer, player.getName(), reason);
+			Player banned = Server.getInGameCharacterByAccount(accountId);
+			if(banned == null) {
+				return;
+			}
+			banned.close();
 		}
 	};
-	private final static ChatSubCommand ban_character = new ChatSubCommand("character", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand ban_character = new ChatSubCommand("character", "ban", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -197,10 +226,25 @@ public class StoreChatCommand {
 					return;
 				}
 			}
-			//TODO: ban account in DB and kick player
+			int characterId = CharacterManager.loadCharacterIDFromName(characterName);
+			if(characterId == -1) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" not found.", MessageType.SELF);
+				return;
+			}
+			long timer = System.currentTimeMillis();
+			if(banTimer < 0) {
+				banTimer = -1-System.currentTimeMillis();
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" banned "+banTime+" for : "+reason, MessageType.SELF);
+			CharacterManager.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
+			Player banned = Server.getInGameCharacter(characterId);
+			if(banned == null) {
+				return;
+			}
+			banned.close();
 		}
 	};
-	private final static ChatSubCommand ban_ip = new ChatSubCommand("ip", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand ban_ip = new ChatSubCommand("ip", "ban", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {

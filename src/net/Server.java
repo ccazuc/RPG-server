@@ -234,6 +234,15 @@ public class Server {
 		return null;
 	}
 	
+	public static Player getInGameCharacterByAccount(int accountId) {
+		for(Player player : inGamePlayerList.values()) {
+			if(player.getAccountId() == accountId) {
+				return player;
+			}
+		}
+		return null;
+	}
+	
 	public static Player getCharacter(String name) {
 		synchronized(loggedPlayerList) {
 			for(Player player : loggedPlayerList.values()) {

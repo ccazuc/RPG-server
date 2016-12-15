@@ -30,7 +30,7 @@ public class GuildManager {
 			try {
 				SQLDatas datas = this.datasList.get(0);
 				this.statement.clear();
-				this.statement.putString(datas.getText());
+				this.statement.putString(datas.getStringValue1());
 				this.statement.putInt(datas.getIValue1());
 				this.statement.execute();
 			} 
@@ -49,7 +49,7 @@ public class GuildManager {
 			try {
 				SQLDatas datas = this.datasList.get(0);
 				this.statement.clear();
-				this.statement.putString(datas.getText());
+				this.statement.putString(datas.getStringValue1());
 				this.statement.putInt(datas.getIValue1());
 				this.statement.execute();
 			} 
@@ -88,7 +88,7 @@ public class GuildManager {
 				SQLDatas datas = this.datasList.get(0);
 				this.statement.clear();
 				this.statement.putInt(datas.getIValue3());
-				this.statement.putString(datas.getText());
+				this.statement.putString(datas.getStringValue1());
 				this.statement.putInt(datas.getIValue1());
 				this.statement.putInt(datas.getIValue2());
 				this.statement.execute();
@@ -164,7 +164,7 @@ public class GuildManager {
 			try {
 				SQLDatas datas = this.datasList.get(0);
 				this.statement.clear();
-				this.statement.putString(datas.getText());
+				this.statement.putString(datas.getStringValue1());
 				this.statement.putInt(datas.getIValue1());
 				this.statement.execute();
 			}
@@ -180,7 +180,7 @@ public class GuildManager {
 			try {
 				SQLDatas datas = this.datasList.get(0);
 				this.statement.clear();
-				this.statement.putString(datas.getText());
+				this.statement.putString(datas.getStringValue1());
 				this.statement.putInt(datas.getIValue1());
 				this.statement.execute();
 			}

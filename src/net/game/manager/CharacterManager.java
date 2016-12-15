@@ -27,6 +27,7 @@ public class CharacterManager {
 	private static JDOStatement loadCharacterNameFromID;
 	private static JDOStatement searchPlayer;
 	private static JDOStatement checkPlayerAccount;
+	private static JDOStatement loadCharacterIdFromName;
 	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?", "Update last online timer") {
 		
 		@Override
@@ -34,7 +35,7 @@ public class CharacterManager {
 			try {
 				this.statement.clear();
 				SQLDatas datas = this.datasList.get(0);
-				this.statement.putLong(datas.getLValue());
+				this.statement.putLong(datas.getLValue1());
 				this.statement.putInt(datas.getIValue1());
 				this.statement.execute();
 			}
@@ -42,7 +43,26 @@ public class CharacterManager {
 				e.printStackTrace();
 			}
 		}
-	}; 
+	};
+	private final static SQLRequest banCharacter = new SQLRequest("INSERT INTO `character_banned (character_id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban character") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putLong(datas.getLValue1());
+				this.statement.putLong(datas.getLValue2());
+				this.statement.putString(datas.getStringValue1());
+				this.statement.putString(datas.getStringValue2());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	private static String rogue = "ROGUE";
 	private static String mage = "MAGE";
 	private static String druid = "DRUID";
@@ -201,8 +221,25 @@ public class CharacterManager {
 		return "";
 	}
 	
+	public static int loadCharacterIDFromName(String name) {
+		try {
+			if(loadCharacterIdFromName == null) {
+				loadCharacterIdFromName = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name= ?");
+			}
+			loadCharacterIdFromName.clear();
+			loadCharacterIdFromName.putString(name);
+			loadCharacterIdFromName.execute();
+			if(loadCharacterIdFromName.fetch()) {
+				return loadCharacterIdFromName.getInt();
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
 	public static int playerExistsInDB(String name) {
-		int id = -1;
 		try {
 			if(searchPlayer == null) {
 				searchPlayer = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
@@ -211,13 +248,18 @@ public class CharacterManager {
 			searchPlayer.putString(name);
 			searchPlayer.execute();
 			if(searchPlayer.fetch()) {
-				id = searchPlayer.getInt();
+				return searchPlayer.getInt();
 			}
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return id;
+		return -1;
+	}
+	
+	public static void banCharacter(int character_id, long ban_date, long unban_date, String banned_by, String ban_reason) {
+		banCharacter.addDatas(new SQLDatas(character_id, ban_date, unban_date, banned_by, ban_reason));
+		Server.addNewSQLRequest(banCharacter);
 	}
 	
 	public static WeaponType[] getWeaponTypes(short type) {
@@ -391,6 +433,6 @@ public class CharacterManager {
 		if(classe == ClassType.WARLOCK) {
 			return "Warlock";
 		}
-		return "";
+		return null;
 	}
 }
