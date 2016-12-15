@@ -15,7 +15,7 @@ import net.utils.Color;
 
 public class StoreChatCommand {
 
-	private final static HashMap<String, ChatCommand> commandMap = new HashMap<String, ChatCommand>();
+	final static HashMap<String, ChatCommand> commandMap = new HashMap<String, ChatCommand>();
 	
 	private final static ChatCommand account = new ChatCommand("account", AccountRank.PLAYER) {
 		
@@ -28,7 +28,7 @@ public class StoreChatCommand {
 			else {
 				String[] value = command.split(" ");
 				if(value.length < 2) {
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 					return;
 				}
 				int i = 0;
@@ -39,7 +39,7 @@ public class StoreChatCommand {
 					}
 					i++;
 				}
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 			}
 		}
 	};
@@ -67,7 +67,7 @@ public class StoreChatCommand {
 				return;
 			}
 			if(value.length < 3) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 				return;
 			}
 			int i = 0;
@@ -78,7 +78,7 @@ public class StoreChatCommand {
 				}
 				i++;
 			}
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand account_set_gmlevel = new ChatSubCommand("gmlevel", "account_set", AccountRank.ADMINISTRATOR) {
@@ -122,8 +122,8 @@ public class StoreChatCommand {
 		@Override
 		public void handle(String command, Player player) {
 			command = command.trim().toLowerCase();
-			if(!command.startsWith('.'+this.name)) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .announce [message]", MessageType.SELF);
+			if(command.equals('.'+this.name)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid value for [message] in .announce [message]", MessageType.SELF);
 				return;
 			}
 			for(Player players : Server.getInGamePlayerList().values()) {
@@ -137,12 +137,12 @@ public class StoreChatCommand {
 		public void handle(String command, Player player) {
 			command = command.trim().toLowerCase();
 			if(command.length() < 7) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 				return;
 			}
 			String[] value = command.split(" ");
 			if(value.length < 2) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 				return;
 			}
 			int i = 0;
@@ -153,7 +153,7 @@ public class StoreChatCommand {
 				}
 				i++;
 			}
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand ban_account = new ChatSubCommand("account", "ban", AccountRank.GAMEMASTER) {
@@ -252,19 +252,66 @@ public class StoreChatCommand {
 				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
 				return;
 			}
-			if(value.length < 3) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
+			if(value.length < 5) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .ban ip [ip_adress] [duration] [reason]", MessageType.SELF);
 				return;
 			}
-			int i = 0;
-			while(i < this.commandList.size()) {
-				if(this.commandList.get(i).getName().equals(value[2])) {
-					this.commandList.get(i).handle(value, player);
+			String ipAdress = value[2];
+			String banTime = value[3];
+			String reason = value[4];
+			long banTimer = 0;
+			if(Server.isInteger(banTime)) {
+				banTimer = Integer.parseInt(banTime);
+			}
+			else {
+				banTimer = convStringTimerToMS(banTime);
+				if(banTimer == -666) {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .ban ip [ip_adress] [duration] [reason]", MessageType.SELF);
 					return;
 				}
-				i++;
 			}
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(), MessageType.SELF);
+			int characterId = CharacterManager.loadCharacterIDFromName(ipAdress);
+			if(characterId == -1) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+ipAdress+" not found.", MessageType.SELF);
+				return;
+			}
+			long timer = System.currentTimeMillis();
+			if(banTimer < 0) {
+				banTimer = -1-System.currentTimeMillis();
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+ipAdress+" banned "+banTime+" for : "+reason, MessageType.SELF);
+			CharacterManager.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
+			Player banned = Server.getInGameCharacter(characterId);
+			if(banned == null) {
+				return;
+			}
+			banned.close();
+		}
+	};
+	private final static ChatCommand help = new ChatCommand("help", AccountRank.PLAYER) {
+		
+		@Override
+		public void handle(String command, Player player) {
+			command = command.trim().toLowerCase();
+			if(command.equals('.'+this.name)) {
+				StringBuilder builder = new StringBuilder();
+				builder.append("Available commands :");
+				for(ChatCommand chatCommand : commandMap.values()) {
+					if(player.getAccountRank().superiorOrEqualsTo(chatCommand.getRank())) {
+						builder.append("\n-"+chatCommand.getName());
+					}
+				}
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
+			}
+			else {
+				String[] value = command.split(" ");
+				if(value.length < 2) {
+					return;
+				}
+				if(commandMap.containsKey(value[1])) {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).printSubCommandError(player), MessageType.SELF);
+				}
+			}
 		}
 	};
 	
@@ -278,6 +325,7 @@ public class StoreChatCommand {
 		ban.addSubCommand(ban_character);
 		ban.addSubCommand(ban_ip);
 		commandMap.put(ban.getName(), ban);
+		commandMap.put(help.getName(), help);
 	}
 	
 	static long convStringTimerToMS(String timer) {

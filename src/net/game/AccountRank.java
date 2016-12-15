@@ -2,19 +2,27 @@ package net.game;
 
 public enum AccountRank {
 
-	PLAYER((char)1),
-	MODERATOR((char)2),
-	GAMEMASTER((char)3),
-	ADMINISTRATOR((char)4);
+	PLAYER((byte)1),
+	MODERATOR((byte)2),
+	GAMEMASTER((byte)3),
+	ADMINISTRATOR((byte)4);
 	
-	private char value;
+	private byte value;
 	
-	private AccountRank(char value) {
+	private AccountRank(byte value) {
 		this.value = value;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
+	}
+	
+	public boolean superiorTo(AccountRank rank) {
+		return this.value > rank.getValue();
+	}
+	
+	public boolean superiorOrEqualsTo(AccountRank rank) {
+		return this.value >= rank.getValue();
 	}
 	
 	public static AccountRank get(int index) {

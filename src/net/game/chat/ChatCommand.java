@@ -23,24 +23,37 @@ public class ChatCommand {
 		this.subCommandList.add(command);
 	}
 	
+	@SuppressWarnings("unused")
+	public void handle(String command, Player player) {}
+	
+	public String printSubCommandError(Player player) {
+		StringBuilder result = new StringBuilder();
+		int i = 0;
+		boolean initHeader = false;
+		while(i < this.subCommandList.size()) {
+			if(player.getAccountRank().superiorOrEqualsTo(this.subCommandList.get(i).getRank())) {
+				if(!initHeader) {
+					result.append("Available command for "+this.name+" : \n");
+					initHeader = true;
+				}
+				result.append("- "+this.subCommandList.get(i).getName());
+			}
+			i++;
+			if(i < this.subCommandList.size() && initHeader) {
+				result.append('\n');
+			}
+		}
+		if(!initHeader) {
+			result.append("No command available for "+this.name);
+		}
+		return result.toString();
+	}
+	
 	public String getName() {
 		return this.name;
 	}
 	
-	@SuppressWarnings("unused")
-	public void handle(String command, Player player) {}
-	
-	public String printSubCommandError() {
-		StringBuilder result = new StringBuilder();
-		result.append("Available command for "+this.name+" : \n");
-		int i = 0;
-		while(i < this.subCommandList.size()) {
-			result.append("- "+this.subCommandList.get(i).getName());
-			i++;
-			if(i < this.subCommandList.size()) {
-				result.append('\n');
-			}
-		}
-		return result.toString();
+	public AccountRank getRank() {
+		return this.accountRank;
 	}
 }

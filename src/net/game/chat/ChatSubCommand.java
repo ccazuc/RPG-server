@@ -25,22 +25,35 @@ public class ChatSubCommand {
 		this.commandList.add(command);
 	}
 	
-	public String printSubCommandError() {
+	public String printSubCommandError(Player player) {
 		StringBuilder result = new StringBuilder();
-		result.append("Available command for "+this.parentName+' '+this.name+" : \n");
 		int i = 0;
+		boolean initHeader = false;
 		while(i < this.commandList.size()) {
-			result.append("- "+this.commandList.get(i).getName());
+			if(player.getAccountRank().superiorOrEqualsTo(this.commandList.get(i).getRank())) {
+				if(!initHeader) {
+					result.append("Available command for "+this.parentName+' '+this.name+" : \n");
+					initHeader = true;
+				}
+				result.append("- "+this.commandList.get(i).getName());
+			}
 			i++;
-			if(i < this.commandList.size()) {
+			if(i < this.commandList.size() && initHeader) {
 				result.append('\n');
 			}
+		}
+		if(!initHeader) {
+			result.append("No command available for "+this.parentName+' '+this.name);
 		}
 		return result.toString();
 	}
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public AccountRank getRank() {
+		return this.rank;
 	}
 	
 	@SuppressWarnings("unused")

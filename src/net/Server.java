@@ -53,6 +53,7 @@ public class Server {
 	private static Thread chatCommandThread;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
 	private static long SERVER_START_TIMER;
+	private static long LOOP_TICK_TIMER;
 	
 	private final static String REALM_NAME = "World Server";
 	private final static int REALM_ID = 15;
@@ -100,13 +101,12 @@ public class Server {
 		ConnectionManager.initPlayerCommand();
 		System.gc();
 		while(true) {
-			//time = System.nanoTime();
-			time = System.currentTimeMillis();
+			LOOP_TICK_TIMER = System.currentTimeMillis();
 			kickPlayers();
 			readAuthServer();
 			readOnlinePlayers();
 			read();
-			delta = (System.currentTimeMillis()-time);
+			delta = (System.currentTimeMillis()-LOOP_TICK_TIMER);
 			if(delta < LOOP_TIMER) {
 				Thread.sleep((LOOP_TIMER-(long)delta));
 			}
@@ -289,6 +289,10 @@ public class Server {
 	
 	public static HashMap<Integer, Player> getInGamePlayerList() {
 		return inGamePlayerList;
+	}
+	
+	public static long getLoopTickTimer() {
+		return LOOP_TICK_TIMER;
 	}
 	
 	public static void removeKey(double key) {
