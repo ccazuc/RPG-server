@@ -59,7 +59,7 @@ public class AccountManager {
 	public static int loadAccountIDFromName(String accountName) {
 		try {
 			if(loadAccountIDFromName == null) {
-				loadAccountIDFromName = Server.getJDO().prepare("SELECT name FROM account WHERE id = ?");
+				loadAccountIDFromName = Server.getJDO().prepare("SELECT id FROM account WHERE name = ?");
 			}
 			loadAccountIDFromName.clear();
 			loadAccountIDFromName.putString(accountName);

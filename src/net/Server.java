@@ -61,7 +61,7 @@ public class Server {
 	private final static int LOOP_TIMER = 15;
 	private static String SERVER_MESSAGE_OF_THE_DAY = "Welcome on blabla";
 	private static boolean serverRunning = true;
-	private static boolean isAcceptingConnection;
+	private static boolean isAcceptingConnection = true;
 
 	private final static Pattern isInteger = Pattern.compile("-?[0-9]+");
 	

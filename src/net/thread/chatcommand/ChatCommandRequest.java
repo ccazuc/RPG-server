@@ -15,14 +15,6 @@ public class ChatCommandRequest {
 		this.player = player;
 	}
 	
-	public String getCommand() {
-		return this.command;
-	}
-	
-	public Player getPlayer() {
-		return this.player;
-	}
-	
 	public void execute() {
 		if(this.player == null) {
 			return;
@@ -32,7 +24,7 @@ public class ChatCommandRequest {
 			StoreChatCommand.get(command).handle(this.command, this.player);
 		}
 		else {
-			CommandSendMessage.selfWithoutAuthor(this.player.getConnection(), "That command doesn't exist, type .help for help.", MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(this.player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
 		}
 	}
 	
@@ -42,5 +34,13 @@ public class ChatCommandRequest {
 			i++;
 		}
 		return message.substring(1, i);
+	}
+	
+	public String getCommand() {
+		return this.command;
+	}
+	
+	public Player getPlayer() {
+		return this.player;
 	}
 }
