@@ -33,15 +33,12 @@ public class ChatCommand {
 		while(i < this.subCommandList.size()) {
 			if(player.getAccountRank().superiorOrEqualsTo(this.subCommandList.get(i).getRank())) {
 				if(!initHeader) {
-					result.append("Available command for "+this.name+" : \n");
+					result.append("Command "+this.name+" have subcommands:");
 					initHeader = true;
 				}
-				result.append("- "+this.subCommandList.get(i).getName());
+				result.append("\n   "+this.subCommandList.get(i).getName());
 			}
 			i++;
-			if(i < this.subCommandList.size() && initHeader) {
-				result.append('\n');
-			}
 		}
 		if(!initHeader) {
 			result.append("No command available for "+this.name);

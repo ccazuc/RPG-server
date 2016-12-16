@@ -21,6 +21,10 @@ public class CommandLoginRealmPlayer extends Command {
 				player.close();
 				return;
 			}
+			if(!Server.isAcceptingConnection()) {
+				connectionRefused(connection);
+				return;
+			}
 			connectionAccepted(connection);
 			player.setAccountRank(AccountRank.values()[Server.getKey(key).getAccountRank()-1]);
 			player.setAccountId(account_id);
@@ -30,6 +34,12 @@ public class CommandLoginRealmPlayer extends Command {
 			Server.removeKey(key);
 			CommandPlayerIsLoggedOnWorldServer.write(player, true);
 		}
+	}
+	
+	private static void connectionRefused(Connection connection) {
+		connection.writeShort(PacketID.LOGIN_REALM);
+		connection.writeShort(PacketID.LOGIN_REALM_DOESNT_ACCEPT_CONNECTION);
+		connection.send();
 	}
 	
 	private static void connectionAccepted(Connection connection) {

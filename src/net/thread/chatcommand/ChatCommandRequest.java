@@ -1,5 +1,7 @@
 package net.thread.chatcommand;
 
+import net.command.chat.CommandSendMessage;
+import net.command.chat.MessageType;
 import net.game.Player;
 import net.game.chat.StoreChatCommand;
 
@@ -22,9 +24,15 @@ public class ChatCommandRequest {
 	}
 	
 	public void execute() {
+		if(this.player == null) {
+			return;
+		}
 		String command = checkCommand(this.command);
-		if(StoreChatCommand.contains(command))   {
+		if(StoreChatCommand.contains(command)) {
 			StoreChatCommand.get(command).handle(this.command, this.player);
+		}
+		else {
+			CommandSendMessage.selfWithoutAuthor(this.player.getConnection(), "That command doesn't exist, type .help for help.", MessageType.SELF);
 		}
 	}
 	

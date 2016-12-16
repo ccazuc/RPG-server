@@ -128,4 +128,5 @@ public class PacketID {
 	public final static short WHO = 124;
 	public final static short WHO_CHAT = 125;
 	public final static short CHAT_DEFAULT_MESSAGE = 126;
+	public final static short LOGIN_REALM_DOESNT_ACCEPT_CONNECTION = 127;
 }

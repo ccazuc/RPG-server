@@ -59,6 +59,9 @@ public class Server {
 	private final static int REALM_ID = 15;
 	private final static int PORT = 5721;
 	private final static int LOOP_TIMER = 15;
+	private static String SERVER_MESSAGE_OF_THE_DAY = "Welcome on blabla";
+	private static boolean serverRunning = true;
+	private static boolean isAcceptingConnection;
 
 	private final static Pattern isInteger = Pattern.compile("-?[0-9]+");
 	
@@ -100,7 +103,7 @@ public class Server {
 		ConnectionManager.initAuthCommand();
 		ConnectionManager.initPlayerCommand();
 		System.gc();
-		while(true) {
+		while(serverRunning) {
 			LOOP_TICK_TIMER = System.currentTimeMillis();
 			kickPlayers();
 			readAuthServer();
@@ -116,6 +119,11 @@ public class Server {
 				System.out.println("ms.");
 			}
 		}
+		//Save eveything of every player to the DB
+		SQLRunnable.close();
+		socketRunnable.close();
+		chatCommandRunnable.close();
+		
 	}
 	
 	private static void readOnlinePlayers() {
@@ -263,6 +271,18 @@ public class Server {
 		return false;
 	}
 	
+	public static boolean isAcceptingConnection() {
+		return isAcceptingConnection;
+	}
+	
+	public static void setIsAcceptingConnection(boolean we) {
+		isAcceptingConnection = we;
+	}
+	
+	public static void close() {
+		serverRunning = false;
+	}
+	
 	public static Key getKey(double key) {
 		return keyList.get(key);
 	}
@@ -319,11 +339,32 @@ public class Server {
 		return PORT;
 	}
 	
+	public static String getServerMessageOfTheDay() {
+		return SERVER_MESSAGE_OF_THE_DAY;
+	}
+	
+	public static void setServerMessageOfTheDay(String message) {
+		SERVER_MESSAGE_OF_THE_DAY = message;
+	}
+	
 	public static boolean isInteger(String string) {
 		return isInteger.matcher(string).matches();
 	}
 	
 	public static boolean isInteger(char c) {
 		return c >= '0' && c <= '9';
+	}
+	
+	public static long getServerStartTimer() {
+		return SERVER_START_TIMER;
+	}
+	
+	public static void mTime(long time, String text) {
+		System.out.println(System.currentTimeMillis()-time+"ms "+text);
+	}
+	
+	public static void nTime(long time, String text) {
+		long timer = System.nanoTime();
+		System.out.println((timer-time)+"ns "+((timer-time)/1000)+"µs "+((timer-time)/1000000)+"ms "+text);
 	}
 }

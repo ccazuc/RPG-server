@@ -14,6 +14,13 @@ import net.game.manager.CharacterManager;
 import net.utils.Color;
 
 public class StoreChatCommand {
+	
+	private final static long MS_IN_A_YEAR = 31536000000l;
+	private final static long MS_IN_A_MONTH = 1036800000l;
+	private final static long MS_IN_A_WEEK = 604800000l;
+	private final static long MS_IN_A_DAY = 86400000l;
+	private final static long MS_IN_AN_HOUR = 3600000l;
+	private final static long MS_IN_A_MINUTE = 60000l;
 
 	final static HashMap<String, ChatCommand> commandMap = new HashMap<String, ChatCommand>();
 	
@@ -295,10 +302,10 @@ public class StoreChatCommand {
 			command = command.trim().toLowerCase();
 			if(command.equals('.'+this.name)) {
 				StringBuilder builder = new StringBuilder();
-				builder.append("Available commands :");
+				builder.append("Available commands:");
 				for(ChatCommand chatCommand : commandMap.values()) {
 					if(player.getAccountRank().superiorOrEqualsTo(chatCommand.getRank())) {
-						builder.append("\n-"+chatCommand.getName());
+						builder.append("\n    "+chatCommand.getName());
 					}
 				}
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
@@ -314,6 +321,123 @@ public class StoreChatCommand {
 			}
 		}
 	};
+	private final static ChatCommand server = new ChatCommand("server", AccountRank.PLAYER) {
+		
+		@Override
+		public void handle(String command, Player player) {
+			command = command.trim().toLowerCase();
+			if(command.equals('.'+this.name)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+			}
+			else {
+				String[] value = command.split(" ");
+				if(value.length < 2) {
+					return;
+				}
+				int i = 0;
+				while(i < this.subCommandList.size()) {
+					if(this.subCommandList.get(i).getName().equals(value[1])) {
+						this.subCommandList.get(i).handle(value, player);
+						return;
+					}
+					i++;
+				}
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+			}
+		}
+	};
+	private final static ChatSubCommand server_exit = new ChatSubCommand("exit", "server", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(player.getAccountRank().getValue() < this.rank.getValue()) {
+				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+				return;
+			}
+			System.out.println("[SERVER EXIT] requested by "+player.getName());
+			Server.close();
+		}
+	};
+	private final static ChatSubCommand server_info = new ChatSubCommand("info", "server", AccountRank.PLAYER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			StringBuilder builder = new StringBuilder();
+			builder.append("Server informations :\n");
+			builder.append("Server message of the day :\n"+Server.getServerMessageOfTheDay()+'\n');
+			builder.append("Online since "+convMillisToDate(System.currentTimeMillis()-Server.getServerStartTimer())+'\n');
+			builder.append("Online player(s) : "+Server.getInGamePlayerList().size());
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand server_motd = new ChatSubCommand("motd", "server", AccountRank.PLAYER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), Server.getServerMessageOfTheDay(), MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand server_set = new ChatSubCommand("set", "server", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(player.getAccountRank().getValue() < this.rank.getValue()) {
+				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+				return;
+			}
+			int i = 0;
+			while(i < this.commandList.size()) {
+				if(this.commandList.get(i).getName().equals(value[2])) {
+					this.commandList.get(i).handle(value, player);
+					return;
+				}
+				i++;
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand server_set_motd = new ChatSubCommand("motd", "server_set", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(player.getAccountRank().getValue() < this.rank.getValue()) {
+				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+				return;
+			}
+			if(value.length < 4) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [motd] in .server set motd [motd]", MessageType.SELF);
+				return;
+			}
+			Server.setServerMessageOfTheDay(value[3]);
+		}
+	};
+	private final static ChatSubCommand server_set_closed = new ChatSubCommand("closed", "server_set", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(player.getAccountRank().getValue() < this.rank.getValue()) {
+				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+				return;
+			}
+			if(value.length < 4) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [closed] in .server set closed [on/off]", MessageType.SELF);
+				return;
+			}
+			if(value[3].equals("on")) {
+				Server.setIsAcceptingConnection(true);
+			}
+			else if(value[3].equals("off")) {
+				Server.setIsAcceptingConnection(false);
+			}
+			else {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [closed] in .server set closed [on/off]", MessageType.SELF);
+			}
+		}
+	};
 	
 	public static void initChatCommandMap() {
 		account.addSubCommand(account_onlinelist);
@@ -326,6 +450,13 @@ public class StoreChatCommand {
 		ban.addSubCommand(ban_ip);
 		commandMap.put(ban.getName(), ban);
 		commandMap.put(help.getName(), help);
+		server.addSubCommand(server_exit);
+		server.addSubCommand(server_info);
+		server.addSubCommand(server_motd);
+		server.addSubCommand(server_set);
+		server_set.addSubCommand(server_set_motd);
+		server_set.addSubCommand(server_set_closed);
+		commandMap.put(server.getName(), server);
 	}
 	
 	static long convStringTimerToMS(String timer) {
@@ -397,6 +528,60 @@ public class StoreChatCommand {
 			i++;
 		}
 		return value;
+	}
+	
+	public static String convMillisToDate(long millis) {
+		StringBuilder builder = new StringBuilder();
+		float value = millis/MS_IN_A_YEAR;
+		if(value >= 2) {
+			builder.append((int)value+" years ");
+		}
+		else if(value >= 1) {
+			builder.append((int)value+" year ");
+		}
+		value = (millis%MS_IN_A_YEAR)/MS_IN_A_MONTH;
+		if(value >= 2) {
+			builder.append((int)value+" months ");
+		}
+		else if(value >= 1) {
+			builder.append((int)value+" month ");
+		}
+		value = (millis%MS_IN_A_MONTH)/MS_IN_A_WEEK;
+		if(value >= 2) {
+			builder.append((int)value+" weeks ");
+		}
+		else if(value >= 1) {
+			builder.append((int)value+" week ");
+		}
+		value = (millis%MS_IN_A_WEEK)/MS_IN_A_DAY;
+		if(value >= 2) {
+			builder.append((int)value+" days ");
+		}
+		else if(value >= 1) {
+			builder.append((int)value+" day ");
+		}
+		value = (millis%MS_IN_A_DAY)/MS_IN_AN_HOUR;
+		if(value >= 2) {
+			builder.append((int)value+" hours ");
+		}
+		else if(value >= 1) {
+			builder.append((int)value+" hour ");
+		}
+		value = (millis%MS_IN_AN_HOUR)/MS_IN_A_MINUTE;
+		if(value >= 2) {
+			builder.append((int)value+" minutes ");
+		}
+		else if(value >= 1) {
+			builder.append((int)value+" minute ");
+		}
+		value = (millis%MS_IN_A_MINUTE)/1000;
+		if(value >= 2) {
+			builder.append((int)value+" seconds ");
+		}
+		else if(value >= 1) {
+			builder.append((int)value+" second ");
+		}
+		return builder.toString();
 	}
 	
 	public static boolean contains(String command) {

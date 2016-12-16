@@ -11,6 +11,9 @@ public class SocketRunnable implements Runnable {
 
 	private ServerSocketChannel serverSocket;
 	private SocketChannel clientSocket;
+	private boolean isAcceptingConnection = true;
+	private final static int LOOP_TIMER = 15;
+	private volatile static boolean running = true;
 	
 	public SocketRunnable(ServerSocketChannel serverSocket) {
 		this.serverSocket = serverSocket;
@@ -18,16 +21,41 @@ public class SocketRunnable implements Runnable {
 	
 	@Override
 	public void run() {
+		long timer = System.currentTimeMillis();
+		long delta;
 		System.out.println("SocketRunnable run");
-		while(true) {
-			try {
-				this.clientSocket = this.serverSocket.accept();
-				this.clientSocket.configureBlocking(false);
-				Server.addNonLoggedPlayer(new Player(this.clientSocket));
+		while(running) {
+			try {	
+				timer = System.currentTimeMillis();
+				if(this.isAcceptingConnection) {
+					this.clientSocket = this.serverSocket.accept();
+					this.clientSocket.configureBlocking(false);
+					Server.addNonLoggedPlayer(new Player(this.clientSocket));
+				}
 			} 
 			catch (IOException e) {
 				e.printStackTrace();
 			}
+			delta = System.currentTimeMillis()-timer;
+			if(delta < LOOP_TIMER) {
+				try {
+					Thread.sleep((LOOP_TIMER-delta));
+				} 
+				catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 		}
+		System.out.println("SocketRunnable stopped");
+	}
+	
+	public void close() {
+		try {
+			this.serverSocket.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		running = false;
 	}
 }

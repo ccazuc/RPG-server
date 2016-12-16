@@ -7,6 +7,7 @@ import java.util.List;
 public class ChatCommandRunnable implements Runnable {
 
 	private List<ChatCommandRequest> commandList = new ArrayList<ChatCommandRequest>();
+	private static boolean running = true;
 	
 	private final static int LOOP_TIMER = 10;
 	
@@ -16,13 +17,16 @@ public class ChatCommandRunnable implements Runnable {
 	
 	@Override
 	public void run() {
+		System.out.println("ChatCommand run");
 		long timer;
 		long delta;
-		while(true) {
+		while(running) {
 			timer = System.currentTimeMillis();
 			if(this.commandList.size() > 0) {
+				long time = System.nanoTime();
 				this.commandList.get(0).execute();
 				this.commandList.remove(0);
+				System.out.println("ChatCommand took "+(System.nanoTime()-time)/1000+" µs to execute.");
 			}
 			delta = System.currentTimeMillis()-timer;
 			if(delta < LOOP_TIMER) {
@@ -34,9 +38,14 @@ public class ChatCommandRunnable implements Runnable {
 				}
 			}
 		}
+		System.out.println("ChatCommandRunnable stopped");
 	}
 	
 	public void addChatCommandRequest(ChatCommandRequest request) {
 		this.commandList.add(request);
+	}
+	
+	public void close() {
+		running = false;
 	}
 }

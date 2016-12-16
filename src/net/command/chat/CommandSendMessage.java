@@ -18,7 +18,7 @@ public class CommandSendMessage extends Command {
 		Connection connection = player.getConnection();
 		String message = connection.readString();
 		MessageType type = MessageType.values()[connection.readChar()];
-		if(message.length() > 2 && message.charAt(0) == '.' && message.charAt(1) != '.') {
+		if(message.length() >= 2 && message.charAt(0) == '.' && message.charAt(1) != '.') {
 			ChatCommandHandler.parse(message, player);
 			return;
 		}

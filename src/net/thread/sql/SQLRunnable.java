@@ -14,6 +14,8 @@ public class SQLRunnable implements Runnable {
 	
 	private List<SQLRequest> SQLList = new ArrayList<SQLRequest>();
 	private List<Who> whoList = new ArrayList<Who>();
+	private boolean running = true;
+	private boolean shouldClose;
 	
 	private final static int LOOP_TIMER = 10;
 	
@@ -27,7 +29,7 @@ public class SQLRunnable implements Runnable {
 		System.out.println("SQLRunnable run");
 		long time;
 		long delta;
-		while(true) {
+		while(this.running) {
 			time = System.currentTimeMillis();
 			if(this.SQLList.size() > 0) {
 				if(this.SQLList.get(0).debugActive) {
@@ -56,7 +58,11 @@ public class SQLRunnable implements Runnable {
 					e.printStackTrace();
 				}
 			}
+			if(this.shouldClose && this.SQLList.size() == 0) {
+				this.running = false;
+			}
 		}
+		System.out.println("SQLRunnable stopped");
 	}
 	
 	private static void endListMethod(Who who) {
@@ -96,7 +102,7 @@ public class SQLRunnable implements Runnable {
 		connection.send();
 	}
 	
-	private static void endListMethoda(Who who) {
+	/*private static void endListMethoda(Who who) {
 		long timer = System.nanoTime();
 		String word = parseWho(who.getWord().toLowerCase().trim());
 		int wordValue = 0;
@@ -126,7 +132,7 @@ public class SQLRunnable implements Runnable {
 		connection.writeInt(-1);
 		System.out.println("[WHO ENDLIST CATCH] took "+(System.nanoTime()-timer)/1000+" µs to execute.");
 		connection.send();
-	}
+	}*/
 	
 	private static void executeWhoRequest(Who who) {
 		/*long timer = System.nanoTime();
@@ -137,7 +143,7 @@ public class SQLRunnable implements Runnable {
 		System.out.println("[WHO LIST] took "+(System.nanoTime()-timer)/1000+" µs to execute.");*/
 		//bufferMethod(who);
 		endListMethod(who);
-		endListMethoda(who);
+		//endListMethoda(who);
 		//bufferMethod(who);
 	}
 	
@@ -150,6 +156,10 @@ public class SQLRunnable implements Runnable {
 			i++;
 		}
 		return "";
+	}
+	
+	public void close() {
+		this.shouldClose = true;
 	}
 	 
 	public void addRequest(SQLRequest request) {
