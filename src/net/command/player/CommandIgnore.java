@@ -10,8 +10,8 @@ import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
-import net.game.manager.CharacterManager;
-import net.game.manager.IgnoreManager;
+import net.game.manager.CharacterMgr;
+import net.game.manager.IgnoreMgr;
 
 public class CommandIgnore extends Command {
 
@@ -29,18 +29,18 @@ public class CommandIgnore extends Command {
 			Player ignore = Server.getInGameCharacter(name);
 			int character_id = 0;
 			if(ignore == null) {
-				character_id = CharacterManager.playerExistsInDB(name);
+				character_id = CharacterMgr.playerExistsInDB(name);
 			}
 			if(!(ignore != null || character_id != -1)) {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
-			if(ignore != null && !IgnoreManager.isIgnored(player.getCharacterId(), ignore.getCharacterId())) {
-				IgnoreManager.addIgnore(player.getCharacterId(), ignore.getCharacterId());
+			if(ignore != null && !IgnoreMgr.isIgnored(player.getCharacterId(), ignore.getCharacterId())) {
+				IgnoreMgr.addIgnore(player.getCharacterId(), ignore.getCharacterId());
 				addIgnore(connection, ignore);
 			}
-			else if(character_id != -1 && !IgnoreManager.isIgnored(player.getCharacterId(), character_id)) {
-				IgnoreManager.addIgnore(player.getCharacterId(), character_id);
+			else if(character_id != -1 && !IgnoreMgr.isIgnored(player.getCharacterId(), character_id)) {
+				IgnoreMgr.addIgnore(player.getCharacterId(), character_id);
 				addIgnore(connection, character_id, name);
 			}
 			else {
@@ -49,18 +49,18 @@ public class CommandIgnore extends Command {
 		}
 		else if(packetId == PacketID.IGNORE_REMOVE) {
 			int id = connection.readInt();
-			if(!IgnoreManager.isIgnored(player.getCharacterId(), id)) {
+			if(!IgnoreMgr.isIgnored(player.getCharacterId(), id)) {
 				CommandSendMessage.selfWithoutAuthor(connection, "This player is not in your ignore list.", MessageType.SELF);
 				return;
 			}
 			removeIgnore(connection, id);
-			IgnoreManager.removeIgnore(player.getCharacterId(), id);
+			IgnoreMgr.removeIgnore(player.getCharacterId(), id);
 		}
 	}
 	
 	public static void ignoreInit(Connection connection, Player player) {
 		int i = 0;
-		ArrayList<Integer> ignoreList = IgnoreManager.getIgnoreList(player.getCharacterId());
+		ArrayList<Integer> ignoreList = IgnoreMgr.getIgnoreList(player.getCharacterId());
 		if(ignoreList == null) {
 			return;
 		}
@@ -75,7 +75,7 @@ public class CommandIgnore extends Command {
 				connection.writeString(temp.getName());
 			}
 			else {
-				connection.writeString(CharacterManager.loadCharacterNameFromID(value));
+				connection.writeString(CharacterMgr.loadCharacterNameFromID(value));
 			}
 			i++;
 		}

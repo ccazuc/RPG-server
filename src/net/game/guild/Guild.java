@@ -42,7 +42,7 @@ public class Guild {
 		this.memberList.add(member);
 		this.memberMap.put(member.getId(), member);
 		CommandGuild.notifyNewMember(this, member);
-		GuildManager.addMemberInDB(this, member.getId());
+		GuildMgr.addMemberInDB(this, member.getId());
 	}
 	
 	public void removeMember(int id, String name) {
@@ -55,7 +55,7 @@ public class Guild {
 			}
 		}
 		this.memberMap.remove(id);
-		GuildManager.removeMemberFromDB(this, id);
+		GuildMgr.removeMemberFromDB(this, id);
 	}
 	
 	public int getLeaderId() {
@@ -95,7 +95,7 @@ public class Guild {
 			if(this.rankList.get(i).getOrder() == rank_order) {
 				this.rankList.get(i).setPermission(permission);
 				this.rankList.get(i).setName(name);
-				GuildManager.updatePermission(this, rank_order, permission, name);
+				GuildMgr.updatePermission(this, rank_order, permission, name);
 				return;
 			}
 			i++;

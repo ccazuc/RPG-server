@@ -6,7 +6,7 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 import net.game.chat.ChatCommandHandler;
-import net.game.manager.IgnoreManager;
+import net.game.manager.IgnoreMgr;
 import net.utils.Color;
 
 public class CommandSendMessage extends Command {
@@ -34,18 +34,18 @@ public class CommandSendMessage extends Command {
 				return;
 			}
 			writeWhisper(connection, temp.getName(), message, false);
-			if(!IgnoreManager.isIgnored(temp.getCharacterId(), player.getCharacterId())) {
+			if(!IgnoreMgr.isIgnored(temp.getCharacterId(), player.getCharacterId())) {
 				writeWhisper(temp.getConnection(), temp.getName(), message, true);
 			}
 			else {
-				selfWithoutAuthor(connection, temp.getName()+IgnoreManager.ignoreMessage, MessageType.SELF, MessageColor.RED);
+				selfWithoutAuthor(connection, temp.getName()+IgnoreMgr.ignoreMessage, MessageType.SELF, MessageColor.RED);
 			}
 		}
 		else if(type == MessageType.PARTY) {
 			if(player.getParty() != null) {
 				int i = 0;
 				while(i < player.getParty().getPlayerList().length) {
-					if(player.getParty().getPlayerList()[i] != null && !IgnoreManager.isIgnored(player.getCharacterId(), player.getParty().getPlayerList()[i].getid())) {
+					if(player.getParty().getPlayerList()[i] != null && !IgnoreMgr.isIgnored(player.getCharacterId(), player.getParty().getPlayerList()[i].getid())) {
 						if(player.getParty().isPartyLeader(player)) {
 							write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY_LEADER);
 						}
@@ -71,7 +71,7 @@ public class CommandSendMessage extends Command {
 			}
 			int i = 0;
 			while(i < player.getGuild().getMemberList().size()) {
-				if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel() && !IgnoreManager.isIgnored(player.getCharacterId(), player.getGuild().getMemberList().get(i).getId())) {
+				if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel() && !IgnoreMgr.isIgnored(player.getCharacterId(), player.getGuild().getMemberList().get(i).getId())) {
 					write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD);
 				}
 				i++;
@@ -93,7 +93,7 @@ public class CommandSendMessage extends Command {
 	
 	private static void sendMessageToUsers(int id, String message, String author, MessageType type) { //used for say and yell
 		for(Player player : Server.getInGamePlayerList().values()) {
-			if(!IgnoreManager.isIgnored(id, player.getCharacterId())) {
+			if(!IgnoreMgr.isIgnored(id, player.getCharacterId())) {
 				write(player.getConnection(), message, author, type);
 			}
 		}

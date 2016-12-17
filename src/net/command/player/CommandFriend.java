@@ -8,8 +8,8 @@ import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
-import net.game.manager.CharacterManager;
-import net.game.manager.FriendManager;
+import net.game.manager.CharacterMgr;
+import net.game.manager.FriendMgr;
 
 public class CommandFriend extends Command {
 	
@@ -27,7 +27,7 @@ public class CommandFriend extends Command {
 			Player member = Server.getInGameCharacter(name);
 			int character_id = 0;
 			if(member == null) { //player is offline or doesn't exist
-				character_id = CharacterManager.playerExistsInDB(name);
+				character_id = CharacterMgr.playerExistsInDB(name);
 			}
 			if(!(member != null || character_id != -1)) {
 				CommandPlayerNotFound.write(connection, name);
@@ -44,7 +44,7 @@ public class CommandFriend extends Command {
 			if(member != null) {
 				if(player.addFriend(member.getCharacterId())) {
 					addOnlineFriend(player, member);
-					FriendManager.addFriendInDB(player.getCharacterId(), member.getCharacterId());
+					FriendMgr.addFriendInDB(player.getCharacterId(), member.getCharacterId());
 				}
 				else {
 					CommandSendMessage.selfWithoutAuthor(connection, "Your friendlist is full.", MessageType.SELF);
@@ -53,7 +53,7 @@ public class CommandFriend extends Command {
 			else if(character_id != -1) {
 				if(player.addFriend(character_id)) {
 					addOfflineFriend(connection, character_id, name);
-					FriendManager.addFriendInDB(player.getCharacterId(), character_id);
+					FriendMgr.addFriendInDB(player.getCharacterId(), character_id);
 				}
 				else {
 					CommandSendMessage.selfWithoutAuthor(connection, "Your friendlist is full.", MessageType.SELF);
@@ -70,7 +70,7 @@ public class CommandFriend extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, "This player is not in your friendlist.", MessageType.SELF);
 				return;
 			}
-			FriendManager.removeFriendFromDB(player.getCharacterId(), id);
+			FriendMgr.removeFriendFromDB(player.getCharacterId(), id);
 			removeFriend(connection, id);
 		}
 	}
@@ -91,7 +91,7 @@ public class CommandFriend extends Command {
 			player.getConnection().writeInt(player.getFriendList().get(i));
 			player.getConnection().writeBoolean(Server.getInGamePlayerList().containsKey(player.getFriendList().get(i)));
 			if(!Server.getInGamePlayerList().containsKey(player.getFriendList().get(i))) {
-				player.getConnection().writeString(CharacterManager.loadCharacterNameFromID(player.getFriendList().get(i)));
+				player.getConnection().writeString(CharacterMgr.loadCharacterNameFromID(player.getFriendList().get(i)));
 			}
 			else {
 				player.getConnection().writeString(Server.getInGameCharacter(player.getFriendList().get(i)).getName());

@@ -12,10 +12,10 @@ import net.connection.PacketID;
 import net.game.ClassType;
 import net.game.Player;
 import net.game.guild.Guild;
-import net.game.guild.GuildManager;
+import net.game.guild.GuildMgr;
 import net.game.guild.GuildMember;
 import net.game.guild.GuildRank;
-import net.game.manager.IgnoreManager;
+import net.game.manager.IgnoreMgr;
 
 public class CommandGuild extends Command {
 	
@@ -68,8 +68,8 @@ public class CommandGuild extends Command {
 			if(member.getGuildRequest() != 0) {
 				return;
 			}
-			if(IgnoreManager.isIgnored(member.getid(), player.getCharacterId())) {
-				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+IgnoreManager.ignoreMessage, MessageType.SELF);
+			if(IgnoreMgr.isIgnored(member.getid(), player.getCharacterId())) {
+				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+IgnoreMgr.ignoreMessage, MessageType.SELF);
 				return;
 			}
 			if(member.getGuild() != null) {
@@ -103,7 +103,7 @@ public class CommandGuild extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, "Nobody invited you to join their guild.", MessageType.SELF);
 				return;
 			}
-			player.setGuild(GuildManager.getGuild(player.getGuildRequest()));
+			player.setGuild(GuildMgr.getGuild(player.getGuildRequest()));
 			player.getGuild().addMember(new GuildMember(player.getCharacterId(), player.getName(), player.getLevel(), player.getGuild().getRankList().get(player.getGuild().getRankList().size()-1), true, "", "", player.getClasse(), System.currentTimeMillis()));
 			initGuildWhenLogin(connection, player);
 			player.setGuildRequest(0);
@@ -124,7 +124,7 @@ public class CommandGuild extends Command {
 			}
 			player.getGuild().setMotd(msg);
 			updateMotd(player.getGuild());
-			GuildManager.updateMotd(player.getGuild());
+			GuildMgr.updateMotd(player.getGuild());
 		}
 		else if(packetId == PacketID.GUILD_SET_INFORMATION) {
 			String msg = connection.readString();
@@ -139,7 +139,7 @@ public class CommandGuild extends Command {
 			}
 			player.getGuild().setInformation(msg);
 			updateInformation(player.getGuild());
-			GuildManager.updateInformation(player.getGuild());
+			GuildMgr.updateInformation(player.getGuild());
 		}
 		else if(packetId == PacketID.GUILD_PROMOTE_PLAYER) {
 			int id = connection.readInt();
@@ -190,7 +190,7 @@ public class CommandGuild extends Command {
 				return;
 			}
 			leaveGuild(player.getGuild(), player.getCharacterId());
-			GuildManager.removeMemberFromDB(player.getGuild(), player.getCharacterId());
+			GuildMgr.removeMemberFromDB(player.getGuild(), player.getCharacterId());
 			player.setGuild(null);
 		}
 		else if(packetId == PacketID.GUILD_SET_LEADER) {
@@ -208,10 +208,10 @@ public class CommandGuild extends Command {
 			member.setRank(player.getGuild().getRankList().get(0));
 			player.getGuild().getMember(player.getCharacterId()).setRank(player.getGuild().getRankList().get(1));
 			player.getGuild().setLeaderId(id);
-			GuildManager.updateMemberRank(player.getCharacterId(), player.getGuild().getId(), player.getGuild().getMember(player.getCharacterId()).getRank().getOrder());
+			GuildMgr.updateMemberRank(player.getCharacterId(), player.getGuild().getId(), player.getGuild().getMember(player.getCharacterId()).getRank().getOrder());
 			sendLeaderToClient(player.getGuild(), member.getId());
-			GuildManager.setLeaderInDB(id, player.getGuild().getId());
-			GuildManager.updateMemberRank(member.getId(), player.getGuild().getId(), member.getRank().getOrder());
+			GuildMgr.setLeaderInDB(id, player.getGuild().getId());
+			GuildMgr.updateMemberRank(member.getId(), player.getGuild().getId(), member.getRank().getOrder());
 		}
 		else if(packetId == PacketID.GUILD_SET_MEMBER_NOTE) {
 			int id = connection.readInt();
@@ -231,7 +231,7 @@ public class CommandGuild extends Command {
 			}
 			member.setNote(note);
 			sendMemberNoteToClient(player.getGuild(), member);
-			GuildManager.updateMemberNote(member.getId(), member.getNote());
+			GuildMgr.updateMemberNote(member.getId(), member.getNote());
 		}
 		else if(packetId == PacketID.GUILD_SET_MEMBER_OFFICER_NOTE) {
 			int id = connection.readInt();
@@ -251,7 +251,7 @@ public class CommandGuild extends Command {
 			}
 			member.setOfficerNote(note);
 			updateMemberOfficerNote(player.getGuild(), member);
-			GuildManager.updateMemberOfficerNote(member.getId(), member.getOfficerNote());
+			GuildMgr.updateMemberOfficerNote(member.getId(), member.getOfficerNote());
 		}
 	}
 	

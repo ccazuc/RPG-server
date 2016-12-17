@@ -1,6 +1,7 @@
 package net.game.chat;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -12,8 +13,10 @@ import net.command.chat.DefaultMessage;
 import net.command.chat.MessageType;
 import net.game.AccountRank;
 import net.game.Player;
-import net.game.manager.AccountManager;
-import net.game.manager.CharacterManager;
+import net.game.manager.AccountMgr;
+import net.game.manager.BanMgr;
+import net.game.manager.CharacterMgr;
+import net.thread.sql.SQLDatas;
 import net.utils.Color;
 
 public class StoreChatCommand {
@@ -25,6 +28,11 @@ public class StoreChatCommand {
 	private final static long MS_IN_AN_HOUR = 3600000l;
 	private final static long MS_IN_A_MINUTE = 60000l;
 	static JDOStatement getBanInfoAccountName;
+	static JDOStatement getBanInfoCharacterName;
+	static JDOStatement getBanListAccount;
+	static JDOStatement getBanListCharacter;
+	static JDOStatement getBanListAccountPattern;
+	static JDOStatement getBanListCharacterPattern;
 
 	final static HashMap<String, ChatCommand> commandMap = new HashMap<String, ChatCommand>();
 	
@@ -111,12 +119,12 @@ public class StoreChatCommand {
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid value for [account_level] on .account set gmlevel [account_name] [account_level]", MessageType.SELF);
 					return;
 				}
-				int accountId = AccountManager.loadAccountIDFromName(accountName);
+				int accountId = AccountMgr.loadAccountIDFromName(accountName);
 				if(accountId == -1) {
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountName+" not found.", MessageType.SELF);
 					return;
 				}
-				AccountManager.updateAccountRank(accountId, level);
+				AccountMgr.updateAccountRank(accountId, level);
 				Player tmp = Server.getInGameCharacterByAccount(accountId);
 				if(tmp == null) {
 					return;
@@ -193,7 +201,7 @@ public class StoreChatCommand {
 					return;
 				}
 			}
-			int accountId = AccountManager.loadAccountIDFromName(accountName);
+			int accountId = AccountMgr.loadAccountIDFromName(accountName);
 			if(accountId == -1) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountName+" not found.", MessageType.SELF);
 				return;
@@ -203,7 +211,7 @@ public class StoreChatCommand {
 				banTimer = -1-System.currentTimeMillis();
 			}
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountId+" banned "+banTime+" for : "+reason, MessageType.SELF);
-			AccountManager.banAccount(accountId, timer, banTimer+timer, player.getName(), reason);
+			BanMgr.banAccount(accountId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacterByAccount(accountId);
 			if(banned == null) {
 				return;
@@ -237,7 +245,7 @@ public class StoreChatCommand {
 					return;
 				}
 			}
-			int characterId = CharacterManager.loadCharacterIDFromName(characterName);
+			int characterId = CharacterMgr.loadCharacterIDFromName(characterName);
 			if(characterId == -1) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" not found.", MessageType.SELF);
 				return;
@@ -247,7 +255,7 @@ public class StoreChatCommand {
 				banTimer = -1-System.currentTimeMillis();
 			}
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" banned "+banTime+" for : "+reason, MessageType.SELF);
-			CharacterManager.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
+			BanMgr.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacter(characterId);
 			if(banned == null) {
 				return;
@@ -281,7 +289,7 @@ public class StoreChatCommand {
 					return;
 				}
 			}
-			int characterId = CharacterManager.loadCharacterIDFromName(ipAdress);
+			int characterId = CharacterMgr.loadCharacterIDFromName(ipAdress);
 			if(characterId == -1) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+ipAdress+" not found.", MessageType.SELF);
 				return;
@@ -291,7 +299,7 @@ public class StoreChatCommand {
 				banTimer = -1-System.currentTimeMillis();
 			}
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+ipAdress+" banned "+banTime+" for : "+reason, MessageType.SELF);
-			CharacterManager.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
+			BanMgr.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacter(characterId);
 			if(banned == null) {
 				return;
@@ -480,7 +488,7 @@ public class StoreChatCommand {
 				accountId = Integer.parseInt(value[2]);
 			}
 			else {
-				accountId = AccountManager.loadAccountIDFromName(value[2]);
+				accountId = AccountMgr.loadAccountIDFromName(value[2]);
 			}
 			if(accountId == -1) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+value[2].substring(0, 1).toUpperCase()+value[2].substring(1).toLowerCase()+" not found.", MessageType.SELF);
@@ -519,35 +527,127 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(value.length < 3) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [account_name] in .baninfo account [account_name]", MessageType.SELF);
+			if(player.getAccountRank().getValue() < this.rank.getValue()) {
+				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
 				return;
 			}
-			int accountId = AccountManager.loadAccountIDFromName(value[2]);
-			if(accountId == -1) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+value[2].substring(0, 1).toUpperCase()+value[2].substring(1).toLowerCase()+" not found.", MessageType.SELF);
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [character_name || character_id] in .baninfo character [character_name || character_id]", MessageType.SELF);
+				return;
+			}
+			int characterId = 0;
+			if(Server.isInteger(value[2])) {
+				characterId = Integer.parseInt(value[2]);
+			}
+			else {
+				characterId = CharacterMgr.loadCharacterIDFromName(value[2]);
+			}
+			if(characterId == -1) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+value[2]+" not found.", MessageType.SELF);
 				return;
 			}
 			try {
-				if(getBanInfoAccountName == null) {
-					getBanInfoAccountName = Server.getAsyncJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM account_banned WHERE account_id = ?");
+				if(getBanInfoCharacterName == null) {
+					getBanInfoCharacterName = Server.getAsyncJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM character_banned WHERE character_id = ?");
 				}
-				getBanInfoAccountName.clear();
-				getBanInfoAccountName.putInt(accountId);
-				getBanInfoAccountName.execute();
-				if(getBanInfoAccountName.fetch()) {
-					long ban_date = getBanInfoAccountName.getLong();
-					long unban_date = getBanInfoAccountName.getLong();
-					String banned_by = getBanInfoAccountName.getString();
-					String ban_reason = getBanInfoAccountName.getString();
+				getBanInfoCharacterName.clear();
+				getBanInfoCharacterName.putInt(characterId);
+				getBanInfoCharacterName.execute();
+				if(getBanInfoCharacterName.fetch()) {
+					long ban_date = getBanInfoCharacterName.getLong();
+					long unban_date = getBanInfoCharacterName.getLong();
+					String banned_by = getBanInfoCharacterName.getString();
+					String ban_reason = getBanInfoCharacterName.getString();
 					StringBuilder builder = new StringBuilder();
 					Date banDate = new Date(ban_date);
 					if(unban_date == -1) {
-						builder.append("Account "+value[2]+" has been permanently banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason);
+						builder.append("Character "+value[2]+" has been permanently banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason);
 					}
 					else {
 						Date unbanDate = new Date(unban_date);
-						builder.append("Account "+value[2]+" has been banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason+"\nBan will expire the "+unbanDate.toString());
+						builder.append("Character "+value[2]+" has been banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason+"\nBan will expire the "+unbanDate.toString());
+					}
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
+				}
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private final static ChatCommand banlist = new ChatCommand("banlist", AccountRank.GAMEMASTER) {
+	
+		@Override
+		public void handle(String command, Player player) {
+			command = command.trim().toLowerCase();
+			if(command.equals('.'+this.name)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+			}
+			else {
+				String[] value = command.split(" ");
+				if(value.length < 2) {
+					return;
+				}
+				int i = 0;
+				while(i < this.subCommandList.size()) {
+					if(this.subCommandList.get(i).getName().equals(value[1])) {
+						this.subCommandList.get(i).handle(value, player);
+						return;
+					}
+					i++;
+				}
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+			}
+		}
+	};
+	private final static ChatSubCommand banlist_account = new ChatSubCommand("account", "banlist", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(player.getAccountRank().getValue() < this.rank.getValue()) {
+				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+				return;
+			}
+			try {
+				if(value.length < 3) {
+					if(getBanListAccount == null) {
+						getBanListAccount = Server.getAsyncJDO().prepare("SELECT account_id FROM account_banned");
+					}
+					StringBuilder builder = new StringBuilder();
+					builder.append("List of banned accounts:");
+					getBanListAccount.clear();
+					getBanListAccount.execute();
+					while(getBanListAccount.fetch()) {
+						String name = AccountMgr.loadAccountNameFromID(getBanListAccount.getInt());
+						if(name != null) {
+							builder.append("\n    "+name);
+						}
+					}
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
+				}
+				else {
+					if(getBanListAccountPattern == null) {
+						getBanListAccountPattern = Server.getAsyncJDO().prepare("SELECT COUNT(account_id) FROM account_banned WHERE account_id = ?");
+					}
+					ArrayList<SQLDatas> accountIDList = AccountMgr.loadAccountIDAndNameFromNamePattern(value[2]);
+					if(accountIDList == null || accountIDList.size() == 0) {
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "No account match "+value[2], MessageType.SELF);
+						return;
+					}
+					StringBuilder builder = new StringBuilder();
+					builder.append("List of banned account matching "+value[2]+':');
+					int i = 0;
+					while(i < accountIDList.size()) {
+						getBanListAccountPattern.clear();
+						getBanListAccountPattern.putInt(accountIDList.get(i).getIValue1());
+						getBanListAccountPattern.execute();
+						if(getBanListAccountPattern.fetch()) {
+							int number = getBanListAccountPattern.getInt();
+							if(number > 0) {
+								builder.append("\n    "+accountIDList.get(i).getStringValue1());
+							}
+						}
+						i++;
 					}
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 				}
@@ -577,7 +677,10 @@ public class StoreChatCommand {
 		server_set.addSubCommand(server_set_closed);
 		commandMap.put(server.getName(), server);
 		baninfo.addSubCommand(baninfo_account);
+		baninfo.addSubCommand(baninfo_character);
 		commandMap.put(baninfo.getName(), baninfo);
+		banlist.addSubCommand(banlist_account);
+		commandMap.put(banlist.getName(), banlist);
 	}
 	
 	static long convStringTimerToMS(String timer) {

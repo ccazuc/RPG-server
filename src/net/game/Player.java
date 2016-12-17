@@ -15,7 +15,7 @@ import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.guild.Guild;
-import net.game.guild.GuildManager;
+import net.game.guild.GuildMgr;
 import net.game.item.Item;
 import net.game.item.ItemManager;
 import net.game.item.ItemType;
@@ -28,8 +28,8 @@ import net.game.item.stuff.Stuff;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 import net.game.item.weapon.WeaponType;
-import net.game.manager.CharacterManager;
-import net.game.manager.FriendManager;
+import net.game.manager.CharacterMgr;
+import net.game.manager.FriendMgr;
 import net.game.profession.Profession;
 import net.game.shortcut.Shortcut;
 import net.game.spell.Spell;
@@ -41,9 +41,9 @@ public class Player extends Unit {
 	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
 	//private ProfessionManager professionManager = new ProfessionManager();
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
-	private CharacterManager characterManager = new CharacterManager(this);
+	private CharacterMgr characterManager = new CharacterMgr(this);
 	private SpellBarManager spellBarManager = new SpellBarManager();
-	private GuildManager guildManager = new GuildManager(this);
+	private GuildMgr guildManager = new GuildMgr(this);
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
 	private ItemManager itemManager = new ItemManager();
 	private HashMap<Integer, Spell> spellUnlocked;
@@ -311,11 +311,11 @@ public class Player extends Unit {
 	
 	public void notifyFriendOnline() {
 		int i = 0;
-		if(FriendManager.containsKey(this.characterId)) {
-			int length = FriendManager.getFriendMap().get(this.characterId).size();
+		if(FriendMgr.containsKey(this.characterId)) {
+			int length = FriendMgr.getFriendMap().get(this.characterId).size();
 			while(i < length) {
-				if(Server.getInGamePlayerList().containsKey(FriendManager.getFriendMap().get(this.characterId).get(i))) {
-					CommandFriend.notifyFriendOnline(Server.getInGameCharacter(FriendManager.getFriendMap().get(this.characterId).get(i)), this);
+				if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.characterId).get(i))) {
+					CommandFriend.notifyFriendOnline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.characterId).get(i)), this);
 				}
 				i++;
 			}
@@ -324,11 +324,11 @@ public class Player extends Unit {
 	
 	public void notifyFriendOffline() {
 		int i = 0;
-		if(FriendManager.containsKey(this.characterId)) {
-			int length = FriendManager.getFriendMap().get(this.characterId).size();
+		if(FriendMgr.containsKey(this.characterId)) {
+			int length = FriendMgr.getFriendMap().get(this.characterId).size();
 			while(i < length) {
-				if(Server.getInGamePlayerList().containsKey(FriendManager.getFriendMap().get(this.characterId).get(i))) {
-					CommandFriend.notifyFriendOffline(Server.getInGameCharacter(FriendManager.getFriendMap().get(this.characterId).get(i)), this);
+				if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.characterId).get(i))) {
+					CommandFriend.notifyFriendOffline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.characterId).get(i)), this);
 				}
 				i++;
 			}
@@ -364,9 +364,9 @@ public class Player extends Unit {
 			if(this.guild != null) {
 				CommandGuild.notifyOfflinePlayer(this);
 			}
-			FriendManager.getFriendMap().remove(this.getCharacterId());
+			FriendMgr.getFriendMap().remove(this.getCharacterId());
 		}
-		FriendManager.getFriendMap().remove(this.characterId);
+		FriendMgr.getFriendMap().remove(this.characterId);
 		CommandLogoutCharacter.setPlayerOfflineInDB(this);
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);

@@ -9,7 +9,7 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Party;
 import net.game.Player;
-import net.game.manager.IgnoreManager;
+import net.game.manager.IgnoreMgr;
 
 public class CommandParty extends Command {
 
@@ -33,8 +33,8 @@ public class CommandParty extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, "You can't invite yourself in a party.", MessageType.SELF);
 				return;
 			}
-			if(IgnoreManager.isIgnored(member.getCharacterId(), player.getCharacterId())) {
-				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+IgnoreManager.ignoreMessage, MessageType.SELF);
+			if(IgnoreMgr.isIgnored(member.getCharacterId(), player.getCharacterId())) {
+				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+IgnoreMgr.ignoreMessage, MessageType.SELF);
 				return;
 			}
 			if(!(isPartyLeader(player, player.getParty() == null || (player.getParty() != null && player.getParty().isPartyLeader(player))))) {

@@ -11,7 +11,7 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
 import net.game.item.Item;
-import net.game.manager.IgnoreManager;
+import net.game.manager.IgnoreMgr;
 
 public class CommandTrade extends Command {
 
@@ -35,8 +35,8 @@ public class CommandTrade extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, "Can't trade with yourself.", MessageType.SELF);
 				return;
 			}
-			if(IgnoreManager.isIgnored(trade.getCharacterId(), player.getCharacterId())) {
-				CommandSendMessage.selfWithoutAuthor(connection, trade.getName()+IgnoreManager.ignoreMessage, MessageType.SELF);
+			if(IgnoreMgr.isIgnored(trade.getCharacterId(), player.getCharacterId())) {
+				CommandSendMessage.selfWithoutAuthor(connection, trade.getName()+IgnoreMgr.ignoreMessage, MessageType.SELF);
 				return;
 			}
 			if(player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading

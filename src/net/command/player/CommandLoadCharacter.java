@@ -4,8 +4,8 @@ import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.game.Player;
-import net.game.manager.CharacterManager;
-import net.game.manager.IgnoreManager;
+import net.game.manager.CharacterMgr;
+import net.game.manager.IgnoreMgr;
 
 public class CommandLoadCharacter extends Command {
 
@@ -17,7 +17,7 @@ public class CommandLoadCharacter extends Command {
 			player.close();
 			return;
 		}
-		if(!CharacterManager.checkPlayerAccount(player.getAccountId(), id)) {
+		if(!CharacterMgr.checkPlayerAccount(player.getAccountId(), id)) {
 			player.close();
 			System.out.println("Account "+player.getAccountId()+" tried to connect on someone else's character (id = "+id+')');
 			return;
@@ -33,7 +33,7 @@ public class CommandLoadCharacter extends Command {
 		player.updateLastLoginTimer();
 		CommandFriend.loadFriendList(player);
 		player.notifyFriendOnline();
-		IgnoreManager.loadIgnoreList(player.getCharacterId());
+		IgnoreMgr.loadIgnoreList(player.getCharacterId());
 		CommandIgnore.ignoreInit(player.getConnection(), player);
 		player.loadGuild();
 		if(player.getGuild() != null) {
