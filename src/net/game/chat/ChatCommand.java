@@ -7,12 +7,12 @@ import net.game.Player;
 
 public class ChatCommand {
 
-	protected AccountRank accountRank;
+	protected AccountRank rank;
 	protected String name;
 	protected ArrayList<ChatSubCommand> subCommandList;
 	
 	public ChatCommand(String name, AccountRank accountLevel) {
-		this.accountRank = accountLevel;
+		this.rank = accountLevel;
 		this.name = name;
 	}
 	
@@ -51,6 +51,6 @@ public class ChatCommand {
 	}
 	
 	public AccountRank getRank() {
-		return this.accountRank;
+		return this.rank;
 	}
 }

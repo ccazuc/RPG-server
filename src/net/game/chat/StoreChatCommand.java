@@ -66,8 +66,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() >= this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			StringBuilder builder = new StringBuilder();
@@ -81,8 +80,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 3) {
@@ -104,8 +102,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 5) {
@@ -179,8 +176,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 5) {
@@ -223,8 +219,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 5) {
@@ -267,8 +262,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 5) {
@@ -362,8 +356,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			System.out.println("[SERVER EXIT] requested by "+player.getName());
@@ -393,8 +386,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 3) {
@@ -416,8 +408,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 4) {
@@ -431,8 +422,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 4) {
@@ -454,6 +444,9 @@ public class StoreChatCommand {
 	
 		@Override
 		public void handle(String command, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
 			command = command.trim().toLowerCase();
 			if(command.equals('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
@@ -479,6 +472,9 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
 			if(value.length < 3) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [account_name || account_id] in .baninfo account [account_name || account_id]", MessageType.SELF);
 				return;
@@ -527,8 +523,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 3) {
@@ -579,6 +574,9 @@ public class StoreChatCommand {
 	
 		@Override
 		public void handle(String command, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
 			command = command.trim().toLowerCase();
 			if(command.equals('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
@@ -604,8 +602,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			try {
@@ -661,8 +658,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(player.getAccountRank().getValue() < this.rank.getValue()) {
-				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			if(!checkRank(player, this.rank)) {
 				return;
 			}
 			if(value.length < 3) {
@@ -795,6 +791,14 @@ public class StoreChatCommand {
 			i++;
 		}
 		return value;
+	}
+	
+	static boolean checkRank(Player player, AccountRank rank) {
+		if(player.getAccountRank().getValue() < rank.getValue()) {
+			CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+			return false;
+		}
+		return true;
 	}
 	
 	public static String convMillisToDate(long millis) {
