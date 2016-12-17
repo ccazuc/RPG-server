@@ -801,9 +801,18 @@ public class StoreChatCommand {
 					target = Server.getInGameCharacterByName(value[2]);
 					if(target != null) {
 						target.setLevel(target.getLevel()+1);
+						CharacterMgr.setExperience(target.getCharacterId(), Player.getExpNeeded(target.getLevel()));
 						CommandSendMessage.selfWithoutAuthor(player.getConnection(), target.getName()+" is now level "+target.getLevel(), MessageType.SELF);
 					}
-					//setLevel in DB
+					else {
+						int id = CharacterMgr.loadCharacterIDFromName(value[2]);
+						if(id == -1) {
+							return;
+						}
+						int level = Player.getLevel(CharacterMgr.getExperience(id));
+						CharacterMgr.setExperience(id, Player.getExpNeeded(level+1));
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), value[2]+" is now level "+level+1, MessageType.SELF);
+					}
 				}
 			}
 			else if(value.length == 4) {
@@ -815,8 +824,17 @@ public class StoreChatCommand {
 				int level = Integer.parseInt(value[3]);
 				if(target != null) {
 					target.setLevel(level);
+					CharacterMgr.setExperience(target.getCharacterId(), Player.getExpNeeded(target.getLevel()));
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), target.getName()+" is now level "+level, MessageType.SELF);
 				}
-				//set level in DB
+				else {
+					int id = CharacterMgr.loadCharacterIDFromName(value[2]);
+					if(id == -1) {
+						return;
+					}
+					CharacterMgr.setExperience(id, Player.getExpNeeded(level));
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), value[2]+" is now level "+level, MessageType.SELF);
+				}
 			}
 		}
 	};

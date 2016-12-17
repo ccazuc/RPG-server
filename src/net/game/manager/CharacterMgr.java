@@ -34,6 +34,8 @@ public class CharacterMgr {
 	private static JDOStatement removeContainer;
 	private static JDOStatement removeStuff;
 	private static JDOStatement removeSpellbar;
+	private static JDOStatement setExperience;
+	private static JDOStatement getExperience;
 	private static SQLRequest asyncRemoveCharacter = new SQLRequest("DELETE FROM `character` WHERE character_id = ?", "Remove character") {
 		
 		@Override
@@ -350,6 +352,10 @@ public class CharacterMgr {
 		if(id == -1) {
 			return;
 		}
+		asynDeleteCharacterByID(id);
+	}
+	
+	public static void asynDeleteCharacterByID(int id) {
 		asyncRemoveCharacter.addDatas(new SQLDatas(id));
 		Server.addNewSQLRequest(asyncRemoveCharacter);
 		asyncRemoveBag.addDatas(new SQLDatas(id));
@@ -398,6 +404,39 @@ public class CharacterMgr {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void setExperience(int id, int experience) {
+		try {
+			if(setExperience == null) {
+				setExperience = Server.getJDO().prepare("UPDATE `character` SET experience = ? WHERE character_id ?");
+			}
+			setExperience.clear();
+			setExperience.putInt(experience);
+			setExperience.putInt(id);
+			setExperience.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static int getExperience(int id) {
+		try {
+			if(getExperience == null) {
+				getExperience = Server.getJDO().prepare("SELECT experience FROM `character` WHERE character_id ?");
+			}
+			getExperience.clear();
+			getExperience.putInt(id);
+			getExperience.execute();
+			if(getExperience.fetch()) {
+				return getExperience.getInt();
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 	
 	public static WeaponType[] getWeaponTypes(short type) {

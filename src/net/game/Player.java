@@ -1257,4 +1257,221 @@ public class Player extends Unit {
 		}
 		return 70;
 	}
+	
+	public static int getExpNeeded(int level) {
+		if(level == 0) {
+			return 0;
+		}
+		if(level == 1) {
+			return 400;
+		}
+		if(level == 2) {
+			return 900;
+		}
+		if(level == 3) {
+			return 1400;
+		}
+		if(level == 4) {
+			return 2100;
+		}
+		if(level == 5) {
+			return 2800;
+		}
+		if(level == 6) {
+			return 3600;
+		}
+		if(level == 7) {
+			return 4500;
+		}
+		if(level == 8) {
+			return 5400;
+		}
+		if(level == 9) {
+			return 6500;
+		}
+		if(level == 10) {
+			return 7600;
+		}
+		if(level == 11) {
+			return 8700;
+		}
+		if(level == 12) {
+			return 9800;
+		}
+		if(level == 13) {
+			return 11000;
+		}
+		if(level == 14) {
+			return 12300;
+		}
+		if(level == 15) {
+			return 13600;
+		}
+		if(level == 16) {
+			return 15000;
+		}
+		if(level == 17) {
+			return 16400;
+		}
+		if(level == 18) {
+			return 17800;
+		}
+		if(level == 19) {
+			return 19300;
+		}
+		if(level == 20) {
+			return 20800;
+		}
+		if(level == 21) {
+			return 22400;
+		}
+		if(level == 22) {
+			return 24000;
+		}
+		if(level == 23) {
+			return 25500;
+		}
+		if(level == 24) {
+			return 27200;
+		}
+		if(level == 25) {
+			return 28900;
+		}
+		if(level == 26) {
+			return 30500;
+		}
+		if(level == 27) {
+			return 32200;
+		}
+		if(level == 28) {
+			return 33900;
+		}
+		if(level == 29) {
+			return 36300;
+		}
+		if(level == 30) {
+			return 38800;
+		}
+		if(level == 31) {
+			return 41600;
+		}
+		if(level == 32) {
+			return 44600;
+		}
+		if(level == 33) {
+			return 48000;
+		}
+		if(level == 34) {
+			return 51400;
+		}
+		if(level == 35) {
+			return 55000;
+		}
+		if(level == 36) {
+			return 58700;
+		}
+		if(level == 37) {
+			return 62400;
+		}
+		if(level == 38) {
+			return 66200;
+		}
+		if(level == 39) {
+			return 70200;
+		}
+		if(level == 40) {
+			return 74300;
+		}
+		if(level == 41) {
+			return 78500;
+		}
+		if(level == 42) {
+			return 82800;
+		}
+		if(level == 43) {
+			return 87100;
+		}
+		if(level == 44) {
+			return 91600;
+		}
+		if(level == 45) {
+			return 96300;
+		}
+		if(level == 46) {
+			return 101000;
+		}
+		if(level == 47) {
+			return 105800;
+		}
+		if(level == 48) {
+			return 110700;
+		}
+		if(level == 49) {
+			return 115700;
+		}
+		if(level == 50) {
+			return 120900;
+		}
+		if(level == 51) {
+			return 126100;
+		}
+		if(level == 52) {
+			return 131500;
+		}
+		if(level == 53) {
+			return 137000;
+		}
+		if(level == 54) {
+			return 142500;
+		}
+		if(level == 55) {
+			return 148200;
+		}
+		if(level == 56) {
+			return 154000;
+		}
+		if(level == 57) {
+			return 159900;
+		}
+		if(level == 58) {
+			return 165800;
+		}
+		if(level == 59) {
+			return 172000;
+		}
+		if(level == 60) {
+			return 290000;
+		}
+		if(level == 61) {
+			return 317000;
+		}
+		if(level == 62) {
+			return 349000;
+		}
+		if(level == 63) {
+			return 386000;
+		}
+		if(level == 64) {
+			return 428000;
+		}
+		if(level == 65) {
+			return 475000;
+		}
+		if(level == 66) {
+			return 527000;
+		}
+		if(level == 67) {
+			return 585000;
+		}
+		if(level == 68) {
+			return 648000;
+		}
+		if(level == 69) {
+			return 717000;
+		}
+		if(level == 70) {
+			return 800000; //TODO check real value
+		}
+		return -1;
+	}
 }
