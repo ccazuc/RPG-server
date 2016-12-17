@@ -29,6 +29,86 @@ public class CharacterMgr {
 	private static JDOStatement checkPlayerAccount;
 	private static JDOStatement loadCharacterIDFromName;
 	private static JDOStatement loadCharacterIDAndNameFromNamePattern;
+	private static JDOStatement removeCharacter;
+	private static JDOStatement removeBag;
+	private static JDOStatement removeContainer;
+	private static JDOStatement removeStuff;
+	private static JDOStatement removeSpellbar;
+	private static SQLRequest asyncRemoveCharacter = new SQLRequest("DELETE FROM `character` WHERE character_id = ?", "Remove character") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.putInt(datas.getIValue1());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private static SQLRequest asyncRemoveBag = new SQLRequest("DELETE FROM bag WHERE character_id = ?", "Remove bag") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.putInt(datas.getIValue1());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private static SQLRequest asyncRemoveContainer = new SQLRequest("DELETE FROM character_containers WHERE character_id = ?", "Remove container") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.putInt(datas.getIValue1());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private static SQLRequest asyncRemoveStuff = new SQLRequest("DELETE FROM character_stuff WHERE character_id = ?", "Remove stuff") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.putInt(datas.getIValue1());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
+	private static SQLRequest asyncRemoveSpellbar = new SQLRequest("DELETE FROM spellbar WHERE character_id = ?", "Remove spellbar") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.putInt(datas.getIValue1());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?", "Update last online timer") {
 		
 		@Override
@@ -263,6 +343,61 @@ public class CharacterMgr {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static void asynDeleteCharacterByName(String name) {
+		int id = loadCharacterIDFromName(name);
+		if(id == -1) {
+			return;
+		}
+		asyncRemoveCharacter.addDatas(new SQLDatas(id));
+		Server.addNewSQLRequest(asyncRemoveCharacter);
+		asyncRemoveBag.addDatas(new SQLDatas(id));
+		Server.addNewSQLRequest(asyncRemoveBag);
+		asyncRemoveContainer.addDatas(new SQLDatas(id));
+		Server.addNewSQLRequest(asyncRemoveContainer);
+		asyncRemoveStuff.addDatas(new SQLDatas(id));
+		Server.addNewSQLRequest(asyncRemoveStuff);
+		asyncRemoveSpellbar.addDatas(new SQLDatas(id));
+		Server.addNewSQLRequest(asyncRemoveSpellbar);
+	}
+	
+	public static void deleteCharacterByName(String name) {
+		int id = loadCharacterIDFromName(name);
+		if(id == -1) {
+			return;
+		}
+		deleteCharacterByID(id);
+	}
+	
+	public static void deleteCharacterByID(int id) {
+		try {
+			if(removeCharacter == null) {
+				removeCharacter = Server.getJDO().prepare("DELETE FROM `character` WHERE character_id = ?");
+				removeBag = Server.getJDO().prepare("DELETE FROM bag WHERE character_id = ?");
+				removeContainer = Server.getJDO().prepare("DELETE FROM character_containers WHERE character_id = ?");
+				removeStuff = Server.getJDO().prepare("DELETE FROM character_stuff WHERE character_id = ?");
+				removeSpellbar = Server.getJDO().prepare("DELETE FROM spellbar WHERE character_id = ?");
+			}
+			removeCharacter.clear();
+			removeCharacter.putInt(id);
+			removeCharacter.execute();
+			removeBag.clear();
+			removeBag.putInt(id);
+			removeBag.execute();
+			removeContainer.clear();
+			removeContainer.putInt(id);
+			removeContainer.execute();
+			removeStuff.clear();
+			removeStuff.putInt(id);
+			removeStuff.execute();
+			removeSpellbar.clear();
+			removeSpellbar.putInt(id);
+			removeSpellbar.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static WeaponType[] getWeaponTypes(short type) {

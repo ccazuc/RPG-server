@@ -11,6 +11,7 @@ import net.thread.sql.SQLRequest;
 public class AccountMgr {
 
 	private static JDOStatement loadAccountIDFromName;
+	private static JDOStatement loadAccountIDFromCharacterID;
 	private static JDOStatement loadAccountIDAndNameFromNamePattern;
 	private final static SQLRequest updateAccountRank = new SQLRequest("UPDATE account SET rank = ? WHERE id = ?", "Update account rank") {
 		
@@ -94,5 +95,23 @@ public class AccountMgr {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static int loadAccountIDFromCharacterID(int characterID) {
+		try {
+			if(loadAccountIDFromCharacterID == null) {
+				loadAccountIDFromCharacterID = Server.getJDO().prepare("SELECT account_id FROM `character` WHERE character_id = ?");
+			}
+			loadAccountIDFromCharacterID.clear();
+			loadAccountIDFromCharacterID.putInt(characterID);
+			loadAccountIDFromCharacterID.execute();
+			if(loadAccountIDFromCharacterID.fetch()) {
+				return loadAccountIDFromCharacterID.getInt();
+			}
+		}
+		catch(SQLException e)  {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 }

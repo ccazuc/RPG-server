@@ -752,6 +752,92 @@ public class StoreChatCommand {
 			}
 		}
 	};
+	private final static ChatCommand character = new ChatCommand("character", AccountRank.GAMEMASTER) {
+	
+		@Override
+		public void handle(String command, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			command = command.trim().toLowerCase();
+			if(command.equals('.'+this.name)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+			}
+			else {
+				String[] value = command.split(" ");
+				if(value.length < 2) {
+					return;
+				}
+				int i = 0;
+				while(i < this.subCommandList.size()) {
+					if(this.subCommandList.get(i).getName().equals(value[1])) {
+						this.subCommandList.get(i).handle(value, player);
+						return;
+					}
+					i++;
+				}
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+			}
+		}
+	};
+	private final static ChatSubCommand character_level = new ChatSubCommand("level", "character", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .character level [character_name] [level]", MessageType.SELF);
+				return;
+			}
+			Player target = null;
+			if(value.length < 4) {
+				if(Server.isInteger(value[2])) {
+					player.setLevel(Integer.parseInt(value[2]));
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You are now level "+player.getLevel(), MessageType.SELF);
+				}
+				else {
+					target = Server.getInGameCharacterByName(value[2]);
+					if(target != null) {
+						target.setLevel(target.getLevel()+1);
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), target.getName()+" is now level "+target.getLevel(), MessageType.SELF);
+					}
+					//setLevel in DB
+				}
+			}
+			else if(value.length == 4) {
+				if(!Server.isInteger(value[3])) {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [level] in .character level [character_name] [level]", MessageType.SELF);
+					return;
+				}
+				target = Server.getInGameCharacterByName(value[2]);
+				int level = Integer.parseInt(value[3]);
+				if(target != null) {
+					target.setLevel(level);
+				}
+				//set level in DB
+			}
+		}
+	};
+	private final static ChatSubCommand character_erase = new ChatSubCommand("erase", "character", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .character erase [character_name]", MessageType.SELF);
+				return;
+			}
+			Player target = Server.getInGameCharacterByName(value[2]);
+			if(target != null) {
+				target.close();
+			}
+			CharacterMgr.deleteCharacterByName(value[2]);
+		}
+	};
 	
 	public static void initChatCommandMap() {
 		account.addSubCommand(account_onlinelist);
@@ -778,6 +864,9 @@ public class StoreChatCommand {
 		banlist.addSubCommand(banlist_account);
 		banlist.addSubCommand(banlist_character);
 		commandMap.put(banlist.getName(), banlist);
+		character.addSubCommand(character_level);
+		character.addSubCommand(character_erase);
+		commandMap.put(character.getName(), character);
 	}
 	
 	static long convStringTimerToMS(String timer) {
