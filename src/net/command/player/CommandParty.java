@@ -24,7 +24,7 @@ public class CommandParty extends Command {
 				return;
 			}
 			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-			Player member = Server.getInGameCharacter(name);
+			Player member = Server.getInGameCharacterByName(name);
 			if(member == null) {
 				CommandPlayerNotFound.write(connection, name);
 				return;

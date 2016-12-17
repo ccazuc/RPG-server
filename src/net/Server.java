@@ -132,6 +132,7 @@ public class Server {
 	private static void readOnlinePlayers() {
 		for(Player player : inGamePlayerList.values()) {
 			player.getConnectionManager().read();
+			System.out.println(player.getIpAdress());
 		}
 	}
 	
@@ -236,13 +237,28 @@ public class Server {
 		return inGamePlayerList.get(id);
 	}
 	
-	public static Player getInGameCharacter(String name) {
+	public static Player getInGameCharacterByName(String name) {
 		for(Player player : inGamePlayerList.values()) {
 			if(player.getName().equals(name)) {
 				return player;
 			}
 		}
 		return null;
+	}
+	
+	public static ArrayList<Player> getAllInGameCharacterByIP(String ip) {
+		boolean init = false;
+		ArrayList<Player> list = null;
+		for(Player player : inGamePlayerList.values()) {
+			if(player.getIpAdress().equals(ip)) {
+				if(!init) {
+					list = new ArrayList<Player>();
+					init = true;
+				}
+				list.add(player);
+			}
+		}
+		return list;
 	}
 	
 	public static Player getInGameCharacterByAccount(int accountId) {

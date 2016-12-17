@@ -26,7 +26,7 @@ public class CommandTrade extends Command {
 				return;
 			}
 			traded = traded.substring(0, 1).toUpperCase()+traded.substring(1).toLowerCase();
-			Player trade = Server.getInGameCharacter(traded);
+			Player trade = Server.getInGameCharacterByName(traded);
 			if(trade == null) {
 				CommandPlayerNotFound.write(connection, traded);
 				return;

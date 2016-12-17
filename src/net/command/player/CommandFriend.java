@@ -24,7 +24,7 @@ public class CommandFriend extends Command {
 				return;
 			}
 			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-			Player member = Server.getInGameCharacter(name);
+			Player member = Server.getInGameCharacterByName(name);
 			int character_id = 0;
 			if(member == null) { //player is offline or doesn't exist
 				character_id = CharacterMgr.playerExistsInDB(name);

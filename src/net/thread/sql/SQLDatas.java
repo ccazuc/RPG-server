@@ -10,6 +10,7 @@ public class SQLDatas {
 	protected byte bValue1;
 	protected String stringValue1;
 	protected String stringValue2;
+	protected String stringValue3;
 	
 	public SQLDatas(int iValue1) {
 		this.iValue1 = iValue1;
@@ -69,6 +70,14 @@ public class SQLDatas {
 		this.stringValue2 = stringValue2;
 	}
 	
+	public SQLDatas(long lValue1, long lValue2, String stringValue1, String stringValue2, String stringValue3) {
+		this.lValue1 = lValue1;
+		this.lValue2 = lValue2;
+		this.stringValue1 = stringValue1;
+		this.stringValue2 = stringValue2;
+		this.stringValue3 = stringValue3;
+	}
+	
 	public int getIValue1() {
 		return this.iValue1;
 	}
@@ -99,5 +108,9 @@ public class SQLDatas {
 	
 	public String getStringValue2() {
 		return this.stringValue2;
+	}
+	
+	public String getStringValue3() {
+		return this.stringValue3;
 	}
 }

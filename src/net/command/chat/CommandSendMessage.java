@@ -28,7 +28,7 @@ public class CommandSendMessage extends Command {
 		if(type == MessageType.WHISPER) {
 			String target = connection.readString();
 			target = target.substring(0, 1).toUpperCase()+target.substring(1).toLowerCase();
-			Player temp = Server.getInGameCharacter(target);
+			Player temp = Server.getInGameCharacterByName(target);
 			if(temp == null) {
 				CommandPlayerNotFound.write(connection, target);
 				return;

@@ -205,8 +205,11 @@ public class StoreChatCommand {
 			long timer = System.currentTimeMillis();
 			if(banTimer < 0) {
 				banTimer = -1-System.currentTimeMillis();
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountId+" banned permanently for : "+reason, MessageType.SELF);
 			}
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountId+" banned "+banTime+" for : "+reason, MessageType.SELF);
+			else {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountId+" banned "+banTime+" for : "+reason, MessageType.SELF);
+			}
 			BanMgr.banAccount(accountId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacterByAccount(accountId);
 			if(banned == null) {
@@ -248,8 +251,11 @@ public class StoreChatCommand {
 			long timer = System.currentTimeMillis();
 			if(banTimer < 0) {
 				banTimer = -1-System.currentTimeMillis();
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" banned permanently for : "+reason, MessageType.SELF);
 			}
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" banned "+banTime+" for : "+reason, MessageType.SELF);
+			else {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" banned "+banTime+" for : "+reason, MessageType.SELF);
+			}
 			BanMgr.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacter(characterId);
 			if(banned == null) {
@@ -273,6 +279,10 @@ public class StoreChatCommand {
 			String banTime = value[3];
 			String reason = value[4];
 			long banTimer = 0;
+			if(!isValidIpAdresse(ipAdress)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [ip_adresse] in .ban ip [ip_adress] [duration] [reason]", MessageType.SELF);
+				return;
+			}
 			if(Server.isInteger(banTime)) {
 				banTimer = Integer.parseInt(banTime);
 			}
@@ -283,22 +293,24 @@ public class StoreChatCommand {
 					return;
 				}
 			}
-			int characterId = CharacterMgr.loadCharacterIDFromName(ipAdress);
-			if(characterId == -1) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+ipAdress+" not found.", MessageType.SELF);
-				return;
-			}
 			long timer = System.currentTimeMillis();
 			if(banTimer < 0) {
 				banTimer = -1-System.currentTimeMillis();
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "IPAdress "+ipAdress+" banned permanently for : "+reason, MessageType.SELF);
 			}
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+ipAdress+" banned "+banTime+" for : "+reason, MessageType.SELF);
-			BanMgr.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
-			Player banned = Server.getInGameCharacter(characterId);
-			if(banned == null) {
+			else {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "IPAdress "+ipAdress+" banned "+banTime+" for : "+reason, MessageType.SELF);
+			}
+			BanMgr.banIPAdress(ipAdress, timer, banTimer+timer, player.getName(), reason);
+			ArrayList<Player> bannedList = Server.getAllInGameCharacterByIP('/'+ipAdress);
+			if(bannedList == null) {
 				return;
 			}
-			banned.close();
+			int i = 0;
+			while(i < bannedList.size()) {
+				bannedList.get(i).close();
+				i++;
+			}
 		}
 	};
 	private final static ChatCommand help = new ChatCommand("help", AccountRank.PLAYER) {
@@ -797,6 +809,25 @@ public class StoreChatCommand {
 		if(player.getAccountRank().getValue() < rank.getValue()) {
 			CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
 			return false;
+		}
+		return true;
+	}
+	
+	static boolean isValidIpAdresse(String ip) {
+		String[] value = ip.split(".");
+		if(value.length != 4) {
+			return false;
+		}
+		int i = 0;
+		while(i < value.length) {
+			if(!Server.isInteger(value[i])) {
+				return false;
+			}
+			int number = Integer.parseInt(value[i]);
+			if(number < 0 && number > 255) {
+				return false;
+			}
+			i++;
 		}
 		return true;
 	}

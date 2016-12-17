@@ -26,7 +26,7 @@ public class CommandIgnore extends Command {
 				return;
 			}
 			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
-			Player ignore = Server.getInGameCharacter(name);
+			Player ignore = Server.getInGameCharacterByName(name);
 			int character_id = 0;
 			if(ignore == null) {
 				character_id = CharacterMgr.playerExistsInDB(name);
