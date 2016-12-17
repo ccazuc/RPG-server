@@ -29,6 +29,7 @@ public class StoreChatCommand {
 	private final static long MS_IN_A_MINUTE = 60000l;
 	static JDOStatement getBanInfoAccountName;
 	static JDOStatement getBanInfoCharacterName;
+	static JDOStatement getBanInfoIPAdress;
 	static JDOStatement getBanListAccount;
 	static JDOStatement getBanListCharacter;
 	static JDOStatement getBanListAccountPattern;
@@ -582,6 +583,50 @@ public class StoreChatCommand {
 			}
 		}
 	};
+	private final static ChatSubCommand baninfo_ip = new ChatSubCommand("ip", "baninfo", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [ip_adress] in .baninfo ip [ip_adress]", MessageType.SELF);
+				return;
+			}
+			if(!isValidIpAdresse(value[2])) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [ip_adress] in .baninfo ip [ip_adress]", MessageType.SELF);
+				return;
+			}
+			try {
+				if(getBanInfoCharacterName == null) {
+					getBanInfoCharacterName = Server.getAsyncJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM ip_banned WHERE ip_adress = ?");
+				}
+				getBanInfoIPAdress.clear();
+				getBanInfoIPAdress.putString(value[2]);
+				getBanInfoIPAdress.execute();
+				if(getBanInfoIPAdress.fetch()) {
+					long ban_date = getBanInfoIPAdress.getLong();
+					long unban_date = getBanInfoIPAdress.getLong();
+					String banned_by = getBanInfoIPAdress.getString();
+					String ban_reason = getBanInfoIPAdress.getString();
+					StringBuilder builder = new StringBuilder();
+					Date banDate = new Date(ban_date);
+					if(unban_date == -1) {
+						builder.append("Ip adress "+value[2]+" has been permanently banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason);
+					}
+					else {
+						Date unbanDate = new Date(unban_date);
+						builder.append("Ip adress "+value[2]+" has been banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason+"\nBan will expire the "+unbanDate.toString());
+					}
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
+				}
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	private final static ChatCommand banlist = new ChatCommand("banlist", AccountRank.GAMEMASTER) {
 	
 		@Override
@@ -728,6 +773,7 @@ public class StoreChatCommand {
 		commandMap.put(server.getName(), server);
 		baninfo.addSubCommand(baninfo_account);
 		baninfo.addSubCommand(baninfo_character);
+		baninfo.addSubCommand(baninfo_ip);
 		commandMap.put(baninfo.getName(), baninfo);
 		banlist.addSubCommand(banlist_account);
 		banlist.addSubCommand(banlist_character);
