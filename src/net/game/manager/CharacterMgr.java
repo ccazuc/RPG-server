@@ -27,7 +27,8 @@ public class CharacterMgr {
 	private static JDOStatement loadCharacterNameFromID;
 	private static JDOStatement searchPlayer;
 	private static JDOStatement checkPlayerAccount;
-	private static JDOStatement loadCharacterIdFromName;
+	private static JDOStatement loadCharacterIDFromName;
+	private static JDOStatement loadCharacterIDAndNameFromNamePattern;
 	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?", "Update last online timer") {
 		
 		@Override
@@ -204,14 +205,14 @@ public class CharacterMgr {
 	
 	public static int loadCharacterIDFromName(String name) {
 		try {
-			if(loadCharacterIdFromName == null) {
-				loadCharacterIdFromName = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name= ?");
+			if(loadCharacterIDFromName == null) {
+				loadCharacterIDFromName = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name= ?");
 			}
-			loadCharacterIdFromName.clear();
-			loadCharacterIdFromName.putString(name);
-			loadCharacterIdFromName.execute();
-			if(loadCharacterIdFromName.fetch()) {
-				return loadCharacterIdFromName.getInt();
+			loadCharacterIDFromName.clear();
+			loadCharacterIDFromName.putString(name);
+			loadCharacterIDFromName.execute();
+			if(loadCharacterIDFromName.fetch()) {
+				return loadCharacterIDFromName.getInt();
 			}
 		}
 		catch(SQLException e) {
@@ -236,6 +237,32 @@ public class CharacterMgr {
 			e.printStackTrace();
 		}
 		return -1;
+	}
+	
+	public static ArrayList<SQLDatas> loadCharacterIDAndNameFromNamePattern(String pattern) { //TODO find why CONTAINS doesn't work
+		try {
+			if(loadCharacterIDAndNameFromNamePattern == null) {
+				loadCharacterIDAndNameFromNamePattern = Server.getJDO().prepare("SELECT character_id, name FROM `character` WHERE CONTAINS(name, ?)");
+			}
+			ArrayList<SQLDatas> list = null;
+			loadCharacterIDAndNameFromNamePattern.clear();
+			loadCharacterIDAndNameFromNamePattern.putString(pattern);
+			loadCharacterIDAndNameFromNamePattern.execute();
+			boolean init = false;
+			while(loadCharacterIDAndNameFromNamePattern.fetch()) {
+				if(!init) {
+					 list = new ArrayList<SQLDatas>();
+					 init = true;
+				}
+				System.out.println("FETCH");
+				list.add(new SQLDatas(loadCharacterIDAndNameFromNamePattern.getInt(), loadCharacterIDAndNameFromNamePattern.getString()));
+			}
+			return list;
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public static WeaponType[] getWeaponTypes(short type) {

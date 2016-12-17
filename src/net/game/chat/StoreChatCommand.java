@@ -657,6 +657,48 @@ public class StoreChatCommand {
 			}
 		}
 	};
+	private final static ChatSubCommand banlist_character = new ChatSubCommand("character", "banlist", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(player.getAccountRank().getValue() < this.rank.getValue()) {
+				CommandDefaultMessage.write(player, DefaultMessage.NOT_ENOUGH_RIGHT);
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [pattern] in .banlist character [pattern]", MessageType.SELF);
+				return;
+			}
+			try {
+				if(getBanListCharacterPattern == null) {
+					getBanListCharacterPattern = Server.getAsyncJDO().prepare("SELECT COUNT(character_id) FROM character_banned WHERE character_id = ?");
+				}
+				ArrayList<SQLDatas> characterIDList = CharacterMgr.loadCharacterIDAndNameFromNamePattern(value[2]);
+				if(characterIDList == null || characterIDList.size() == 0) {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "No character match "+value[2], MessageType.SELF);
+					return;
+				}
+				StringBuilder builder = new StringBuilder();
+				builder.append("List of banned character matching "+value[2]+':');
+				int i = 0;
+				while(i < characterIDList.size()) {
+					getBanListCharacterPattern.clear();
+					getBanListCharacterPattern.putInt(characterIDList.get(i).getIValue1());
+					getBanListCharacterPattern.execute();
+					if(getBanListCharacterPattern.fetch()) {
+						if(getBanListCharacterPattern.getInt() > 0) {
+							builder.append("\n    "+characterIDList.get(i).getStringValue1());
+						}
+					}
+					i++;
+				}
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	
 	public static void initChatCommandMap() {
 		account.addSubCommand(account_onlinelist);
@@ -680,6 +722,7 @@ public class StoreChatCommand {
 		baninfo.addSubCommand(baninfo_character);
 		commandMap.put(baninfo.getName(), baninfo);
 		banlist.addSubCommand(banlist_account);
+		banlist.addSubCommand(banlist_character);
 		commandMap.put(banlist.getName(), banlist);
 	}
 	

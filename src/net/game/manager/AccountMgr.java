@@ -70,16 +70,14 @@ public class AccountMgr {
 		return null;
 	}
 	
-	public static ArrayList<SQLDatas> loadAccountIDAndNameFromNamePattern(String pattern) {
+	public static ArrayList<SQLDatas> loadAccountIDAndNameFromNamePattern(String pattern) { //TODO find why CONTAINS doesn't work
 		try {
 			if(loadAccountIDAndNameFromNamePattern == null) {
 				loadAccountIDAndNameFromNamePattern = Server.getJDO().prepare("SELECT id, name FROM account WHERE CONTAINS(name, ?)");
 			}
 			ArrayList<SQLDatas> list = null;
 			loadAccountIDAndNameFromNamePattern.clear();
-			//loadAccountIDAndNameFromNamePattern.putString(pattern.substring(0, 1).toUpperCase()+pattern.substring(1).toLowerCase());
-			loadAccountIDAndNameFromNamePattern.putString("Mideas");
-			//System.out.println("Used pattern"+pattern.substring(0, 1).toUpperCase()+pattern.substring(1).toLowerCase());
+			loadAccountIDAndNameFromNamePattern.putString(pattern);
 			loadAccountIDAndNameFromNamePattern.execute();
 			boolean init = false;
 			while(loadAccountIDAndNameFromNamePattern.fetch()) {
