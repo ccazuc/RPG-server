@@ -2,24 +2,24 @@ package net.game;
 
 public enum Race {
 
-	HUMAN((char)0),
-	DWARF((char)1),
-	NIGHTELF((char)2),
-	GNOME((char)3),
-	DRAENEI((char)4),
-	ORC((char)5),
-	UNDEAD((char)6),
-	TAUREN((char)7),
-	TROLL((char)8),
-	BLOODELF((char)9);
+	HUMAN((byte)0),
+	DWARF((byte)1),
+	NIGHTELF((byte)2),
+	GNOME((byte)3),
+	DRAENEI((byte)4),
+	ORC((byte)5),
+	UNDEAD((byte)6),
+	TAUREN((byte)7),
+	TROLL((byte)8),
+	BLOODELF((byte)9);
 
-    private final char value;
+	private final byte value;
     
-    Race(char value) {
-    	this.value = value;
-    }
+	Race(byte value) {
+		this.value = value;
+	}
     
-    public char getValue() {
-    	return this.value;
-    }
+	public byte getValue() {
+		return this.value;
+	}
 }

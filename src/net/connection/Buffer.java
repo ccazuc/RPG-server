@@ -98,7 +98,7 @@ public class Buffer {
 	
 	protected final void writeItem(final Item item) {
 		this.player.addItemSentToClient(item.getId());
-		writeChar(item.getItemType().getValue());
+		writeByte(item.getItemType().getValue());
 		if(item.getItemType() == ItemType.CONTAINER) {
 			writeContainer((Container)item);
 		}
@@ -123,23 +123,23 @@ public class Buffer {
 	protected final void writeStuff(final Stuff stuff) {
 		this.player.addItemSentToClient(stuff.getId());
 		int i = 0;
-		writeChar(stuff.getType().getValue());
+		writeByte(stuff.getType().getValue());
 		writeInt(stuff.getClassType().length);
 		while(i < stuff.getClassType().length) {
-			writeChar(stuff.getClassType(i).getValue());
+			writeByte(stuff.getClassType(i).getValue());
 			i++;
 		}
 		writeString(stuff.getSpriteId());
 		writeInt(stuff.getId());
 		writeString(stuff.getStuffName());
 		writeInt(stuff.getQuality());
-		writeChar(stuff.getGemSlot1().getValue());
-		writeChar(stuff.getGemSlot2().getValue());
-		writeChar(stuff.getGemSlot3().getValue());
-		writeChar(stuff.getGemBonusType().getValue());
+		writeByte(stuff.getGemSlot1().getValue());
+		writeByte(stuff.getGemSlot2().getValue());
+		writeByte(stuff.getGemSlot3().getValue());
+		writeByte(stuff.getGemBonusType().getValue());
 		writeInt(stuff.getGemBonusValue());
 		writeInt(stuff.getLevel());
-		writeChar(stuff.getWear().getValue());
+		writeByte(stuff.getWear().getValue());
 		writeInt(stuff.getCritical());
 		writeInt(stuff.getStrength());
 		writeInt(stuff.getStamina());
@@ -155,7 +155,7 @@ public class Buffer {
 		writeString(gem.getSpriteId());
 		writeString(gem.getStuffName());
 		writeInt(gem.getQuality());
-		writeChar(gem.getColor().getValue());
+		writeByte(gem.getColor().getValue());
 		writeInt(gem.getStrength());
 		writeInt(gem.getStamina());
 		writeInt(gem.getArmor());
@@ -186,16 +186,16 @@ public class Buffer {
 		writeString(weapon.getSpriteId());
 		writeInt(weapon.getClassType().length);
 		while(i < weapon.getClassType().length) {
-			writeChar(weapon.getClassType(i).getValue());
+			writeByte(weapon.getClassType(i).getValue());
 			i++;
 		}
-		writeChar(weapon.getWeaponType().getValue());
-		writeChar(weapon.getWeaponSlot().getValue());
+		writeByte(weapon.getWeaponType().getValue());
+		writeByte(weapon.getWeaponSlot().getValue());
 		writeInt(weapon.getQuality());
-		writeChar(weapon.getGemSlot1().getValue());
-		writeChar(weapon.getGemSlot2().getValue());
-		writeChar(weapon.getGemSlot3().getValue());
-		writeChar(weapon.getGemBonusType().getValue());
+		writeByte(weapon.getGemSlot1().getValue());
+		writeByte(weapon.getGemSlot2().getValue());
+		writeByte(weapon.getGemSlot3().getValue());
+		writeByte(weapon.getGemBonusType().getValue());
 		writeInt(weapon.getGemBonusValue());
 		writeInt(weapon.getLevel());
 		writeInt(weapon.getArmor());

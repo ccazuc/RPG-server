@@ -2,18 +2,18 @@ package net.game.item.weapon;
 
 public enum WeaponSlot {
 
-	MAINHAND((char)0),
-	OFFHAND((char)1),
-	BOTH((char)2),
-	RANGED((char)3);
+	MAINHAND((byte)0),
+	OFFHAND((byte)1),
+	BOTH((byte)2),
+	RANGED((byte)3);
 	
-	private char value;
+	private byte value;
 	
-	private WeaponSlot(char value) {
+	private WeaponSlot(byte value) {
 		this.value = value;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }

@@ -1,17 +1,18 @@
 package net.game;
 
 public enum UnitType {
-	PLAYER((char)0),
-	GM((char)1),
-	NPC((char)2);
 	
-	private char value;
+	PLAYER((byte)0),
+	GM((byte)1),
+	NPC((byte)2);
 	
-	private UnitType(char value) {
+	private byte value;
+	
+	private UnitType(byte value) {
 		this.value = value;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }

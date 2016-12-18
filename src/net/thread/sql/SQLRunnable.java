@@ -91,9 +91,9 @@ public class SQLRunnable implements Runnable {
 				else {
 					connection.writeString(player.getGuild().getName());
 				}
-				connection.writeChar(player.getRace().getValue());
+				connection.writeByte(player.getRace().getValue());
 				connection.writeInt(player.getLevel());
-				connection.writeChar(ClassType.GUERRIER.getValue());
+				connection.writeByte(ClassType.GUERRIER.getValue());
 				
 			}
 		}

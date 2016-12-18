@@ -96,8 +96,8 @@ public class CommandFriend extends Command {
 			else {
 				player.getConnection().writeString(Server.getInGameCharacter(player.getFriendList().get(i)).getName());
 				player.getConnection().writeInt(Server.getInGameCharacter(player.getFriendList().get(i)).getLevel());
-				player.getConnection().writeChar(Server.getInGameCharacter(player.getFriendList().get(i)).getRace().getValue());
-				player.getConnection().writeChar(Server.getInGameCharacter(player.getFriendList().get(i)).getClasse().getValue());
+				player.getConnection().writeByte(Server.getInGameCharacter(player.getFriendList().get(i)).getRace().getValue());
+				player.getConnection().writeByte(Server.getInGameCharacter(player.getFriendList().get(i)).getClasse().getValue());
 			}
 			i++;
 		}
@@ -117,8 +117,8 @@ public class CommandFriend extends Command {
 		player.getConnection().writeInt(friend.getCharacterId());
 		player.getConnection().writeString(friend.getName());
 		player.getConnection().writeInt(friend.getLevel());
-		player.getConnection().writeChar(friend.getRace().getValue());
-		player.getConnection().writeChar(friend.getClasse().getValue());
+		player.getConnection().writeByte(friend.getRace().getValue());
+		player.getConnection().writeByte(friend.getClasse().getValue());
 		player.getConnection().send();
 	}
 	
@@ -129,8 +129,8 @@ public class CommandFriend extends Command {
 		player.getConnection().writeInt(friend.getCharacterId());
 		player.getConnection().writeString(friend.getName());
 		player.getConnection().writeInt(friend.getLevel());
-		player.getConnection().writeChar(friend.getRace().getValue());
-		player.getConnection().writeChar(friend.getClasse().getValue());
+		player.getConnection().writeByte(friend.getRace().getValue());
+		player.getConnection().writeByte(friend.getClasse().getValue());
 		player.getConnection().send();
 	}
 	

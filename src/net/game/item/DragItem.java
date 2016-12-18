@@ -2,22 +2,22 @@ package net.game.item;
 
 public enum DragItem {
 
-	BAG((char)0),
-	INVENTORY((char)1),
-	BANK((char)2),
-	GUILDBANK((char)3);
+	BAG((byte)0),
+	INVENTORY((byte)1),
+	BANK((byte)2),
+	GUILDBANK((byte)3);
 	
-	private char value;
+	private byte value;
 	
-	private DragItem(char c) {
+	private DragItem(byte c) {
 		this.value = c;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 	
-	public static DragItem getValue(char c) {
+	public static DragItem getValue(byte c) {
 		if(c > 0 && c <= DragItem.values().length) {
 			return DragItem.values()[c];
 		}

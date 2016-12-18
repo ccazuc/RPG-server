@@ -11,7 +11,7 @@ public class CommandDragItems extends Command {
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();
-		DragItem dragType = DragItem.getValue(connection.readChar());
+		DragItem dragType = DragItem.getValue(connection.readByte());
 		int slot1 = connection.readInt();
 		int slot2 = connection.readInt();
 		if(dragType != null) {

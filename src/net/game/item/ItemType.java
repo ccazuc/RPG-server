@@ -2,20 +2,20 @@ package net.game.item;
 
 public enum ItemType {
 
-	STUFF((char)0),
-	ITEM((char)1),
-	POTION((char)2),
-	CONTAINER((char)3),
-	WEAPON((char)4),
-	GEM((char)5);
+	STUFF((byte)0),
+	ITEM((byte)1),
+	POTION((byte)2),
+	CONTAINER((byte)3),
+	WEAPON((byte)4),
+	GEM((byte)5);
 	
-	private char value;
+	private byte value;
 	
-	private ItemType(char value) {
+	private ItemType(byte value) {
 		this.value = value;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }

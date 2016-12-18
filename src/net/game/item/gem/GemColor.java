@@ -2,22 +2,22 @@ package net.game.item.gem;
 
 public enum GemColor {
 
-	RED((char)0),
-	GREEN((char)1),
-	BLUE((char)2),
-	PURPLE((char)3),
-	ORANGE((char)4),
-	YELLOW((char)5),
-	META((char)6),
-	NONE((char)7);
+	RED((byte)0),
+	GREEN((byte)1),
+	BLUE((byte)2),
+	PURPLE((byte)3),
+	ORANGE((byte)4),
+	YELLOW((byte)5),
+	META((byte)6),
+	NONE((byte)7);
 	
-	private char value;
+	private byte value;
 	
-	private GemColor(char value) {
+	private GemColor(byte value) {
 		this.value = value;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }

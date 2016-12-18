@@ -274,7 +274,7 @@ public class CommandParty extends Command {
 		connection.writeInt(joined.getMaxMana());
 		connection.writeInt(joined.getLevel());
 		connection.writeInt(joined.getCharacterId());
-		connection.writeChar(joined.getClasse().getValue());
+		connection.writeByte(joined.getClasse().getValue());
 		connection.send();
 	}
 	
@@ -289,7 +289,7 @@ public class CommandParty extends Command {
 		player.getConnection().writeInt(joined.getMaxMana());
 		player.getConnection().writeInt(joined.getLevel());
 		player.getConnection().writeInt(joined.getCharacterId());
-		player.getConnection().writeChar(joined.getClasse().getValue());
+		player.getConnection().writeByte(joined.getClasse().getValue());
 		player.getConnection().send();
 	}
 	

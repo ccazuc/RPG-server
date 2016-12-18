@@ -451,7 +451,7 @@ public class CommandGuild extends Command {
 				connection.writeInt(member.getRank().getOrder());
 				connection.writeInt(member.getLevel());
 				connection.writeBoolean(member.isOnline());
-				connection.writeChar(member.getClassType().getValue());
+				connection.writeByte(member.getClassType().getValue());
 				connection.writeLong(member.getLastLoginTimer());
 				connection.send();
 			}
@@ -503,7 +503,7 @@ public class CommandGuild extends Command {
 					connection.writeInt(member.getLevel());
 					connection.writeString(player.getGuild().getMemberList().get(i).getName());
 					//connection.writeChar(member.getClassType().getValue());
-					connection.writeChar(ClassType.GUERRIER.getValue());
+					connection.writeByte(ClassType.GUERRIER.getValue());
 					connection.writeString(member.getNote());
 					connection.writeString(member.getOfficerNote());
 					connection.writeInt(member.getRank().getOrder());
@@ -519,7 +519,7 @@ public class CommandGuild extends Command {
 					connection.writeInt(member.getLevel());
 					connection.writeString(member.getName());
 					//connection.writeChar(member.getClassType().getValue());
-					connection.writeChar(ClassType.GUERRIER.getValue());
+					connection.writeByte(ClassType.GUERRIER.getValue());
 					connection.writeString(member.getNote());
 					connection.writeInt(member.getRank().getOrder());
 					connection.writeBoolean(Server.getInGamePlayerList().containsKey(member.getId()));

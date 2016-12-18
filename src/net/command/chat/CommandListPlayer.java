@@ -18,7 +18,7 @@ public class CommandListPlayer extends Command {
 		connection.writeInt(Server.getInGamePlayerList().size());
 		for(Player player : Server.getInGamePlayerList().values()) {
 			connection.writeString(player.getName()+" "+Player.convClassTypeToString(player.getClasse())+" level "+player.getLevel());
-			connection.writeChar(player.getClasse().getValue());
+			connection.writeByte(player.getClasse().getValue());
 		}
 		connection.send();
 	}

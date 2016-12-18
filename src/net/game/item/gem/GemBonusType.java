@@ -2,20 +2,20 @@ package net.game.item.gem;
 
 public enum GemBonusType {
 
-	ARMOR((char)0),
-	STAMINA((char)1),
-	MANA((char)2),
-	STRENGTH((char)3),
-	CRITICAL((char)4),
-	NONE((char)5);
+	ARMOR((byte)0),
+	STAMINA((byte)1),
+	MANA((byte)2),
+	STRENGTH((byte)3),
+	CRITICAL((byte)4),
+	NONE((byte)5);
 	
-	private char value;
+	private byte value;
 	
-	private GemBonusType(char value) {
+	private GemBonusType(byte value) {
 		this.value = value;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }

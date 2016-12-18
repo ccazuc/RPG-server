@@ -32,8 +32,8 @@ public class CommandAddFriend extends Command {
 		player.getConnection().writeShort(PacketID.FRIEND_SEND_INFO);
 		player.getConnection().writeString(friend.getName());
 		player.getConnection().writeInt(friend.getLevel());
-		player.getConnection().writeChar(friend.getRace().getValue());
-		player.getConnection().writeChar(friend.getClasse().getValue());
+		player.getConnection().writeByte(friend.getRace().getValue());
+		player.getConnection().writeByte(friend.getClasse().getValue());
 		player.getConnection().send();
 	}
 }

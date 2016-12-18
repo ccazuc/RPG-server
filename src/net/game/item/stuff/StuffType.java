@@ -2,31 +2,31 @@ package net.game.item.stuff;
 
 public enum StuffType {
 
-	HEAD((char)0),
-	NECKLACE((char)1),
-	SHOULDERS((char)2),
-	CHEST((char)3),
-	BACK((char)4),
-	RAN((char)5),
-	RANDOM((char)6),
-	WRISTS((char)7),
-	GLOVES((char)8),
-	BELT((char)9),
-	LEGGINGS((char)10),
-	BOOTS((char)11),
-	RING((char)12),
-	TRINKET((char)13),
-	MAINHAND((char)14),
-	OFFHAND((char)15),
-	RANGED((char)16);
+	HEAD((byte)0),
+	NECKLACE((byte)1),
+	SHOULDERS((byte)2),
+	CHEST((byte)3),
+	BACK((byte)4),
+	RAN((byte)5),
+	RANDOM((byte)6),
+	WRISTS((byte)7),
+	GLOVES((byte)8),
+	BELT((byte)9),
+	LEGGINGS((byte)10),
+	BOOTS((byte)11),
+	RING((byte)12),
+	TRINKET((byte)13),
+	MAINHAND((byte)14),
+	OFFHAND((byte)15),
+	RANGED((byte)16);
 	
-	private char value;    
+	private byte value;    
 
-	private StuffType(char value) {
+	private StuffType(byte value) {
 		this.value = value;
 	}
 
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }

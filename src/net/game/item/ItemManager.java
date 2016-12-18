@@ -231,18 +231,18 @@ public class ItemManager {
 					if(player.getBag().getBag(i).isContainer() || player.getBag().getBag(i).isGem()) {
 						connection.writeInt(i);
 						connection.writeInt(player.getBag().getBag(i).getId());
-						connection.writeChar(player.getBag().getBag(i).getItemType().getValue());
+						connection.writeByte(player.getBag().getBag(i).getItemType().getValue());
 					}
 					else if(player.getBag().getBag(i).isPotion()) {
 						connection.writeInt(i);
 						connection.writeInt(player.getBag().getBag(i).getId());
-						connection.writeChar(player.getBag().getBag(i).getItemType().getValue());
+						connection.writeByte(player.getBag().getBag(i).getItemType().getValue());
 						connection.writeInt(player.getBag().getBag(i).getAmount());
 					}
 					else if(player.getBag().getBag(i).isStuff() || player.getBag().getBag(i).isWeapon()) {
 						connection.writeInt(i);
 						connection.writeInt(player.getBag().getBag(i).getId());
-						connection.writeChar(player.getBag().getBag(i).getItemType().getValue());
+						connection.writeByte(player.getBag().getBag(i).getItemType().getValue());
 						if(((Stuff)player.getBag().getBag(i)).getEquippedGem(0) != null || ((Stuff)player.getBag().getBag(i)).getEquippedGem(1) != null || ((Stuff)player.getBag().getBag(i)).getEquippedGem(2) != null) {
 							connection.writeBoolean(true);
 							if(((Stuff)player.getBag().getBag(i)).getEquippedGem(0) != null) {

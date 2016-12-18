@@ -2,24 +2,24 @@ package net.game;
 
 public enum ClassType {
 
-	DRUID((char)0),
-	GUERRIER((char)1),
-	HUNTER((char)2),
-	MAGE((char)3),
-	PALADIN((char)4),
-	PRIEST((char)5),
-	ROGUE((char)6),
-	SHAMAN((char)7),
-	WARLOCK((char)8),
-	NPC((char)9);
+	DRUID((byte)0),
+	GUERRIER((byte)1),
+	HUNTER((byte)2),
+	MAGE((byte)3),
+	PALADIN((byte)4),
+	PRIEST((byte)5),
+	ROGUE((byte)6),
+	SHAMAN((byte)7),
+	WARLOCK((byte)8),
+	NPC((byte)9);
 	
-	private char value;
+	private byte value;
 	
-	private ClassType(char value) {
+	private ClassType(byte value) {
 		this.value = value;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }

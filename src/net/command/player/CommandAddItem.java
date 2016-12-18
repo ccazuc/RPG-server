@@ -50,7 +50,7 @@ public class CommandAddItem extends Command {
 		player.getConnection().writeShort(PacketID.ADD_ITEM);
 		player.getConnection().writeShort(PacketID.UNKNOWN_ITEM);
 		player.getConnection().writeInt(number);
-		player.getConnection().writeChar(temp.getItemType().getValue());
+		player.getConnection().writeByte(temp.getItemType().getValue());
 		if(temp.isContainer()) {
 			player.getConnection().writeContainer((Container)temp);
 		}

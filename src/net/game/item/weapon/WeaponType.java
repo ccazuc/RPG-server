@@ -2,29 +2,29 @@ package net.game.item.weapon;
 
 public enum WeaponType {
 
-	ONEHANDEDAXE((char)0),
-	TWOHANDEDAXE((char)1),
-	ONEHANDEDSWORD((char)2),
-	TWOHANDEDSWORD((char)3),
-	ONEHANDEDMACE((char)4),
-	TWOHANDEDMACE((char)5),
-	POLEARM((char)6),
-	STAFF((char)7),
-	DAGGER((char)8),
-	FISTWEAPON((char)9),
-	BOW((char)10),
-	CROSSBOW((char)11),
-	GUN((char)12),
-	THROWN((char)13),
-	WAND((char)14);
+	ONEHANDEDAXE((byte)0),
+	TWOHANDEDAXE((byte)1),
+	ONEHANDEDSWORD((byte)2),
+	TWOHANDEDSWORD((byte)3),
+	ONEHANDEDMACE((byte)4),
+	TWOHANDEDMACE((byte)5),
+	POLEARM((byte)6),
+	STAFF((byte)7),
+	DAGGER((byte)8),
+	FISTWEAPON((byte)9),
+	BOW((byte)10),
+	CROSSBOW((byte)11),
+	GUN((byte)12),
+	THROWN((byte)13),
+	WAND((byte)14);
 	
-	private char value;
+	private byte value;
 	
-	private WeaponType(char value) {
+	private WeaponType(byte value) {
 		this.value = value;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }
