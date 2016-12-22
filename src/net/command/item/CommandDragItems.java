@@ -1,6 +1,8 @@
-package net.command.player;
+package net.command.item;
 
 import net.command.Command;
+import net.command.player.CommandSendRedAlert;
+import net.command.player.CommandSetItem;
 import net.connection.Connection;
 import net.game.DefaultRedAlert;
 import net.game.Player;
@@ -38,8 +40,53 @@ public class CommandDragItems extends Command {
 			
 		}
 		else if(sourceType == DragItem.INVENTORY) {
-			
+			if(destinationType == DragItem.BAG) {
+				swapInventoryToBagItem(player, source, destination);
+			}
+			else if(destinationType == DragItem.INVENTORY) {
+				
+			}
 		}
+	}
+	
+	private static void swapInventoryToBagItem(Player player, int source, int destination) {
+		Stuff sourceItem = player.getStuff(source);
+		if(sourceItem == null) {
+			return;
+		}
+		Item destinationItem = player.getBag().getBag(destination);
+		if(destinationItem == null) {
+			player.getBag().setBag(destination, sourceItem);
+			CommandSetItem.swapItems(player, DragItem.INVENTORY, source, DragItem.BAG, destination);
+			return;
+		}
+		if(!destinationItem.isStuff() && !destinationItem.isWeapon()) {
+			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
+			CommandSetItem.setSelectable(player, DragItem.BAG, destination);
+			CommandSetItem.setSelectable(player, DragItem.INVENTORY, source);
+			return;
+		}
+		if(((Stuff)destinationItem).getType().getSlot() != source && ((Stuff)destinationItem).getType().getSlot2() != source) {
+			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
+			CommandSetItem.setSelectable(player, DragItem.BAG, destination);
+			CommandSetItem.setSelectable(player, DragItem.INVENTORY, source);
+			return;
+		}
+		if(destinationItem.isStuff() && !player.canEquipStuff((Stuff)destinationItem)) {
+			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
+			CommandSetItem.setSelectable(player, DragItem.BAG, destination);
+			CommandSetItem.setSelectable(player, DragItem.INVENTORY, source);
+			return;
+		}
+		if(destinationItem.isWeapon() && !player.canEquipWeapon((Stuff)destinationItem)) {
+			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
+			CommandSetItem.setSelectable(player, DragItem.BAG, destination);
+			CommandSetItem.setSelectable(player, DragItem.INVENTORY, source);
+			return;
+		}
+		player.setStuff(source, destinationItem);
+		player.getBag().setBag(destination, sourceItem);
+		CommandSetItem.swapItems(player, DragItem.INVENTORY, source, DragItem.BAG, destination);
 	}
 	
 	private static void swapBagToBagItem(Player player, int source, int destination, int amount) {
@@ -78,6 +125,7 @@ public class CommandDragItems extends Command {
 		}
 		if(player.getBag().getBag(source).getAmount() < amount) {
 			System.out.println("ERROR amount < client amount on swapBagToBagItam in CommandDragItems for player "+player.getCharacterId());
+			return;
 		}
 		if(player.getBag().getBag(destination) == null) {
 			Item item = Item.getItem(player.getBag().getBag(source).getId());
@@ -120,10 +168,20 @@ public class CommandDragItems extends Command {
 			CommandSetItem.setSelectable(player, DragItem.INVENTORY, destination);
 			return;
 		}
-		if(player.canEquipStuff((Stuff)tmp)) {
-			player.getBag().setBag(source, player.getStuff(destination));
-			player.setStuff(destination, tmp);
-			CommandSetItem.swapItems(player, DragItem.BAG, source, DragItem.INVENTORY, destination);
+		if(tmp.isStuff() && !player.canEquipStuff((Stuff)tmp)) {
+			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
+			CommandSetItem.setSelectable(player, DragItem.BAG, source);
+			CommandSetItem.setSelectable(player, DragItem.INVENTORY, destination);
+			return;
 		}
+		if(tmp.isWeapon() && !player.canEquipWeapon((Stuff)tmp)) {
+			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
+			CommandSetItem.setSelectable(player, DragItem.BAG, source);
+			CommandSetItem.setSelectable(player, DragItem.INVENTORY, destination);
+			return;
+		}
+		player.getBag().setBag(source, player.getStuff(destination));
+		player.setStuff(destination, tmp);
+		CommandSetItem.swapItems(player, DragItem.BAG, source, DragItem.INVENTORY, destination);
 	}
 }

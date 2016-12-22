@@ -859,12 +859,10 @@ public class Player extends Unit {
 	}
 	
 	public void setStuff(int i, Item tempItem) {
-		if(tempItem == null) {
-			this.stuff[i] = null;
+		if(this.stuff[i] != null) {
+			
 		}
-		else if(tempItem.isStuff() || tempItem.isWeapon()) {
-			this.stuff[i] = (Stuff)tempItem;
-		}
+		this.stuff[i] = (Stuff)tempItem;
 	}
 	
 	public Shortcut getShortcut(int i) {
@@ -898,10 +896,7 @@ public class Player extends Unit {
 	}
 
 	public boolean canEquipStuff(Stuff stuff) {
-		if(this.level >= stuff.getLevel() && canWear(stuff) && stuff.canEquipTo(this.classe)) {
-			return true;
-		}
-		return false;
+		return this.level >= stuff.getLevel() && canWear(stuff) && stuff.canEquipTo(this.classe);
 	}
 	
 	public boolean canEquipWeapon(Stuff weapon) {
@@ -912,28 +907,20 @@ public class Player extends Unit {
 	}
 
 	public boolean canWear(Stuff stuff) {
-		if(stuff != null) {
-			if(this.wear == Wear.PLATE) {
-				return true;
-			}
-			if(this.wear == Wear.MAIL) {
-				if(stuff.getWear() == Wear.PLATE) {
-					return false;
-				}
-				return true;
-			}
-			if(this.wear == Wear.LEATHER) {
-				if(stuff.getWear() == Wear.PLATE || stuff.getWear() == Wear.MAIL) {
-					return false;
-				}
-				return true;
-			}
-			if(this.wear == Wear.CLOTH) {
-				if(stuff.getWear() == Wear.CLOTH || stuff.getWear() == Wear.NONE) {
-					return true;
-				}
-				return false;
-			}
+		if(stuff == null) {
+			return false;
+		}
+		if(this.wear == Wear.PLATE) {
+			return true;
+		}
+		if(this.wear == Wear.MAIL) {
+			return stuff.getWear() == Wear.PLATE;
+		}
+		if(this.wear == Wear.LEATHER) {
+			return stuff.getWear() == Wear.PLATE || stuff.getWear() == Wear.MAIL;
+		}
+		if(this.wear == Wear.CLOTH) {
+			return stuff.getWear() == Wear.CLOTH || stuff.getWear() == Wear.NONE;
 		}
 		return false;
 	}
@@ -965,7 +952,7 @@ public class Player extends Unit {
 		this.race = race;
 	}
 	
-	public void loadSpellBar() throws SQLException {
+	public void loadSpellBar()  {
 		this.spellBarManager.loadSpellBar(this);
 	}
 
