@@ -17,11 +17,12 @@ public class SQLRunnable implements Runnable {
 	private boolean running = true;
 	private boolean shouldClose;
 	
-	private final static int LOOP_TIMER = 10;
+	private final int LOOP_TIMER;
 	
-	public SQLRunnable() {
+	public SQLRunnable(int loop_timer) {
 		this.SQLList = Collections.synchronizedList(this.SQLList);
 		this.whoList = Collections.synchronizedList(this.whoList);
+		this.LOOP_TIMER = loop_timer;
 	}
 	
 	@Override
@@ -50,9 +51,9 @@ public class SQLRunnable implements Runnable {
 				this.whoList.remove(0);
 			}
 			delta = System.currentTimeMillis()-time;
-			if(delta < LOOP_TIMER) {
+			if(delta < this.LOOP_TIMER) {
 				try {
-					Thread.sleep((LOOP_TIMER-delta));
+					Thread.sleep((this.LOOP_TIMER-delta));
 				} 
 				catch (InterruptedException e) {
 					e.printStackTrace();

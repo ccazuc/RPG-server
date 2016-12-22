@@ -117,16 +117,16 @@ public class BanMgr {
 	
 	public static void banAccount(int account_id, long ban_date, long unban_date, String banned_by, String ban_reason) {
 		banAccount.addDatas(new SQLDatas(account_id, ban_date, unban_date, banned_by, ban_reason));
-		Server.addNewSQLRequest(banAccount);
+		Server.executeHighPrioritySQL(banAccount);
 	}
 	
 	public static void banCharacter(int character_id, long ban_date, long unban_date, String banned_by, String ban_reason) {
 		banCharacter.addDatas(new SQLDatas(character_id, ban_date, unban_date, banned_by, ban_reason));
-		Server.addNewSQLRequest(banCharacter);
+		Server.executeHighPrioritySQL(banCharacter);
 	}
 
 	public static void banIPAdress(String ip_adress, long ban_date, long unban_date, String banned_by, String ban_reason) {
 		banIPAdress.addDatas(new SQLDatas(ban_date, unban_date, ip_adress, banned_by, ban_reason));
-		Server.addNewSQLRequest(banIPAdress);
+		Server.executeHighPrioritySQL(banIPAdress);
 	}
 }

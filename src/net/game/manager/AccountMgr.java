@@ -32,7 +32,7 @@ public class AccountMgr {
 	
 	public static void updateAccountRank(int account_id, int rank) {
 		updateAccountRank.addDatas(new SQLDatas(account_id, rank));
-		Server.addNewSQLRequest(updateAccountRank);
+		Server.executeLowPrioritySQL(updateAccountRank);
 	}
 	
 	public static int loadAccountIDFromName(String accountName) {

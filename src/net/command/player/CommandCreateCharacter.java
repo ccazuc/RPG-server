@@ -118,13 +118,13 @@ public class CommandCreateCharacter extends Command {
 			}
 			SQLDatas datas = new SQLDatas(characterId);
 			insert_bag.addDatas(datas);
-			Server.addNewSQLRequest(insert_bag);
+			Server.executeLowPrioritySQL(insert_bag);
 			character_containers.addDatas(datas);
-			Server.addNewSQLRequest(character_containers);
+			Server.executeLowPrioritySQL(character_containers);
 			character_stuff.addDatas(datas);
-			Server.addNewSQLRequest(character_stuff);
+			Server.executeLowPrioritySQL(character_stuff);
 			spellbar.addDatas(datas);
-			Server.addNewSQLRequest(spellbar);
+			Server.executeLowPrioritySQL(spellbar);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

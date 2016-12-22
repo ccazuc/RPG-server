@@ -95,7 +95,7 @@ public class IgnoreMgr {
 			ignoreMap.get(player_id).add(ignore_id);
 		}
 		addIgnoreInDB.addDatas(new SQLDatas(player_id, ignore_id));
-		Server.addNewSQLRequest(addIgnoreInDB);
+		Server.executeLowPrioritySQL(addIgnoreInDB);
 	}
 	
 	public static void removeIgnore(int player_id, int ignore_id) {
@@ -107,7 +107,7 @@ public class IgnoreMgr {
 				if(ignoreList.get(i) == ignore_id) {
 					ignoreList.remove(i);
 					removeIgnoreFromDB.addDatas(new SQLDatas(player_id, ignore_id));
-					Server.addNewSQLRequest(removeIgnoreFromDB);
+					Server.executeLowPrioritySQL(removeIgnoreFromDB);
 					return;
 				}
 				i++;

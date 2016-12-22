@@ -46,8 +46,10 @@ public class Server {
 	private static ArrayList<Player> nonLoggedPlayerKickList = new ArrayList<Player>();
 	private static HashMap<Integer, Player> inGamePlayerList = new HashMap<Integer, Player>();
 	private static ArrayList<Integer> inGamePlayerKickList = new ArrayList<Integer>();
-	private static Thread SQLRequestThread;
-	private static SQLRunnable SQLRunnable;
+	private static Thread highPrioritySQLRequestThread;
+	private static Thread lowPrioritySQLRequestThread;
+	private static SQLRunnable highPrioritySQLRunnable;
+	private static SQLRunnable lowPrioritySQLRunnable;
 	private static SocketRunnable socketRunnable;
 	private static Thread socketThread;
 	private static ChatCommandRunnable chatCommandRunnable;
@@ -91,9 +93,12 @@ public class Server {
 		GemManager.loadGems();
 		ContainerManager.loadContainer();
 		SpellManager.loadSpells();
-		SQLRunnable = new SQLRunnable();
-		SQLRequestThread = new Thread(SQLRunnable);
-		SQLRequestThread.start();
+		highPrioritySQLRunnable = new SQLRunnable(3);
+		highPrioritySQLRequestThread = new Thread(highPrioritySQLRunnable);
+		highPrioritySQLRequestThread.start();
+		lowPrioritySQLRunnable = new SQLRunnable(15);
+		lowPrioritySQLRequestThread = new Thread(lowPrioritySQLRunnable);
+		lowPrioritySQLRequestThread.start();
 		socketRunnable = new SocketRunnable(serverSocketChannel);
 		socketThread = new Thread(socketRunnable);
 		socketThread.start();
@@ -123,7 +128,8 @@ public class Server {
 			}
 		}
 		//Save eveything of every player to the DB
-		SQLRunnable.close();
+		lowPrioritySQLRunnable.close();
+		highPrioritySQLRunnable.close();
 		socketRunnable.close();
 		chatCommandRunnable.close();
 		
@@ -313,12 +319,16 @@ public class Server {
 		ConnectionManager.readAuthServer();
 	}
 	
-	public static void addNewSQLRequest(SQLRequest request) {
-		SQLRunnable.addRequest(request);
+	public static void executeHighPrioritySQL(SQLRequest request) {
+		highPrioritySQLRunnable.addRequest(request);
+	}
+	
+	public static void executeLowPrioritySQL(SQLRequest request) {
+		lowPrioritySQLRunnable.addRequest(request);
 	}
 	
 	public static void addNewWhoRequest(Who who) {
-		SQLRunnable.addWhoRequest(who);
+		lowPrioritySQLRunnable.addWhoRequest(who);
 	}
 	
 	public static void addNewChatCommandRequest(ChatCommandRequest request) {

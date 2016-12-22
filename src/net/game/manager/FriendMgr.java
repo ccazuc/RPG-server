@@ -61,11 +61,11 @@ public class FriendMgr {
 	
 	public static void addFriendInDB(int character_id, int friend_id) {
 		addFriendInDB.addDatas(new SQLDatas(character_id, friend_id));
-		Server.addNewSQLRequest(addFriendInDB);
+		Server.executeLowPrioritySQL(addFriendInDB);
 	}
 	
 	public static void removeFriendFromDB(int character_id, int friend_id) {
 		removeFriendFromDB.addDatas(new SQLDatas(character_id, friend_id));
-		Server.addNewSQLRequest(removeFriendFromDB);
+		Server.executeLowPrioritySQL(removeFriendFromDB);
 	}
 }

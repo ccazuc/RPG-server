@@ -134,4 +134,7 @@ public class PacketID {
 	public final static short SET_ITEM_NULL = 130;
 	public final static short SET_ITEM_AMOUNT = 131;
 	public final static short SET_ITEM_SWAP = 132;
+	public final static short SET_ITEM_SELECTABLE = 133;
+	public final static short SET_ITEM_ADD = 134;
+	public final static short SEND_RED_ALERT = 135;
 }

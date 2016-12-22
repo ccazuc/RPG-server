@@ -244,7 +244,7 @@ public class CharacterMgr {
 	
 	public void updateLastLoginTimer() {
 		updateLastOnlineTimer.addDatas(new SQLDatas(this.player.getCharacterId(), System.currentTimeMillis()));
-		Server.addNewSQLRequest(updateLastOnlineTimer);
+		Server.executeLowPrioritySQL(updateLastOnlineTimer);
 	}
 	
 	public static void checkOnlinePlayers() throws SQLException {
@@ -357,15 +357,15 @@ public class CharacterMgr {
 	
 	public static void asynDeleteCharacterByID(int id) {
 		asyncRemoveCharacter.addDatas(new SQLDatas(id));
-		Server.addNewSQLRequest(asyncRemoveCharacter);
+		Server.executeHighPrioritySQL(asyncRemoveCharacter);
 		asyncRemoveBag.addDatas(new SQLDatas(id));
-		Server.addNewSQLRequest(asyncRemoveBag);
+		Server.executeLowPrioritySQL(asyncRemoveBag);
 		asyncRemoveContainer.addDatas(new SQLDatas(id));
-		Server.addNewSQLRequest(asyncRemoveContainer);
+		Server.executeLowPrioritySQL(asyncRemoveContainer);
 		asyncRemoveStuff.addDatas(new SQLDatas(id));
-		Server.addNewSQLRequest(asyncRemoveStuff);
+		Server.executeLowPrioritySQL(asyncRemoveStuff);
 		asyncRemoveSpellbar.addDatas(new SQLDatas(id));
-		Server.addNewSQLRequest(asyncRemoveSpellbar);
+		Server.executeLowPrioritySQL(asyncRemoveSpellbar);
 	}
 	
 	public static void deleteCharacterByName(String name) {

@@ -299,47 +299,47 @@ public class GuildMgr {
 	
 	public static void removeMemberFromDB(Guild guild, int id) {
 		removeMember.addDatas(new SQLDatas(id, guild.getId()));
-		Server.addNewSQLRequest(removeMember);
+		Server.executeLowPrioritySQL(removeMember);
 	}
 	
 	public static void addMemberInDB(Guild guild, int id) {
 		addMemberInDB.addDatas(new SQLDatas(id, guild.getId(), guild.getRankList().size()-1));
-		Server.addNewSQLRequest(addMemberInDB);
+		Server.executeLowPrioritySQL(addMemberInDB);
 	}
 	
 	public static void updatePermission(Guild guild, int rank_order, int permission, String name) {
 		updatePermission.addDatas(new SQLDatas(guild.getId(), rank_order, permission, name));
-		Server.addNewSQLRequest(updatePermission);
+		Server.executeLowPrioritySQL(updatePermission);
 	}
 	
 	public static void updateInformation(Guild guild) {
 		updateInformation.addDatas(new SQLDatas(guild.getId(), guild.getInformation()));
-		Server.addNewSQLRequest(updateInformation);
+		Server.executeLowPrioritySQL(updateInformation);
 	}
 	
 	public static void updateMotd(Guild guild) {
 		updateMotd.addDatas(new SQLDatas(guild.getId(), guild.getMotd()));
-		Server.addNewSQLRequest(updateMotd);
+		Server.executeLowPrioritySQL(updateMotd);
 	}
 	
 	public static void updateMemberRank(int playerId, int guildId, int rank) {
 		updateMemberRank.addDatas(new SQLDatas(rank, guildId, playerId));
-		Server.addNewSQLRequest(updateMemberRank);
+		Server.executeLowPrioritySQL(updateMemberRank);
 	}
 	
 	public static void setLeaderInDB(int player_id, int guild_id) {
 		setLeaderInDB.addDatas(new SQLDatas(player_id, guild_id));
-		Server.addNewSQLRequest(setLeaderInDB);
+		Server.executeLowPrioritySQL(setLeaderInDB);
 	}
 	
 	public static void updateMemberNote(int player_id, String note) {
 		setMemberNoteInDB.addDatas(new SQLDatas(player_id, note));
-		Server.addNewSQLRequest(setMemberNoteInDB);
+		Server.executeLowPrioritySQL(setMemberNoteInDB);
 	}
 	
 	public static void updateMemberOfficerNote(int player_id, String officerNote) {
 		setMemberOfficerNoteInDB.addDatas(new SQLDatas(player_id, officerNote));
-		Server.addNewSQLRequest(setMemberOfficerNoteInDB);
+		Server.executeLowPrioritySQL(setMemberOfficerNoteInDB);
 	}
 	
 	public static HashMap<Integer, Guild> getGuildList() {
