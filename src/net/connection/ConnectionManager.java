@@ -24,6 +24,7 @@ import net.command.item.CommandWeapon;
 import net.command.player.CommandAddItem;
 import net.command.player.CommandCreateCharacter;
 import net.command.player.CommandDeleteCharacter;
+import net.command.player.CommandDragItems;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandIgnore;
@@ -93,6 +94,7 @@ public class ConnectionManager {
 		commandList.put((int)GUILD, new CommandGuild());
 		commandList.put((int)IGNORE, new CommandIgnore());
 		commandList.put((int)WHO, new CommandWho());
+		commandList.put((int)DRAG_ITEM, new CommandDragItems());
 	}
 	
 	public static void initAuthCommand() {

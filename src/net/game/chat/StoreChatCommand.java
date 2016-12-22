@@ -395,6 +395,16 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), Server.getServerMessageOfTheDay(), MessageType.SELF);
 		}
 	};
+	private final static ChatSubCommand server_ram = new ChatSubCommand("ram", "server", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Server is using "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024L*1024L)+" Mb of ram.", MessageType.SELF);
+		}
+	};
 	private final static ChatSubCommand server_set = new ChatSubCommand("set", "server", AccountRank.ADMINISTRATOR) {
 		
 		@Override
@@ -872,6 +882,7 @@ public class StoreChatCommand {
 		server.addSubCommand(server_info);
 		server.addSubCommand(server_motd);
 		server.addSubCommand(server_set);
+		server.addSubCommand(server_ram);
 		server_set.addSubCommand(server_set_motd);
 		server_set.addSubCommand(server_set_closed);
 		commandMap.put(server.getName(), server);

@@ -18,7 +18,7 @@ public enum DragItem {
 	}
 	
 	public static DragItem getValue(byte c) {
-		if(c > 0 && c <= DragItem.values().length) {
+		if(c >= 0 && c <= DragItem.values().length) {
 			return DragItem.values()[c];
 		}
 		return null;

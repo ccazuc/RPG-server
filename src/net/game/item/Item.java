@@ -42,6 +42,10 @@ public class Item implements Cloneable {
 		return this.amount;
 	}
 	
+	public int getMaxStack() {
+		return this.maxStack;
+	}
+	
 	public String getSpriteId() {
 		return this.sprite_id;
 	}

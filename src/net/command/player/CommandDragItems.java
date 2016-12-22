@@ -11,32 +11,51 @@ public class CommandDragItems extends Command {
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();
-		DragItem dragType = DragItem.getValue(connection.readByte());
-		int slot1 = connection.readInt();
-		int slot2 = connection.readInt();
-		if(dragType != null) {
-			if(dragType == DragItem.BAG) {
-				swapBagItem(player, slot1, slot2);
-			}
-			else if(dragType == DragItem.BANK) {
-				
-			}
-			else if(dragType == DragItem.GUILDBANK) {
-				
-			}
-			else if(dragType == DragItem.INVENTORY) {
-				
-			}
-		} 
-		else {
+		DragItem sourceType = DragItem.getValue(connection.readByte());
+		int source = connection.readInt();
+		DragItem destinationType = DragItem.getValue(connection.readByte());
+		int destination = connection.readInt();
+		System.out.println(source+" "+player.getBag().getBag(source)+" "+destination+" "+player.getBag().getBag(destination)+" ");
+		if(sourceType == null || destinationType == null) {
 			player.close();
+			return;
+		}
+		if(sourceType == DragItem.BAG) {
+			swapBagItem(player, source, destination);
+		}
+		else if(sourceType == DragItem.BANK) {
+			
+		}
+		else if(sourceType == DragItem.GUILDBANK) {
+			
+		}
+		else if(sourceType == DragItem.INVENTORY) {
+			
 		}
 	}
 	
-	private static void swapBagItem(Player player, int slot1, int slot2) {
-		Item temp = player.getBag().getBag(slot2);
-		if(player.getBag().getBag(slot1) != null) {
-			//player.getBag().setBag(i, stuff, number);
+	private static void swapBagItem(Player player, int source, int destination) {
+		Item tmp = player.getBag().getBag(source);
+		if(player.getBag().getBag(destination) != null) {
+			if(player.getBag().getBag(destination).isStackable() && tmp.isStackable() && tmp.getId() == player.getBag().getBag(destination).getId()) {
+				if(tmp.getAmount()+player.getBag().getBag(destination).getAmount() > tmp.getMaxStack()) {
+					int amount = tmp.getAmount()+player.getBag().getBag(destination).getAmount()-tmp.getMaxStack();
+					tmp.setAmount(amount);
+					player.getBag().getBag(destination).setAmount(tmp.getMaxStack());
+					CommandSetItem.setAmount(player, DragItem.BAG, source, tmp.getAmount());
+					CommandSetItem.setAmount(player, DragItem.BAG, destination, player.getBag().getBag(destination).getAmount());
+				}
+				else {
+					player.getBag().getBag(destination).setAmount(tmp.getAmount()+player.getBag().getBag(destination).getAmount());
+					player.getBag().setBag(source, null);
+					CommandSetItem.setAmount(player, DragItem.BAG, destination, player.getBag().getBag(destination).getAmount());
+					CommandSetItem.setNull(player, DragItem.BAG, source);
+				}
+				return;
+			}
 		}
+		player.getBag().setBag(source, player.getBag().getBag(destination));
+		player.getBag().setBag(destination, tmp);
+		CommandSetItem.swapItems(player, DragItem.BAG, source, DragItem.BAG, destination);
 	}
 }
