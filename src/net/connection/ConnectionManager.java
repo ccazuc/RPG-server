@@ -179,8 +179,8 @@ public class ConnectionManager {
 	private void readPacket() {
 		while(this.connection != null && this.connection.hasRemaining()) {
 			int packetLength = this.connection.readInt();
-			System.out.println(packetLength);
-			if(this.connection.rBufferRemaining() < packetLength) {
+			System.out.println(packetLength+" "+this.connection.rBufferRemaining());
+			if(this.connection.rBufferRemaining()+4 < packetLength) {
 				this.connection.rBufferSetPosition(this.connection.rBufferPosition()-4);
 				return;
 			}
@@ -188,6 +188,7 @@ public class ConnectionManager {
 			if(commandList.containsKey((int)packetId)) {
 				this.lastPacketReaded = packetId;
 				commandList.get((int)packetId).read(this.player);
+				this.connection.clearRBuffer();
 			}
 			else {
 				System.out.println("Unknown packet: "+(int)packetId+", last packet readed: "+this.lastPacketReaded+" for player "+this.player.getAccountId());
