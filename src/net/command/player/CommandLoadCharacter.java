@@ -4,6 +4,7 @@ import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.game.Player;
+import net.game.log.Log;
 import net.game.manager.CharacterMgr;
 import net.game.manager.IgnoreMgr;
 
@@ -14,12 +15,13 @@ public class CommandLoadCharacter extends Command {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		if(!Server.getLoggedPlayerList().containsKey(player.getAccountId())) {
+			Log.write(player, "Tried to load character "+id+" whereas he's not connected");
 			player.close();
 			return;
 		}
 		if(!CharacterMgr.checkPlayerAccount(player.getAccountId(), id)) {
 			player.close();
-			System.out.println("Account "+player.getAccountId()+" tried to connect on someone else's character (id = "+id+')');
+			Log.write(player, "tried to connect on someone else's character (id = "+id+')');
 			return;
 		}
 		player.setCharacterId(id);

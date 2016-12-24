@@ -2,13 +2,13 @@ package net.command.item;
 
 import net.command.Command;
 import net.command.player.CommandSendRedAlert;
-import net.command.player.CommandSetItem;
 import net.connection.Connection;
 import net.game.DefaultRedAlert;
 import net.game.Player;
 import net.game.item.DragItem;
 import net.game.item.Item;
 import net.game.item.stuff.Stuff;
+import net.game.log.Log;
 
 public class CommandDragItems extends Command {
 
@@ -91,6 +91,9 @@ public class CommandDragItems extends Command {
 	
 	private static void swapBagToBagItem(Player player, int source, int destination, int amount) {
 		Item tmp = player.getBag().getBag(source);
+		if(player.getBag().getBag(source) == null) {
+			return;
+		}
 		if(amount == -1) {
 			if(player.getBag().getBag(destination) != null) {
 				if(player.getBag().getBag(destination).isStackable() && tmp.isStackable() && tmp.getId() == player.getBag().getBag(destination).getId()) {
@@ -116,15 +119,11 @@ public class CommandDragItems extends Command {
 			return;
 		}
 		if(amount <= 0) {
-			System.out.println("ERROR player modified default value of draggedAmount on swapBagToBagItam in CommandDragItems for player "+player.getCharacterId()+" amount value : "+amount);
-			return;
-		}
-		if(player.getBag().getBag(source) == null) {
-			System.out.println("ERROR on swapBagToBagItam in CommandDragItems for player "+player.getCharacterId());
+			Log.write(player, "Modified default value of draggedAmount for draggedItem to "+amount);
 			return;
 		}
 		if(player.getBag().getBag(source).getAmount() < amount) {
-			System.out.println("ERROR amount < client amount on swapBagToBagItam in CommandDragItems for player "+player.getCharacterId());
+			Log.write(player, "Server's amount < client's amount in swapBagToBagItem in CommandDragItems");
 			return;
 		}
 		if(player.getBag().getBag(destination) == null) {
@@ -134,7 +133,7 @@ public class CommandDragItems extends Command {
 			}
 			player.getBag().setBag(destination, item, amount);
 			player.getBag().getBag(source).setAmount(player.getBag().getBag(source).getAmount()-amount);
-			CommandSetItem.addItem(player, DragItem.BAG, player.getBag().getBag(destination).getItemType(), player.getBag().getBag(destination).getId(), destination, player.getBag().getBag(destination).getAmount());
+			CommandSetItem.addItem(player, DragItem.BAG, player.getBag().getBag(destination).getId(), destination, player.getBag().getBag(destination).getAmount());
 			CommandSetItem.setAmount(player, DragItem.BAG, source, player.getBag().getBag(source).getAmount());
 			return;
 		}

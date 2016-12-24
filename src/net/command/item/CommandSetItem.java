@@ -1,10 +1,9 @@
-package net.command.player;
+package net.command.item;
 
 import net.command.Command;
 import net.connection.PacketID;
 import net.game.Player;
 import net.game.item.DragItem;
-import net.game.item.ItemType;
 
 public class CommandSetItem extends Command {
 
@@ -48,11 +47,10 @@ public class CommandSetItem extends Command {
 		player.getConnection().send();
 	}
 	
-	public static void addItem(Player player, DragItem type, ItemType itemType, int id, int slot, int amount) {
+	public static void addItem(Player player, DragItem type, int id, int slot, int amount) {
 		player.getConnection().writeShort(PacketID.SET_ITEM);
 		player.getConnection().writeShort(PacketID.SET_ITEM_ADD);
 		player.getConnection().writeByte(type.getValue());
-		player.getConnection().writeByte(itemType.getValue());
 		player.getConnection().writeInt(id);
 		player.getConnection().writeInt(slot);
 		player.getConnection().writeInt(amount);

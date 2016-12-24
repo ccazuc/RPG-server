@@ -29,6 +29,7 @@ import net.game.manager.CharacterMgr;
 import net.game.spell.SpellManager;
 import net.thread.chatcommand.ChatCommandRequest;
 import net.thread.chatcommand.ChatCommandRunnable;
+import net.thread.log.LogRunnable;
 import net.thread.socket.SocketRunnable;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRunnable;
@@ -54,6 +55,8 @@ public class Server {
 	private static Thread socketThread;
 	private static ChatCommandRunnable chatCommandRunnable;
 	private static Thread chatCommandThread;
+	private static Thread logThread;
+	private static LogRunnable logRunnable;
 	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
 	private static long SERVER_START_TIMER;
 	private static long LOOP_TICK_TIMER;
@@ -105,6 +108,9 @@ public class Server {
 		chatCommandRunnable = new ChatCommandRunnable();
 		chatCommandThread = new Thread(chatCommandRunnable);
 		chatCommandThread.start();
+		logRunnable = new LogRunnable();
+		logThread = new Thread(logRunnable);
+		logThread.start();
 		System.out.println("Init took "+(System.currentTimeMillis()-time)+" ms.");
 		ConnectionManager.connectAuthServer();
 		ConnectionManager.registerToAuthServer();
@@ -142,20 +148,17 @@ public class Server {
 	}
 	
 	private static void kickPlayers() {
-		int i = 0;
-		while(i < nonLoggedPlayerKickList.size()) {
-			nonLoggedPlayerList.remove(nonLoggedPlayerKickList.get(i)); 
-			nonLoggedPlayerKickList.remove(i);
+		while(nonLoggedPlayerKickList.size() > 0) {
+			nonLoggedPlayerList.remove(nonLoggedPlayerKickList.get(0)); 
+			nonLoggedPlayerKickList.remove(0);
 		}
-		i = 0;
-		while(i < loggedPlayerKickList.size()) {
-			loggedPlayerList.remove(loggedPlayerKickList.get(i));
-			loggedPlayerKickList.remove(i);
+		while(loggedPlayerKickList.size() > 0) {
+			loggedPlayerList.remove(loggedPlayerKickList.get(0));
+			loggedPlayerKickList.remove(0);
 		}
-		i = 0;
-		while(i < inGamePlayerKickList.size()) {
-			inGamePlayerList.remove(inGamePlayerKickList.get(i));
-			inGamePlayerKickList.remove(i);
+		while(inGamePlayerKickList.size() > 0) {
+			inGamePlayerList.remove(inGamePlayerKickList.get(0));
+			inGamePlayerKickList.remove(0);
 		}
 	}
 	

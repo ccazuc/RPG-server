@@ -7,6 +7,7 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.AccountRank;
 import net.game.Player;
+import net.game.log.Log;
 
 public class CommandLoginRealmPlayer extends Command {
 
@@ -18,6 +19,7 @@ public class CommandLoginRealmPlayer extends Command {
 			double key = connection.readDouble();
 			int account_id = connection.readInt();
 			if(!Server.hasKey(key, account_id)) {
+				Log.write(player, "Unknown loggin key");
 				player.close();
 				return;
 			}

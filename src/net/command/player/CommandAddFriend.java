@@ -13,7 +13,7 @@ public class CommandAddFriend extends Command {
 	public void read(Player player) {
 		Connection connection = player.getConnection();
 		String name = connection.readString();
-		if(!(name.length() > 2)) {
+		if(name.length() <= 2) {
 			CommandPlayerNotFound.write(connection, name);
 			return;
 		}

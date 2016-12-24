@@ -32,7 +32,7 @@ public class SQLRunnable implements Runnable {
 		long delta;
 		while(this.running) {
 			time = System.currentTimeMillis();
-			if(this.SQLList.size() > 0) {
+			while(this.SQLList.size() > 0) {
 				if(this.SQLList.get(0).debugActive) {
 					long timer = System.nanoTime();
 					this.SQLList.get(0).execute();
@@ -43,7 +43,7 @@ public class SQLRunnable implements Runnable {
 				}
 				this.SQLList.remove(0);
 			}
-			if(this.whoList.size() > 0) {
+			while(this.whoList.size() > 0) {
 				Who who = this.whoList.get(0);
 				long timer = System.nanoTime();
 				executeWhoRequest(who);

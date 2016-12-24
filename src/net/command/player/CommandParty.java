@@ -9,6 +9,7 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Party;
 import net.game.Player;
+import net.game.log.Log;
 import net.game.manager.IgnoreMgr;
 
 public class CommandParty extends Command {
@@ -104,6 +105,7 @@ public class CommandParty extends Command {
 			}
 			if(!(member.getParty() == player.getParty())) {
 				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+" is not a member of your party.", MessageType.SELF);
+				Log.write(player, "Tried to give leader to someone who's not in his party");
 				return;
 			}
 			int i = 0;
@@ -124,6 +126,7 @@ public class CommandParty extends Command {
 		}
 		else if(packetId == PacketID.PARTY_ACCEPT_REQUEST) {
 			if(player.getPlayerParty() == null) {
+				Log.write(player, "accepted a party request whereas nobody sent one to him");
 				CommandSendMessage.selfWithoutAuthor(player.getPlayerParty().getConnection(), "Nobody invited you to join their party.", MessageType.SELF);
 				return;
 			}

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import net.Server;
 import net.command.Command;
 import net.game.Player;
+import net.game.log.Log;
 import net.game.manager.FriendMgr;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
@@ -22,14 +23,15 @@ public class CommandLogoutCharacter extends Command {
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
-			}
-			
+			}	
 		}
 	};
 
 	@Override
 	public void read(Player player) {
 		if(!Server.getInGamePlayerList().containsKey(player.getCharacterId())) {
+			Log.write(player, "tried to logout whereas he's not in-game");
+			player.close();
 			return;
 		}
 		setPlayerOfflineInDB(player);
