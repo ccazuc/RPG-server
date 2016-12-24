@@ -83,11 +83,13 @@ public class CommandSendMessage extends Command {
 	}
 	
 	private static void writeWhisper(Connection connection, String name, String message, boolean isTarget) { //used for whisper
+		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(MessageType.WHISPER.getValue());
 		connection.writeString(message);
 		connection.writeString(name);
 		connection.writeBoolean(isTarget);
+		connection.endPacket();
 		connection.send();
 	}
 	
@@ -100,14 +102,17 @@ public class CommandSendMessage extends Command {
 	}
 	
 	public static void write(Connection connection, String message, String author, MessageType type) { //used 
+		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
 		connection.writeString(author);
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void selfWithAuthor(Connection connection, String message, String author, MessageType type) { //used 
+		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
@@ -115,10 +120,12 @@ public class CommandSendMessage extends Command {
 		connection.writeString(author);
 		connection.writeBoolean(true);
 		connection.writeChar(MessageColor.YELLOW.getValue());
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void selfWithAuthor(Connection connection, String message, String author, MessageType type, Color color) { //used 
+		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
@@ -126,10 +133,12 @@ public class CommandSendMessage extends Command {
 		connection.writeString(author);
 		connection.writeBoolean(false);
 		connection.writeColor(color);
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void selfWithAuthor(Connection connection, String message, String author, MessageType type, MessageColor color) { //used 
+		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
@@ -137,36 +146,43 @@ public class CommandSendMessage extends Command {
 		connection.writeString(author);
 		connection.writeBoolean(true);
 		connection.writeChar(color.getValue());
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void selfWithoutAuthor(Connection connection, String message, MessageType type, Color color) { //used 
+		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(false);
 		connection.writeBoolean(false);
 		connection.writeColor(color);
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void selfWithoutAuthor(Connection connection, String message, MessageType type, MessageColor color) { //used 
+		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(false);
 		connection.writeBoolean(true);
 		connection.writeChar(color.getValue());
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void selfWithoutAuthor(Connection connection, String message, MessageType type) { //used 
+		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeChar(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(false);
 		connection.writeBoolean(true);
 		connection.writeChar(MessageColor.YELLOW.getValue());
+		connection.endPacket();
 		connection.send();
 	}
 }

@@ -39,14 +39,18 @@ public class CommandLoginRealmPlayer extends Command {
 	}
 	
 	private static void connectionRefused(Connection connection) {
+		connection.startPacket();
 		connection.writeShort(PacketID.LOGIN_REALM);
 		connection.writeShort(PacketID.LOGIN_REALM_DOESNT_ACCEPT_CONNECTION);
+		connection.endPacket();
 		connection.send();
 	}
 	
 	private static void connectionAccepted(Connection connection) {
+		connection.startPacket();
 		connection.writeShort(PacketID.LOGIN_REALM);
 		connection.writeShort(PacketID.LOGIN_REALM_SUCCESS);
+		connection.endPacket();
 		connection.send();
 	}
 }

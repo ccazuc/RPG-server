@@ -64,6 +64,7 @@ public class CommandIgnore extends Command {
 		if(ignoreList == null) {
 			return;
 		}
+		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_INIT);
 		connection.writeInt(ignoreList.size());
@@ -79,29 +80,36 @@ public class CommandIgnore extends Command {
 			}
 			i++;
 		}
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void removeIgnore(Connection connection, int id) {
+		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_REMOVE);
 		connection.writeInt(id);
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void addIgnore(Connection connection, Player ignore) {
+		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_ADD);
 		connection.writeInt(ignore.getCharacterId());
 		connection.writeString(ignore.getName());
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void addIgnore(Connection connection, int id, String name) {
+		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_ADD);
 		connection.writeInt(id);
 		connection.writeString(name);
+		connection.endPacket();
 		connection.send();
 	}
 }

@@ -139,8 +139,10 @@ public class CommandCreateCharacter extends Command {
 			while(i < name.length()) {
 				char temp = name.charAt(i);
 				if(!((temp >= 'A' && temp <= 'Z') || (temp >= 'a' && temp <= 'z')) && temp != 'é' && temp != 'è' && temp != 'ç' && temp != 'à' && temp != 'ê' && temp != 'â' && temp != 'û' && temp != 'ë' && temp != 'ä' && temp != 'ü') {
+					connection.startPacket();
 					connection.writeShort(PacketID.CREATE_CHARACTER);
 					connection.writeShort(PacketID.ERROR_NAME_ALPHABET);
+					connection.endPacket();
 					connection.send();
 					return false;
 				}
@@ -153,8 +155,10 @@ public class CommandCreateCharacter extends Command {
 			}
 		}
 		else {
+			connection.startPacket();
 			connection.writeShort(PacketID.CREATE_CHARACTER);
 			connection.writeShort(PacketID.ERROR_NAME_LENGTH);
+			connection.endPacket();
 			connection.send();
 			return false;
 		}
@@ -167,8 +171,10 @@ public class CommandCreateCharacter extends Command {
 		if(check_character.fetch()) {
 			int id = check_character.getInt();
 			if(id != 0) {	
+				connection.startPacket();
 				connection.writeShort(PacketID.CREATE_CHARACTER);
 				connection.writeShort(PacketID.ERROR_NAME_ALREADY_TAKEN);
+				connection.endPacket();
 				connection.send();
 				return false;
 			}

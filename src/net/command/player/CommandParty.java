@@ -171,16 +171,20 @@ public class CommandParty extends Command {
 	}
 	
 	private static void inviteRequest(Connection connection, String name) {
+		connection.startPacket();
 		connection.writeShort(PacketID.PARTY);
 		connection.writeShort(PacketID.PARTY_ADD_MEMBER);
 		connection.writeString(name);
+		connection.endPacket();
 		connection.send();
 	}
 	
 	private static void requestDeclined(Connection connection, String name) {
+		connection.startPacket();
 		connection.writeShort(PacketID.PARTY);
 		connection.writeShort(PacketID.PARTY_DECLINE_REQUEST);
 		connection.writeString(name);
+		connection.endPacket();
 		connection.send();
 	}
 	
@@ -214,15 +218,19 @@ public class CommandParty extends Command {
 		int i = 0;
 		while(i < player.getParty().getPlayerList().length) {
 			if(player.getParty().getPlayerList()[i] == player) {
+				player.getConnection().startPacket();
 				player.getConnection().writeShort(PacketID.PARTY);
 				player.getConnection().writeShort(PacketID.PARTY_LEFT);
+				player.getConnection().endPacket();
 				player.getConnection().send();
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You left the party.", MessageType.SELF);
 			}
 			else if(player.getParty().getPlayerList()[i] != null) {
+				player.getParty().getPlayerList()[i].getConnection().startPacket();
 				player.getParty().getPlayerList()[i].getConnection().writeShort(PacketID.PARTY);
 				player.getParty().getPlayerList()[i].getConnection().writeShort(PacketID.PARTY_MEMBER_LEFT);
 				player.getParty().getPlayerList()[i].getConnection().writeInt(player.getCharacterId());
+				player.getParty().getPlayerList()[i].getConnection().endPacket();
 				player.getParty().getPlayerList()[i].getConnection().send();
 				CommandSendMessage.selfWithoutAuthor(player.getParty().getPlayerList()[i].getConnection(), player.getName()+" left the party.", MessageType.SELF);
 				if(wasLeader) {
@@ -241,8 +249,10 @@ public class CommandParty extends Command {
 		int i = 0;
 		while(i < player.getParty().getPlayerList().length) {
 			if(player.getParty().getPlayerList()[i] != null) {
+				player.getParty().getPlayerList()[i].getConnection().startPacket();
 				player.getParty().getPlayerList()[i].getConnection().writeShort(PacketID.PARTY);
 				player.getParty().getPlayerList()[i].getConnection().writeShort(PacketID.PARTY_DISBAND);
+				player.getParty().getPlayerList()[i].getConnection().endPacket();
 				player.getParty().getPlayerList()[i].getConnection().send();
 				System.out.println(player.getConnection().wBufferRemaining()+" remaining, capacity: "+player.getConnection().wBufferCapacity()+" "+player.getConnection());
 				CommandSendMessage.selfWithoutAuthor(player.getParty().getPlayerList()[i].getConnection(), "You left the party.", MessageType.SELF);
@@ -261,13 +271,16 @@ public class CommandParty extends Command {
 	}
 	
 	private static void setLeader(Connection connection, int id) {
+		connection.startPacket();
 		connection.writeShort(PacketID.PARTY);
 		connection.writeShort(PacketID.PARTY_SET_LEADER);
 		connection.writeInt(id);
+		connection.endPacket();
 		connection.send();
 	}
 	
 	private static void memberJoinedParty(Connection connection, Player joined) {
+		connection.startPacket();
 		connection.writeShort(PacketID.PARTY);
 		connection.writeShort(PacketID.PARTY_MEMBER_JOINED);
 		connection.writeString(joined.getName());
@@ -278,10 +291,12 @@ public class CommandParty extends Command {
 		connection.writeInt(joined.getLevel());
 		connection.writeInt(joined.getCharacterId());
 		connection.writeByte(joined.getClasse().getValue());
+		connection.endPacket();
 		connection.send();
 	}
 	
 	private static void newParty(Player player, Player joined) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.PARTY);
 		player.getConnection().writeShort(PacketID.PARTY_NEW);
 		player.getConnection().writeBoolean(player.hasInitParty());
@@ -293,6 +308,7 @@ public class CommandParty extends Command {
 		player.getConnection().writeInt(joined.getLevel());
 		player.getConnection().writeInt(joined.getCharacterId());
 		player.getConnection().writeByte(joined.getClasse().getValue());
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	

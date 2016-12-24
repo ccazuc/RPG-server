@@ -13,8 +13,10 @@ public class CommandPotion extends Command {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		if(PotionManager.exists(id)) {
+			connection.startPacket();
 			connection.writeShort(PacketID.POTION);
 			connection.writePotion(PotionManager.getPotion(id));
+			connection.endPacket();
 			connection.send();
 		}
 	}

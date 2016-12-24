@@ -76,14 +76,17 @@ public class CommandFriend extends Command {
 	}
 	
 	public static void removeFriend(Connection connection, int id) {
+		connection.startPacket();
 		connection.writeShort(PacketID.FRIEND);
 		connection.writeShort(PacketID.FRIEND_REMOVE);
 		connection.writeInt(id);
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public static void loadFriendList(Player player) {
 		int i = 0;
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.FRIEND);
 		player.getConnection().writeShort(PacketID.FRIEND_LOAD_ALL);
 		player.getConnection().writeInt(player.getFriendList().size());
@@ -101,17 +104,21 @@ public class CommandFriend extends Command {
 			}
 			i++;
 		}
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	
 	public static void notifyFriendOffline(Player player, Player friend) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.FRIEND);
 		player.getConnection().writeShort(PacketID.FRIEND_OFFLINE);
 		player.getConnection().writeInt(friend.getCharacterId());
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	
 	public static void notifyFriendOnline(Player player, Player friend) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.FRIEND);
 		player.getConnection().writeShort(PacketID.FRIEND_ONLINE);
 		player.getConnection().writeInt(friend.getCharacterId());
@@ -119,10 +126,12 @@ public class CommandFriend extends Command {
 		player.getConnection().writeInt(friend.getLevel());
 		player.getConnection().writeByte(friend.getRace().getValue());
 		player.getConnection().writeByte(friend.getClasse().getValue());
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	
 	private static void addOnlineFriend(Player player, Player friend) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.FRIEND);
 		player.getConnection().writeShort(PacketID.FRIEND_ADD);
 		player.getConnection().writeBoolean(true);
@@ -131,15 +140,18 @@ public class CommandFriend extends Command {
 		player.getConnection().writeInt(friend.getLevel());
 		player.getConnection().writeByte(friend.getRace().getValue());
 		player.getConnection().writeByte(friend.getClasse().getValue());
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	
 	private static void addOfflineFriend(Connection connection, int id, String name) {
+		connection.startPacket();
 		connection.writeShort(PacketID.FRIEND);
 		connection.writeShort(PacketID.FRIEND_ADD);
 		connection.writeBoolean(false);
 		connection.writeInt(id);
 		connection.writeString(name);
+		connection.endPacket();
 		connection.send();
 	}
 }

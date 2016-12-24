@@ -47,6 +47,7 @@ public class CommandRequestItem extends Command {
 				return;
 			}
 		}
+		connection.startPacket();
 		connection.writeShort(PacketID.REQUEST_ITEM);
 		if(knownItem) {
 			connection.writeBoolean(true);
@@ -62,6 +63,7 @@ public class CommandRequestItem extends Command {
 		if(isGem) {
 			connection.writeInt(gemSlot);
 		}
+		connection.endPacket();
 		connection.send();
 		if(item == null) {
 			player.addItemSentToClient(id);

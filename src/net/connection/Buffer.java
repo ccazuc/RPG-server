@@ -72,6 +72,7 @@ public class Buffer {
 	}
 	
 	private final byte read(final ByteBuffer buffer) throws IOException {
+		buffer.clear();
 		if(this.socket.read(buffer) >= 0) {
 			buffer.flip();
 			return 1;

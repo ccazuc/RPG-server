@@ -72,16 +72,20 @@ public class CommandGet extends Command {
 	}
 	
 	public void write(Connection connection, int value) {
+		connection.startPacket();
 		connection.writeShort(PacketID.CHAT_GET);
 		connection.writeShort(PacketID.INT);
 		connection.writeInt(value);
+		connection.endPacket();
 		connection.send();
 	}
 	
 	public void write(Connection connection, String msg) {
+		connection.startPacket();
 		connection.writeShort(PacketID.CHAT_GET);
 		connection.writeShort(PacketID.STRING);
 		connection.writeString(msg);
+		connection.endPacket();
 		connection.send();
 	}
 }

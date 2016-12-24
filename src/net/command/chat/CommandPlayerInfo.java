@@ -30,10 +30,12 @@ public class CommandPlayerInfo extends Command {
 	public void write(Player player) {
 		if(player != null) {
 			Connection connection = player.getConnection();
+			connection.startPacket();
 			connection.writeString(player.getName());
 			connection.writeInt(player.getAccountId());
 			connection.writeInt(player.getAccountRank().getValue());
 			connection.writeString(player.getIpAdress());
+			connection.endPacket();
 			connection.send();
 		}
 	}

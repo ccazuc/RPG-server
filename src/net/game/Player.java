@@ -190,11 +190,13 @@ public class Player extends Unit {
 	}
 	
 	public void sendStats() {
+		this.connectionManager.getConnection().startPacket();
 		this.connectionManager.getConnection().writeShort(PacketID.LOAD_STATS);
 		this.connectionManager.getConnection().writeInt(this.characterId);
 		this.connectionManager.getConnection().writeInt(this.exp);
 		this.connectionManager.getConnection().writeInt(this.gold);
 		this.connectionManager.getConnection().writeInt(this.accountRank.getValue());
+		this.connectionManager.getConnection().endPacket();
 		this.connectionManager.getConnection().send();
 	}
 	

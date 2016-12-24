@@ -13,8 +13,10 @@ public class CommandStuff extends Command {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		if(StuffManager.exists(id)) {
+			connection.startPacket();
 			connection.writeShort(PacketID.STUFF);
 			connection.writeStuff(StuffManager.getStuff(id));
+			connection.endPacket();
 			connection.send();
 		}
 	}

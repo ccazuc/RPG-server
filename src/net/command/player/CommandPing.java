@@ -14,7 +14,9 @@ public class CommandPing extends Command {
 	}
 
 	public static void write(Player player) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.PING);
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 }

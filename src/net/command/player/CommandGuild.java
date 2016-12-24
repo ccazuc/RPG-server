@@ -261,10 +261,12 @@ public class CommandGuild extends Command {
 			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
 				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_SET_MEMBER_NOTE);
 				connection.writeInt(member.getId());
 				connection.writeString(member.getNote());
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -277,10 +279,12 @@ public class CommandGuild extends Command {
 			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
 				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_SET_MEMBER_OFFICER_NOTE);
 				connection.writeInt(member.getId());
 				connection.writeString(member.getOfficerNote());
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -293,10 +297,12 @@ public class CommandGuild extends Command {
 			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
 				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_KICK_MEMBER);
 				connection.writeString(name);
 				connection.writeInt(id);
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -309,9 +315,11 @@ public class CommandGuild extends Command {
 			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
 				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_SET_LEADER);
 				connection.writeInt(id);
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -324,9 +332,11 @@ public class CommandGuild extends Command {
 			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
 				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_MEMBER_LEFT);
 				connection.writeInt(id);
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -339,10 +349,12 @@ public class CommandGuild extends Command {
 			GuildMember temp = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(temp.getId()) != null) {
 				Connection connection = Server.getInGameCharacter(temp.getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_PROMOTE_PLAYER);
 				connection.writeInt(member.getId());
 				connection.writeInt(member.getRank().getOrder());
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -355,9 +367,11 @@ public class CommandGuild extends Command {
 			GuildMember member = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(member.getId()) != null) {
 				Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_SET_MOTD);
 				connection.writeString(guild.getMotd());
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -370,9 +384,11 @@ public class CommandGuild extends Command {
 			GuildMember member = guild.getMemberList().get(i);
 			if(Server.getInGameCharacter(member.getId()) != null) {
 				Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_SET_INFORMATION);
 				connection.writeString(guild.getInformation());
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -386,9 +402,11 @@ public class CommandGuild extends Command {
 				GuildMember member = player.getGuild().getMemberList().get(i);
 				if(Server.getInGameCharacter(member.getId()) != null) {
 					Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
+					connection.startPacket();
 					connection.writeShort(PacketID.GUILD);
 					connection.writeShort(PacketID.GUILD_ONLINE_PLAYER);
 					connection.writeInt(player.getCharacterId());
+					connection.endPacket();
 					connection.send();
 				}
 				i++;
@@ -403,9 +421,11 @@ public class CommandGuild extends Command {
 				GuildMember member = player.getGuild().getMemberList().get(i);
 				if(Server.getInGameCharacter(member.getId()) != null && member.getId() != player.getCharacterId()) {
 					Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
+					connection.startPacket();
 					connection.writeShort(PacketID.GUILD);
 					connection.writeShort(PacketID.GUILD_OFFLINE_PLAYER);
 					connection.writeInt(player.getCharacterId());
+					connection.endPacket();
 					connection.send();
 				}
 				i++;
@@ -414,10 +434,12 @@ public class CommandGuild extends Command {
 	}
 	
 	private static void joinGuildRequest(Connection connection, String player_name, String guild_name) {
+		connection.startPacket();
 		connection.writeShort(PacketID.GUILD);
 		connection.writeShort(PacketID.GUILD_INVITE_PLAYER);
 		connection.writeString(player_name);
 		connection.writeString(guild_name);
+		connection.endPacket();
 		connection.send();
 	}
 	
@@ -426,11 +448,13 @@ public class CommandGuild extends Command {
 		while(i < guild.getMemberList().size()) {
 			if(Server.getInGameCharacter(guild.getMemberList().get(i).getId()) != null) {
 				Connection connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_UPDATE_PERMISSION);
 				connection.writeInt(rank_order);
 				connection.writeInt(permission);
 				connection.writeString(name);
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -442,6 +466,7 @@ public class CommandGuild extends Command {
 		while(i < guild.getMemberList().size()) {
 			if(Server.getInGameCharacter(guild.getMemberList().get(i).getId()) != null && guild.getMemberList().get(i) != member) {
 				Connection connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_NEW_MEMBER);
 				connection.writeInt(member.getId());
@@ -453,6 +478,7 @@ public class CommandGuild extends Command {
 				connection.writeBoolean(member.isOnline());
 				connection.writeByte(member.getClassType().getValue());
 				connection.writeLong(member.getLastLoginTimer());
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -464,11 +490,13 @@ public class CommandGuild extends Command {
 		while(i < guild.getMemberList().size()) {
 			if(Server.getInGameCharacter(guild.getMemberList().get(i).getId()) != null) {
 				Connection connection = Server.getInGameCharacter(guild.getMemberList().get(i).getId()).getConnection();
+				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_KICK_MEMBER);
 				connection.writeInt(member.getId());
 				connection.writeString(member.getName());
 				connection.writeString(name);
+				connection.endPacket();
 				connection.send();
 			}
 			i++;
@@ -478,6 +506,7 @@ public class CommandGuild extends Command {
 	public static void initGuildWhenLogin(Connection connection, Player player) {
 		if(player.getGuild() != null) {
 			int i = 0;
+			connection.startPacket();
 			connection.writeShort(PacketID.GUILD);
 			connection.writeShort(PacketID.GUILD_INIT);
 			connection.writeInt(player.getGuild().getId());
@@ -527,6 +556,8 @@ public class CommandGuild extends Command {
 					i++;
 				}
 			}
+			System.out.println("Guild send length "+connection.rBufferPosition());
+			connection.endPacket();
 			connection.send();
 		}
 	}

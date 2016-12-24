@@ -37,6 +37,7 @@ public class CommandSelectScreenLoadCharacters extends Command {
 			write_statement.execute();
 			while(write_statement.fetch()) {
 				if(hasSendId) {
+					connection.startPacket();
 					connection.writeShort(PacketID.SELECT_SCREEN_LOAD_CHARACTERS);
 					hasSendId = false;
 				}
@@ -51,7 +52,10 @@ public class CommandSelectScreenLoadCharacters extends Command {
 				connection.writeString(classe);
 				connection.writeString(race);
 			}
-			connection.send();
+			if(!hasSendId) {
+				connection.endPacket();
+				connection.send();
+			}
 			System.out.println("[SQL REQUEST] load characters took "+(System.nanoTime()-timer)/1000+" µs to execute.");
 		}
 		catch(SQLException e) {

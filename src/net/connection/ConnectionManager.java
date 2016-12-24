@@ -177,9 +177,11 @@ public class ConnectionManager {
 	}
 	
 	private void readPacket() {
-		while(this.connection != null && this.connection.hasRemaining()) {
+		if(this.connection == null) {
+			return;
+		}
+		while(this.connection.hasRemaining()) {
 			int packetLength = this.connection.readInt();
-			System.out.println(packetLength+" "+this.connection.rBufferRemaining());
 			if(this.connection.rBufferRemaining()+4 < packetLength) {
 				this.connection.rBufferSetPosition(this.connection.rBufferPosition()-4);
 				return;
@@ -188,16 +190,25 @@ public class ConnectionManager {
 			if(commandList.containsKey((int)packetId)) {
 				this.lastPacketReaded = packetId;
 				commandList.get((int)packetId).read(this.player);
-				this.connection.clearRBuffer();
 			}
 			else {
 				System.out.println("Unknown packet: "+(int)packetId+", last packet readed: "+this.lastPacketReaded+" for player "+this.player.getAccountId());
+				this.player.close();
+				break;
 			}
 		}
 	}
 	
 	private static void readAuthPacket() {
-		while(authConnection != null && authConnection.hasRemaining()) {
+		if(authConnection == null) {
+			return;
+		}
+		while(authConnection.hasRemaining()) {
+			int packetLength = authConnection.readInt();
+			if(authConnection.rBufferRemaining()+4 < packetLength) {
+				authConnection.rBufferSetPosition(authConnection.rBufferPosition()-4);
+				return;
+			}
 			short packetId = authConnection.readShort();
 			if(authCommand.containsKey((int)packetId)) {
 				authCommand.get((int)packetId).read(authConnection);

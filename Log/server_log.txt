@@ -1,0 +1,11 @@
+--------------------------------------------------------------
+Sat Dec 24 21:09:15 CET 2016
+java.lang.NullPointerException
+	at net.command.player.CommandLoginRealmPlayer.read(CommandLoginRealmPlayer.java:34)
+	at net.connection.ConnectionManager.readPacket(ConnectionManager.java:191)
+	at net.connection.ConnectionManager.read(ConnectionManager.java:132)
+	at net.Server.read(Server.java:176)
+	at net.Server.main(Server.java:126)
+--------------------------------------------------------------
+
+

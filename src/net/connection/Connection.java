@@ -15,6 +15,7 @@ public class Connection {
 
 	private Buffer wBuffer;
 	private Buffer rBuffer;
+	private int startPacketPosition;
 	private SocketChannel socket;
 	
 	public Connection(SocketChannel socket, Player player) {
@@ -78,6 +79,10 @@ public class Connection {
 		this.rBuffer.clear();
 	}
 	
+	public final void flipRBuffer() {
+		this.rBuffer.flip();
+	}
+	
 	public final byte read() throws IOException {
 		return this.rBuffer.read();
 	}
@@ -90,6 +95,18 @@ public class Connection {
 			//e.printStackTrace();
 			System.out.println("IOException on send");
 		}
+	}
+	
+	public final void startPacket() {
+		this.startPacketPosition = this.wBuffer.getPosition();
+		writeInt(0);
+	}
+	
+	public final void endPacket() {
+		int position = this.wBuffer.getPosition();
+		this.wBuffer.setPosition(this.startPacketPosition);
+		this.wBuffer.writeInt(position-this.startPacketPosition);
+		this.wBuffer.setPosition(position);
 	}
 	
 	public final boolean hasRemaining() {

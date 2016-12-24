@@ -38,15 +38,18 @@ public class CommandAddItem extends Command {
 	}
 	
 	private static void writeKnownItem(Player player, int id, int number) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.ADD_ITEM);
 		player.getConnection().writeShort(PacketID.KNOWN_ITEM);
 		player.getConnection().writeInt(id);
 		player.getConnection().writeInt(number);
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	
 	private static void writeUnknownItem(Player player, int id, int number) {
 		Item temp = Item.getItem(id);
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.ADD_ITEM);
 		player.getConnection().writeShort(PacketID.UNKNOWN_ITEM);
 		player.getConnection().writeInt(number);
@@ -66,6 +69,7 @@ public class CommandAddItem extends Command {
 		else if(temp.isWeapon()) {
 			player.getConnection().writeWeapon((Stuff)temp);
 		}
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 }

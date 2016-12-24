@@ -157,6 +157,7 @@ public class CommandTrade extends Command {
 	}
 	
 	private static void tradeItem(Player player, Item[] table) throws SQLException {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.TRADE);
 		player.getConnection().writeShort(PacketID.TRADE_SEND_ALL_ITEMS);
 		int i = 0;
@@ -179,31 +180,39 @@ public class CommandTrade extends Command {
 			}
 			i++;
 		}
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	
 	private static void tradeUnaccept(Player player) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.TRADE);
 		player.getConnection().writeShort(PacketID.TRADE_UNACCEPT);
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	
 	private static void write(short packetId, Player player, String name) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.TRADE);
 		player.getConnection().writeShort(packetId);
 		player.getConnection().writeString(name);
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	
 	private static void writeAddItemError(Player player, int slot) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.TRADE);
 		player.getConnection().writeShort(PacketID.TRADE_ADD_ITEM_ERROR);
 		player.getConnection().writeInt(slot);
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 	
 	private static void sendUnknownItem(Player player, int id, int slot, int amount, int gem1Id, int gem2Id, int gem3Id) {
 		if(slot >= 0 && slot <= 6) {
+			player.getConnection().startPacket();
 			player.getConnection().writeShort(PacketID.TRADE);
 			player.getConnection().writeShort(PacketID.TRADE_ADD_ITEM);
 			player.getConnection().writeShort(PacketID.UNKNOWN_ITEM);
@@ -214,6 +223,7 @@ public class CommandTrade extends Command {
 			player.getConnection().writeInt(gem1Id);
 			player.getConnection().writeInt(gem2Id);
 			player.getConnection().writeInt(gem3Id);
+			player.getConnection().endPacket();
 			player.getConnection().send();
 			player.getTrade().addItem(player.getPlayerTrade(), slot, amount, Item.getItem(id));
 			tradeUnaccept(player.getPlayerTrade());
@@ -224,6 +234,7 @@ public class CommandTrade extends Command {
 	
 	private static void sendUnknownItem(Player player, int id, int slot, int amount) {
 		if(slot >= 0 && slot <= 6) {
+			player.getConnection().startPacket();
 			player.getConnection().writeShort(PacketID.TRADE);
 			player.getConnection().writeShort(PacketID.TRADE_ADD_ITEM);
 			player.getConnection().writeShort(PacketID.UNKNOWN_ITEM);
@@ -231,6 +242,7 @@ public class CommandTrade extends Command {
 			player.getConnection().writeInt(slot);
 			player.getConnection().writeInt(amount);
 			player.getConnection().writeBoolean(false);
+			player.getConnection().endPacket();
 			player.getConnection().send();
 			player.getTrade().addItem(player.getPlayerTrade(), slot, amount, Item.getItem(id));
 			tradeUnaccept(player.getPlayerTrade());
@@ -241,6 +253,7 @@ public class CommandTrade extends Command {
 	
 	private static void sendKnownItem(Player player, int id, int slot, int amount) {
 		if(slot >= 0 && slot <= 6) {
+			player.getConnection().startPacket();
 			player.getConnection().writeShort(PacketID.TRADE);
 			player.getConnection().writeShort(PacketID.TRADE_ADD_ITEM);
 			player.getConnection().writeShort(PacketID.KNOWN_ITEM);
@@ -248,6 +261,7 @@ public class CommandTrade extends Command {
 			player.getConnection().writeInt(slot);
 			player.getConnection().writeInt(amount);
 			player.getConnection().writeBoolean(false);
+			player.getConnection().endPacket();
 			player.getConnection().send();
 			player.getTrade().addItem(player.getPlayerTrade(), slot, amount, Item.getItem(id));
 			tradeUnaccept(player.getPlayerTrade());
@@ -258,6 +272,7 @@ public class CommandTrade extends Command {
 	
 	private static void sendKnownItem(Player player, int id, int slot, int amount, int gem1Id, int gem2Id, int gem3Id) {
 		if(slot >= 0 && slot <= 6) {
+			player.getConnection().startPacket();
 			player.getConnection().writeShort(PacketID.TRADE);
 			player.getConnection().writeShort(PacketID.TRADE_ADD_ITEM);
 			player.getConnection().writeShort(PacketID.KNOWN_ITEM);
@@ -268,6 +283,7 @@ public class CommandTrade extends Command {
 			player.getConnection().writeInt(gem1Id);
 			player.getConnection().writeInt(gem2Id);
 			player.getConnection().writeInt(gem3Id);
+			player.getConnection().endPacket();
 			player.getConnection().send();
 			player.getTrade().addItem(player.getPlayerTrade(), slot, amount, Item.getItem(id));
 			tradeUnaccept(player.getPlayerTrade());
@@ -278,8 +294,10 @@ public class CommandTrade extends Command {
 	
 	private static void tradeCancel(Player player) {
 		if(player != null) {
+			player.getConnection().startPacket();
 			player.getConnection().writeShort(PacketID.TRADE);
 			player.getConnection().writeShort(PacketID.TRADE_CLOSE);
+			player.getConnection().endPacket();
 			player.getConnection().send();
 		}
 	}

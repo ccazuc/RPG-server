@@ -7,10 +7,12 @@ import net.game.Player;
 public class CommandUpdateStats extends Command {
 	
 	public static void write(Player player, short packetID, int id, int value) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.UPDATE_STATS);
 		player.getConnection().writeShort(packetID);
 		player.getConnection().writeInt(id);
 		player.getConnection().writeInt(value);
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 }

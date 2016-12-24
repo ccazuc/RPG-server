@@ -28,12 +28,14 @@ public class CommandAddFriend extends Command {
 	}
 	
 	private static void writeAddFriend(Player player, Player friend) {
+		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.FRIEND);
 		player.getConnection().writeShort(PacketID.FRIEND_SEND_INFO);
 		player.getConnection().writeString(friend.getName());
 		player.getConnection().writeInt(friend.getLevel());
 		player.getConnection().writeByte(friend.getRace().getValue());
 		player.getConnection().writeByte(friend.getClasse().getValue());
+		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
 }
