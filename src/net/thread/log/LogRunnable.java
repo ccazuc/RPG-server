@@ -14,6 +14,7 @@ import net.game.Player;
 
 public class LogRunnable implements Runnable {
 
+	private static List<Exception> exceptionList = new ArrayList<Exception>();
 	private static List<String> playerPrintList = new ArrayList<String>();
 	private static Calendar calendar = Calendar.getInstance();
 	private static FileWriter fileWriterPlayerLog;
@@ -33,6 +34,7 @@ public class LogRunnable implements Runnable {
 	
 	public LogRunnable() {
 		playerPrintList = Collections.synchronizedList(playerPrintList);
+		exceptionList = Collections.synchronizedList(exceptionList);
 	}
 	
 	@Override
@@ -41,8 +43,8 @@ public class LogRunnable implements Runnable {
 		if(!folder.exists()) {
 			folder.mkdirs();
 		}
-		folder = new File(FILE_NAME_PLAYER_LOG);
 		try {
+			folder = new File(FILE_NAME_PLAYER_LOG);
 			if(!folder.exists()) {
 				folder.createNewFile();
 			}

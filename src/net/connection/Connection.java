@@ -49,6 +49,18 @@ public class Connection {
 		this.wBuffer.setPosition(position);
 	}
 	
+	public int rBufferPosition() {
+		return this.rBuffer.getPosition();
+	}
+	
+	public int rBufferRemaining() {
+		return this.rBuffer.remaining();
+	}
+	
+	public void rBufferSetPosition(int position) {
+		this.rBuffer.setPosition(position);
+	}
+	
 	public final void close() {
 		try {
 			this.socket.close();
