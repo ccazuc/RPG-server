@@ -19,7 +19,7 @@ public class CommandLoginRealmPlayer extends Command {
 			double key = connection.readDouble();
 			int account_id = connection.readInt();
 			if(!Server.hasKey(key, account_id)) {
-				Log.write(player, "Unknown loggin key");
+				Log.writePlayerLog(player, "Unknown loggin key");
 				player.close();
 				return;
 			}

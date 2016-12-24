@@ -27,7 +27,7 @@ public class CommandDragItems extends Command {
 		}
 		if(sourceType == DragItem.BAG) {
 			if(destinationType == DragItem.BAG) {
-				swapBagToBagItem(player, source, destination, amount);
+				swapBagToBagItem(player, source, destination, -2);
 			}
 			else if(destinationType == DragItem.INVENTORY) {
 				swapBagToInventoryItem(player, source, destination);
@@ -119,11 +119,11 @@ public class CommandDragItems extends Command {
 			return;
 		}
 		if(amount <= 0) {
-			Log.write(player, "Modified default value of draggedAmount for draggedItem to "+amount);
+			Log.writePlayerLog(player, "Modified default value of draggedAmount for draggedItem to "+amount);
 			return;
 		}
 		if(player.getBag().getBag(source).getAmount() < amount) {
-			Log.write(player, "Server's amount < client's amount in swapBagToBagItem in CommandDragItems");
+			Log.writePlayerLog(player, "Server's amount < client's amount in swapBagToBagItem in CommandDragItems");
 			return;
 		}
 		if(player.getBag().getBag(destination) == null) {

@@ -402,7 +402,19 @@ public class StoreChatCommand {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Server is using "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024L*1024L)+" Mb of ram.", MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Server is using "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)+" Mb of ram.", MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand server_gc = new ChatSubCommand("gc", "server", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Used ram before gc: "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)+" Mb", MessageType.SELF);
+			System.gc();
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Used ram after gc: "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)+" Mb", MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand server_set = new ChatSubCommand("set", "server", AccountRank.ADMINISTRATOR) {
@@ -883,6 +895,7 @@ public class StoreChatCommand {
 		server.addSubCommand(server_motd);
 		server.addSubCommand(server_set);
 		server.addSubCommand(server_ram);
+		server.addSubCommand(server_gc);
 		server_set.addSubCommand(server_set_motd);
 		server_set.addSubCommand(server_set_closed);
 		commandMap.put(server.getName(), server);

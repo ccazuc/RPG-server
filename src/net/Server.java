@@ -117,27 +117,34 @@ public class Server {
 		ConnectionManager.initAuthCommand();
 		ConnectionManager.initPlayerCommand();
 		System.gc();
-		while(serverRunning) {
-			LOOP_TICK_TIMER = System.currentTimeMillis();
-			kickPlayers();
-			readAuthServer();
-			readOnlinePlayers();
-			read();
-			delta = (System.currentTimeMillis()-LOOP_TICK_TIMER);
-			if(delta < LOOP_TIMER) {
-				Thread.sleep((LOOP_TIMER-(long)delta));
+		try {
+			while(serverRunning) {
+				LOOP_TICK_TIMER = System.currentTimeMillis();
+				kickPlayers();
+				readAuthServer();
+				readOnlinePlayers();
+				read();
+				delta = (System.currentTimeMillis()-LOOP_TICK_TIMER);
+				if(delta < LOOP_TIMER) {
+					Thread.sleep((LOOP_TIMER-(long)delta));
+				}
+				if(delta > 2) {
+					System.out.print("Loop too long: ");
+					System.out.print(delta);
+					System.out.println("ms.");
+				}
 			}
-			if(delta > 2) {
-				System.out.print("Loop too long: ");
-				System.out.print(delta);
-				System.out.println("ms.");
-			}
+		}
+		catch(RuntimeException e) {
+			logRunnable.writeServerLog(e);
+			System.out.println("[RUNTIME EXCEPTION OCCURED]");
 		}
 		//Save eveything of every player to the DB
 		lowPrioritySQLRunnable.close();
 		highPrioritySQLRunnable.close();
 		socketRunnable.close();
 		chatCommandRunnable.close();
+		logRunnable.close();
 		
 	}
 	

@@ -14,7 +14,7 @@ public class CommandDeleteCharacter extends Command {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		if(AccountMgr.loadAccountIDFromCharacterID(id) != player.getAccountId()) {
-			Log.write(player, "Tried to delete someone else's character (id = "+id+')');
+			Log.writePlayerLog(player, "Tried to delete someone else's character (id = "+id+')');
 			player.close();
 			return;
 		}

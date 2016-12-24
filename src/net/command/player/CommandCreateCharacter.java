@@ -77,7 +77,7 @@ public class CommandCreateCharacter extends Command {
 	@Override
 	public void read(Player player) {
 		if(Server.getInGameCharacter(player.getCharacterId()) != null) {
-			Log.write(player, "Tried to create a character while beeing in-game");
+			Log.writePlayerLog(player, "Tried to create a character while beeing in-game");
 			player.close();
 			return;
 		}

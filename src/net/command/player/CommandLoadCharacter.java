@@ -15,13 +15,13 @@ public class CommandLoadCharacter extends Command {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		if(!Server.getLoggedPlayerList().containsKey(player.getAccountId())) {
-			Log.write(player, "Tried to load character "+id+" whereas he's not connected");
+			Log.writePlayerLog(player, "Tried to load character "+id+" whereas he's not connected");
 			player.close();
 			return;
 		}
 		if(!CharacterMgr.checkPlayerAccount(player.getAccountId(), id)) {
 			player.close();
-			Log.write(player, "tried to connect on someone else's character (id = "+id+')');
+			Log.writePlayerLog(player, "tried to connect on someone else's character (id = "+id+')');
 			return;
 		}
 		player.setCharacterId(id);
