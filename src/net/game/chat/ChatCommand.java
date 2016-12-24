@@ -7,9 +7,16 @@ import net.game.Player;
 
 public class ChatCommand {
 
+	protected String helpMessage;
 	protected AccountRank rank;
 	protected String name;
 	protected ArrayList<ChatSubCommand> subCommandList;
+	
+	public ChatCommand(String name, String helpMessage, AccountRank accountLevel) {
+		this.rank = accountLevel;
+		this.helpMessage = helpMessage;
+		this.name = name;
+	}
 	
 	public ChatCommand(String name, AccountRank accountLevel) {
 		this.rank = accountLevel;
@@ -21,6 +28,10 @@ public class ChatCommand {
 			this.subCommandList = new ArrayList<ChatSubCommand>();
 		}
 		this.subCommandList.add(command);
+	}
+	
+	public String printHelpMessage() {
+		return this.helpMessage;
 	}
 	
 	@SuppressWarnings("unused")

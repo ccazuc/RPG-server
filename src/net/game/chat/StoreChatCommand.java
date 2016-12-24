@@ -63,7 +63,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand account_onlinelist = new ChatSubCommand("onlinelist", "account", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand account_onlinelist = new ChatSubCommand("onlinelist", "account", "Syntax: .account onlinelist \n\n List all online accounts.", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -99,7 +99,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand account_set_gmlevel = new ChatSubCommand("gmlevel", "account_set", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand account_set_gmlevel = new ChatSubCommand("gmlevel", "account_set", "Invalid synthax : .account set gmlevel [account_name] [account_level]", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -107,14 +107,14 @@ public class StoreChatCommand {
 				return;
 			}
 			if(value.length < 5) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .account set gmlevel [account_name] [account_level]", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
 			if(Server.isInteger(value[4])) {
 				String accountName = value[3];
 				int level = Integer.parseInt(value[4]);
 				if(!(level >= 1 && level <= AccountRank.values().length)) {
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid value for [account_level] on .account set gmlevel [account_name] [account_level]", MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 					return;
 				}
 				int accountId = AccountMgr.loadAccountIDFromName(accountName);
@@ -130,17 +130,17 @@ public class StoreChatCommand {
 				tmp.setAccountRank(AccountRank.get(level));
 			}
 			else {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .account set gmlevel [account_name] [account_level]", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 			}
 		}
 	};
-	private final static ChatCommand announce = new ChatCommand("announce", AccountRank.PLAYER) {
+	private final static ChatCommand announce = new ChatCommand("announce", "Synthax : .announce [message] \n\n Send an announce to all players", AccountRank.PLAYER) {
 		
 		@Override
 		public void handle(String command, Player player) {
 			command = command.trim().toLowerCase();
 			if(command.equals('.'+this.name)) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid value for [message] in .announce [message]", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
 			for(Player players : Server.getInGamePlayerList().values()) {
@@ -173,7 +173,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand ban_account = new ChatSubCommand("account", "ban", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand ban_account = new ChatSubCommand("account", "ban", "Synthax : .ban account [account_name] [duration] [reason]", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -181,7 +181,7 @@ public class StoreChatCommand {
 				return;
 			}
 			if(value.length < 5) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .ban account [account_name] [duration] [reason]", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
 			String accountName = value[2];
@@ -194,7 +194,7 @@ public class StoreChatCommand {
 			else {
 				banTimer = convStringTimerToMS(banTime);
 				if(banTimer == -666) {
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .ban account [account_name] [duration] [reason]", MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 					return;
 				}
 			}
@@ -219,7 +219,7 @@ public class StoreChatCommand {
 			banned.close();
 		}
 	};
-	private final static ChatSubCommand ban_character = new ChatSubCommand("character", "ban", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand ban_character = new ChatSubCommand("character", "ban", "Synthax : .ban character [character_name] [duration] [reason]", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -227,7 +227,7 @@ public class StoreChatCommand {
 				return;
 			}
 			if(value.length < 5) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .ban character [character_name] [duration] [reason]", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
 			String characterName = value[2];
@@ -240,7 +240,7 @@ public class StoreChatCommand {
 			else {
 				banTimer = convStringTimerToMS(banTime);
 				if(banTimer == -666) {
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .ban character [character_name] [duration] [reason]", MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 					return;
 				}
 			}
@@ -265,7 +265,7 @@ public class StoreChatCommand {
 			banned.close();
 		}
 	};
-	private final static ChatSubCommand ban_ip = new ChatSubCommand("ip", "ban", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand ban_ip = new ChatSubCommand("ip", "ban", "Synthax : .ban ip [ip_adress] [duration] [reason]",  AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -273,7 +273,7 @@ public class StoreChatCommand {
 				return;
 			}
 			if(value.length < 5) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .ban ip [ip_adress] [duration] [reason]", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
 			String ipAdress = value[2];
@@ -281,7 +281,7 @@ public class StoreChatCommand {
 			String reason = value[4];
 			long banTimer = 0;
 			if(!isValidIpAdresse(ipAdress)) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [ip_adresse] in .ban ip [ip_adress] [duration] [reason]", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
 			if(Server.isInteger(banTime)) {
@@ -290,7 +290,7 @@ public class StoreChatCommand {
 			else {
 				banTimer = convStringTimerToMS(banTime);
 				if(banTimer == -666) {
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Invalid synthax : .ban ip [ip_adress] [duration] [reason]", MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 					return;
 				}
 			}
@@ -314,7 +314,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatCommand help = new ChatCommand("help", AccountRank.PLAYER) {
+	private final static ChatCommand help = new ChatCommand("help", "Syntax: .help [command] \n\nDisplay usage instructions for the given command. If no command provided show list of available commands.", AccountRank.PLAYER) {
 		
 		@Override
 		public void handle(String command, Player player) {
@@ -335,7 +335,36 @@ public class StoreChatCommand {
 					return;
 				}
 				if(commandMap.containsKey(value[1])) {
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).printSubCommandError(player), MessageType.SELF);
+					if(value.length > 2 && commandMap.get(value[1]).subCommandList != null) {
+						int i = 0;
+						while(i < commandMap.get(value[1]).subCommandList.size()) {
+							if(commandMap.get(value[1]).subCommandList.get(i).getName().equals(value[2])) {
+								if(value.length > 3 && commandMap.get(value[1]).subCommandList.get(i).commandList != null) {
+									int j = 0;
+									while(j < commandMap.get(value[1]).subCommandList.get(i).commandList.size()) {
+										if(commandMap.get(value[1]).subCommandList.get(i).commandList.get(j).getName().equals(value[3])) {
+											CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).subCommandList.get(i).commandList.get(j).helpMessage, MessageType.SELF);
+											return;
+										}
+										j++;
+									}
+									CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
+									return;
+								}
+								CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).subCommandList.get(i).printHelpMessage(), MessageType.SELF);
+								return;
+							}
+							i++;
+						}
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
+						return;
+					}
+					if(commandMap.get(value[1]).subCommandList != null) {
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).printSubCommandError(player), MessageType.SELF);
+					}
+					else {
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).printHelpMessage(), MessageType.SELF);
+					}
 				}
 			}
 		}
@@ -365,7 +394,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand server_exit = new ChatSubCommand("exit", "server", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_exit = new ChatSubCommand("exit", "server", "Syntax: .server exit\n\n  Close the server", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -376,7 +405,7 @@ public class StoreChatCommand {
 			Server.close();
 		}
 	};
-	private final static ChatSubCommand server_info = new ChatSubCommand("info", "server", AccountRank.PLAYER) {
+	private final static ChatSubCommand server_info = new ChatSubCommand("info", "server", "Syntax: .server info\n\nDisplay multiple server informations.", AccountRank.PLAYER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -388,14 +417,14 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand server_motd = new ChatSubCommand("motd", "server", AccountRank.PLAYER) {
+	private final static ChatSubCommand server_motd = new ChatSubCommand("motd", "server", "Syntax: .server motd\n\n Display the server message of the day.", AccountRank.PLAYER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), Server.getServerMessageOfTheDay(), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand server_ram = new ChatSubCommand("ram", "server", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_ram = new ChatSubCommand("ram", "server", "Syntax: .server ram\n\n Dispay the ram used by the server.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -405,7 +434,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Server is using "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)+" Mb of ram.", MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand server_gc = new ChatSubCommand("gc", "server", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_gc = new ChatSubCommand("gc", "server", "Syntax: .server gc\n\n Perform a gc and display the ram used before and after the gc.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -439,7 +468,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand server_set_motd = new ChatSubCommand("motd", "server_set", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_set_motd = new ChatSubCommand("motd", "server_set", "Syntax: .server set motd [message]\n\n Set the server message of the day.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -453,7 +482,7 @@ public class StoreChatCommand {
 			Server.setServerMessageOfTheDay(value[3]);
 		}
 	};
-	private final static ChatSubCommand server_set_closed = new ChatSubCommand("closed", "server_set", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_set_closed = new ChatSubCommand("closed", "server_set", "Syntax: .server set closed [on/off]\n\n Set wether the server should accept connection or not.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -503,7 +532,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand baninfo_account = new ChatSubCommand("account", "baninfo", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand baninfo_account = new ChatSubCommand("account", "baninfo", "Syntax : .baninfo account [account_name || account_id]\n\n Display ban informations of the account.", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -554,7 +583,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand baninfo_character = new ChatSubCommand("character", "baninfo", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand baninfo_character = new ChatSubCommand("character", "baninfo", "Syntax: .baninfo character [character_name || character_id]\n\n Display ban informations of the character.", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -605,7 +634,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand baninfo_ip = new ChatSubCommand("ip", "baninfo", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand baninfo_ip = new ChatSubCommand("ip", "baninfo", "Syntax: .baninfo ip [ip_adress]\n\n Display informations of the ip", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -677,7 +706,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand banlist_account = new ChatSubCommand("account", "banlist", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand banlist_account = new ChatSubCommand("account", "banlist", "Syntax: .banlist account || .banlist account [pattern]\n\n Display the account banlist for the given pattern.", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -733,7 +762,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand banlist_character = new ChatSubCommand("character", "banlist", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand banlist_character = new ChatSubCommand("character", "banlist", "Syntax: .banlist character [pattern]\n\n Display the character banlist for the given pattern.", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -802,7 +831,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand character_level = new ChatSubCommand("level", "character", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand character_level = new ChatSubCommand("level", "character", "Syntax: .character level", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -860,7 +889,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand character_erase = new ChatSubCommand("erase", "character", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand character_erase = new ChatSubCommand("erase", "character", ".character erase [name]\n\n Erase the character.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {

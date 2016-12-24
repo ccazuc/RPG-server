@@ -78,6 +78,9 @@ public class LogRunnable implements Runnable {
 				}
 				playerPrintList.remove(0);
 			}
+			while(exceptionList.size() > 0) {
+				
+			}
 			delta = System.currentTimeMillis()-time;
 			if(shouldClose && playerPrintList.size() == 0) {
 				outPlayerLog.close();
@@ -107,7 +110,7 @@ public class LogRunnable implements Runnable {
 	
 	public static void writePlayerLog(Player player, String text) {
 		synchronized(playerPrintList) {
-			if(player.isInGame()) {
+			if(player.isOnline()) {
 				playerPrintList.add("[ERROR "+calendar.getTime()+"] PlayerName: "+player.getName()+" PlayerID: "+player.getCharacterId()+" AccountID: "+player.getAccountId()+" "+text);
 			}
 			else {

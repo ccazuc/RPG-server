@@ -35,6 +35,7 @@ public class CommandLogoutCharacter extends Command {
 			return;
 		}
 		setPlayerOfflineInDB(player);
+		player.setOffline();
 		player.notifyFriendOffline();
 		player.setGuildRequest(0);
 		if(player.getGuild() != null) {

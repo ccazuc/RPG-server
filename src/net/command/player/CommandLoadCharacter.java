@@ -24,6 +24,7 @@ public class CommandLoadCharacter extends Command {
 			Log.writePlayerLog(player, "tried to connect on someone else's character (id = "+id+')');
 			return;
 		}
+		player.setOnline();
 		player.setCharacterId(id);
 		player.initTable();
 		player.loadCharacterInfoSQL();

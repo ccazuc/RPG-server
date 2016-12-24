@@ -64,7 +64,7 @@ public class Player extends Unit {
 	private Player playerParty;
 	private int numberBlueGem;
 	private Shortcut[] spells;
-	private boolean isInGame;
+	private boolean isOnline;
 	private int guildRequest;
 	private int defaultArmor;
 	private ClassType classe;
@@ -189,6 +189,17 @@ public class Player extends Unit {
 		return false;
 	}
 	
+	public void setOffline() {
+		this.isOnline = false;
+	}
+	
+	public void setOnline() {
+		this.isOnline = false;
+	}
+	
+	public boolean isOnline() {
+		return this.isOnline;
+	}
 	public void sendStats() {
 		this.connectionManager.getConnection().startPacket();
 		this.connectionManager.getConnection().writeShort(PacketID.LOAD_STATS);
@@ -679,14 +690,6 @@ public class Player extends Unit {
 		this.spellUnlocked.clear();
 		this.target = null;
 		this.wear = null;
-	}
-	
-	public boolean isInGame() {
-		return this.isInGame;
-	}
-	
-	public void setIsInGame(boolean we) {
-		this.isInGame = we;
 	}
 	
 	public void setGuildRequest(int id) {
