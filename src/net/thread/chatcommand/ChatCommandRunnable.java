@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.game.manager.DebugMgr;
+
 public class ChatCommandRunnable implements Runnable {
 
 	private List<ChatCommandRequest> commandList = new ArrayList<ChatCommandRequest>();
@@ -19,14 +21,21 @@ public class ChatCommandRunnable implements Runnable {
 	public void run() {
 		System.out.println("ChatCommand run");
 		long timer;
+		long time = 0;
 		long delta;
 		while(running) {
 			timer = System.currentTimeMillis();
-			if(this.commandList.size() > 0) {
-				long time = System.nanoTime();
-				this.commandList.get(0).execute();
-				this.commandList.remove(0);
-				System.out.println("ChatCommand took "+(System.nanoTime()-time)/1000+" µs to execute.");
+			synchronized(this.commandList) {
+				while(this.commandList.size() > 0) {
+					if(DebugMgr.getChatCommandTimer())   {
+						time = System.nanoTime();
+					}
+					this.commandList.get(0).execute();
+					this.commandList.remove(0);
+					if(DebugMgr.getChatCommandTimer()) {
+						System.out.println("ChatCommand took "+(System.nanoTime()-time)/1000+" µs to execute.");
+					}
+				}
 			}
 			delta = System.currentTimeMillis()-timer;
 			if(delta < LOOP_TIMER) {
@@ -42,7 +51,9 @@ public class ChatCommandRunnable implements Runnable {
 	}
 	
 	public void addChatCommandRequest(ChatCommandRequest request) {
-		this.commandList.add(request);
+		synchronized(this.commandList) {
+			this.commandList.add(request);
+		}
 	}
 	
 	public void close() {

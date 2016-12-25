@@ -9,6 +9,7 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.ClassType;
 import net.game.Player;
+import net.game.manager.DebugMgr;
 
 public class SQLRunnable implements Runnable {
 	
@@ -32,23 +33,27 @@ public class SQLRunnable implements Runnable {
 		long delta;
 		while(this.running) {
 			time = System.currentTimeMillis();
-			while(this.SQLList.size() > 0) {
-				if(this.SQLList.get(0).debugActive) {
-					long timer = System.nanoTime();
-					this.SQLList.get(0).execute();
-					System.out.println("[SQL REQUEST] "+this.SQLList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
+			synchronized(this.SQLList) {
+				while(this.SQLList.size() > 0) {
+					if(this.SQLList.get(0).debugActive || DebugMgr.getSQLRequestTimer()) {
+						long timer = System.nanoTime();
+						this.SQLList.get(0).execute();
+						System.out.println("[SQL REQUEST] "+this.SQLList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
+					}
+					else {
+						this.SQLList.get(0).execute();
+					}
+					this.SQLList.remove(0);
 				}
-				else {
-					this.SQLList.get(0).execute();
-				}
-				this.SQLList.remove(0);
 			}
-			while(this.whoList.size() > 0) {
-				Who who = this.whoList.get(0);
-				long timer = System.nanoTime();
-				executeWhoRequest(who);
-				System.out.println("[WHO] took "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
-				this.whoList.remove(0);
+			synchronized(this.whoList) {
+				while(this.whoList.size() > 0) {
+					Who who = this.whoList.get(0);
+					long timer = System.nanoTime();
+					executeWhoRequest(who);
+					System.out.println("[WHO] took "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
+					this.whoList.remove(0);
+				}
 			}
 			delta = System.currentTimeMillis()-time;
 			if(delta < this.LOOP_TIMER) {
@@ -164,10 +169,14 @@ public class SQLRunnable implements Runnable {
 	}
 	 
 	public void addRequest(SQLRequest request) {
-		this.SQLList.add(request);
+		synchronized(this.SQLList) {
+			this.SQLList.add(request);
+		}
 	}
 	
 	public void addWhoRequest(Who who) {
-		this.whoList.add(who);
+		synchronized(this.whoList) {
+			this.whoList.add(who);
+		}
 	}
 }

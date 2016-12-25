@@ -26,6 +26,7 @@ import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 import net.game.manager.BanMgr;
 import net.game.manager.CharacterMgr;
+import net.game.manager.DebugMgr;
 import net.game.spell.SpellManager;
 import net.thread.chatcommand.ChatCommandRequest;
 import net.thread.chatcommand.ChatCommandRunnable;
@@ -128,7 +129,7 @@ public class Server {
 				if(delta < LOOP_TIMER) {
 					Thread.sleep((LOOP_TIMER-(long)delta));
 				}
-				if(delta > 2) {
+				if(delta >= DebugMgr.getLoopTooLongValue()) {
 					System.out.print("Loop too long: ");
 					System.out.print(delta);
 					System.out.println("ms.");

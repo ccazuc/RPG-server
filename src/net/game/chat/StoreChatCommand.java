@@ -16,6 +16,7 @@ import net.game.Player;
 import net.game.manager.AccountMgr;
 import net.game.manager.BanMgr;
 import net.game.manager.CharacterMgr;
+import net.game.manager.DebugMgr;
 import net.thread.sql.SQLDatas;
 import net.utils.Color;
 
@@ -907,6 +908,109 @@ public class StoreChatCommand {
 			CharacterMgr.deleteCharacterByName(value[2]);
 		}
 	};
+	private final static ChatCommand debug = new ChatCommand("debug", AccountRank.ADMINISTRATOR) {
+	
+		@Override
+		public void handle(String command, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			command = command.trim().toLowerCase();
+			if(command.equals('.'+this.name)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+			}
+			else {
+				String[] value = command.split(" ");
+				if(value.length < 2) {
+					return;
+				}
+				int i = 0;
+				while(i < this.subCommandList.size()) {
+					if(this.subCommandList.get(i).getName().equals(value[1])) {
+						this.subCommandList.get(i).handle(value, player);
+						return;
+					}
+					i++;
+				}
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+			}
+		}
+	};
+	private final static ChatSubCommand debug_looptoolongtimer = new ChatSubCommand("looptoolongtimer", "debug", ".debug looptoolongtimer [timer]\n\n Set the value of looptoolong print.", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug looptoolongtimer [value]", MessageType.SELF);
+				return;
+			}
+			if(!Server.isInteger(value[2])) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug looptoolongtimer [value]", MessageType.SELF);
+				return;
+			}
+			DebugMgr.setLoopTooLongValue(Integer.parseInt(value[2]));
+		}
+	};
+	private final static ChatSubCommand debug_printsqltimer = new ChatSubCommand("printsqltimer", "debug", ".debug printsqltimer [true || false]\n\n Set wether the time to execute the request should be printed.", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug printsqltimer [true || false]", MessageType.SELF);
+				return;
+			}
+			if(!value[2].equals("true") && !value[2].equals("false")) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug printsqltimer [true || false]", MessageType.SELF);
+				return;
+			}
+			boolean b = value[2].equals("true") ? true : false;
+			DebugMgr.setSQLRequestTimer(b);
+		}
+	};
+	private final static ChatSubCommand debug_printlogfiletimer = new ChatSubCommand("printlogfiletimer", "debug", ".debug printlogfiletimer [true || false]\n\n Set wether the time to write in the log file should be printed.", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug printlogfiletimer [true || false]", MessageType.SELF);
+				return;
+			}
+			if(!value[2].equals("true") && !value[2].equals("false")) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug printlogfiletimer [true || false]", MessageType.SELF);
+				return;
+			}
+			boolean b = value[2].equals("true") ? true : false;
+			DebugMgr.setWriteLogFileTimer(b);
+		}
+	};
+	private final static ChatSubCommand debug_chatcommandtimer = new ChatSubCommand("chatcommandtimer", "debug", ".debug chatcommandtimer [true || false]\n\n Set wether the time to execute the chat command should be printed.", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug chatcommandtimer [true || false]", MessageType.SELF);
+				return;
+			}
+			if(!value[2].equals("true") && !value[2].equals("false")) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug chatcommandtimer [true || false]", MessageType.SELF);
+				return;
+			}
+			boolean b = value[2].equals("true") ? true : false;
+			DebugMgr.setChatCommandTimer(b);
+		}
+	};
 	
 	public static void initChatCommandMap() {
 		account.addSubCommand(account_onlinelist);
@@ -938,6 +1042,11 @@ public class StoreChatCommand {
 		character.addSubCommand(character_level);
 		character.addSubCommand(character_erase);
 		commandMap.put(character.getName(), character);
+		debug.addSubCommand(debug_looptoolongtimer);
+		debug.addSubCommand(debug_printsqltimer);
+		debug.addSubCommand(debug_printlogfiletimer);
+		debug.addSubCommand(debug_chatcommandtimer);
+		commandMap.put(debug.getName(), debug);
 	}
 	
 	static long convStringTimerToMS(String timer) {

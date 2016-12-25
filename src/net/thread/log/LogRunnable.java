@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.game.Player;
+import net.game.manager.DebugMgr;
 
 public class LogRunnable implements Runnable {
 
@@ -29,7 +30,6 @@ public class LogRunnable implements Runnable {
 	private final static int LOOP_TIMER = 1000;
 	private static boolean running = true;
 	private static boolean shouldClose;
-	private final static boolean DEBUG = true;
 	private static long debugTimer;
 	
 	public LogRunnable() {
@@ -67,19 +67,32 @@ public class LogRunnable implements Runnable {
 		long delta;
 		while(running) {
 			time = System.currentTimeMillis();
-			while(playerPrintList.size() > 0) {
-				if(DEBUG) {
-					debugTimer = System.currentTimeMillis();
+			synchronized(playerPrintList) {
+				while(playerPrintList.size() > 0) {
+					if(DebugMgr.getWriteLogFileTimer()) {
+						debugTimer = System.currentTimeMillis();
+					}
+					outPlayerLog.println(playerPrintList.get(0));
+					outPlayerLog.flush();
+					if(DebugMgr.getWriteLogFileTimer()) {
+						System.out.println("Write \""+playerPrintList.get(0)+"\" in "+FILE_NAME_PLAYER_LOG+" took "+(System.currentTimeMillis()-debugTimer)/1000+" µs");
+					}
+					playerPrintList.remove(0);
 				}
-				outPlayerLog.println(playerPrintList.get(0));
-				outPlayerLog.flush();
-				if(DEBUG) {
-					System.out.println("Write \""+playerPrintList.get(0)+"\" in "+FILE_PATH+" took "+(System.currentTimeMillis()-debugTimer)/1000+" µs");
-				}
-				playerPrintList.remove(0);
 			}
 			while(exceptionList.size() > 0) {
-				
+				if(DebugMgr.getWriteLogFileTimer()) {
+					debugTimer = System.currentTimeMillis();
+				}
+				outServerLog.println("--------------------------------------------------------------");
+				outServerLog.println(calendar.getTime());
+				exceptionList.get(0).printStackTrace(outServerLog);
+				outServerLog.println("--------------------------------------------------------------");
+				outServerLog.print(System.lineSeparator()+System.lineSeparator());
+				outServerLog.flush();
+				if(DebugMgr.getWriteLogFileTimer()) {
+					System.out.println("Write \""+exceptionList.get(0).getClass()+"\" in "+FILE_NAME_SERVER_LOG+" took "+(System.currentTimeMillis()-debugTimer)/1000+" µs");
+				}
 			}
 			delta = System.currentTimeMillis()-time;
 			if(shouldClose && playerPrintList.size() == 0) {
@@ -120,13 +133,8 @@ public class LogRunnable implements Runnable {
 	}
 	
 	public void writeServerLog(Exception e) {
-		synchronized(outServerLog) {
-			outServerLog.println("--------------------------------------------------------------");
-			outServerLog.println(calendar.getTime());
-			e.printStackTrace(outServerLog);
-			outServerLog.println("--------------------------------------------------------------");
-			outServerLog.print(System.lineSeparator()+System.lineSeparator());
-			outServerLog.flush();
+		synchronized(exceptionList) {
+			exceptionList.add(e);
 		}
 	}
 	
