@@ -7,7 +7,7 @@ import net.game.Player;
 
 public class ChatCommand {
 
-	protected String helpMessage;
+	protected String helpMessage = "";
 	protected AccountRank rank;
 	protected String name;
 	protected ArrayList<ChatSubCommand> subCommandList;

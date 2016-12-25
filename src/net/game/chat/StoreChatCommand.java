@@ -1013,7 +1013,7 @@ public class StoreChatCommand {
 			DebugMgr.setChatCommandTimer(b);
 		}
 	};
-	private final static ChatCommand additem = new ChatCommand("additem", AccountRank.GAMEMASTER) {
+	private final static ChatCommand additem = new ChatCommand("additem", "List of possible syntax: \n  .additem [item_id || item_name] to the item to yourself.\n  .additem [item_id || item_name] [character_name]\n  .additem [item_id || item_name] [amount] [character_id || character_name]", AccountRank.GAMEMASTER) {
 	
 		@Override
 		public void handle(String command, Player player) {
