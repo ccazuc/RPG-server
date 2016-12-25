@@ -1,5 +1,7 @@
 package net.game;
 
+import net.game.manager.CharacterMgr;
+
 public class Unit {
 
 	protected int level;
@@ -91,6 +93,7 @@ public class Unit {
 	
 	public void setLevel(int level) {
 		this.level = level;
+		CharacterMgr.setExperience(this.id, Player.getExpNeeded(this.level));
 	}
 	
 	public int getid() {

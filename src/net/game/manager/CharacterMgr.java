@@ -36,6 +36,22 @@ public class CharacterMgr {
 	private static JDOStatement removeSpellbar;
 	private static JDOStatement setExperience;
 	private static JDOStatement getExperience;
+	private static SQLRequest asyncSetExperience = new SQLRequest("UPDATE `character` SET experience = ? WHERE character_id ?", "Set experience") {
+		
+		@Override
+		public void gatherData() {
+			try {
+				this.statement.clear();
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putInt(datas.getIValue2());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	private static SQLRequest asyncRemoveCharacter = new SQLRequest("DELETE FROM `character` WHERE character_id = ?", "Remove character") {
 		
 		@Override
@@ -419,6 +435,11 @@ public class CharacterMgr {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void asynSetExperience(int id, int experience) {
+		asyncSetExperience.addDatas(new SQLDatas(id, experience));
+		Server.executeHighPrioritySQL(asyncSetExperience);
 	}
 	
 	public static int getExperience(int id) {

@@ -815,6 +815,12 @@ public class Player extends Unit {
 		this.gold = gold;
 	}
 	
+	@Override
+	public void setLevel(int level) {
+		this.level = level;
+		CharacterMgr.setExperience(this.id, Player.getExpNeeded(this.level));
+	}
+	
 	public int getNumberRedGem() {
 		return this.numberRedGem;
 	}
