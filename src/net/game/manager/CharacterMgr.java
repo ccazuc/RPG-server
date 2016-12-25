@@ -425,7 +425,7 @@ public class CharacterMgr {
 	public static void setExperience(int id, int experience) {
 		try {
 			if(setExperience == null) {
-				setExperience = Server.getJDO().prepare("UPDATE `character` SET experience = ? WHERE character_id ?");
+				setExperience = Server.getJDO().prepare("UPDATE `character` SET experience = ? WHERE character_id = ?");
 			}
 			setExperience.clear();
 			setExperience.putInt(experience);

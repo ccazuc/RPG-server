@@ -8,8 +8,8 @@ public class Key {
 	private String accountName;
 	private long timer;
 	
-	public Key(int accountId, int accountRank, String accountName, double value) {
-		this.timer = System.currentTimeMillis();
+	public Key(int accountId, int accountRank, String accountName, double value, long timer) {
+		this.timer = timer;
 		this.accountRank = accountRank;
 		this.accountId = accountId;
 		this.value = value;

@@ -58,7 +58,9 @@ public class Server {
 	private static Thread chatCommandThread;
 	private static Thread logThread;
 	private static LogRunnable logRunnable;
-	private static HashMap<Double, Key> keyList = new HashMap<Double, Key>();
+	private static HashMap<Double, Key> keyMap = new HashMap<Double, Key>();
+	private static ArrayList<Double> removeKeyList = new ArrayList<Double>();
+	private final static int KEY_TIMEOUT_TIMER = 15000;
 	private static long SERVER_START_TIMER;
 	private static long LOOP_TICK_TIMER;
 	
@@ -122,9 +124,11 @@ public class Server {
 			while(serverRunning) {
 				LOOP_TICK_TIMER = System.currentTimeMillis();
 				kickPlayers();
+				removeKey();
 				readAuthServer();
 				readOnlinePlayers();
 				read();
+				checkKeyTimer();
 				delta = (System.currentTimeMillis()-LOOP_TICK_TIMER);
 				if(delta < LOOP_TIMER) {
 					Thread.sleep((LOOP_TIMER-(long)delta));
@@ -147,6 +151,21 @@ public class Server {
 		chatCommandRunnable.close();
 		logRunnable.close();
 		
+	}
+	
+	private static void removeKey() {
+		while(removeKeyList.size() > 0) {
+			keyMap.remove(removeKeyList.get(0));
+			removeKeyList.remove(0);
+		}
+	}
+	
+	private static void checkKeyTimer() {
+		for(Key key : keyMap.values()) {
+			if(LOOP_TICK_TIMER-key.getTimer() >= KEY_TIMEOUT_TIMER) {
+				removeKeyList.add(key.getValue());
+			}
+		}
 	}
 	
 	private static void readOnlinePlayers() {
@@ -298,10 +317,11 @@ public class Server {
 	}
 	
 	public static boolean hasKey(double key, int account_id) {
-		if(keyList.containsKey(key)) {
-			if(keyList.get(key).getAccountId() == account_id) {
-				return true;
-			}
+		if(!keyMap.containsKey(key)) {
+			return false;
+		}
+		if(keyMap.get(key).getAccountId() == account_id) {
+			return true;
 		}
 		return false;
 	}
@@ -319,11 +339,11 @@ public class Server {
 	}
 	
 	public static Key getKey(double key) {
-		return keyList.get(key);
+		return keyMap.get(key);
 	}
 	
 	public static void addKey(Key key) {
-		keyList.put(key.getValue(), key);
+		keyMap.put(key.getValue(), key);
 	}
 	
 	private static void readAuthServer() {
@@ -355,7 +375,7 @@ public class Server {
 	}
 	
 	public static void removeKey(double key) {
-		keyList.remove(key);
+		keyMap.remove(key);
 	}
 	
 	public static String getRealmName() {
