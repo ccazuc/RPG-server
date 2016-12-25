@@ -115,30 +115,30 @@ public class Bag extends Item implements Cloneable {
 	}
 	
 	public void setBag(int i, Item stuff) {
-		if(i >= 0 && i < this.bag.length) {
-			this.bag[i] = stuff;
+		if(i < 0 || i >= this.bag.length) {
+			return;
 		}
+		this.bag[i] = stuff;
+		this.bagChange = true;
 	}
 	
 	public void setBag(int i, Item stuff, int number) {
-		if(i >= 0 && i < this.bag.length) {
-			if(number <= 0) {
-				this.bag[i] = null;
-			}
-			else {
-				this.bag[i] = stuff;
-				this.bag[i].setAmount(number);
-			}
+		if(i < 0 || i >= this.bag.length) {
+			return;
 		}
+		if(number <= 0) {
+			this.bag[i] = null;
+		}
+		else {
+			this.bag[i] = stuff;
+			this.bag[i].setAmount(number);
+		}
+		this.bagChange = true;
 	}
 	
 	@Override
 	public int getId() {
 		return this.id;
-	}
-	
-	public void setBagChange(boolean we) {
-		this.bagChange = we;
 	}
 	
 	public boolean getBagChange() {

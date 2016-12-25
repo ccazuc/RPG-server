@@ -278,76 +278,81 @@ public class ItemManager {
 		}
 	}
 	
-	public void setBagItems(Player player) throws SQLException {
-		int i = 0;
-		if(setBagItem == null) {
-			String request = "";
-			StringBuilder builder = new StringBuilder();
-			builder.append("UPDATE bag SET ");
-			builder.append(setBagRequest);
-			builder.append("WHERE character_id = ?");
-			request = builder.toString();
-			setBagItem = Server.getJDO().prepare(request);
-		}
-		setBagItem.clear();
-		while(i < 96) {
-			if(i < player.getBag().getBag().length) {
-				Item tempBag = player.getBag().getBag(i);
-				if(tempBag == null) {
-					setBagItem.putInt(0);
-					setBagItem.putInt(0);
-					setBagItem.putInt(0);
-					setBagItem.putInt(0);
-					setBagItem.putInt(0);
-				}
-				else if(tempBag.isStuff() || tempBag.isWeapon()) {
-					setBagItem.putInt(tempBag.getId());
-					setBagItem.putInt(0);
-					if(((Stuff)tempBag).getEquippedGem(0) == null) {
+	public void setBagItems(Player player) {
+		try {
+			int i = 0;
+			if(setBagItem == null) {
+				String request = "";
+				StringBuilder builder = new StringBuilder();
+				builder.append("UPDATE bag SET ");
+				builder.append(setBagRequest);
+				builder.append("WHERE character_id = ?");
+				request = builder.toString();
+				setBagItem = Server.getJDO().prepare(request);
+			}
+			setBagItem.clear();
+			while(i < 96) {
+				if(i < player.getBag().getBag().length) {
+					Item tempBag = player.getBag().getBag(i);
+					if(tempBag == null) {
+						setBagItem.putInt(0);
+						setBagItem.putInt(0);
+						setBagItem.putInt(0);
+						setBagItem.putInt(0);
 						setBagItem.putInt(0);
 					}
-					else {
-						setBagItem.putInt((((Stuff)tempBag).getEquippedGem(0).getId()));
-					}
-					if(((Stuff)tempBag).getEquippedGem(1) == null) {
-						setBagItem.putInt(0);
-					}
-					else {
-						setBagItem.putInt((((Stuff)tempBag).getEquippedGem(1).getId()));
-					}
-					if(((Stuff)tempBag).getEquippedGem(2) == null) {
-						setBagItem.putInt(0);
-					}
-					else {
-						setBagItem.putInt((((Stuff)tempBag).getEquippedGem(2).getId()));
-					}
-				}
-				else if(tempBag.isContainer() || tempBag.isGem()) {
-					setBagItem.putInt(tempBag.getId());
-					setBagItem.putInt(0);
-					setBagItem.putInt(0);
-					setBagItem.putInt(0);
-					setBagItem.putInt(0);
-				}
-				else if(tempBag.isItem() || tempBag.isPotion()) {
+					else if(tempBag.isStuff() || tempBag.isWeapon()) {
 						setBagItem.putInt(tempBag.getId());
-						setBagItem.putInt(tempBag.getAmount());
+						setBagItem.putInt(0);
+						if(((Stuff)tempBag).getEquippedGem(0) == null) {
+							setBagItem.putInt(0);
+						}
+						else {
+							setBagItem.putInt((((Stuff)tempBag).getEquippedGem(0).getId()));
+						}
+						if(((Stuff)tempBag).getEquippedGem(1) == null) {
+							setBagItem.putInt(0);
+						}
+						else {
+							setBagItem.putInt((((Stuff)tempBag).getEquippedGem(1).getId()));
+						}
+						if(((Stuff)tempBag).getEquippedGem(2) == null) {
+							setBagItem.putInt(0);
+						}
+						else {
+							setBagItem.putInt((((Stuff)tempBag).getEquippedGem(2).getId()));
+						}
+					}
+					else if(tempBag.isContainer() || tempBag.isGem()) {
+						setBagItem.putInt(tempBag.getId());
 						setBagItem.putInt(0);
 						setBagItem.putInt(0);
 						setBagItem.putInt(0);
+						setBagItem.putInt(0);
+					}
+					else if(tempBag.isItem() || tempBag.isPotion()) {
+							setBagItem.putInt(tempBag.getId());
+							setBagItem.putInt(tempBag.getAmount());
+							setBagItem.putInt(0);
+							setBagItem.putInt(0);
+							setBagItem.putInt(0);
+					}
 				}
+				else {
+					setBagItem.putInt(0);
+					setBagItem.putInt(0);
+					setBagItem.putInt(0);
+					setBagItem.putInt(0);
+					setBagItem.putInt(0);
+				}
+				i++;
 			}
-			else {
-				setBagItem.putInt(0);
-				setBagItem.putInt(0);
-				setBagItem.putInt(0);
-				setBagItem.putInt(0);
-				setBagItem.putInt(0);
-			}
-			i++;
+			setBagItem.putInt(player.getCharacterId());
+			setBagItem.execute();
 		}
-		setBagItem.putInt(player.getCharacterId());
-		setBagItem.execute();
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void getEquippedBags(Player player) throws SQLException {

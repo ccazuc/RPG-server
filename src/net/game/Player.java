@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.Server;
+import net.command.item.CommandSetItem;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandLogoutCharacter;
@@ -16,17 +17,15 @@ import net.connection.ConnectionManager;
 import net.connection.PacketID;
 import net.game.guild.Guild;
 import net.game.guild.GuildMgr;
+import net.game.item.DragItem;
 import net.game.item.Item;
 import net.game.item.ItemManager;
-import net.game.item.ItemType;
 import net.game.item.bag.Bag;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.gem.GemBonusType;
 import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
-import net.game.item.stuff.StuffManager;
-import net.game.item.weapon.WeaponManager;
 import net.game.item.weapon.WeaponType;
 import net.game.manager.CharacterMgr;
 import net.game.manager.FriendMgr;
@@ -240,12 +239,7 @@ public class Player extends Unit {
 	}
 	
 	public void setBagItemSQL() {
-		try {
-			this.itemManager.setBagItems(this);
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
+		this.itemManager.setBagItems(this);
 	}
 	
 	public void loadEquippedBagSQL() {
@@ -318,7 +312,6 @@ public class Player extends Unit {
 	public void event() {
 		if(this.bag.getBagChange()) {
 			updateBagItem();
-			this.bag.setBagChange(false);
 		}
 	}
 	
@@ -491,7 +484,7 @@ public class Player extends Unit {
 		return false;
 	}
 	
-	public boolean addItem(Item item, int amount) throws SQLException {
+	public boolean addItem(Item item, int amount) {
 		if(amount == 1) {
 			return addSingleItem(item, amount);
 		}
@@ -506,14 +499,18 @@ public class Player extends Unit {
 		return false;
 	}
 	
-	private boolean addSingleItem(Item item, int amount) throws SQLException {
+	private boolean addSingleItem(Item item, int amount) {
+		if(item == null) {
+			return false;
+		}
 		int i = 0;
 		boolean returns = false;
 		if(!item.isStackable()) {
 			while(i < this.bag.getBag().length && amount > 0) {
 				if(this.bag.getBag(i) == null) {
 					this.bag.setBag(i, item);
-					this.bag.setBagChange(true);
+					CommandSetItem.addItem(this, DragItem.BAG, item.getId(), i, 1);
+					System.out.println("Added "+item.getId()+" "+i);
 					amount --;
 					returns = true;
 				}
@@ -525,7 +522,7 @@ public class Player extends Unit {
 			while(i < this.bag.getBag().length) {
 				if(this.bag.getBag(i) != null && this.bag.getBag(i).equals(item)) {
 					this.bag.setBag(i, item, this.bag.getBag(i).getAmount()+amount);
-					this.bag.setBagChange(true);
+					CommandSetItem.setAmount(this, DragItem.BAG, i, this.bag.getBag(i).getAmount());
 					this.itemManager.setBagItems(this);
 					return true;
 				}
@@ -535,7 +532,7 @@ public class Player extends Unit {
 			while(i < this.bag.getBag().length) {
 				if(this.bag.getBag(i) == null) {
 					this.bag.setBag(i, item, amount);
-					this.bag.setBagChange(true);
+					CommandSetItem.addItem(this, DragItem.BAG, item.getId(), i, amount);;
 					this.itemManager.setBagItems(this);
 					return true;
 				}
@@ -545,7 +542,7 @@ public class Player extends Unit {
 		return returns;
 	}
 	
-	@SuppressWarnings("unused")
+	/*@SuppressWarnings("unused")
 	private boolean addMultipleUnstackableItem(int id, int number) throws SQLException {
 		int i = 0;
 		boolean returns = false;
@@ -566,7 +563,6 @@ public class Player extends Unit {
 						this.bag.setBag(i, StuffManager.getClone(id));
 					}
 					returns = true;
-					this.bag.setBagChange(true);
 					number--;
 				}
 				
@@ -575,45 +571,56 @@ public class Player extends Unit {
 			this.itemManager.setBagItems(this);
 		}
 		return returns;
-	}
+	}*/
 	
-	private boolean addMultipleUnstackableItem(Item item, int number) throws SQLException {
+	private boolean addMultipleUnstackableItem(Item item, int number) {
+		if(item == null) {
+			return false;
+		}
 		int i = 0;
 		boolean returns = false;
 		while(i < this.bag.getBag().length && number > 0) {
 			if(this.bag.getBag(i) == null) {
 				if(item.isStuff() || item.isWeapon()) {
 					this.bag.setBag(i, new Stuff((Stuff)item));
+					CommandSetItem.addItem(this, DragItem.BAG, item.getId(), i, 1);
 					number--;
-					this.bag.setBagChange(true);
 					returns = true;
 				}
 				else if(item.isGem()) {
 					this.bag.setBag(i, new Gem((Gem)item));
+					CommandSetItem.addItem(this, DragItem.BAG, item.getId(), i, 1);
 					number--;
-					this.bag.setBagChange(true);
 					returns = true;
 				}
 				else if(item.isPotion()) {
 					this.bag.setBag(i, new Potion((Potion)item));
+					CommandSetItem.addItem(this, DragItem.BAG, item.getId(), i, 1);
 					number--;
-					this.bag.setBagChange(true);
+					returns = true;
+				}
+				else if(item.isContainer()) {
+					this.bag.setBag(i, new Container((Container)item));
+					CommandSetItem.addItem(this, DragItem.BAG, item.getId(), i, 1);
+					number--;
 					returns = true;
 				}
 			}
 			i++;
 		}
-		this.itemManager.setBagItems(this);
+		//this.itemManager.setBagItems(this);
 		return returns;
 	}
 	
-	public void deleteItem(Item item, int amount) throws SQLException {
+	public void deleteItem(Item item, int amount) {
+		if(item == null) {
+			return;
+		}
 		int i = 0;
 		if(!item.isStackable()) {
 			while(i < this.bag.getBag().length && amount > 0) {
 				if(this.bag.getBag(i) != null && this.bag.getBag(i).equals(item)) {
 					this.bag.setBag(i, null);
-					this.bag.setBagChange(true);
 					amount--;
 				}
 				i++;
@@ -626,7 +633,6 @@ public class Player extends Unit {
 					int temp = amount;
 					amount = amount-this.bag.getBag(i).getAmount();
 					this.bag.setBag(i, this.bag.getBag(i), Math.max(0, this.bag.getBag(i).getAmount())-temp);
-					this.bag.setBagChange(true);
 				}
 				i++;
 			}
