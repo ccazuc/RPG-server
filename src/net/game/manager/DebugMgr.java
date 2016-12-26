@@ -1,7 +1,5 @@
 package net.game.manager;
 
-import java.awt.image.LookupOp;
-
 public class DebugMgr {
 
 	private static boolean CHAT_COMMAND_TIMER = true;

@@ -98,6 +98,9 @@ public class Connection {
 	}
 	
 	public final void startPacket() {
+		if(this.wBuffer.getPosition() >= 3*this.wBuffer.capacity()/4) {
+			send();
+		}
 		this.startPacketPosition = this.wBuffer.getPosition();
 		writeInt(0);
 	}

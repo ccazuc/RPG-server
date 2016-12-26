@@ -1,7 +1,5 @@
 package net.game;
 
-import java.sql.SQLException;
-
 import net.command.player.CommandTrade;
 import net.game.item.Item;
 
@@ -51,7 +49,7 @@ public class Trade {
 		}
 	}
 	
-	public void exchangeItem() throws SQLException {
+	public void exchangeItem() {
 		int i = 0;
 		int number = 0;
 		while(i < this.tradeInitTable.length-1) {

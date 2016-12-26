@@ -1,7 +1,5 @@
 package net.command.player;
 
-import java.sql.SQLException;
-
 import net.Server;
 import net.command.Command;
 import net.command.chat.CommandPlayerNotFound;
@@ -123,12 +121,7 @@ public class CommandTrade extends Command {
 			player.getPlayerTrade().getConnection().send();
 			player.getTrade().setTradeState(player, true);
 			if(player.getTrade().getTradeInitState() && player.getTrade().getTradeTargetState()) {
-				try {
-					player.getTrade().exchangeItem();
-				} 
-				catch (SQLException e) {
-					e.printStackTrace();
-				}
+				player.getTrade().exchangeItem();
 				closeTrade(player);
 			}
 		}
@@ -151,12 +144,12 @@ public class CommandTrade extends Command {
 		}
 	}
 	
-	public static void sendTradeItems(Player tradeInit) throws SQLException {
+	public static void sendTradeItems(Player tradeInit) {
 		tradeItem(tradeInit, tradeInit.getTrade().getTradeTargetTable());
 		tradeItem(tradeInit.getPlayerTrade(), tradeInit.getTrade().getTradeInitTable());
 	}
 	
-	private static void tradeItem(Player player, Item[] table) throws SQLException {
+	private static void tradeItem(Player player, Item[] table) {
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.TRADE);
 		player.getConnection().writeShort(PacketID.TRADE_SEND_ALL_ITEMS);
