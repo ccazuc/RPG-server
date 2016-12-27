@@ -41,11 +41,11 @@ public class CommandRequestItem extends Command {
 			}
 			else if(ContainerManager.exists(id)) {
 				item = ContainerManager.getContainer(id);
-				player.addItemSentToClient(id);
 			}
 			if(item == null) {
 				return;
 			}
+			player.addItemSentToClient(id);
 		}
 		connection.startPacket();
 		connection.writeShort(PacketID.REQUEST_ITEM);

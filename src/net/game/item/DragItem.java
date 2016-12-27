@@ -5,7 +5,9 @@ public enum DragItem {
 	BAG((byte)0),
 	INVENTORY((byte)1),
 	BANK((byte)2),
-	GUILDBANK((byte)3);
+	GUILDBANK((byte)3),
+	TRADE((byte)4),
+	;
 	
 	private byte value;
 	

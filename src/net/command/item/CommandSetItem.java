@@ -66,4 +66,14 @@ public class CommandSetItem extends Command {
 		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
+	
+	public static void setDraggedItem(Player player, DragItem type, int slot) {
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.SET_ITEM);
+		player.getConnection().writeShort(PacketID.SET_ITEM_DRAGGED_ITEM);
+		player.getConnection().writeByte(type.getValue());
+		player.getConnection().writeInt(slot);
+		player.getConnection().endPacket();
+		player.getConnection().send();
+	}
 }

@@ -188,6 +188,9 @@ public class Stuff extends Item {
 		return this.equippedGem[slot];
 	}
 	
+	public int getEquippedGemID(int slot) {
+		return this.equippedGem[slot] == null ? 0 : this.equippedGem[slot].getId();
+	}
 	public boolean isBonusActivated(GemColor gemColor, GemColor slotColor) {
 		if(gemColor == GemColor.BLUE && slotColor == GemColor.BLUE) {
 			return true;

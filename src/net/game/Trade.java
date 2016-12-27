@@ -86,6 +86,16 @@ public class Trade {
 		return this.tradeTargetTable;
 	}
 	
+	public Item[] getTradeTable(Player player) {
+		if(player == this.tradeInit) {
+			return this.tradeInitTable;
+		}
+		if(player == this.tradeTarget) {
+			return this.tradeTargetTable;
+		}
+		return null;
+	}
+	
 	public boolean getTradeInitState() {
 		return this.tradeInitAccepted;
 	}

@@ -16,6 +16,7 @@ import net.command.chat.CommandPlayerInfo;
 import net.command.chat.CommandSendMessage;
 import net.command.chat.CommandSet;
 import net.command.item.CommandContainer;
+import net.command.item.CommandDeleteItem;
 import net.command.item.CommandDragItems;
 import net.command.item.CommandGem;
 import net.command.item.CommandPotion;
@@ -95,6 +96,7 @@ public class ConnectionManager {
 		commandList.put((int)IGNORE, new CommandIgnore());
 		commandList.put((int)WHO, new CommandWho());
 		commandList.put((int)DRAG_ITEM, new CommandDragItems());
+		commandList.put((int)DELETE_ITEM, new CommandDeleteItem());
 	}
 	
 	public static void initAuthCommand() {

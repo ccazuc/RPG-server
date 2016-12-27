@@ -20,14 +20,13 @@ public class CommandDragItems extends Command {
 		DragItem destinationType = DragItem.getValue(connection.readByte());
 		int destination = connection.readInt();
 		int amount = connection.readInt();
-		System.out.println(source+" "+player.getBag().getBag(source)+" "+destination+" "+player.getBag().getBag(destination)+" "+amount);
 		if(sourceType == null || destinationType == null) {
 			player.close();
 			return;
 		}
 		if(sourceType == DragItem.BAG) {
 			if(destinationType == DragItem.BAG) {
-				swapBagToBagItem(player, source, destination, -2);
+				swapBagToBagItem(player, source, destination, amount);
 			}
 			else if(destinationType == DragItem.INVENTORY) {
 				swapBagToInventoryItem(player, source, destination);
@@ -155,30 +154,35 @@ public class CommandDragItems extends Command {
 		if(tmp == null) {
 			return;
 		}
-		if(!tmp.isStuff() || !tmp.isWeapon()) {
+		if(!tmp.isStuff() && !tmp.isWeapon()) {
+			System.out.println('a');
 			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
 			CommandSetItem.setSelectable(player, DragItem.BAG, source);
 			CommandSetItem.setSelectable(player, DragItem.INVENTORY, destination);
 			return;
 		}
 		if(((Stuff)tmp).getType().getSlot() != destination && ((Stuff)tmp).getType().getSlot2() != destination) {
+			System.out.println('b');
 			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
 			CommandSetItem.setSelectable(player, DragItem.BAG, source);
 			CommandSetItem.setSelectable(player, DragItem.INVENTORY, destination);
 			return;
 		}
 		if(tmp.isStuff() && !player.canEquipStuff((Stuff)tmp)) {
+			System.out.println('c');
 			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
 			CommandSetItem.setSelectable(player, DragItem.BAG, source);
 			CommandSetItem.setSelectable(player, DragItem.INVENTORY, destination);
 			return;
 		}
 		if(tmp.isWeapon() && !player.canEquipWeapon((Stuff)tmp)) {
+			System.out.println('d');
 			CommandSendRedAlert.write(player, DefaultRedAlert.CANNOT_EQUIP_ITEM);
 			CommandSetItem.setSelectable(player, DragItem.BAG, source);
 			CommandSetItem.setSelectable(player, DragItem.INVENTORY, destination);
 			return;
 		}
+		System.out.println("SWAPPED");
 		player.getBag().setBag(source, player.getStuff(destination));
 		player.setStuff(destination, tmp);
 		CommandSetItem.swapItems(player, DragItem.BAG, source, DragItem.INVENTORY, destination);

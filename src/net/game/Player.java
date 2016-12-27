@@ -363,6 +363,28 @@ public class Player extends Unit {
 		return false;
 	}
 	
+	public int getItemBagSlot(Item item) {
+		int i = 0;
+		while(i < this.bag.getBag().length) {
+			if(this.bag.getBag(i) == item) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+	
+	public int getItemInventorySlot(Item item) {
+		int i = 0;
+		while(i < this.stuff.length) {
+			if(this.stuff[i] == item) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+	
 	public void close() {
 		//long timer = System.nanoTime();
 		if(Server.getInGamePlayerList().containsKey(this.characterId)) {
