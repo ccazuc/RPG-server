@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.game.manager.DebugMgr;
+import net.thread.log.LogRunnable;
 
 public class ChatCommandRunnable implements Runnable {
 
@@ -30,7 +31,12 @@ public class ChatCommandRunnable implements Runnable {
 					if(DebugMgr.getChatCommandTimer())   {
 						time = System.nanoTime();
 					}
-					this.commandList.get(0).execute();
+					try {
+						this.commandList.get(0).execute();
+					}
+					catch(RuntimeException e) {
+						LogRunnable.writeServerLog(e, this.commandList.get(0).getPlayer());
+					}
 					this.commandList.remove(0);
 					if(DebugMgr.getChatCommandTimer()) {
 						System.out.println("ChatCommand took "+(System.nanoTime()-time)/1000+" µs to execute.");

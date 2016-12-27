@@ -15,7 +15,7 @@ import net.game.manager.DebugMgr;
 
 public class LogRunnable implements Runnable {
 
-	private static List<Exception> exceptionList = new ArrayList<Exception>();
+	private static List<ServerException> exceptionList = new ArrayList<ServerException>();
 	private static List<String> playerPrintList = new ArrayList<String>();
 	private static Calendar calendar = Calendar.getInstance();
 	private static FileWriter fileWriterPlayerLog;
@@ -86,16 +86,25 @@ public class LogRunnable implements Runnable {
 				}
 				outServerLog.println("--------------------------------------------------------------");
 				outServerLog.println(calendar.getTime());
-				exceptionList.get(0).printStackTrace(outServerLog);
+				if(exceptionList.get(0).getPlayer() != null) {
+					if(exceptionList.get(0).getPlayer().isOnline()) {
+						outServerLog.println("AccountID : "+exceptionList.get(0).getPlayer().getAccountId()+", CharacterID : "+exceptionList.get(0).getPlayer().getCharacterId()+", CharacterName : "+exceptionList.get(0).getPlayer().getName());
+					}
+					else {
+						outServerLog.println("AccountID : "+exceptionList.get(0).getPlayer().getAccountId());
+					}
+				}
+				exceptionList.get(0).getException().printStackTrace(outServerLog);
 				outServerLog.println("--------------------------------------------------------------");
 				outServerLog.print(System.lineSeparator()+System.lineSeparator());
 				outServerLog.flush();
 				if(DebugMgr.getWriteLogFileTimer()) {
-					System.out.println("Write \""+exceptionList.get(0).getClass()+"\" in "+FILE_NAME_SERVER_LOG+" took "+(System.currentTimeMillis()-debugTimer)/1000+" µs");
+					System.out.println("Write \""+exceptionList.get(0).getException().getClass()+"\" in "+FILE_NAME_SERVER_LOG+" took "+(System.currentTimeMillis()-debugTimer)/1000+" µs");
 				}
+				exceptionList.remove(0);
 			}
 			delta = System.currentTimeMillis()-time;
-			if(shouldClose && playerPrintList.size() == 0) {
+			if(shouldClose && playerPrintList.size() == 0 && exceptionList.size() == 0) {
 				outPlayerLog.close();
 				outServerLog.close();
 				running = false;
@@ -132,9 +141,15 @@ public class LogRunnable implements Runnable {
 		}
 	}
 	
-	public void writeServerLog(Exception e) {
+	public static void writeServerLog(Exception e) {
 		synchronized(exceptionList) {
-			exceptionList.add(e);
+			exceptionList.add(new ServerException(e));
+		}
+	}
+	
+	public static void writeServerLog(Exception e, Player player) {
+		synchronized(exceptionList) {
+			exceptionList.add(new ServerException(e, player));
 		}
 	}
 	

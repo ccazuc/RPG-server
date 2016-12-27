@@ -1,11 +1,104 @@
 --------------------------------------------------------------
-Sat Dec 24 21:09:15 CET 2016
-java.lang.NullPointerException
-	at net.command.player.CommandLoginRealmPlayer.read(CommandLoginRealmPlayer.java:34)
-	at net.connection.ConnectionManager.readPacket(ConnectionManager.java:191)
-	at net.connection.ConnectionManager.read(ConnectionManager.java:132)
-	at net.Server.read(Server.java:176)
-	at net.Server.main(Server.java:126)
+Tue Dec 27 20:14:45 CET 2016
+java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Tue Dec 27 20:14:45 CET 2016
+java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Tue Dec 27 20:14:45 CET 2016
+java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Tue Dec 27 20:14:45 CET 2016
+java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Tue Dec 27 20:14:45 CET 2016
+java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Tue Dec 27 20:14:45 CET 2016
+java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Tue Dec 27 20:14:45 CET 2016
+java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Tue Dec 27 20:20:43 CET 2016
+AccountID : 1java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999"
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
