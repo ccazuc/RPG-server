@@ -532,7 +532,6 @@ public class Player extends Unit {
 				if(this.bag.getBag(i) == null) {
 					this.bag.setBag(i, item);
 					CommandSetItem.addItem(this, DragItem.BAG, item.getId(), i, 1);
-					System.out.println("Added "+item.getId()+" "+i);
 					amount --;
 					returns = true;
 				}
@@ -632,6 +631,21 @@ public class Player extends Unit {
 		}
 		//this.itemManager.setBagItems(this);
 		return returns;
+	}
+	
+	public void deleteIdenticalItem(Item item) {
+		if(item == null) {
+			return;
+		}
+		int i = 0;
+		while(i < this.bag.getBag().length) {
+			if(this.bag.getBag(i) == item) {
+				this.bag.setBag(i, null);
+				CommandSetItem.setNull(this, DragItem.BAG, i);
+				return;
+			}
+			i++;
+		}
 	}
 	
 	public void deleteItem(Item item, int amount) {

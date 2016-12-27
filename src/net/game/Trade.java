@@ -2,6 +2,7 @@ package net.game;
 
 import net.command.player.CommandTrade;
 import net.game.item.Item;
+import net.game.log.Log;
 
 public class Trade {
 
@@ -49,33 +50,47 @@ public class Trade {
 		}
 	}
 	
-	public void exchangeItem() {
+	public int exchangeItem() {
 		int i = 0;
 		int number = 0;
 		while(i < this.tradeInitTable.length-1) {
 			if(this.tradeInitTable[i] != null) {
+				if(this.tradeInit.getItemBagSlot(this.tradeInitTable[i]) == -1 && this.tradeInit.getItemInventorySlot(this.tradeInitTable[i]) == -1) {
+					Log.writePlayerLog(this.tradeInit, "Tried to trade an item which is not in his bag, item name : "+this.tradeInitTable[i].getStuffName());
+					CommandTrade.closeTrade(this.tradeInit);
+					CommandTrade.closeTrade(this.tradeTarget);
+					return -1;
+				}
 				number++;
 			}
 			i++;
 		}
 		if(number > this.tradeTarget.getBag().getNumberFreeSlotBag()) {
-			//player has not enough free space
-			return;
+			CommandTrade.tradeUnaccept(this.tradeInit);
+			CommandTrade.tradeUnaccept(this.tradeTarget);
+			return -1;
 		}
 		i = 0;
 		number = 0;
 		while(i < this.tradeTargetTable.length-1) {
 			if(this.tradeTargetTable[i] != null)  {
+				if(this.tradeTarget.getItemBagSlot(this.tradeTargetTable[i]) == -1 && this.tradeTarget.getItemInventorySlot(this.tradeTargetTable[i]) == -1) {
+					Log.writePlayerLog(this.tradeTarget, "Tried to trade an item which is not in his bag, item name : "+this.tradeTargetTable[i].getStuffName());
+					CommandTrade.closeTrade(this.tradeInit);
+					CommandTrade.closeTrade(this.tradeTarget);
+					return -1;
+				}
 				number++;
 			}
 			i++;
 		}
 		if(number > this.tradeInit.getBag().getNumberFreeSlotBag()) {
-			//player has not enough free space
-			return;
+			CommandTrade.tradeUnaccept(this.tradeInit);
+			CommandTrade.tradeUnaccept(this.tradeTarget);
+			return -1;
 		}
-		System.out.println("Exchange Item");
 		CommandTrade.sendTradeItems(this.tradeInit);
+		return 0;
 	}
 	
 	public Item[] getTradeInitTable() {

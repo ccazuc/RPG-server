@@ -151,7 +151,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatCommand ban = new ChatCommand("ban", AccountRank.PLAYER) {
+	private final static ChatCommand ban = new ChatCommand("ban", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String command, Player player) {

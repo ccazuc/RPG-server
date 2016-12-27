@@ -1,1 +1,4 @@
 [ERROR Mon Dec 26 15:10:02 CET 2016] AccountID: 1 Modified default value of draggedAmount for draggedItem to -2
+[ERROR Tue Dec 27 13:17:38 CET 2016] AccountID: 2 Tried to accept the trade whereas he's not trading.
+[ERROR Tue Dec 27 13:17:38 CET 2016] AccountID: 2 Tried to close the trade whereas he's not trading.
+[ERROR Tue Dec 27 16:15:04 CET 2016] AccountID: 2 Invalid tradeSlot value in CommandTrade : 7

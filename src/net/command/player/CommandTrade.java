@@ -51,15 +51,12 @@ public class CommandTrade extends Command {
 			}
 			trade.setPlayerTrade(player);
 			player.setPlayerTrade(trade);
-			CommandSendMessage.selfWithAuthor(trade.getConnection(), '['+player.getName()+"] wants to trade with you.", player.getName(), MessageType.SELF);
+			CommandSendMessage.selfWithAuthor(trade.getConnection(), " wants to trade with you.", player.getName(), MessageType.SELF);
 			write(PacketID.TRADE_REQUEST, trade, player.getName());
 		}
 		else if(packetID == PacketID.TRADE_NEW_CONFIRM) { //confirm the trade
-			player.getPlayerTrade().getConnection().startPacket();
-			player.getPlayerTrade().getConnection().writeShort(PacketID.TRADE);
-			player.getPlayerTrade().getConnection().writeShort(PacketID.TRADE_NEW_CONFIRM);
-			player.getPlayerTrade().getConnection().endPacket();
-			player.getPlayerTrade().getConnection().send();
+			confirmTrade(player.getPlayerTrade());
+			confirmTrade(player);
 			player.getPlayerTrade().initTrade(player.getPlayerTrade(), player);
 			player.setTrade(player.getPlayerTrade().getTrade());
 		}
@@ -97,16 +94,16 @@ public class CommandTrade extends Command {
 						Log.writePlayerLog(player, "Item not found in CommandTrade:TRADE_ADD_ITEM.");
 					}
 					else {
-						CommandSetItem.setDraggedItem(player, DragItem.INVENTORY, slot);
+						CommandSetItem.setSelectable(player, DragItem.INVENTORY, slot);
 					}
 				}
 				else {
-					CommandSetItem.setDraggedItem(player, DragItem.BAG, slot);
+					CommandSetItem.setSelectable(player, DragItem.BAG, slot);
 				}
 			}
 			player.getTrade().getTradeTable(player)[tradeSlot] = item;
 			addSelfItem(player, slotType, itemSlot, tradeSlot);
-			addOtherItem(player.getPlayerTrade(), tradeSlot, item);
+			addOtherItem(player.getPlayerTrade(), tradeSlot+7, item);
 			/*int id = connection.readInt();
 			int slot = connection.readInt();
 			int amount = connection.readInt();
@@ -156,34 +153,45 @@ public class CommandTrade extends Command {
 				Log.writePlayerLog(player, "Tried to remove item from a trade whereas he's not trading.");
 				return;
 			}
-			if(slot >= 0 && slot <= 6) {
-				removeItem(player, slot);
-				tradeUnaccept(player.getPlayerTrade());
+			if(slot < 0 || slot > 6) {
+				Log.writePlayerLog(player, "Tried to remove remove an item from trade slot : "+slot+'.');
+				return;
 			}
+			removeItem(player, slot);
+			removeItem(player.getPlayerTrade(), slot+7);
+			player.getTrade().setTradeState(player, false);
 		}
 		else if(packetID == PacketID.TRADE_ACCEPT) { //lock the trade
+			System.out.println("Trade accepted");
 			if(player.getTrade() == null) {
 				Log.writePlayerLog(player, "Tried to accept the trade whereas he's not trading.");
 				return;
 			}
-			player.getPlayerTrade().getConnection().startPacket();
-			player.getPlayerTrade().getConnection().writeShort(PacketID.TRADE);
-			player.getPlayerTrade().getConnection().writeShort(PacketID.TRADE_ACCEPT);
-			player.getPlayerTrade().getConnection().endPacket();
-			player.getPlayerTrade().getConnection().send();
+			tradeAccept(player.getPlayerTrade());
 			player.getTrade().setTradeState(player, true);
 			if(player.getTrade().getTradeInitState() && player.getTrade().getTradeTargetState()) {
-				player.getTrade().exchangeItem();
+				if(player.getTrade().exchangeItem() == -1) {
+					return;
+				}
 				closeTrade(player);
 			}
 		}
 		else if(packetID == PacketID.TRADE_CLOSE) { //cancel the trade
+			System.out.println("Trade close requested");
 			if(player.getTrade() == null) {
 				Log.writePlayerLog(player, "Tried to close the trade whereas he's not trading.");
 				return;
 			}
 			closeTrade(player);
 		}
+	}
+	
+	private static void tradeAccept(Player player) {
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.TRADE);
+		player.getConnection().writeShort(PacketID.TRADE_ACCEPT);
+		player.getConnection().endPacket();
+		player.getConnection().send();
 	}
 	
 	public static void addSelfItem(Player player, DragItem slotType, int itemSlot, int tradeSlot) {
@@ -204,6 +212,7 @@ public class CommandTrade extends Command {
 		player.getConnection().writeShort(PacketID.TRADE_ADD_ITEM);
 		player.getConnection().writeBoolean(false);
 		player.getConnection().writeInt(tradeSlot);
+		player.getConnection().writeInt(item.getAmount());
 		player.getConnection().writeInt(item.getId());
 		if(item.isStuff() || item.isWeapon()) {
 			if(((Stuff)item).getGemSlot1() != GemColor.NONE) {
@@ -223,14 +232,15 @@ public class CommandTrade extends Command {
 	}
 	
 	public static void closeTrade(Player player) {
+		System.out.println("Trade closed");
 		tradeCancel(player);
 		tradeCancel(player.getPlayerTrade());
-		player.setTrade(null);
 		if(player.getPlayerTrade() != null) {
 			player.getPlayerTrade().setTrade(null);
 			player.getPlayerTrade().setPlayerTrade(null);
 			player.setPlayerTrade(null);
 		}
+		player.setTrade(null);
 	}
 	
 	public static void removeItem(Player player, int slot) {
@@ -243,39 +253,29 @@ public class CommandTrade extends Command {
 	}
 	
 	public static void sendTradeItems(Player tradeInit) {
-		tradeItem(tradeInit, tradeInit.getTrade().getTradeTargetTable());
-		tradeItem(tradeInit.getPlayerTrade(), tradeInit.getTrade().getTradeInitTable());
+		tradeItem(tradeInit, tradeInit.getTrade().getTradeTargetTable(), tradeInit.getTrade().getTradeInitTable());
+		tradeItem(tradeInit.getPlayerTrade(), tradeInit.getTrade().getTradeInitTable(), tradeInit.getTrade().getTradeTargetTable());
 	}
 	
-	private static void tradeItem(Player player, Item[] table) {
-		player.getConnection().startPacket();
-		player.getConnection().writeShort(PacketID.TRADE);
-		player.getConnection().writeShort(PacketID.TRADE_SEND_ALL_ITEMS);
+	private static void tradeItem(Player player, Item[] addTable, Item[] deleteTable) {
+		//player.getConnection().startPacket();
+		//player.getConnection().writeShort(PacketID.TRADE);
+		//player.getConnection().writeShort(PacketID.TRADE_SEND_ALL_ITEMS);
 		int i = 0;
 		while(i < 6) {
-			if(table[i] != null) {
-				if(player.itemHasBeenSendToClient(table[i].getId())) {
-					player.getConnection().writeShort(PacketID.KNOWN_ITEM);
-					player.getConnection().writeInt(table[i].getId());
-					player.getConnection().writeInt(table[i].getAmount());
-				}
-				else {
-					player.getConnection().writeShort(PacketID.UNKNOWN_ITEM);
-					player.getConnection().writeItem(table[i]);
-					player.getConnection().writeInt(table[i].getAmount());
-				}
-				player.addItem(table[i], table[i].getAmount());
+			if(addTable[i] != null) {
+				player.addItem(addTable[i], addTable[i].getAmount());
 			}
-			else {
-				player.getConnection().writeShort((byte)-1);
+			if(deleteTable[i] != null) {
+				player.deleteIdenticalItem(deleteTable[i]);
 			}
 			i++;
 		}
-		player.getConnection().endPacket();
-		player.getConnection().send();
+		//player.getConnection().endPacket();
+		//player.getConnection().send();
 	}
 	
-	private static void tradeUnaccept(Player player) {
+	public static void tradeUnaccept(Player player) {
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.TRADE);
 		player.getConnection().writeShort(PacketID.TRADE_UNACCEPT);
@@ -382,6 +382,14 @@ public class CommandTrade extends Command {
 			player.getTrade().setTradeState(player.getPlayerTrade(), false);
 		}
 	}*/
+	
+	private static void confirmTrade(Player player) {
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.TRADE);
+		player.getConnection().writeShort(PacketID.TRADE_NEW_CONFIRM);
+		player.getConnection().endPacket();
+		player.getConnection().send();
+	}
 	
 	private static void tradeCancel(Player player) {
 		if(player != null) {
