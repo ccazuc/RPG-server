@@ -86,6 +86,7 @@ public class SQLRunnable implements Runnable {
 			}
 		}
 		Connection connection = who.getConnection();
+		connection.startPacket();
 		connection.writeShort(PacketID.WHO);
 		for(Player player : Server.getInGamePlayerList().values()) {
 			if(word.length() == 0 || player.getLevel() == wordValue && player.getName().contains(word) || (player.getGuild() != null && player.getGuild().getName().contains(word))) {
@@ -105,6 +106,7 @@ public class SQLRunnable implements Runnable {
 		}
 		connection.writeInt(-1);
 		System.out.println("[WHO ENDLIST REGEXP] took "+(System.nanoTime()-timer)/1000+" µs to execute.");
+		connection.endPacket();
 		connection.send();
 	}
 	

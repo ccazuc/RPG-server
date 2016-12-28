@@ -47,7 +47,7 @@ public class ChatCommand {
 					result.append("Command "+this.name+" have subcommands:");
 					initHeader = true;
 				}
-				result.append("\n   "+this.subCommandList.get(i).getName());
+				result.append("\n"+this.subCommandList.get(i).getName());
 			}
 			i++;
 		}

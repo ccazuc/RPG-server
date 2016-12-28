@@ -65,7 +65,8 @@ public class CommandSendMessage extends Command {
 				selfWithoutAuthor(connection, "You are not in a guild.", MessageType.SELF);
 				return;
 			}
-			if(player.getGuild().getMember(player.getCharacterId()).getRank().canTalkInGuildChannel()) {
+			
+			if(!player.getGuild().getMember(player.getCharacterId()).getRank().canTalkInGuildChannel()) {
 				selfWithoutAuthor(connection, "You don't have the right to do this.", MessageType.SELF);
 				return;
 			}

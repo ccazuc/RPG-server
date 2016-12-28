@@ -66,7 +66,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand account_onlinelist = new ChatSubCommand("onlinelist", "account", "Syntax: .account onlinelist \n\n List all online accounts.", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand account_onlinelist = new ChatSubCommand("onlinelist", "account", "Syntax: .account onlinelist \n\nList all online accounts.", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -137,7 +137,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatCommand announce = new ChatCommand("announce", "Synthax : .announce [message] \n\n Send an announce to all players", AccountRank.PLAYER) {
+	private final static ChatCommand announce = new ChatCommand("announce", "Synthax : .announce [message] \n\nSend an announce to all players", AccountRank.PLAYER) {
 		
 		@Override
 		public void handle(String command, Player player) {
@@ -327,7 +327,7 @@ public class StoreChatCommand {
 				builder.append("Available commands:");
 				for(ChatCommand chatCommand : commandMap.values()) {
 					if(player.getAccountRank().superiorOrEqualsTo(chatCommand.getRank())) {
-						builder.append("\n    "+chatCommand.getName());
+						builder.append("\n"+chatCommand.getName());
 					}
 				}
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
@@ -397,7 +397,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand server_exit = new ChatSubCommand("exit", "server", "Syntax: .server exit\n\n  Close the server", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_exit = new ChatSubCommand("exit", "server", "Syntax: .server exit\n\nCloses the server.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -420,14 +420,14 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand server_motd = new ChatSubCommand("motd", "server", "Syntax: .server motd\n\n Display the server message of the day.", AccountRank.PLAYER) {
+	private final static ChatSubCommand server_motd = new ChatSubCommand("motd", "server", "Syntax: .server motd\n\nDisplay the server message of the day.", AccountRank.PLAYER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), Server.getServerMessageOfTheDay(), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand server_ram = new ChatSubCommand("ram", "server", "Syntax: .server ram\n\n Dispay the ram used by the server.", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_ram = new ChatSubCommand("ram", "server", "Syntax: .server ram\n\nDispay the ram used by the server.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -437,7 +437,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Server is using "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)+" Mb of ram.", MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand server_gc = new ChatSubCommand("gc", "server", "Syntax: .server gc\n\n Perform a gc and display the ram used before and after the gc.", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_gc = new ChatSubCommand("gc", "server", "Syntax: .server gc\n\nPerform a gc and display the ram used before and after the gc.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -471,7 +471,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand server_set_motd = new ChatSubCommand("motd", "server_set", "Syntax: .server set motd [message]\n\n Set the server message of the day.", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_set_motd = new ChatSubCommand("motd", "server_set", "Syntax: .server set motd [message]\n\nSet the server message of the day.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -485,7 +485,7 @@ public class StoreChatCommand {
 			Server.setServerMessageOfTheDay(value[3]);
 		}
 	};
-	private final static ChatSubCommand server_set_closed = new ChatSubCommand("closed", "server_set", "Syntax: .server set closed [on/off]\n\n Set wether the server should accept connection or not.", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand server_set_closed = new ChatSubCommand("closed", "server_set", "Syntax: .server set closed [on/off]\n\nSet wether the server should accept connection or not.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -535,7 +535,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand baninfo_account = new ChatSubCommand("account", "baninfo", "Syntax : .baninfo account [account_name || account_id]\n\n Display ban informations of the account.", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand baninfo_account = new ChatSubCommand("account", "baninfo", "Syntax : .baninfo account [account_name || account_id]\n\nDisplay ban informations of the account.", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -586,7 +586,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand baninfo_character = new ChatSubCommand("character", "baninfo", "Syntax: .baninfo character [character_name || character_id]\n\n Display ban informations of the character.", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand baninfo_character = new ChatSubCommand("character", "baninfo", "Syntax: .baninfo character [character_name || character_id]\n\nDisplay ban informations of the character.", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -637,7 +637,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand baninfo_ip = new ChatSubCommand("ip", "baninfo", "Syntax: .baninfo ip [ip_adress]\n\n Display informations of the ip", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand baninfo_ip = new ChatSubCommand("ip", "baninfo", "Syntax: .baninfo ip [ip_adress]\n\nDisplay informations of the ip", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -752,7 +752,7 @@ public class StoreChatCommand {
 						if(getBanListAccountPattern.fetch()) {
 							int number = getBanListAccountPattern.getInt();
 							if(number > 0) {
-								builder.append("\n    "+accountIDList.get(i).getStringValue1());
+								builder.append("\n"+accountIDList.get(i).getStringValue1());
 							}
 						}
 						i++;
@@ -765,7 +765,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand banlist_character = new ChatSubCommand("character", "banlist", "Syntax: .banlist character [pattern]\n\n Display the character banlist for the given pattern.", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand banlist_character = new ChatSubCommand("character", "banlist", "Syntax: .banlist character [pattern]\n\nDisplay the character banlist for the given pattern.", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -794,7 +794,7 @@ public class StoreChatCommand {
 					getBanListCharacterPattern.execute();
 					if(getBanListCharacterPattern.fetch()) {
 						if(getBanListCharacterPattern.getInt() > 0) {
-							builder.append("\n    "+characterIDList.get(i).getStringValue1());
+							builder.append("\n"+characterIDList.get(i).getStringValue1());
 						}
 					}
 					i++;
@@ -892,7 +892,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand character_erase = new ChatSubCommand("erase", "character", ".character erase [name]\n\n Erase the character.", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand character_erase = new ChatSubCommand("erase", "character", ".character erase [name]\n\nErase the character.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -938,7 +938,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatSubCommand debug_looptoolongtimer = new ChatSubCommand("looptoolongtimer", "debug", ".debug looptoolongtimer [timer]\n\n Set the value of looptoolong print.", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand debug_looptoolongtimer = new ChatSubCommand("looptoolongtimer", "debug", ".debug looptoolongtimer [timer]\n\nSet the value of looptoolong print.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -956,7 +956,7 @@ public class StoreChatCommand {
 			DebugMgr.setLoopTooLongValue(Integer.parseInt(value[2]));
 		}
 	};
-	private final static ChatSubCommand debug_printsqltimer = new ChatSubCommand("printsqltimer", "debug", ".debug printsqltimer [true || false]\n\n Set wether the time to execute the request should be printed.", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand debug_printsqltimer = new ChatSubCommand("printsqltimer", "debug", ".debug printsqltimer [true || false]\n\nSet wether the time to execute the request should be printed.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -975,7 +975,7 @@ public class StoreChatCommand {
 			DebugMgr.setSQLRequestTimer(b);
 		}
 	};
-	private final static ChatSubCommand debug_printlogfiletimer = new ChatSubCommand("printlogfiletimer", "debug", ".debug printlogfiletimer [true || false]\n\n Set wether the time to write in the log file should be printed.", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand debug_printlogfiletimer = new ChatSubCommand("printlogfiletimer", "debug", ".debug printlogfiletimer [true || false]\n\nSet wether the time to write in the log file should be printed.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -994,7 +994,7 @@ public class StoreChatCommand {
 			DebugMgr.setWriteLogFileTimer(b);
 		}
 	};
-	private final static ChatSubCommand debug_chatcommandtimer = new ChatSubCommand("chatcommandtimer", "debug", ".debug chatcommandtimer [true || false]\n\n Set wether the time to execute the chat command should be printed.", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand debug_chatcommandtimer = new ChatSubCommand("chatcommandtimer", "debug", ".debug chatcommandtimer [true || false]\n\nSet wether the time to execute the chat command should be printed.", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -1013,7 +1013,7 @@ public class StoreChatCommand {
 			DebugMgr.setChatCommandTimer(b);
 		}
 	};
-	private final static ChatCommand additem = new ChatCommand("additem", "List of possible syntax: \n  .additem [item_id || item_name] to the item to yourself.\n  .additem [item_id || item_name] [character_name]\n  .additem [item_id || item_name] [amount] [character_id || character_name]", AccountRank.GAMEMASTER) {
+	private final static ChatCommand additem = new ChatCommand("additem", "List of possible syntax: \n.additem [item_id || item_name] to add the item to yourself.\n.additem [item_id || item_name] [character_name]\n.additem [item_id || item_name] [amount] [character_id || character_name]", AccountRank.GAMEMASTER) {
 	
 		@Override
 		public void handle(String command, Player player) {
@@ -1022,11 +1022,7 @@ public class StoreChatCommand {
 			}
 			command = command.trim().toLowerCase();
 			if(command.equals('.'+this.name)) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect syntax, list of possible syntax:"
-								+ "\n  .additem [item_id || item_name] to the item to yourself. "
-								+ "\n  .additem [item_id || item_name] [character_name]"
-								+ "\n  .additem [item_id || item_name] [amount]"
-								+ "\n  .additem [item_id || item_name] [amount] [character_id || character_name]", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 			}
 			else {
 				String[] value = command.split(" ");
