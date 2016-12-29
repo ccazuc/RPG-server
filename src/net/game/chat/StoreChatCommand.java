@@ -336,7 +336,7 @@ public class StoreChatCommand {
 			if(bannedList == null) {
 				return;
 			}
-			int i = 0;
+			i = 0;
 			while(i < bannedList.size()) {
 				bannedList.get(i).close();
 				i++;
