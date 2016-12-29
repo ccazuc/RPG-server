@@ -2,3 +2,5 @@
 [ERROR Tue Dec 27 13:17:38 CET 2016] AccountID: 2 Tried to accept the trade whereas he's not trading.
 [ERROR Tue Dec 27 13:17:38 CET 2016] AccountID: 2 Tried to close the trade whereas he's not trading.
 [ERROR Tue Dec 27 16:15:04 CET 2016] AccountID: 2 Invalid tradeSlot value in CommandTrade : 7
+[ERROR Thu Dec 29 21:30:05 CET 2016] AccountID: 1 tried to logout whereas he's not in-game
+[ERROR Thu Dec 29 21:36:42 CET 2016] AccountID: 1 Unknown packet: 26, last packet readed: 25

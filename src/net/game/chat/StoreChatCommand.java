@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 import jdo.JDOStatement;
 import net.Server;
@@ -39,6 +40,7 @@ public class StoreChatCommand {
 	static JDOStatement getBanListCharacter;
 	static JDOStatement getBanListAccountPattern;
 	static JDOStatement getBanListCharacterPattern;
+	private static Pattern isValidIP = Pattern.compile("^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?).(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$");
 
 	final static HashMap<String, ChatCommand> commandMap = new HashMap<String, ChatCommand>();
 	
@@ -46,8 +48,8 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String command, Player player) {
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account level : "+(player.getAccountRank().getValue()), MessageType.SELF);
 			}
 			else {
@@ -58,7 +60,7 @@ public class StoreChatCommand {
 				}
 				int i = 0;
 				while(i < this.subCommandList.size()) {
-					if(this.subCommandList.get(i).getName().equals(value[1])) {
+					if(this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
 						this.subCommandList.get(i).handle(value, player);
 						return;
 					}
@@ -95,7 +97,7 @@ public class StoreChatCommand {
 			}
 			int i = 0;
 			while(i < this.commandList.size()) {
-				if(this.commandList.get(i).getName().equals(value[2])) {
+				if(this.commandList.get(i).getName().equalsIgnoreCase(value[2])) {
 					this.commandList.get(i).handle(value, player);
 					return;
 				}
@@ -139,17 +141,18 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatCommand announce = new ChatCommand("announce", "Synthax : .announce [message] \n\nSend an announce to all players", AccountRank.PLAYER) {
+	private final static ChatCommand announce = new ChatCommand("announce", "Synthax : .announce [message]\n\nSend an announce to all players", AccountRank.PLAYER) {
 		
 		@Override
 		public void handle(String command, Player player) {
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
+			String display = command.substring(this.name.length()+1);
 			for(Player players : Server.getInGamePlayerList().values()) {
-				CommandSendMessage.selfWithoutAuthor(players.getConnection(), command.substring(this.name.length()+1), MessageType.ANNOUNCE, new Color(0/255f, 208/255f, 225/255f));
+				CommandSendMessage.selfWithoutAuthor(players.getConnection(), display, MessageType.ANNOUNCE, new Color(0/255f, 208/255f, 225/255f));
 			}
 		}
 	};
@@ -157,7 +160,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String command, Player player) {
-			command = command.trim().toLowerCase();
+			command = command.trim();
 			if(command.length() < 7) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 				return;
@@ -169,7 +172,7 @@ public class StoreChatCommand {
 			}
 			int i = 0;
 			while(i < this.subCommandList.size()) {
-				if(this.subCommandList.get(i).getName().equals(value[1])) {
+				if(this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
 					this.subCommandList.get(i).handle(value, player);
 					return;
 				}
@@ -209,8 +212,15 @@ public class StoreChatCommand {
 				return;
 			}
 			long timer = System.currentTimeMillis();
+			StringBuilder builder = new StringBuilder();
+			int i = 4;
+			while(i < value.length) {
+				builder.append(value[i]);
+				i++;
+			}
+			reason = builder.toString();
 			if(banTimer < 0) {
-				banTimer = -1-System.currentTimeMillis();
+				banTimer = -1-timer;
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountId+" banned permanently for : "+reason, MessageType.SELF);
 			}
 			else {
@@ -254,9 +264,16 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" not found.", MessageType.SELF);
 				return;
 			}
+			StringBuilder builder = new StringBuilder();
+			int i = 4;
+			while(i < value.length) {
+				builder.append(value[i]);
+				i++;
+			}
+			reason = builder.toString();
 			long timer = System.currentTimeMillis();
 			if(banTimer < 0) {
-				banTimer = -1-System.currentTimeMillis();
+				banTimer = -1-timer;
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" banned permanently for : "+reason, MessageType.SELF);
 			}
 			else {
@@ -285,7 +302,7 @@ public class StoreChatCommand {
 			String banTime = value[3];
 			String reason = value[4];
 			long banTimer = 0;
-			if(!isValidIpAdresse(ipAdress)) {
+			if(!isValidIpAdress(ipAdress)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
@@ -300,8 +317,15 @@ public class StoreChatCommand {
 				}
 			}
 			long timer = System.currentTimeMillis();
+			StringBuilder builder = new StringBuilder();
+			int i = 4;
+			while(i < value.length) {
+				builder.append(value[i]);
+				i++;
+			}
+			reason = builder.toString();
 			if(banTimer < 0) {
-				banTimer = -1-System.currentTimeMillis();
+				banTimer = -1-timer;
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "IPAdress "+ipAdress+" banned permanently for : "+reason, MessageType.SELF);
 			}
 			else {
@@ -323,8 +347,8 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String command, Player player) {
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				StringBuilder builder = new StringBuilder();
 				builder.append("Available commands:");
 				for(ChatCommand chatCommand : commandMap.values()) {
@@ -343,11 +367,11 @@ public class StoreChatCommand {
 					if(value.length > 2 && commandMap.get(value[1]).subCommandList != null) {
 						int i = 0;
 						while(i < commandMap.get(value[1]).subCommandList.size()) {
-							if(commandMap.get(value[1]).subCommandList.get(i).getName().equals(value[2])) {
+							if(commandMap.get(value[1]).subCommandList.get(i).getName().equalsIgnoreCase(value[2])) {
 								if(value.length > 3 && commandMap.get(value[1]).subCommandList.get(i).commandList != null) {
 									int j = 0;
 									while(j < commandMap.get(value[1]).subCommandList.get(i).commandList.size()) {
-										if(commandMap.get(value[1]).subCommandList.get(i).commandList.get(j).getName().equals(value[3])) {
+										if(commandMap.get(value[1]).subCommandList.get(i).commandList.get(j).getName().equalsIgnoreCase(value[3])) {
 											CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).subCommandList.get(i).commandList.get(j).helpMessage, MessageType.SELF);
 											return;
 										}
@@ -378,8 +402,8 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String command, Player player) {
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 			}
 			else {
@@ -389,7 +413,7 @@ public class StoreChatCommand {
 				}
 				int i = 0;
 				while(i < this.subCommandList.size()) {
-					if(this.subCommandList.get(i).getName().equals(value[1])) {
+					if(this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
 						this.subCommandList.get(i).handle(value, player);
 						return;
 					}
@@ -464,7 +488,7 @@ public class StoreChatCommand {
 			}
 			int i = 0;
 			while(i < this.commandList.size()) {
-				if(this.commandList.get(i).getName().equals(value[2])) {
+				if(this.commandList.get(i).getName().equalsIgnoreCase(value[2])) {
 					this.commandList.get(i).handle(value, player);
 					return;
 				}
@@ -498,10 +522,10 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [closed] in .server set closed [on/off]", MessageType.SELF);
 				return;
 			}
-			if(value[3].equals("on")) {
+			if(value[3].equalsIgnoreCase("on")) {
 				Server.setIsAcceptingConnection(true);
 			}
-			else if(value[3].equals("off")) {
+			else if(value[3].equalsIgnoreCase("off")) {
 				Server.setIsAcceptingConnection(false);
 			}
 			else {
@@ -516,8 +540,8 @@ public class StoreChatCommand {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 			}
 			else {
@@ -527,7 +551,7 @@ public class StoreChatCommand {
 				}
 				int i = 0;
 				while(i < this.subCommandList.size()) {
-					if(this.subCommandList.get(i).getName().equals(value[1])) {
+					if(this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
 						this.subCommandList.get(i).handle(value, player);
 						return;
 					}
@@ -650,7 +674,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [ip_adress] in .baninfo ip [ip_adress]", MessageType.SELF);
 				return;
 			}
-			if(!isValidIpAdresse(value[2])) {
+			if(!isValidIpAdress(value[2])) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [ip_adress] in .baninfo ip [ip_adress]", MessageType.SELF);
 				return;
 			}
@@ -690,8 +714,8 @@ public class StoreChatCommand {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 			}
 			else {
@@ -701,7 +725,7 @@ public class StoreChatCommand {
 				}
 				int i = 0;
 				while(i < this.subCommandList.size()) {
-					if(this.subCommandList.get(i).getName().equals(value[1])) {
+					if(this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
 						this.subCommandList.get(i).handle(value, player);
 						return;
 					}
@@ -815,8 +839,8 @@ public class StoreChatCommand {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 			}
 			else {
@@ -826,7 +850,7 @@ public class StoreChatCommand {
 				}
 				int i = 0;
 				while(i < this.subCommandList.size()) {
-					if(this.subCommandList.get(i).getName().equals(value[1])) {
+					if(this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
 						this.subCommandList.get(i).handle(value, player);
 						return;
 					}
@@ -919,8 +943,8 @@ public class StoreChatCommand {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 				return;
 			}
@@ -930,7 +954,7 @@ public class StoreChatCommand {
 			}
 			int i = 0;
 			while(i < this.subCommandList.size()) {
-				if(this.subCommandList.get(i).getName().equals(value[1])) {
+				if(this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
 					this.subCommandList.get(i).handle(value, player);
 					return;
 				}
@@ -968,11 +992,11 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug printsqltimer [true || false]", MessageType.SELF);
 				return;
 			}
-			if(!value[2].equals("true") && !value[2].equals("false")) {
+			if(!value[2].equalsIgnoreCase("true") && !value[2].equalsIgnoreCase("false")) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug printsqltimer [true || false]", MessageType.SELF);
 				return;
 			}
-			boolean b = value[2].equals("true") ? true : false;
+			boolean b = value[2].equalsIgnoreCase("true") ? true : false;
 			DebugMgr.setSQLRequestTimer(b);
 		}
 	};
@@ -987,11 +1011,11 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug printlogfiletimer [true || false]", MessageType.SELF);
 				return;
 			}
-			if(!value[2].equals("true") && !value[2].equals("false")) {
+			if(!value[2].equalsIgnoreCase("true") && !value[2].equalsIgnoreCase("false")) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug printlogfiletimer [true || false]", MessageType.SELF);
 				return;
 			}
-			boolean b = value[2].equals("true") ? true : false;
+			boolean b = value[2].equalsIgnoreCase("true") ? true : false;
 			DebugMgr.setWriteLogFileTimer(b);
 		}
 	};
@@ -1006,11 +1030,11 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug chatcommandtimer [true || false]", MessageType.SELF);
 				return;
 			}
-			if(!value[2].equals("true") && !value[2].equals("false")) {
+			if(!value[2].equalsIgnoreCase("true") && !value[2].equalsIgnoreCase("false")) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug chatcommandtimer [true || false]", MessageType.SELF);
 				return;
 			}
-			boolean b = value[2].equals("true") ? true : false;
+			boolean b = value[2].equalsIgnoreCase("true") ? true : false;
 			DebugMgr.setChatCommandTimer(b);
 		}
 	};
@@ -1025,23 +1049,23 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug whotimer [true || false]", MessageType.SELF);
 				return;
 			}
-			if(!value[2].equals("true") && !value[2].equals("false")) {
+			if(!value[2].equalsIgnoreCase("true") && !value[2].equalsIgnoreCase("false")) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug whotimer [true || false]", MessageType.SELF);
 				return;
 			}
-			boolean b = value[2].equals("true") ? true : false;
+			boolean b = value[2].equalsIgnoreCase("true") ? true : false;
 			DebugMgr.setExecuteWhoTimer(b);
 		}
 	};
-	private final static ChatCommand additem = new ChatCommand("additem", "List of possible syntax: \n.additem [item_id || item_name] to add the item to yourself.\n.additem [item_id || item_name] [character_name]\n.additem [item_id || item_name] [amount] [character_id || character_name]", AccountRank.GAMEMASTER) {
+	private final static ChatCommand additem = new ChatCommand("additem", "List of possible syntax: \n.additem [item_id || \"item_name\"] to add the item to yourself.\n.additem [item_id || \"item_name\"] [character_name]\n.additem [item_id || \"item_name\"] [amount] [character_id || character_name]\nItem name should not contains space, for example : Potion_of_healing", AccountRank.GAMEMASTER) {
 	
 		@Override
 		public void handle(String command, Player player) {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 			}
 			else {
@@ -1126,8 +1150,8 @@ public class StoreChatCommand {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			command = command.trim().toLowerCase();
-			if(command.equals('.'+this.name)) {
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
 				if(!checkRank(player, AccountRank.MODERATOR)) {
 					return;
 				}
@@ -1138,7 +1162,7 @@ public class StoreChatCommand {
 			if(value.length < 2) {
 				return;
 			}
-			if(value[1].equals("on")) {
+			if(value[1].equalsIgnoreCase("on")) {
 				if(!checkRank(player, AccountRank.MODERATOR)) {
 					return;
 				}
@@ -1146,7 +1170,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "GM mode enabled.", MessageType.SELF);
 				return;
 			}
-			else if(value[1].equals("off")) {
+			else if(value[1].equalsIgnoreCase("off")) {
 				if(!checkRank(player, AccountRank.MODERATOR)) {
 					return;
 				}
@@ -1156,7 +1180,7 @@ public class StoreChatCommand {
 			}
 			int i = 0;
 			while(i < this.subCommandList.size()) {
-				if(this.subCommandList.get(i).getName().equals(value[1])) {
+				if(this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
 					this.subCommandList.get(i).handle(value, player);
 					return;
 				}
@@ -1201,9 +1225,16 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [message] in .gm announce [message]", MessageType.SELF);
 				return;
 			}
+			int i = 2;
+			StringBuilder builder = new StringBuilder();
+			while(i < value.length) {
+				builder.append(value[i]);
+				i++;
+			}
+			String result = builder.toString();
 			for(Player players : Server.getInGamePlayerList().values()) {
 				if(players.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
-					CommandSendMessage.selfWithoutAuthor(players.getConnection(), value[2], MessageType.GM_ANNOUNCE, MessageColor.ANNOUNCE);
+					CommandSendMessage.selfWithoutAuthor(players.getConnection(), result, MessageType.GM_ANNOUNCE, MessageColor.ANNOUNCE);
 				}
 			}
 		}
@@ -1219,9 +1250,16 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [message] in .gm announce [message]", MessageType.SELF);
 				return;
 			}
+			int i = 2;
+			StringBuilder builder = new StringBuilder();
+			while(i < value.length) {
+				builder.append(value[i]);
+				i++;
+			}
+			String result = builder.toString();
 			for(Player players : Server.getInGamePlayerList().values()) {
 				if(players.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
-					CommandSendMessage.selfWithAuthor(players.getConnection(), value[2], player.getName(), MessageType.GM_ANNOUNCE, MessageColor.ANNOUNCE);
+					CommandSendMessage.selfWithAuthor(players.getConnection(), result, player.getName(), MessageType.GM_ANNOUNCE, MessageColor.ANNOUNCE);
 				}
 			}
 		}
@@ -1237,9 +1275,16 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [message] in .gm notify [message]", MessageType.SELF);
 				return;
 			}
+			int i = 2;
+			StringBuilder builder = new StringBuilder();
+			while(i < value.length) {
+				builder.append(value[i]);
+				i++;
+			}
+			String result = builder.toString();
 			for(Player players : Server.getInGamePlayerList().values()) {
 				if(players.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
-					CommandSendRedAlert.write(players, value[2]);
+					CommandSendRedAlert.write(players, result);
 				}
 			}
 		}
@@ -1368,7 +1413,7 @@ public class StoreChatCommand {
 		return true;
 	}
 	
-	static boolean isValidIpAdresse(String ip) {
+	/*static boolean isValidIpAdresse(String ip) {
 		String[] value = ip.split(".");
 		if(value.length != 4) {
 			return false;
@@ -1385,6 +1430,10 @@ public class StoreChatCommand {
 			i++;
 		}
 		return true;
+	}*/
+	
+	static boolean isValidIpAdress(String ip) {
+		return isValidIP.matcher(ip).matches();
 	}
 	
 	public static String convMillisToDate(long millis) {

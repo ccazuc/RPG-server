@@ -29,7 +29,7 @@ public class CommandLogoutCharacter extends Command {
 
 	@Override
 	public void read(Player player) {
-		if(!Server.getInGamePlayerList().containsKey(player.getCharacterId())) {
+		if(!player.isOnline()) {
 			Log.writePlayerLog(player, "tried to logout whereas he's not in-game");
 			player.close();
 			return;

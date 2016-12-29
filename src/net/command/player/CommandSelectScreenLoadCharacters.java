@@ -8,6 +8,7 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Player;
+import net.game.log.Log;
 
 
 public class CommandSelectScreenLoadCharacters extends Command {
@@ -16,11 +17,11 @@ public class CommandSelectScreenLoadCharacters extends Command {
 
 	@Override
 	public void read(Player player) {
-		if(!Server.getInGamePlayerList().containsKey(player.getCharacterId())) {
+		if(!player.isOnline()) {
 			write(player, player.getAccountId());
 		}
 		else {
-			System.out.println("Account "+player.getAccountId()+" tried to load characters while beeing online.");
+			Log.writePlayerLog(player, "tried to load select screen characters while beeing online");
 		}
 	}
 	

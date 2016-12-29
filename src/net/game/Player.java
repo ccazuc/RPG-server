@@ -194,7 +194,7 @@ public class Player extends Unit {
 	}
 	
 	public void setOnline() {
-		this.isOnline = false;
+		this.isOnline = true;
 	}
 	
 	public boolean isOnline() {

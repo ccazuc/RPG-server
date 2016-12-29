@@ -73,8 +73,8 @@ public class ConnectionManager {
 		nonLoggedCommandList.put((int)LOAD_CHARACTER, new CommandLoadCharacter());
 		nonLoggedCommandList.put((int)LOGIN, new CommandLogin());
 		nonLoggedCommandList.put((int)PING, new CommandPing());
+		nonLoggedCommandList.put((int)PING_CONFIRMED, new CommandPingConfirmed());
 		loggedCommandList.put((int)SEND_SINGLE_BAG_ITEM, new CommandSendSingleBagItem());
-		loggedCommandList.put((int)PING_CONFIRMED, new CommandPingConfirmed());
 		loggedCommandList.put((int)PING_CONFIRMED, new CommandPingConfirmed());
 		loggedCommandList.put((int)CHAT_LIST_PLAYER, new CommandListPlayer());
 		loggedCommandList.put((int)CHAT_PLAYER_INFO, new CommandPlayerInfo());
@@ -189,11 +189,11 @@ public class ConnectionManager {
 				return;
 			}
 			short packetId = this.connection.readShort();
-			if(loggedCommandList.containsKey((int)packetId)) {
+			if(this.player.isOnline() && loggedCommandList.containsKey((int)packetId)) {
 				this.lastPacketReaded = packetId;
 				loggedCommandList.get((int)packetId).read(this.player);
 			}
-			else if(nonLoggedCommandList.containsKey((int)packetId)) {
+			else if(!this.player.isOnline() && nonLoggedCommandList.containsKey((int)packetId)) {
 				this.lastPacketReaded = packetId;
 				nonLoggedCommandList.get((int)packetId).read(this.player);
 			}
