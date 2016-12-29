@@ -9,6 +9,7 @@ public enum MessageColor {
 	BLUE((byte)2, Color.BLUE),
 	WHITE((byte)3, Color.WHITE),
 	RED((byte)4, Color.RED),
+	ANNOUNCE((byte)5, new Color(0/255f, 208/255f, 225/255f)),
 	;
 	
 	private Color color;

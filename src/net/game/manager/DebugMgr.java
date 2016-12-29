@@ -5,6 +5,7 @@ public class DebugMgr {
 	private static boolean CHAT_COMMAND_TIMER = true;
 	private static boolean SQL_REQUEST_TIMER = true;
 	private static boolean WRITE_LOG_FILE_TIMER = true;
+	private static boolean EXECUTE_WHO_TIMER = true;
 	private static int LOOP_TOO_LONG_VALUE = 5;
 	
 	public static boolean getChatCommandTimer() {
@@ -37,5 +38,13 @@ public class DebugMgr {
 	
 	public static void setLoopTooLongValue(int value) {
 		LOOP_TOO_LONG_VALUE = value;
+	}
+	
+	public static boolean getExecuteWhoTimer() {
+		return EXECUTE_WHO_TIMER;
+	}
+	
+	public static void setExecuteWhoTimer(boolean we) {
+		EXECUTE_WHO_TIMER = we;
 	}
 }

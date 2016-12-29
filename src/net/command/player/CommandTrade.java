@@ -162,7 +162,6 @@ public class CommandTrade extends Command {
 			player.getTrade().setTradeState(player, false);
 		}
 		else if(packetID == PacketID.TRADE_ACCEPT) { //lock the trade
-			System.out.println("Trade accepted");
 			if(player.getTrade() == null) {
 				Log.writePlayerLog(player, "Tried to accept the trade whereas he's not trading.");
 				return;
@@ -177,7 +176,6 @@ public class CommandTrade extends Command {
 			}
 		}
 		else if(packetID == PacketID.TRADE_CLOSE) { //cancel the trade
-			System.out.println("Trade close requested");
 			if(player.getTrade() == null) {
 				Log.writePlayerLog(player, "Tried to close the trade whereas he's not trading.");
 				return;
@@ -232,7 +230,6 @@ public class CommandTrade extends Command {
 	}
 	
 	public static void closeTrade(Player player) {
-		System.out.println("Trade closed");
 		tradeCancel(player);
 		tradeCancel(player.getPlayerTrade());
 		if(player.getPlayerTrade() != null) {

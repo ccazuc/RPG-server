@@ -72,7 +72,7 @@ public class Player extends Unit {
 	private int characterId;
 	private long pingTimer;
 	private boolean logged;
-	private boolean isGMOn = true;
+	private boolean isGMOn;
 	private int accountId;
 	private Stuff[] stuff;
 	private Guild guild;

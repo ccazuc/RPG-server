@@ -30,11 +30,11 @@ import net.game.manager.DebugMgr;
 import net.game.spell.SpellManager;
 import net.thread.chatcommand.ChatCommandRequest;
 import net.thread.chatcommand.ChatCommandRunnable;
+import net.thread.chatcommand.Who;
 import net.thread.log.LogRunnable;
 import net.thread.socket.SocketRunnable;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRunnable;
-import net.thread.sql.Who;
 
 public class Server {
 	
@@ -141,7 +141,7 @@ public class Server {
 			}
 		}
 		catch(RuntimeException e) {
-			logRunnable.writeServerLog(e);
+			LogRunnable.writeServerLog(e);
 			System.out.println("[RUNTIME EXCEPTION OCCURED]");
 		}
 		//Save eveything of every player to the DB
@@ -359,7 +359,7 @@ public class Server {
 	}
 	
 	public static void addNewWhoRequest(Who who) {
-		lowPrioritySQLRunnable.addWhoRequest(who);
+		chatCommandRunnable.addWhoRequest(who);
 	}
 	
 	public static void addNewChatCommandRequest(ChatCommandRequest request) {

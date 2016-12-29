@@ -2,15 +2,21 @@ package net.game;
 
 public enum AccountRank {
 
-	PLAYER((byte)1),
-	MODERATOR((byte)2),
-	GAMEMASTER((byte)3),
-	ADMINISTRATOR((byte)4);
+	PLAYER((byte)1, "Player"),
+	MODERATOR((byte)2, "Moderator"),
+	GAMEMASTER((byte)3, "Gamemaster"),
+	ADMINISTRATOR((byte)4, "Administrator");
 	
 	private byte value;
+	private String name;
 	
-	private AccountRank(byte value) {
+	private AccountRank(byte value, String name) {
 		this.value = value;
+		this.name = name;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	public byte getValue() {

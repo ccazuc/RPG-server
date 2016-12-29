@@ -11,7 +11,9 @@ import net.command.chat.CommandDefaultMessage;
 import net.command.chat.CommandPlayerNotFound;
 import net.command.chat.CommandSendMessage;
 import net.command.chat.DefaultMessage;
+import net.command.chat.MessageColor;
 import net.command.chat.MessageType;
+import net.command.player.CommandSendRedAlert;
 import net.game.AccountRank;
 import net.game.Player;
 import net.game.item.Item;
@@ -147,7 +149,7 @@ public class StoreChatCommand {
 				return;
 			}
 			for(Player players : Server.getInGamePlayerList().values()) {
-				CommandSendMessage.selfWithoutAuthor(players.getConnection(), "[GM ANNOUNCE] "+command.substring(this.name.length()+1), MessageType.SELF, new Color(0/255f, 208/255f, 225/255f));
+				CommandSendMessage.selfWithoutAuthor(players.getConnection(), command.substring(this.name.length()+1), MessageType.ANNOUNCE, new Color(0/255f, 208/255f, 225/255f));
 			}
 		}
 	};
@@ -920,22 +922,21 @@ public class StoreChatCommand {
 			command = command.trim().toLowerCase();
 			if(command.equals('.'+this.name)) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+				return;
 			}
-			else {
-				String[] value = command.split(" ");
-				if(value.length < 2) {
+			String[] value = command.split(" ");
+			if(value.length < 2) {
+				return;
+			}
+			int i = 0;
+			while(i < this.subCommandList.size()) {
+				if(this.subCommandList.get(i).getName().equals(value[1])) {
+					this.subCommandList.get(i).handle(value, player);
 					return;
 				}
-				int i = 0;
-				while(i < this.subCommandList.size()) {
-					if(this.subCommandList.get(i).getName().equals(value[1])) {
-						this.subCommandList.get(i).handle(value, player);
-						return;
-					}
-					i++;
-				}
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+				i++;
 			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand debug_looptoolongtimer = new ChatSubCommand("looptoolongtimer", "debug", ".debug looptoolongtimer [timer]\n\nSet the value of looptoolong print.", AccountRank.ADMINISTRATOR) {
@@ -1011,6 +1012,25 @@ public class StoreChatCommand {
 			}
 			boolean b = value[2].equals("true") ? true : false;
 			DebugMgr.setChatCommandTimer(b);
+		}
+	};
+	private final static ChatSubCommand debug_whotimer = new ChatSubCommand("whotimer", "debug", ".debug whotimer [true || false]\n\nSet wether the time to execute the who command should be printed.", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug whotimer [true || false]", MessageType.SELF);
+				return;
+			}
+			if(!value[2].equals("true") && !value[2].equals("false")) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug whotimer [true || false]", MessageType.SELF);
+				return;
+			}
+			boolean b = value[2].equals("true") ? true : false;
+			DebugMgr.setExecuteWhoTimer(b);
 		}
 	};
 	private final static ChatCommand additem = new ChatCommand("additem", "List of possible syntax: \n.additem [item_id || item_name] to add the item to yourself.\n.additem [item_id || item_name] [character_name]\n.additem [item_id || item_name] [amount] [character_id || character_name]", AccountRank.GAMEMASTER) {
@@ -1099,7 +1119,7 @@ public class StoreChatCommand {
 			}
 		}
 	};
-	private final static ChatCommand gm = new ChatCommand("gm", AccountRank.MODERATOR) {
+	private final static ChatCommand gm = new ChatCommand("gm", AccountRank.PLAYER) {
 	
 		@Override
 		public void handle(String command, Player player) {
@@ -1108,79 +1128,118 @@ public class StoreChatCommand {
 			}
 			command = command.trim().toLowerCase();
 			if(command.equals('.'+this.name)) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
-			}
-			else {
-				String[] value = command.split(" ");
-				if(value.length < 2) {
+				if(!checkRank(player, AccountRank.MODERATOR)) {
 					return;
 				}
-				if(value.length == 2) {
-					if(Server.isInteger(value[1])) {
-						Item item = Item.getItem(Integer.parseInt(value[1]));
-						if(item == null) {
-							CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
-							return;
-						}
-						player.addItem(item, 1);
-					}
-					else {
-						//TODO: find item by name efficency
-					}
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Current GM mode : "+player.isGMOn(), MessageType.SELF);
+				return;
+			}
+			String[] value = command.split(" ");
+			if(value.length < 2) {
+				return;
+			}
+			if(value[1].equals("on")) {
+				if(!checkRank(player, AccountRank.MODERATOR)) {
+					return;
 				}
-				else if(value.length == 3) {
-					Player playerToAdd = player;
-					int amount = 1;
-					if(!Server.isInteger(value[2])) {
-						playerToAdd = Server.getCharacter(value[2]);
-						if(playerToAdd == null) {
-							CommandPlayerNotFound.write(player.getConnection(), value[2].substring(0, 1).toUpperCase()+value[2].substring(1));
-							return;
-						}
-					}
-					else {
-						amount = Integer.parseInt(value[2]);
-					}
-					if(Server.isInteger(value[1])) {
-						Item item = Item.getItem(Integer.parseInt(value[1]));
-						if(item == null) {
-							CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
-							return;
-						}
-						player.addItem(item, amount);
-					}
-					else {
-						//TODO: find item by name efficency
-					}
+				player.setGMOn(true);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "GM mode enabled.", MessageType.SELF);
+				return;
+			}
+			else if(value[1].equals("off")) {
+				if(!checkRank(player, AccountRank.MODERATOR)) {
+					return;
 				}
-				else if(value.length == 4) {
-					if(!Server.isInteger(value[2])) {
-						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [amount] in .additem [item_id || item_name] [amount] [character_id || character_name]", MessageType.SELF);
-						return;
+				player.setGMOn(false);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "GM mode disabled.", MessageType.SELF);
+				return;
+			}
+			int i = 0;
+			while(i < this.subCommandList.size()) {
+				if(this.subCommandList.get(i).getName().equals(value[1])) {
+					this.subCommandList.get(i).handle(value, player);
+					return;
+				}
+				i++;
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand gm_list = new ChatSubCommand("list", "gm", ".gm list\n\nDispay all the online gamemaster and their GM status.", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			StringBuilder builder = null;
+			boolean init = false;
+			for(Player players : Server.getInGamePlayerList().values()) {
+				if(players.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
+					if(!init) {
+						builder = new StringBuilder();
+						builder.append("List of available gamemaster : ");
+						init = true;
 					}
-					Item item = null;
-					if(Server.isInteger(value[1])) {
-						item = Item.getItem(Integer.parseInt(value[1]));
-					}
-					else {
-						//TODO: find item by name efficency
-					}
-					if(item == null) {
-						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
-						return;
-					}
-					Player playerToAdd = null;
-					if(Server.isInteger(value[3])) {
-						playerToAdd = Server.getCharacter(Integer.parseInt(value[3]));
-					}
-					else {
-						playerToAdd = Server.getCharacter(value[3]);
-					}
-					if(playerToAdd == null) {
-						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Player not found.", MessageType.SELF);
-						return;
-					}
-					playerToAdd.addItem(item, Integer.parseInt(value[2]));
+					builder.append("\n- name : "+players.getName()+" rank : "+player.getAccountRank().getName()+" GM status enabled : "+player.isGMOn());
+				}
+			}
+			if(!init) {
+				builder.append("No gamemaster online.");
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand gm_announce = new ChatSubCommand("announce", "gm", ".gm announce [message]\n\nSend a message to all online gamemaster without your name.", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length <= 2) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [message] in .gm announce [message]", MessageType.SELF);
+				return;
+			}
+			for(Player players : Server.getInGamePlayerList().values()) {
+				if(players.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
+					CommandSendMessage.selfWithoutAuthor(players.getConnection(), value[2], MessageType.GM_ANNOUNCE, MessageColor.ANNOUNCE);
+				}
+			}
+		}
+	};
+	private final static ChatSubCommand gm_nameannounce = new ChatSubCommand("nameannounce", "gm", ".gm nameannounce [message]\n\nSend a message to all online gamemaster with your name.", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length <= 2) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [message] in .gm announce [message]", MessageType.SELF);
+				return;
+			}
+			for(Player players : Server.getInGamePlayerList().values()) {
+				if(players.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
+					CommandSendMessage.selfWithAuthor(players.getConnection(), value[2], player.getName(), MessageType.GM_ANNOUNCE, MessageColor.ANNOUNCE);
+				}
+			}
+		}
+	};
+	private final static ChatSubCommand gm_notify = new ChatSubCommand("notify", "gm", ".gm notify [message]\n\nDisplay a notification on the screen of all online GM.", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length <= 2) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [message] in .gm notify [message]", MessageType.SELF);
+				return;
+			}
+			for(Player players : Server.getInGamePlayerList().values()) {
+				if(players.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
+					CommandSendRedAlert.write(players, value[2]);
 				}
 			}
 		}
@@ -1220,8 +1279,14 @@ public class StoreChatCommand {
 		debug.addSubCommand(debug_printsqltimer);
 		debug.addSubCommand(debug_printlogfiletimer);
 		debug.addSubCommand(debug_chatcommandtimer);
+		debug.addSubCommand(debug_whotimer);
 		commandMap.put(debug.getName(), debug);
 		commandMap.put(additem.getName(), additem);
+		gm.addSubCommand(gm_list);
+		gm.addSubCommand(gm_announce);
+		gm.addSubCommand(gm_nameannounce);
+		gm.addSubCommand(gm_notify);
+		commandMap.put(gm.getName(), gm);
 	}
 	
 	static long convStringTimerToMS(String timer) {
