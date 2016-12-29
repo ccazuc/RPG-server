@@ -4,17 +4,17 @@ import net.utils.Color;
 
 public enum MessageColor {
 	
-	YELLOW((char)0, new Color(1, 251/255f, 0)),
-	GREEN((char)1, new Color(64/255f, 1, 64/255f)),
-	BLUE((char)2, Color.BLUE),
-	WHITE((char)3, Color.WHITE),
-	RED((char)4, Color.RED),
+	YELLOW((byte)0, new Color(1, 251/255f, 0)),
+	GREEN((byte)1, new Color(64/255f, 1, 64/255f)),
+	BLUE((byte)2, Color.BLUE),
+	WHITE((byte)3, Color.WHITE),
+	RED((byte)4, Color.RED),
 	;
 	
 	private Color color;
-	private char value;
+	private byte value;
 
-	private MessageColor(char value, Color color) {
+	private MessageColor(byte value, Color color) {
 		this.color = color;
 		this.value = value;
 	}
@@ -23,7 +23,7 @@ public enum MessageColor {
 		return this.color;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }

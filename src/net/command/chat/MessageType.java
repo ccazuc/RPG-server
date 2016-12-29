@@ -2,27 +2,27 @@ package net.command.chat;
 
 public enum MessageType {
 
-	SAY((char)0),
-	GUILD((char)1),
-	PARTY((char)2),
-	RAID((char)3),
-	BATTLEGROUND((char)4),
-	YELL((char)5),
-	DISCUSSION((char)6),
-	SELF((char)7),
-	WHISPER((char)8),
-	EMOTE((char)9),
-	PARTY_LEADER((char)10),
-	OFFICER_CHAT((char)11),
-	GM_ANNOUNCE((char)12);
+	SAY((byte)0),
+	GUILD((byte)1),
+	PARTY((byte)2),
+	RAID((byte)3),
+	BATTLEGROUND((byte)4),
+	YELL((byte)5),
+	DISCUSSION((byte)6),
+	SELF((byte)7),
+	WHISPER((byte)8),
+	EMOTE((byte)9),
+	PARTY_LEADER((byte)10),
+	OFFICER_CHAT((byte)11),
+	GM_ANNOUNCE((byte)12);
 	
-	private char value;
+	private byte value;
 	
-	private MessageType(char value) {
+	private MessageType(byte value) {
 		this.value = value;
 	}
 	
-	public char getValue() {
+	public byte getValue() {
 		return this.value;
 	}
 }

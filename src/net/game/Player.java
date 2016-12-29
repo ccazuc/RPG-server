@@ -52,6 +52,7 @@ public class Player extends Unit {
 	private ArrayList<Integer> ignoreList;
 	private Profession secondProfession;
 	private Profession firstProfession;
+	private AccountRank accountRank;
 	private WeaponType[] weaponType;
 	private boolean hasInitParty;
 	private int numberYellowGem;
@@ -69,9 +70,9 @@ public class Player extends Unit {
 	private ClassType classe;
 	private int numberRedGem;
 	private int characterId;
-	private AccountRank accountRank;
 	private long pingTimer;
 	private boolean logged;
+	private boolean isGMOn = true;
 	private int accountId;
 	private Stuff[] stuff;
 	private Guild guild;
@@ -1022,6 +1023,14 @@ public class Player extends Unit {
 
 	public void setPingTimer(long pingTimer) {
 		this.pingTimer = pingTimer;
+	}
+	
+	public boolean isGMOn() {
+		return this.isGMOn;
+	}
+	
+	public void setGMOn(boolean we) {
+		this.isGMOn = we;
 	}
 	
 	public static String convClassTypeToString(ClassType type) {

@@ -17,7 +17,7 @@ public class CommandSendMessage extends Command {
 	public void read(Player player) {
 		Connection connection = player.getConnection();
 		String message = connection.readString();
-		MessageType type = MessageType.values()[connection.readChar()];
+		MessageType type = MessageType.values()[connection.readByte()];
 		if(message.length() >= 2 && message.charAt(0) == '.' && message.charAt(1) != '.') {
 			ChatCommandHandler.parse(message, player);
 			return;
@@ -28,36 +28,35 @@ public class CommandSendMessage extends Command {
 		if(type == MessageType.WHISPER) {
 			String target = connection.readString();
 			target = target.substring(0, 1).toUpperCase()+target.substring(1).toLowerCase();
-			Player temp = Server.getInGameCharacterByName(target);
-			if(temp == null) {
+			Player tmp = Server.getInGameCharacterByName(target);
+			if(tmp == null) {
 				CommandPlayerNotFound.write(connection, target);
 				return;
 			}
-			writeWhisper(connection, temp.getName(), message, false);
-			if(!IgnoreMgr.isIgnored(temp.getCharacterId(), player.getCharacterId())) {
-				writeWhisper(temp.getConnection(), temp.getName(), message, true);
+			writeWhisper(connection, tmp.getName(), message, false, tmp.isGMOn());
+			if(!IgnoreMgr.isIgnored(tmp.getCharacterId(), player.getCharacterId())) {
+				writeWhisper(tmp.getConnection(), tmp.getName(), message, true, player.isGMOn());
 			}
 			else {
-				selfWithoutAuthor(connection, temp.getName()+IgnoreMgr.ignoreMessage, MessageType.SELF, MessageColor.RED);
+				selfWithoutAuthor(connection, tmp.getName()+IgnoreMgr.ignoreMessage, MessageType.SELF, MessageColor.RED);
 			}
 		}
 		else if(type == MessageType.PARTY) {
-			if(player.getParty() != null) {
-				int i = 0;
-				while(i < player.getParty().getPlayerList().length) {
-					if(player.getParty().getPlayerList()[i] != null && !IgnoreMgr.isIgnored(player.getCharacterId(), player.getParty().getPlayerList()[i].getid())) {
-						if(player.getParty().isPartyLeader(player)) {
-							write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY_LEADER);
-						}
-						else {
-							write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY);
-						}
-					}
-					i++;
-				}
-			}
-			else {
+			if(player.getParty() == null) {
 				selfWithoutAuthor(connection, "You are not in a party.", MessageType.SELF);
+				return;
+			}
+			int i = 0;
+			while(i < player.getParty().getPlayerList().length) {
+				if(player.getParty().getPlayerList()[i] != null && !IgnoreMgr.isIgnored(player.getCharacterId(), player.getParty().getPlayerList()[i].getid())) {
+					if(player.getParty().isPartyLeader(player)) {
+						write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY_LEADER, player.isGMOn());
+					}
+					else {
+						write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY, player.isGMOn());
+					}
+				}
+				i++;
 			}
 		}
 		else if(type == MessageType.GUILD) {
@@ -73,41 +72,43 @@ public class CommandSendMessage extends Command {
 			int i = 0;
 			while(i < player.getGuild().getMemberList().size()) {
 				if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel() && !IgnoreMgr.isIgnored(player.getCharacterId(), player.getGuild().getMemberList().get(i).getId())) {
-					write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD);
+					write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD, player.isGMOn());
 				}
 				i++;
 			}
 		}
 		else {
-			sendMessageToUsers(player.getCharacterId(), message, player.getName(), type);
+			sendMessageToUsers(player.getCharacterId(), message, player.getName(), type, player.isGMOn());
 		}
 	}
 	
-	private static void writeWhisper(Connection connection, String name, String message, boolean isTarget) { //used for whisper
+	private static void writeWhisper(Connection connection, String name, String message, boolean isTarget, boolean isGM) { //used for whisper
 		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
-		connection.writeChar(MessageType.WHISPER.getValue());
+		connection.writeByte(MessageType.WHISPER.getValue());
 		connection.writeString(message);
 		connection.writeString(name);
 		connection.writeBoolean(isTarget);
+		connection.writeBoolean(isGM);
 		connection.endPacket();
 		connection.send();
 	}
 	
-	private static void sendMessageToUsers(int id, String message, String author, MessageType type) { //used for say and yell
+	private static void sendMessageToUsers(int id, String message, String author, MessageType type, boolean isGM) { //used for say and yell
 		for(Player player : Server.getInGamePlayerList().values()) {
 			if(!IgnoreMgr.isIgnored(id, player.getCharacterId())) {
-				write(player.getConnection(), message, author, type);
+				write(player.getConnection(), message, author, type, isGM);
 			}
 		}
 	}
 	
-	public static void write(Connection connection, String message, String author, MessageType type) { //used 
+	public static void write(Connection connection, String message, String author, MessageType type, boolean isGM) { //used 
 		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
-		connection.writeChar(type.getValue());
+		connection.writeByte(type.getValue());
 		connection.writeString(message);
 		connection.writeString(author);
+		connection.writeBoolean(isGM);
 		connection.endPacket();
 		connection.send();
 	}
@@ -115,12 +116,12 @@ public class CommandSendMessage extends Command {
 	public static void selfWithAuthor(Connection connection, String message, String author, MessageType type) { //used 
 		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
-		connection.writeChar(type.getValue());
+		connection.writeByte(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(true);
 		connection.writeString(author);
 		connection.writeBoolean(true);
-		connection.writeChar(MessageColor.YELLOW.getValue());
+		connection.writeByte(MessageColor.YELLOW.getValue());
 		connection.endPacket();
 		connection.send();
 	}
@@ -128,7 +129,7 @@ public class CommandSendMessage extends Command {
 	public static void selfWithAuthor(Connection connection, String message, String author, MessageType type, Color color) { //used 
 		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
-		connection.writeChar(type.getValue());
+		connection.writeByte(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(true);
 		connection.writeString(author);
@@ -141,12 +142,12 @@ public class CommandSendMessage extends Command {
 	public static void selfWithAuthor(Connection connection, String message, String author, MessageType type, MessageColor color) { //used 
 		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
-		connection.writeChar(type.getValue());
+		connection.writeByte(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(true);
 		connection.writeString(author);
 		connection.writeBoolean(true);
-		connection.writeChar(color.getValue());
+		connection.writeByte(color.getValue());
 		connection.endPacket();
 		connection.send();
 	}
@@ -154,7 +155,7 @@ public class CommandSendMessage extends Command {
 	public static void selfWithoutAuthor(Connection connection, String message, MessageType type, Color color) { //used 
 		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
-		connection.writeChar(type.getValue());
+		connection.writeByte(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(false);
 		connection.writeBoolean(false);
@@ -166,11 +167,11 @@ public class CommandSendMessage extends Command {
 	public static void selfWithoutAuthor(Connection connection, String message, MessageType type, MessageColor color) { //used 
 		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
-		connection.writeChar(type.getValue());
+		connection.writeByte(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(false);
 		connection.writeBoolean(true);
-		connection.writeChar(color.getValue());
+		connection.writeByte(color.getValue());
 		connection.endPacket();
 		connection.send();
 	}
@@ -178,11 +179,11 @@ public class CommandSendMessage extends Command {
 	public static void selfWithoutAuthor(Connection connection, String message, MessageType type) { //used 
 		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
-		connection.writeChar(type.getValue());
+		connection.writeByte(type.getValue());
 		connection.writeString(message);
 		connection.writeBoolean(false);
 		connection.writeBoolean(true);
-		connection.writeChar(MessageColor.YELLOW.getValue());
+		connection.writeByte(MessageColor.YELLOW.getValue());
 		connection.endPacket();
 		connection.send();
 	}

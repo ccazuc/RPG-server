@@ -1099,6 +1099,92 @@ public class StoreChatCommand {
 			}
 		}
 	};
+	private final static ChatCommand gm = new ChatCommand("gm", AccountRank.MODERATOR) {
+	
+		@Override
+		public void handle(String command, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			command = command.trim().toLowerCase();
+			if(command.equals('.'+this.name)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
+			}
+			else {
+				String[] value = command.split(" ");
+				if(value.length < 2) {
+					return;
+				}
+				if(value.length == 2) {
+					if(Server.isInteger(value[1])) {
+						Item item = Item.getItem(Integer.parseInt(value[1]));
+						if(item == null) {
+							CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
+							return;
+						}
+						player.addItem(item, 1);
+					}
+					else {
+						//TODO: find item by name efficency
+					}
+				}
+				else if(value.length == 3) {
+					Player playerToAdd = player;
+					int amount = 1;
+					if(!Server.isInteger(value[2])) {
+						playerToAdd = Server.getCharacter(value[2]);
+						if(playerToAdd == null) {
+							CommandPlayerNotFound.write(player.getConnection(), value[2].substring(0, 1).toUpperCase()+value[2].substring(1));
+							return;
+						}
+					}
+					else {
+						amount = Integer.parseInt(value[2]);
+					}
+					if(Server.isInteger(value[1])) {
+						Item item = Item.getItem(Integer.parseInt(value[1]));
+						if(item == null) {
+							CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
+							return;
+						}
+						player.addItem(item, amount);
+					}
+					else {
+						//TODO: find item by name efficency
+					}
+				}
+				else if(value.length == 4) {
+					if(!Server.isInteger(value[2])) {
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [amount] in .additem [item_id || item_name] [amount] [character_id || character_name]", MessageType.SELF);
+						return;
+					}
+					Item item = null;
+					if(Server.isInteger(value[1])) {
+						item = Item.getItem(Integer.parseInt(value[1]));
+					}
+					else {
+						//TODO: find item by name efficency
+					}
+					if(item == null) {
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
+						return;
+					}
+					Player playerToAdd = null;
+					if(Server.isInteger(value[3])) {
+						playerToAdd = Server.getCharacter(Integer.parseInt(value[3]));
+					}
+					else {
+						playerToAdd = Server.getCharacter(value[3]);
+					}
+					if(playerToAdd == null) {
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Player not found.", MessageType.SELF);
+						return;
+					}
+					playerToAdd.addItem(item, Integer.parseInt(value[2]));
+				}
+			}
+		}
+	};
 	
 	public static void initChatCommandMap() {
 		account.addSubCommand(account_onlinelist);

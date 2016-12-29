@@ -12,7 +12,7 @@ public class CommandDefaultMessage extends Command {
 		player.getConnection().writeShort(PacketID.CHAT_DEFAULT_MESSAGE);
 		player.getConnection().writeChar(message.getValue());
 		player.getConnection().writeBoolean(true);
-		player.getConnection().writeChar(MessageColor.YELLOW.getValue());
+		player.getConnection().writeByte(MessageColor.YELLOW.getValue());
 		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
@@ -22,7 +22,7 @@ public class CommandDefaultMessage extends Command {
 		player.getConnection().writeShort(PacketID.CHAT_DEFAULT_MESSAGE);
 		player.getConnection().writeChar(message.getValue());
 		player.getConnection().writeBoolean(true);
-		player.getConnection().writeChar(color.getValue());
+		player.getConnection().writeByte(color.getValue());
 		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
