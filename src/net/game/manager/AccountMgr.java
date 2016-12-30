@@ -7,13 +7,14 @@ import jdo.JDOStatement;
 import net.Server;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
+import net.thread.sql.SQLRequestPriority;
 
 public class AccountMgr {
 
 	private static JDOStatement loadAccountIDFromName;
 	private static JDOStatement loadAccountIDFromCharacterID;
 	private static JDOStatement loadAccountIDAndNameFromNamePattern;
-	private final static SQLRequest updateAccountRank = new SQLRequest("UPDATE account SET rank = ? WHERE id = ?", "Update account rank") {
+	private final static SQLRequest updateAccountRank = new SQLRequest("UPDATE account SET rank = ? WHERE id = ?", "Update account rank", SQLRequestPriority.HIGH) {
 		
 		@Override
 		public void gatherData() {
@@ -32,7 +33,7 @@ public class AccountMgr {
 	
 	public static void updateAccountRank(int account_id, int rank) {
 		updateAccountRank.addDatas(new SQLDatas(account_id, rank));
-		Server.executeLowPrioritySQL(updateAccountRank);
+		Server.executeSQLRequest(updateAccountRank);
 	}
 	
 	public static int loadAccountIDFromName(String accountName) {

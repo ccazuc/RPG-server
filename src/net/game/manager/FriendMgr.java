@@ -8,11 +8,12 @@ import net.Server;
 import net.game.Player;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
+import net.thread.sql.SQLRequestPriority;
 
 public class FriendMgr {
 
 	private static HashMap<Integer, ArrayList<Integer>> friendMap = new HashMap<Integer, ArrayList<Integer>>();
-	private final static SQLRequest addFriendInDB = new SQLRequest("INSERT INTO social_friend (character_id, friend_id) VALUES (?, ?)", "Add friend") {
+	private final static SQLRequest addFriendInDB = new SQLRequest("INSERT INTO social_friend (character_id, friend_id) VALUES (?, ?)", "Add friend", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -28,7 +29,7 @@ public class FriendMgr {
 			}
 		}
 	};
-	private final static SQLRequest removeFriendFromDB = new SQLRequest("DELETE FROM social_friend WHERE character_id = ? AND friend_id = ?", "Remove friend") {
+	private final static SQLRequest removeFriendFromDB = new SQLRequest("DELETE FROM social_friend WHERE character_id = ? AND friend_id = ?", "Remove friend", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -61,11 +62,11 @@ public class FriendMgr {
 	
 	public static void addFriendInDB(int character_id, int friend_id) {
 		addFriendInDB.addDatas(new SQLDatas(character_id, friend_id));
-		Server.executeLowPrioritySQL(addFriendInDB);
+		Server.executeSQLRequest(addFriendInDB);
 	}
 	
 	public static void removeFriendFromDB(int character_id, int friend_id) {
 		removeFriendFromDB.addDatas(new SQLDatas(character_id, friend_id));
-		Server.executeLowPrioritySQL(removeFriendFromDB);
+		Server.executeSQLRequest(removeFriendFromDB);
 	}
 }

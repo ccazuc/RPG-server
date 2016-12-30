@@ -585,7 +585,7 @@ public class StoreChatCommand {
 			}
 			try {
 				if(getBanInfoAccountName == null) {
-					getBanInfoAccountName = Server.getAsyncJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM account_banned WHERE account_id = ?");
+					getBanInfoAccountName = Server.getAsyncLowPriorityJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM account_banned WHERE account_id = ?");
 				}
 				getBanInfoAccountName.clear();
 				getBanInfoAccountName.putInt(accountId);
@@ -636,7 +636,7 @@ public class StoreChatCommand {
 			}
 			try {
 				if(getBanInfoCharacterName == null) {
-					getBanInfoCharacterName = Server.getAsyncJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM character_banned WHERE character_id = ?");
+					getBanInfoCharacterName = Server.getAsyncLowPriorityJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM character_banned WHERE character_id = ?");
 				}
 				getBanInfoCharacterName.clear();
 				getBanInfoCharacterName.putInt(characterId);
@@ -680,7 +680,7 @@ public class StoreChatCommand {
 			}
 			try {
 				if(getBanInfoCharacterName == null) {
-					getBanInfoCharacterName = Server.getAsyncJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM ip_banned WHERE ip_adress = ?");
+					getBanInfoCharacterName = Server.getAsyncLowPriorityJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM ip_banned WHERE ip_adress = ?");
 				}
 				getBanInfoIPAdress.clear();
 				getBanInfoIPAdress.putString(value[2]);
@@ -745,7 +745,7 @@ public class StoreChatCommand {
 			try {
 				if(value.length < 3) {
 					if(getBanListAccount == null) {
-						getBanListAccount = Server.getAsyncJDO().prepare("SELECT account_id FROM account_banned");
+						getBanListAccount = Server.getAsyncLowPriorityJDO().prepare("SELECT account_id FROM account_banned");
 					}
 					StringBuilder builder = new StringBuilder();
 					builder.append("List of banned accounts:");
@@ -761,7 +761,7 @@ public class StoreChatCommand {
 				}
 				else {
 					if(getBanListAccountPattern == null) {
-						getBanListAccountPattern = Server.getAsyncJDO().prepare("SELECT COUNT(account_id) FROM account_banned WHERE account_id = ?");
+						getBanListAccountPattern = Server.getAsyncLowPriorityJDO().prepare("SELECT COUNT(account_id) FROM account_banned WHERE account_id = ?");
 					}
 					ArrayList<SQLDatas> accountIDList = AccountMgr.loadAccountIDAndNameFromNamePattern(value[2]);
 					if(accountIDList == null || accountIDList.size() == 0) {
@@ -804,7 +804,7 @@ public class StoreChatCommand {
 			}
 			try {
 				if(getBanListCharacterPattern == null) {
-					getBanListCharacterPattern = Server.getAsyncJDO().prepare("SELECT COUNT(character_id) FROM character_banned WHERE character_id = ?");
+					getBanListCharacterPattern = Server.getAsyncLowPriorityJDO().prepare("SELECT COUNT(character_id) FROM character_banned WHERE character_id = ?");
 				}
 				ArrayList<SQLDatas> characterIDList = CharacterMgr.loadCharacterIDAndNameFromNamePattern(value[2]);
 				if(characterIDList == null || characterIDList.size() == 0) {

@@ -11,11 +11,11 @@ import net.game.ClassType;
 import net.game.Player;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
+import net.thread.sql.SQLRequestPriority;
 
 public class GuildMgr {
 
 	private static HashMap<Integer, Guild> guildList = new HashMap<Integer, Guild>();
-	private Player player;
 	private static JDOStatement loadRank;
 	private static JDOStatement loadGuildInformation;
 	private static JDOStatement loadMember;
@@ -23,7 +23,7 @@ public class GuildMgr {
 	private static JDOStatement loadPlayerGuild;
 	private static JDOStatement removeOrphanedGuildRank;
 	private static JDOStatement removeOrphanedGuildMember;
-	private final static SQLRequest updateInformation = new SQLRequest("UPDATE guild SET information = ? WHERE id = ?", "Update guild information") {
+	private final static SQLRequest updateInformation = new SQLRequest("UPDATE guild SET information = ? WHERE id = ?", "Update guild information", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -42,7 +42,7 @@ public class GuildMgr {
 			}
 		}
 	};
-	private final static SQLRequest updateMotd = new SQLRequest("UPDATE guild SET motd = ? WHERE id = ?", "Update guild Motd") {
+	private final static SQLRequest updateMotd = new SQLRequest("UPDATE guild SET motd = ? WHERE id = ?", "Update guild Motd", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -61,7 +61,7 @@ public class GuildMgr {
 			}
 		}
 	};
-	private final static SQLRequest removeMember = new SQLRequest("REMOVE FROM guild_member WHERE member_id = ? AND guild_id = ?", "Remove guild member") {
+	private final static SQLRequest removeMember = new SQLRequest("REMOVE FROM guild_member WHERE member_id = ? AND guild_id = ?", "Remove guild member", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -80,7 +80,7 @@ public class GuildMgr {
 			}
 		}
 	};
-	private final static SQLRequest updatePermission = new SQLRequest("UPDATE guild_rank SET permission = ?, name = ? WHERE guild_id = ? AND rank_order = ?", "Update guild permission") {
+	private final static SQLRequest updatePermission = new SQLRequest("UPDATE guild_rank SET permission = ?, name = ? WHERE guild_id = ? AND rank_order = ?", "Update guild permission", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -101,7 +101,7 @@ public class GuildMgr {
 			}
 		}
 	};
-	private final static SQLRequest addMemberInDB = new SQLRequest("INSERT INTO guild_member (member_id, guild_id, rank) VALUES (?, ?, ?)", "Add guild member") {
+	private final static SQLRequest addMemberInDB = new SQLRequest("INSERT INTO guild_member (member_id, guild_id, rank) VALUES (?, ?, ?)", "Add guild member", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -121,7 +121,7 @@ public class GuildMgr {
 			}
 		}
 	};
-	private final static SQLRequest updateMemberRank = new SQLRequest("UPDATE guild_member SET rank = ? WHERE guild_id = ? AND member_id = ?", "Update guild member rank") {
+	private final static SQLRequest updateMemberRank = new SQLRequest("UPDATE guild_member SET rank = ? WHERE guild_id = ? AND member_id = ?", "Update guild member rank", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -141,7 +141,7 @@ public class GuildMgr {
 			}
 		}
 	};
-	private final static SQLRequest setLeaderInDB = new SQLRequest("UPDATE guild SET leader_id = ? WHERE id = ?", "Set guild leader") {
+	private final static SQLRequest setLeaderInDB = new SQLRequest("UPDATE guild SET leader_id = ? WHERE id = ?", "Set guild leader", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -157,7 +157,7 @@ public class GuildMgr {
 			}
 		}
 	};
-	private final static SQLRequest setMemberNoteInDB = new SQLRequest("UPDATE guild_member SET note = ? WHERE member_id = ?", "Set guild member note") {
+	private final static SQLRequest setMemberNoteInDB = new SQLRequest("UPDATE guild_member SET note = ? WHERE member_id = ?", "Set guild member note", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -173,7 +173,7 @@ public class GuildMgr {
 			}
 		}
 	};
-	private final static SQLRequest setMemberOfficerNoteInDB = new SQLRequest("UPDATE guild_member SET officer_note = ? WHERE member_id = ?", "Set guild member officerNote") {
+	private final static SQLRequest setMemberOfficerNoteInDB = new SQLRequest("UPDATE guild_member SET officer_note = ? WHERE member_id = ?", "Set guild member officerNote", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -216,130 +216,131 @@ public class GuildMgr {
 		}
 	}
 	
-	public GuildMgr(Player player) {
-		this.player = player;
-	}
-	
-	public void loadGuild() throws SQLException {
-		if(loadPlayerGuild == null) {
-			loadPlayerGuild = Server.getJDO().prepare("SELECT guild_id FROM guild_member WHERE member_id = ?");
-			loadRank = Server.getJDO().prepare("SELECT rank_order, permission, name FROM guild_rank WHERE guild_id = ?");
-			loadMember = Server.getJDO().prepare("SELECT member_id, rank, note, officer_note FROM guild_member WHERE guild_id = ?");
-			loadGuildInformation = Server.getJDO().prepare("SELECT name, leader_id, information, motd FROM guild WHERE id = ?");
-			loadMemberInformation = Server.getJDO().prepare("SELECT name, online, experience, class, last_login_timer FROM `character` WHERE character_id = ?");
-		}
-		int guildId = 0;
-		loadPlayerGuild.clear();
-		loadPlayerGuild.putInt(this.player.getCharacterId());
-		loadPlayerGuild.execute();
-		if(loadPlayerGuild.fetch()) {
-			guildId = loadPlayerGuild.getInt();
-		}
-		if(guildId != 0) {
-			if(guildList.containsKey(guildId)) {
-				this.player.setGuild(getGuild(guildId));
-				return;
+	public static void loadGuild(Player player) {
+		try {
+			if(loadPlayerGuild == null) {
+				loadPlayerGuild = Server.getJDO().prepare("SELECT guild_id FROM guild_member WHERE member_id = ?");
+				loadRank = Server.getJDO().prepare("SELECT rank_order, permission, name FROM guild_rank WHERE guild_id = ?");
+				loadMember = Server.getJDO().prepare("SELECT member_id, rank, note, officer_note FROM guild_member WHERE guild_id = ?");
+				loadGuildInformation = Server.getJDO().prepare("SELECT name, leader_id, information, motd FROM guild WHERE id = ?");
+				loadMemberInformation = Server.getJDO().prepare("SELECT name, online, experience, class, last_login_timer FROM `character` WHERE character_id = ?");
 			}
-			ArrayList<GuildRank> rankList = new ArrayList<GuildRank>();
-			loadRank.clear();
-			loadRank.putInt(guildId);
-			loadRank.execute();
-			while(loadRank.fetch()) {
-				int rank_order = loadRank.getInt();
-				int permission = loadRank.getInt();
-				String name = loadRank.getString();
-				rankList.add(new GuildRank(rank_order, permission, name));
+			int guildId = 0;
+			loadPlayerGuild.clear();
+			loadPlayerGuild.putInt(player.getCharacterId());
+			loadPlayerGuild.execute();
+			if(loadPlayerGuild.fetch()) {
+				guildId = loadPlayerGuild.getInt();
 			}
-			ArrayList<GuildMember> memberList = new ArrayList<GuildMember>();
-			loadMember.clear();
-			loadMember.putInt(guildId);
-			loadMember.execute();
-			while(loadMember.fetch()) {
-				int member_id = loadMember.getInt();
-				int rank = loadMember.getInt();
-				GuildRank guildRank = null;
-				int i = 0;
-				while(i < rankList.size()) {
-					if(rankList.get(i).getOrder() == rank) {
-						guildRank = rankList.get(i);
-						break;
+			if(guildId != 0) {
+				if(guildList.containsKey(guildId)) {
+					player.setGuild(getGuild(guildId));
+					return;
+				}
+				ArrayList<GuildRank> rankList = new ArrayList<GuildRank>();
+				loadRank.clear();
+				loadRank.putInt(guildId);
+				loadRank.execute();
+				while(loadRank.fetch()) {
+					int rank_order = loadRank.getInt();
+					int permission = loadRank.getInt();
+					String name = loadRank.getString();
+					rankList.add(new GuildRank(rank_order, permission, name));
+				}
+				ArrayList<GuildMember> memberList = new ArrayList<GuildMember>();
+				loadMember.clear();
+				loadMember.putInt(guildId);
+				loadMember.execute();
+				while(loadMember.fetch()) {
+					int member_id = loadMember.getInt();
+					int rank = loadMember.getInt();
+					GuildRank guildRank = null;
+					int i = 0;
+					while(i < rankList.size()) {
+						if(rankList.get(i).getOrder() == rank) {
+							guildRank = rankList.get(i);
+							break;
+						}
+						i++;
 					}
-					i++;
+					String note = loadMember.getString();
+					String officerNote = loadMember.getString();
+					loadMemberInformation.clear();
+					loadMemberInformation.putInt(member_id);
+					loadMemberInformation.execute();
+					if(loadMemberInformation.fetch()) {
+						String name = loadMemberInformation.getString();
+						boolean isOnline = loadMemberInformation.getInt() == 0 ? false : true;
+						int level = Player.getLevel(loadMemberInformation.getInt());
+						ClassType type = Player.convStringToClassType(loadMemberInformation.getString());
+						long last_login_timer = loadMemberInformation.getLong();
+						memberList.add(new GuildMember(member_id, name, level, guildRank, isOnline, note, officerNote, type, last_login_timer));
+					}
+					else {
+						System.out.println("GuildManager:LoadGuild player not found in table character");
+					}
 				}
-				String note = loadMember.getString();
-				String officerNote = loadMember.getString();
-				loadMemberInformation.clear();
-				loadMemberInformation.putInt(member_id);
-				loadMemberInformation.execute();
-				if(loadMemberInformation.fetch()) {
-					String name = loadMemberInformation.getString();
-					boolean isOnline = loadMemberInformation.getInt() == 0 ? false : true;
-					int level = Player.getLevel(loadMemberInformation.getInt());
-					ClassType type = Player.convStringToClassType(loadMemberInformation.getString());
-					long last_login_timer = loadMemberInformation.getLong();
-					memberList.add(new GuildMember(member_id, name, level, guildRank, isOnline, note, officerNote, type, last_login_timer));
-				}
-				else {
-					System.out.println("GuildManager:LoadGuild player not found in table character");
+				loadGuildInformation.clear();
+				loadGuildInformation.putInt(guildId);
+				loadGuildInformation.execute();
+				if(loadGuildInformation.fetch()) {
+					String guildName = loadGuildInformation.getString();
+					int leaderId = loadGuildInformation.getInt();
+					String information = loadGuildInformation.getString();
+					String motd = loadGuildInformation.getString();
+					addGuild(new Guild(guildId, leaderId, guildName, information, motd, memberList, rankList));
+					player.setGuild(getGuild(guildId));
 				}
 			}
-			loadGuildInformation.clear();
-			loadGuildInformation.putInt(guildId);
-			loadGuildInformation.execute();
-			if(loadGuildInformation.fetch()) {
-				String guildName = loadGuildInformation.getString();
-				int leaderId = loadGuildInformation.getInt();
-				String information = loadGuildInformation.getString();
-				String motd = loadGuildInformation.getString();
-				addGuild(new Guild(guildId, leaderId, guildName, information, motd, memberList, rankList));
-				this.player.setGuild(getGuild(guildId));
-			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	
 	public static void removeMemberFromDB(Guild guild, int id) {
 		removeMember.addDatas(new SQLDatas(id, guild.getId()));
-		Server.executeLowPrioritySQL(removeMember);
+		Server.executeSQLRequest(removeMember);
 	}
 	
 	public static void addMemberInDB(Guild guild, int id) {
 		addMemberInDB.addDatas(new SQLDatas(id, guild.getId(), guild.getRankList().size()-1));
-		Server.executeLowPrioritySQL(addMemberInDB);
+		Server.executeSQLRequest(addMemberInDB);
 	}
 	
 	public static void updatePermission(Guild guild, int rank_order, int permission, String name) {
 		updatePermission.addDatas(new SQLDatas(guild.getId(), rank_order, permission, name));
-		Server.executeLowPrioritySQL(updatePermission);
+		Server.executeSQLRequest(updatePermission);
 	}
 	
 	public static void updateInformation(Guild guild) {
 		updateInformation.addDatas(new SQLDatas(guild.getId(), guild.getInformation()));
-		Server.executeLowPrioritySQL(updateInformation);
+		Server.executeSQLRequest(updateInformation);
 	}
 	
 	public static void updateMotd(Guild guild) {
 		updateMotd.addDatas(new SQLDatas(guild.getId(), guild.getMotd()));
-		Server.executeLowPrioritySQL(updateMotd);
+		Server.executeSQLRequest(updateMotd);
 	}
 	
 	public static void updateMemberRank(int playerId, int guildId, int rank) {
 		updateMemberRank.addDatas(new SQLDatas(rank, guildId, playerId));
-		Server.executeLowPrioritySQL(updateMemberRank);
+		Server.executeSQLRequest(updateMemberRank);
 	}
 	
 	public static void setLeaderInDB(int player_id, int guild_id) {
 		setLeaderInDB.addDatas(new SQLDatas(player_id, guild_id));
-		Server.executeLowPrioritySQL(setLeaderInDB);
+		Server.executeSQLRequest(setLeaderInDB);
 	}
 	
 	public static void updateMemberNote(int player_id, String note) {
 		setMemberNoteInDB.addDatas(new SQLDatas(player_id, note));
-		Server.executeLowPrioritySQL(setMemberNoteInDB);
+		Server.executeSQLRequest(setMemberNoteInDB);
 	}
 	
 	public static void updateMemberOfficerNote(int player_id, String officerNote) {
 		setMemberOfficerNoteInDB.addDatas(new SQLDatas(player_id, officerNote));
-		Server.executeLowPrioritySQL(setMemberOfficerNoteInDB);
+		Server.executeSQLRequest(setMemberOfficerNoteInDB);
 	}
 	
 	public static HashMap<Integer, Guild> getGuildList() {

@@ -11,13 +11,14 @@ import net.game.Player;
 import net.game.log.Log;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
+import net.thread.sql.SQLRequestPriority;
 
 public class CommandCreateCharacter extends Command {
 	
 	private static JDOStatement create_character;
 	private static JDOStatement check_character;
 	private static JDOStatement character_id;
-	private static SQLRequest insert_bag = new SQLRequest("INSERT INTO `bag` (character_id) VALUES (?)", "Create character insert_bag") {
+	private static SQLRequest insert_bag = new SQLRequest("INSERT INTO `bag` (character_id) VALUES (?)", "Create character insert_bag", SQLRequestPriority.HIGH) {
 		@Override
 		public void gatherData() {
 			this.statement.clear();
@@ -31,7 +32,7 @@ public class CommandCreateCharacter extends Command {
 			
 		}
 	};
-	private static SQLRequest character_containers = new SQLRequest("INSERT INTO character_containers (character_id) VALUES (?)", "Create character character_containers") {
+	private static SQLRequest character_containers = new SQLRequest("INSERT INTO character_containers (character_id) VALUES (?)", "Create character character_containers", SQLRequestPriority.HIGH) {
 		@Override
 		public void gatherData() {
 			this.statement.clear();
@@ -45,7 +46,7 @@ public class CommandCreateCharacter extends Command {
 			
 		}
 	};
-	private static SQLRequest character_stuff = new SQLRequest("INSERT INTO character_stuff (character_id) VALUES (?)", "Create character character_stuff") {
+	private static SQLRequest character_stuff = new SQLRequest("INSERT INTO character_stuff (character_id) VALUES (?)", "Create character character_stuff", SQLRequestPriority.HIGH) {
 		@Override
 		public void gatherData() {
 			this.statement.clear();
@@ -59,7 +60,7 @@ public class CommandCreateCharacter extends Command {
 			
 		}
 	};
-	private static SQLRequest spellbar = new SQLRequest("INSERT INTO spellbar (character_id) VALUES (?)", "Create character spellbar") {
+	private static SQLRequest spellbar = new SQLRequest("INSERT INTO spellbar (character_id) VALUES (?)", "Create character spellbar", SQLRequestPriority.HIGH) {
 		@Override
 		public void gatherData() {
 			this.statement.clear();
@@ -120,13 +121,13 @@ public class CommandCreateCharacter extends Command {
 			}
 			SQLDatas datas = new SQLDatas(characterId);
 			insert_bag.addDatas(datas);
-			Server.executeLowPrioritySQL(insert_bag);
+			Server.executeSQLRequest(insert_bag);
 			character_containers.addDatas(datas);
-			Server.executeLowPrioritySQL(character_containers);
+			Server.executeSQLRequest(character_containers);
 			character_stuff.addDatas(datas);
-			Server.executeLowPrioritySQL(character_stuff);
+			Server.executeSQLRequest(character_stuff);
 			spellbar.addDatas(datas);
-			Server.executeLowPrioritySQL(spellbar);
+			Server.executeSQLRequest(spellbar);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

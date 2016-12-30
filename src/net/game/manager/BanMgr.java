@@ -6,6 +6,7 @@ import jdo.JDOStatement;
 import net.Server;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
+import net.thread.sql.SQLRequestPriority;
 
 public class BanMgr {
 
@@ -13,7 +14,7 @@ public class BanMgr {
 	private static JDOStatement removeExpiredBanAccount;
 	private static JDOStatement selectAllBanCharacter;
 	private static JDOStatement removeExpiredBanCharacter;
-	private final static SQLRequest banAccount = new SQLRequest("INSERT INTO ban_account (id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban account") {
+	private final static SQLRequest banAccount = new SQLRequest("INSERT INTO ban_account (id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban account", SQLRequestPriority.HIGH) {
 		
 		@Override
 		public void gatherData() {
@@ -32,7 +33,7 @@ public class BanMgr {
 			}
 		}
 	};
-	private final static SQLRequest banCharacter = new SQLRequest("INSERT INTO character_banned (character_id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban character") {
+	private final static SQLRequest banCharacter = new SQLRequest("INSERT INTO character_banned (character_id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban character", SQLRequestPriority.HIGH) {
 		
 		@Override
 		public void gatherData() {
@@ -51,7 +52,7 @@ public class BanMgr {
 			}
 		}
 	};
-	private final static SQLRequest banIPAdress = new SQLRequest("INSERT INTO ip_banned (ip_adress, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban IP adress") {
+	private final static SQLRequest banIPAdress = new SQLRequest("INSERT INTO ip_banned (ip_adress, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban IP adress", SQLRequestPriority.HIGH) {
 		
 		@Override
 		public void gatherData() {
@@ -117,16 +118,16 @@ public class BanMgr {
 	
 	public static void banAccount(int account_id, long ban_date, long unban_date, String banned_by, String ban_reason) {
 		banAccount.addDatas(new SQLDatas(account_id, ban_date, unban_date, banned_by, ban_reason));
-		Server.executeHighPrioritySQL(banAccount);
+		Server.executeSQLRequest(banAccount);
 	}
 	
 	public static void banCharacter(int character_id, long ban_date, long unban_date, String banned_by, String ban_reason) {
 		banCharacter.addDatas(new SQLDatas(character_id, ban_date, unban_date, banned_by, ban_reason));
-		Server.executeHighPrioritySQL(banCharacter);
+		Server.executeSQLRequest(banCharacter);
 	}
 
 	public static void banIPAdress(String ip_adress, long ban_date, long unban_date, String banned_by, String ban_reason) {
 		banIPAdress.addDatas(new SQLDatas(ban_date, unban_date, ip_adress, banned_by, ban_reason));
-		Server.executeHighPrioritySQL(banIPAdress);
+		Server.executeSQLRequest(banIPAdress);
 	}
 }

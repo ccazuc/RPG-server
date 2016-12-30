@@ -396,40 +396,42 @@ public class CommandGuild extends Command {
 	}
 	
 	public static void notifyOnlinePlayer(Player player) {
-		if(player.getGuild() != null) {
-			int i = 0;
-			while(i < player.getGuild().getMemberList().size()) {
-				GuildMember member = player.getGuild().getMemberList().get(i);
-				if(Server.getInGameCharacter(member.getId()) != null) {
-					Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
-					connection.startPacket();
-					connection.writeShort(PacketID.GUILD);
-					connection.writeShort(PacketID.GUILD_ONLINE_PLAYER);
-					connection.writeInt(player.getCharacterId());
-					connection.endPacket();
-					connection.send();
-				}
-				i++;
+		if(player.getGuild() == null) {
+			return;
+		}
+		int i = 0;
+		while(i < player.getGuild().getMemberList().size()) {
+			GuildMember member = player.getGuild().getMemberList().get(i);
+			if(Server.getInGameCharacter(member.getId()) != null) {
+				Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
+				connection.startPacket();
+				connection.writeShort(PacketID.GUILD);
+				connection.writeShort(PacketID.GUILD_ONLINE_PLAYER);
+				connection.writeInt(player.getCharacterId());
+				connection.endPacket();
+				connection.send();
 			}
+			i++;
 		}
 	}
 	
 	public static void notifyOfflinePlayer(Player player) {
-		if(player.getGuild() != null) {
-			int i = 0;
-			while(i < player.getGuild().getMemberList().size()) {
-				GuildMember member = player.getGuild().getMemberList().get(i);
-				if(Server.getInGameCharacter(member.getId()) != null && member.getId() != player.getCharacterId()) {
-					Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
-					connection.startPacket();
-					connection.writeShort(PacketID.GUILD);
-					connection.writeShort(PacketID.GUILD_OFFLINE_PLAYER);
-					connection.writeInt(player.getCharacterId());
-					connection.endPacket();
-					connection.send();
-				}
-				i++;
+		if(player.getGuild() == null) {
+			return;
+		}
+		int i = 0;
+		while(i < player.getGuild().getMemberList().size()) {
+			GuildMember member = player.getGuild().getMemberList().get(i);
+			if(Server.getInGameCharacter(member.getId()) != null && member.getId() != player.getCharacterId()) {
+				Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
+				connection.startPacket();
+				connection.writeShort(PacketID.GUILD);
+				connection.writeShort(PacketID.GUILD_OFFLINE_PLAYER);
+				connection.writeInt(player.getCharacterId());
+				connection.endPacket();
+				connection.send();
 			}
+			i++;
 		}
 	}
 	
@@ -559,7 +561,7 @@ public class CommandGuild extends Command {
 				i++;
 			}
 		}
-		System.out.println("Guild send length "+connection.rBufferPosition());
+		System.out.println("Guild send length "+connection.wBufferPosition());
 		connection.endPacket();
 		connection.send();
 	}

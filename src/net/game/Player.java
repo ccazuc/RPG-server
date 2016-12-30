@@ -41,7 +41,6 @@ public class Player extends Unit {
 	//private ProfessionManager professionManager = new ProfessionManager();
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private SpellBarManager spellBarManager = new SpellBarManager();
-	private GuildMgr guildManager = new GuildMgr(this);
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
 	private ItemManager itemManager = new ItemManager();
 	private HashMap<Integer, Spell> spellUnlocked;
@@ -221,21 +220,11 @@ public class Player extends Unit {
 	}
 	
 	public void loadGuild() {
-		try {
-			this.guildManager.loadGuild();
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
+		GuildMgr.loadGuild(this);
 	}
 	
 	public void loadBagItemSQL() {
-		try {
-			this.itemManager.getBagItems(this);
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
+		ItemManager.getBagItems(this);
 	}
 	
 	public void setBagItemSQL() {
@@ -243,12 +232,7 @@ public class Player extends Unit {
 	}
 	
 	public void loadEquippedBagSQL() {
-		try {
-			this.itemManager.getEquippedBags(this);
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
+		ItemManager.getEquippedBags(this);
 	}
 	
 	public void setEquippedBagSQL() {
@@ -261,12 +245,7 @@ public class Player extends Unit {
 	}
 	
 	public void loadEquippedItemSQL() {
-		try {
-			this.itemManager.getEquippedItems(this);
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
+		ItemManager.getEquippedItems(this);
 	}
 	
 	public void setEquippedItemSQL() {
@@ -279,21 +258,11 @@ public class Player extends Unit {
 	}
 	
 	public void loadCharacterInfoSQL() {
-		try {
-			CharacterMgr.loadCharacterInfo(this);
-		} 
-		catch (SQLException e) {
-			e.printStackTrace();
-		}
+		CharacterMgr.loadCharacterInfo(this);
 	}
 	
 	public void loadFriendList() {
-		try {
-			CharacterMgr.loadFriendList(this);
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
+		CharacterMgr.loadFriendList(this);
 	}
 	
 	public void loadSpellUnlocked() {
@@ -316,15 +285,16 @@ public class Player extends Unit {
 	}
 	
 	public void notifyFriendOnline() {
+		if(!FriendMgr.containsKey(this.characterId)) {
+			return;
+		}
 		int i = 0;
-		if(FriendMgr.containsKey(this.characterId)) {
-			int length = FriendMgr.getFriendMap().get(this.characterId).size();
-			while(i < length) {
-				if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.characterId).get(i))) {
-					CommandFriend.notifyFriendOnline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.characterId).get(i)), this);
-				}
-				i++;
+		int length = FriendMgr.getFriendMap().get(this.characterId).size();
+		while(i < length) {
+			if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.characterId).get(i))) {
+				CommandFriend.notifyFriendOnline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.characterId).get(i)), this);
 			}
+			i++;
 		}
 	}
 	

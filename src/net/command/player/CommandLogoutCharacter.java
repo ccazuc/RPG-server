@@ -9,10 +9,11 @@ import net.game.log.Log;
 import net.game.manager.FriendMgr;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
+import net.thread.sql.SQLRequestPriority;
 
 public class CommandLogoutCharacter extends Command {
 	
-	private static SQLRequest setOffline = new SQLRequest("UPDATE `character` SET online = 0 WHERE character_id = ?", "Set offline") {
+	private static SQLRequest setOffline = new SQLRequest("UPDATE `character` SET online = 0 WHERE character_id = ?", "Set offline", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() {
@@ -52,7 +53,7 @@ public class CommandLogoutCharacter extends Command {
 		if(player.getCharacterId() != 0) {
 			//setOffline.setId(player.getCharacterId());
 			setOffline.addDatas(new SQLDatas(player.getCharacterId()));
-			Server.executeLowPrioritySQL(setOffline);
+			Server.executeSQLRequest(setOffline);
 		}
 	}
 }

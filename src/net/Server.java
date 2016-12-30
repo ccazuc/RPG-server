@@ -34,13 +34,15 @@ import net.thread.chatcommand.Who;
 import net.thread.log.LogRunnable;
 import net.thread.socket.SocketRunnable;
 import net.thread.sql.SQLRequest;
+import net.thread.sql.SQLRequestPriority;
 import net.thread.sql.SQLRunnable;
 import net.thread.sql.SQLTask;
 
 public class Server {
 	
 	private static JDO jdo;
-	private static JDO asyncJdo;
+	private static JDO asyncLowPriorityJdo;
+	private static JDO asyncHighPriorityJdo;
 	private static ServerSocketChannel serverSocketChannel;
 	//private static SocketChannel clientSocket;
 	private static Map<Integer, Player> loggedPlayerList = Collections.synchronizedMap(new HashMap<Integer, Player>());
@@ -81,7 +83,8 @@ public class Server {
 		long time = System.currentTimeMillis();
 		float delta;
 		jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
-		asyncJdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
+		asyncLowPriorityJdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
+		asyncHighPriorityJdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
 		BanMgr.removeExpiredBanAccount();
 		BanMgr.removeExpiredBanCharacter();
 		CharacterMgr.checkOnlinePlayers();
@@ -245,7 +248,9 @@ public class Server {
 	}
 	
 	public static void addInGamePlayer(Player player) {
-		inGamePlayerList.put(player.getCharacterId(), player);
+		synchronized(inGamePlayerList) {
+			inGamePlayerList.put(player.getCharacterId(), player);
+		}
 	}
 	
 	public static void removeInGamePlayer(Player player) {
@@ -254,7 +259,9 @@ public class Server {
 	
 	public static void removeLoggedPlayer(Player player) {
 		if(player != null) {
-			loggedPlayerKickList.add(player.getAccountId());
+			synchronized(loggedPlayerKickList) {
+				loggedPlayerKickList.add(player.getAccountId());
+			}
 		}
 	}
 	
@@ -351,17 +358,26 @@ public class Server {
 		ConnectionManager.readAuthServer();
 	}
 	
-	public static void executeHighPrioritySQL(SQLRequest request) {
+	/*public static void executeHighPrioritySQL(SQLRequest request) {
 		highPrioritySQLRunnable.addRequest(request);
+	}*/
+	
+	public static void executeSQLRequest(SQLRequest request) {
+		if(request.getPriority() == SQLRequestPriority.HIGH) {
+			highPrioritySQLRunnable.addRequest(request);
+		}
+		else {
+			lowPrioritySQLRunnable.addRequest(request);
+		}
 	}
 	
 	public static void executeHighPrioritySQLTask(SQLTask task) {
 		highPrioritySQLRunnable.addTask(task);
 	}
 	
-	public static void executeLowPrioritySQL(SQLRequest request) {
+	/*public static void executeLowPrioritySQL(SQLRequest request) {
 		lowPrioritySQLRunnable.addRequest(request);
-	}
+	}*/
 	
 	public static void addNewWhoRequest(Who who) {
 		chatCommandRunnable.addWhoRequest(who);
@@ -391,8 +407,12 @@ public class Server {
 		return jdo;
 	}
 	
-	public static JDO getAsyncJDO() {
-		return asyncJdo;
+	public static JDO getAsyncLowPriorityJDO() {
+		return asyncLowPriorityJdo;
+	}
+	
+	public static JDO getAsyncHighPriorityJDO() {
+		return asyncHighPriorityJdo;
 	}
 	
 	public static int getRealmId() {

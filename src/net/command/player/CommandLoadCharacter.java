@@ -6,7 +6,6 @@ import net.connection.Connection;
 import net.game.Player;
 import net.game.log.Log;
 import net.game.manager.CharacterMgr;
-import net.game.manager.IgnoreMgr;
 
 public class CommandLoadCharacter extends Command {
 
