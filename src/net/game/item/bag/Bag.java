@@ -63,7 +63,38 @@ public class Bag extends Item implements Cloneable {
 	}
 	
 	public void setEquippedBag(int i, Container bag) {
-		this.equippedBag[i] = bag;
+		if(i < 0 || i >=this.equippedBag.length) {
+			return;
+		}
+		int length = this.bag.length;
+		Item[] tempBag = this.bag.clone();
+		if(this.equippedBag[i] != null) {
+			int tempBagSize = this.equippedBag[i].getSize();
+			this.equippedBag[i] = bag;
+			if(bag != null) {
+				if(tempBagSize >= this.equippedBag[i].getSize()) {
+					this.bag = new Item[length+(tempBagSize-this.equippedBag[i].getSize())];
+				}
+				else {
+					this.bag = new Item[length+(this.equippedBag[i].getSize()-tempBagSize)];
+				}
+			}
+			else {
+				this.bag = new Item[length-tempBagSize];
+			}
+		}
+		else {
+			this.equippedBag[i] = bag;
+			if(bag != null) {
+				this.bag = new Item[length+this.equippedBag[i].getSize()];
+			}
+		}
+		int j = 0;
+		while(j < tempBag.length && j < this.bag.length) {
+			this.bag[j] = tempBag[j];
+			j++;
+		}
+		System.out.println("Bag length : "+this.bag.length);
 	}
 	
 	public Container getEquippedBag(int i) {

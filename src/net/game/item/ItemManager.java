@@ -1,6 +1,7 @@
 package net.game.item;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
@@ -16,9 +17,11 @@ import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 
 public class ItemManager {
-	private static String getBagRequest;
+	
+	private static final HashMap<Integer, JDOStatement> getBagItemsMap = new HashMap<Integer, JDOStatement>();
+	//private static String getBagRequest;
 	private static String setBagRequest;
-	private static JDOStatement getBagItem;
+	//private static JDOStatement getBagItem;
 	private static JDOStatement setBagItem;
 	private static JDOStatement getEquippedBag;
 	private static JDOStatement setEquippedBag;
@@ -46,7 +49,7 @@ public class ItemManager {
 		setBagRequest = builderSetBagItemsRequest.toString();
 		x = 1;
 		i = 1;
-		StringBuilder builderGetBagItemsRequest = new StringBuilder();
+		/*StringBuilder builderGetBagItemsRequest = new StringBuilder();
 		while(i < 97) {
 			x = 1;
 			builderGetBagItemsRequest.append("slot"+Integer.toString(i)+", numberstack"+Integer.toString(i)+", ");
@@ -61,7 +64,7 @@ public class ItemManager {
 			}
 			i++;
 		}
-		getBagRequest = builderGetBagItemsRequest.toString();
+		getBagRequest = builderGetBagItemsRequest.toString();*/
 	}
 	
 	/*public void getBagItems(Player player) throws SQLException {
@@ -157,7 +160,7 @@ public class ItemManager {
 		int gem2Id;
 		int gem3Id;
 		try {
-			if(getBagItem == null) {
+			/*if(getBagItem == null) {
 				String request = "";
 				StringBuilder builder = new StringBuilder();
 				builder.append("SELECT ");
@@ -165,8 +168,16 @@ public class ItemManager {
 				builder.append("FROM bag WHERE character_id = ?");
 				request = builder.toString();
 				getBagItem = Server.getAsyncHighPriorityJDO().prepare(request);
+			}*/
+			JDOStatement getBagItem = null;
+			if(getBagItemsMap.containsKey(player.getBag().getBag().length)) {
+				getBagItem = getBagItemsMap.get(player.getBag().getBag().length);
 			}
-			i = 0;
+			else  {
+				getBagItem = prepareGetBagRequest(player.getBag().getBag().length);
+				getBagItemsMap.put(player.getBag().getBag().length, getBagItem);
+			}
+			i = 0; 
 			int numberBagItems = 0;
 			getBagItem.clear();
 			getBagItem.putInt(player.getCharacterId());
@@ -229,46 +240,40 @@ public class ItemManager {
 				i = 0;
 				connection.writeInt(numberBagItems);
 				while(i < player.getBag().getBag().length) {
-					if(player.getBag().getBag(i) != null) {
-						if(player.getBag().getBag(i).isContainer() || player.getBag().getBag(i).isGem()) {
-							connection.writeInt(i);
-							connection.writeInt(player.getBag().getBag(i).getId());
-							connection.writeByte(player.getBag().getBag(i).getItemType().getValue());
-						}
-						else if(player.getBag().getBag(i).isPotion()) {
-							connection.writeInt(i);
-							connection.writeInt(player.getBag().getBag(i).getId());
-							connection.writeByte(player.getBag().getBag(i).getItemType().getValue());
-							connection.writeInt(player.getBag().getBag(i).getAmount());
-						}
-						else if(player.getBag().getBag(i).isStuff() || player.getBag().getBag(i).isWeapon()) {
-							connection.writeInt(i);
-							connection.writeInt(player.getBag().getBag(i).getId());
-							connection.writeByte(player.getBag().getBag(i).getItemType().getValue());
-							if(((Stuff)player.getBag().getBag(i)).getEquippedGem(0) != null || ((Stuff)player.getBag().getBag(i)).getEquippedGem(1) != null || ((Stuff)player.getBag().getBag(i)).getEquippedGem(2) != null) {
-								connection.writeBoolean(true);
-								if(((Stuff)player.getBag().getBag(i)).getEquippedGem(0) != null) {
-									connection.writeInt(((Stuff)player.getBag().getBag(i)).getEquippedGem(0).getId());
+					if(player.getBag().getBag(i) == null) {
+						i++;
+						continue;
+					}
+					if(player.getBag().getBag(i).isContainer() || player.getBag().getBag(i).isGem()) {
+						connection.writeInt(i);
+						connection.writeInt(player.getBag().getBag(i).getId());
+						connection.writeByte(player.getBag().getBag(i).getItemType().getValue());
+					}
+					else if(player.getBag().getBag(i).isPotion()) {
+						connection.writeInt(i);
+						connection.writeInt(player.getBag().getBag(i).getId());
+						connection.writeByte(player.getBag().getBag(i).getItemType().getValue());
+						connection.writeInt(player.getBag().getBag(i).getAmount());
+					}
+					else if(player.getBag().getBag(i).isStuff() || player.getBag().getBag(i).isWeapon()) {
+						connection.writeInt(i);
+						connection.writeInt(player.getBag().getBag(i).getId());
+						connection.writeByte(player.getBag().getBag(i).getItemType().getValue());
+						if(((Stuff)player.getBag().getBag(i)).getEquippedGem(0) != null || ((Stuff)player.getBag().getBag(i)).getEquippedGem(1) != null || ((Stuff)player.getBag().getBag(i)).getEquippedGem(2) != null) {
+							connection.writeBoolean(true);
+							int j = 0;
+							while(j < 3) {
+								if(((Stuff)player.getBag().getBag(i)).getEquippedGem(j) != null) {
+									connection.writeInt(((Stuff)player.getBag().getBag(i)).getEquippedGem(j).getId());
 								}
 								else {
 									connection.writeInt(0);
 								}
-								if(((Stuff)player.getBag().getBag(i)).getEquippedGem(1) != null) {
-									connection.writeInt(((Stuff)player.getBag().getBag(i)).getEquippedGem(1).getId());
-								}
-								else {
-									connection.writeInt(0);
-								}
-								if(((Stuff)player.getBag().getBag(i)).getEquippedGem(2) != null) {
-									connection.writeInt(((Stuff)player.getBag().getBag(i)).getEquippedGem(2).getId());
-								}
-								else {
-									connection.writeInt(0);
-								}
+								j++;
 							}
-							else {
-								connection.writeBoolean(false);
-							}
+						}
+						else {
+							connection.writeBoolean(false);
 						}
 					}
 					i++;
@@ -749,6 +754,33 @@ public class ItemManager {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static JDOStatement prepareGetBagRequest(int length) throws SQLException {
+		long timer = System.nanoTime();
+		StringBuilder builder = new StringBuilder();
+		builder.append("SELECT ");
+		int i = 1;
+		int x = 1;
+		length++;
+		while(i < length) {
+			x = 1;
+			builder.append("slot"+i+", numberstack"+i+", ");
+			while(x <= 3) {
+				if(i == length-1 && x == 3) {
+					builder.append("slot"+i+"_gem"+x+" ");
+				}
+				else {
+					builder.append("slot"+i+"_gem"+x+", ");
+				}
+				x++;
+			}
+			i++;
+		}
+		builder.append("FROM bag WHERE character_id = ?");
+		JDOStatement result = Server.getAsyncHighPriorityJDO().prepare(builder.toString());
+		System.out.println("Get bag item request builds took "+(System.nanoTime()-timer)/1000+" µs.");
+		return result;
 	}
 	
 	private static void setGems(Stuff stuff, int gem1Id, int gem2Id, int gem3Id) {
