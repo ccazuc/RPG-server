@@ -24,7 +24,8 @@ public class CommandLoadCharacter extends Command {
 			Log.writePlayerLog(player, "tried to connect on someone else's character (id = "+id+')');
 			return;
 		}
-		player.setOnline();
+		CharacterMgr.fullyLoadCharacter(player, id);
+		/*player.setOnline();
 		player.setCharacterId(id);
 		player.initTable();
 		player.loadCharacterInfoSQL();
@@ -40,13 +41,13 @@ public class CommandLoadCharacter extends Command {
 		CommandIgnore.ignoreInit(player.getConnection(), player);
 		player.loadGuild();
 		if(player.getGuild() != null) {
-			CommandGuild.initGuildWhenLogin(connection, player);
+			CommandGuild.initGuildWhenLogin(player);
 			player.getGuild().getMember(player.getCharacterId()).setOnlineStatus(true);
 			CommandGuild.notifyOnlinePlayer(player);
 		}
 		//this.player.loadSpellUnlocked();
 		Server.addInGamePlayer(player);
-		Server.removeLoggedPlayer(player);
+		Server.removeLoggedPlayer(player);*/
 	}
 	
 	@Override

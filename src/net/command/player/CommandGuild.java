@@ -105,7 +105,7 @@ public class CommandGuild extends Command {
 			}
 			player.setGuild(GuildMgr.getGuild(player.getGuildRequest()));
 			player.getGuild().addMember(new GuildMember(player.getCharacterId(), player.getName(), player.getLevel(), player.getGuild().getRankList().get(player.getGuild().getRankList().size()-1), true, "", "", player.getClasse(), System.currentTimeMillis()));
-			initGuildWhenLogin(connection, player);
+			initGuildWhenLogin(player);
 			player.setGuildRequest(0);
 		}
 		else if(packetId == PacketID.GUILD_DECLINE_REQUEST) {
@@ -503,63 +503,65 @@ public class CommandGuild extends Command {
 		}
 	}
 	
-	public static void initGuildWhenLogin(Connection connection, Player player) {
-		if(player.getGuild() != null) {
-			int i = 0;
-			connection.startPacket();
-			connection.writeShort(PacketID.GUILD);
-			connection.writeShort(PacketID.GUILD_INIT);
-			connection.writeInt(player.getGuild().getId());
-			connection.writeInt(player.getGuild().getLeaderId());
-			connection.writeString(player.getGuild().getName());
-			connection.writeString(player.getGuild().getInformation());
-			connection.writeString(player.getGuild().getMotd());
-			connection.writeInt(player.getGuild().getRankList().size());
-			while(i < player.getGuild().getRankList().size()) {
-				GuildRank rank = player.getGuild().getRankList().get(i);
-				connection.writeInt(rank.getOrder());
-				connection.writeString(rank.getName());
-				connection.writeInt(rank.getPermission());
+	public static void initGuildWhenLogin(Player player) {
+		if(player.getGuild() == null) {
+			return;
+		}
+		Connection connection = player.getConnection();
+		int i = 0;
+		connection.startPacket();
+		connection.writeShort(PacketID.GUILD);
+		connection.writeShort(PacketID.GUILD_INIT);
+		connection.writeInt(player.getGuild().getId());
+		connection.writeInt(player.getGuild().getLeaderId());
+		connection.writeString(player.getGuild().getName());
+		connection.writeString(player.getGuild().getInformation());
+		connection.writeString(player.getGuild().getMotd());
+		connection.writeInt(player.getGuild().getRankList().size());
+		while(i < player.getGuild().getRankList().size()) {
+			GuildRank rank = player.getGuild().getRankList().get(i);
+			connection.writeInt(rank.getOrder());
+			connection.writeString(rank.getName());
+			connection.writeInt(rank.getPermission());
+			i++;
+		}
+		i = 0;
+		connection.writeInt(player.getGuild().getMemberList().size());
+		connection.writeBoolean(player.getGuild().getMember(player.getCharacterId()).getRank().canSeeOfficerNote());
+		if(player.getGuild().getMember(player.getCharacterId()).getRank().canSeeOfficerNote()) {
+			while(i < player.getGuild().getMemberList().size()) {
+				GuildMember member = player.getGuild().getMemberList().get(i);
+				connection.writeInt(member.getId());
+				connection.writeInt(member.getLevel());
+				connection.writeString(player.getGuild().getMemberList().get(i).getName());
+				//connection.writeChar(member.getClassType().getValue());
+				connection.writeByte(ClassType.GUERRIER.getValue());
+				connection.writeString(member.getNote());
+				connection.writeString(member.getOfficerNote());
+				connection.writeInt(member.getRank().getOrder());
+				connection.writeBoolean(Server.getInGamePlayerList().containsKey(member.getId()));
+				connection.writeLong(member.getLastLoginTimer());
 				i++;
 			}
-			i = 0;
-			connection.writeInt(player.getGuild().getMemberList().size());
-			connection.writeBoolean(player.getGuild().getMember(player.getCharacterId()).getRank().canSeeOfficerNote());
-			if(player.getGuild().getMember(player.getCharacterId()).getRank().canSeeOfficerNote()) {
-				while(i < player.getGuild().getMemberList().size()) {
-					GuildMember member = player.getGuild().getMemberList().get(i);
-					connection.writeInt(member.getId());
-					connection.writeInt(member.getLevel());
-					connection.writeString(player.getGuild().getMemberList().get(i).getName());
-					//connection.writeChar(member.getClassType().getValue());
-					connection.writeByte(ClassType.GUERRIER.getValue());
-					connection.writeString(member.getNote());
-					connection.writeString(member.getOfficerNote());
-					connection.writeInt(member.getRank().getOrder());
-					connection.writeBoolean(Server.getInGamePlayerList().containsKey(member.getId()));
-					connection.writeLong(member.getLastLoginTimer());
-					i++;
-				}
-			}
-			else {
-				while(i < player.getGuild().getMemberList().size()) {
-					GuildMember member = player.getGuild().getMemberList().get(i);
-					connection.writeInt(member.getId());
-					connection.writeInt(member.getLevel());
-					connection.writeString(member.getName());
-					//connection.writeChar(member.getClassType().getValue());
-					connection.writeByte(ClassType.GUERRIER.getValue());
-					connection.writeString(member.getNote());
-					connection.writeInt(member.getRank().getOrder());
-					connection.writeBoolean(Server.getInGamePlayerList().containsKey(member.getId()));
-					connection.writeLong(member.getLastLoginTimer());
-					i++;
-				}
-			}
-			System.out.println("Guild send length "+connection.rBufferPosition());
-			connection.endPacket();
-			connection.send();
 		}
+		else {
+			while(i < player.getGuild().getMemberList().size()) {
+				GuildMember member = player.getGuild().getMemberList().get(i);
+				connection.writeInt(member.getId());
+				connection.writeInt(member.getLevel());
+				connection.writeString(member.getName());
+				//connection.writeChar(member.getClassType().getValue());
+				connection.writeByte(ClassType.GUERRIER.getValue());
+				connection.writeString(member.getNote());
+				connection.writeInt(member.getRank().getOrder());
+				connection.writeBoolean(Server.getInGamePlayerList().containsKey(member.getId()));
+				connection.writeLong(member.getLastLoginTimer());
+				i++;
+			}
+		}
+		System.out.println("Guild send length "+connection.rBufferPosition());
+		connection.endPacket();
+		connection.send();
 	}
 	
 	private static boolean isInAGuild(Player player) {

@@ -1,5 +1,7 @@
 package net.thread.sql;
 
+import net.game.Player;
+
 public class SQLDatas {
 
 	protected int iValue1;
@@ -11,6 +13,7 @@ public class SQLDatas {
 	protected String stringValue1;
 	protected String stringValue2;
 	protected String stringValue3;
+	protected Player player;
 	
 	public SQLDatas(int iValue1) {
 		this.iValue1 = iValue1;
@@ -29,6 +32,11 @@ public class SQLDatas {
 	public SQLDatas(int iValue1, byte bValue1) {
 		this.iValue1 = iValue1;
 		this.bValue1 = bValue1;
+	}
+	
+	public SQLDatas(Player player, int iValue1) {
+		this.player = player;
+		this.iValue1 = iValue1;
 	}
 	
 	public SQLDatas(int iValue1, String stringValue1) {
@@ -112,5 +120,9 @@ public class SQLDatas {
 	
 	public String getStringValue3() {
 		return this.stringValue3;
+	}
+	
+	public Player getPlayer() {
+		return this.player;
 	}
 }

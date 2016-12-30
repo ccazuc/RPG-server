@@ -40,7 +40,6 @@ public class Player extends Unit {
 	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
 	//private ProfessionManager professionManager = new ProfessionManager();
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
-	private CharacterMgr characterManager = new CharacterMgr(this);
 	private SpellBarManager spellBarManager = new SpellBarManager();
 	private GuildMgr guildManager = new GuildMgr(this);
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
@@ -281,7 +280,7 @@ public class Player extends Unit {
 	
 	public void loadCharacterInfoSQL() {
 		try {
-			this.characterManager.loadCharacterInfo();
+			CharacterMgr.loadCharacterInfo(this);
 		} 
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -290,7 +289,7 @@ public class Player extends Unit {
 	
 	public void loadFriendList() {
 		try {
-			this.characterManager.loadFriendList();
+			CharacterMgr.loadFriendList(this);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -299,7 +298,7 @@ public class Player extends Unit {
 	
 	public void loadSpellUnlocked() {
 		try {
-			this.characterManager.loadSpellUnlocked();
+			CharacterMgr.loadSpellUnlocked(this);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -307,7 +306,7 @@ public class Player extends Unit {
 	}
 	
 	public void updateLastLoginTimer() {
-		this.characterManager.updateLastLoginTimer();
+		CharacterMgr.updateLastLoginTimer(this);
 	}
 	
 	public void event() {

@@ -35,6 +35,7 @@ import net.thread.log.LogRunnable;
 import net.thread.socket.SocketRunnable;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRunnable;
+import net.thread.sql.SQLTask;
 
 public class Server {
 	
@@ -352,6 +353,10 @@ public class Server {
 	
 	public static void executeHighPrioritySQL(SQLRequest request) {
 		highPrioritySQLRunnable.addRequest(request);
+	}
+	
+	public static void executeHighPrioritySQLTask(SQLTask task) {
+		highPrioritySQLRunnable.addTask(task);
 	}
 	
 	public static void executeLowPrioritySQL(SQLRequest request) {

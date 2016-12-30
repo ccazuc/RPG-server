@@ -8,6 +8,7 @@ import net.game.manager.DebugMgr;
 
 public class SQLRunnable implements Runnable {
 	
+	private List<SQLTask> SQLTaskList = new ArrayList<SQLTask>();
 	private List<SQLRequest> SQLList = new ArrayList<SQLRequest>();
 	private boolean running = true;
 	private boolean shouldClose;
@@ -16,6 +17,7 @@ public class SQLRunnable implements Runnable {
 	
 	public SQLRunnable(int loop_timer) {
 		this.SQLList = Collections.synchronizedList(this.SQLList);
+		this.SQLTaskList = Collections.synchronizedList(this.SQLTaskList);
 		this.LOOP_TIMER = loop_timer;
 	}
 	
@@ -26,6 +28,19 @@ public class SQLRunnable implements Runnable {
 		long delta;
 		while(this.running) {
 			time = System.currentTimeMillis();
+			synchronized(this.SQLTaskList) {
+				while(this.SQLTaskList.size() > 0) {
+					if(DebugMgr.getSQLRequestTimer()) {
+						long timer = System.nanoTime();
+						this.SQLTaskList.get(0).execute();
+						System.out.println("[SQL TASK] "+this.SQLTaskList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");
+					}
+					else {
+						this.SQLTaskList.get(0).execute();
+					}
+					this.SQLTaskList.remove(0);
+				}
+			}
 			synchronized(this.SQLList) {
 				while(this.SQLList.size() > 0) {
 					if(this.SQLList.get(0).debugActive || DebugMgr.getSQLRequestTimer()) {
@@ -62,6 +77,12 @@ public class SQLRunnable implements Runnable {
 	public void addRequest(SQLRequest request) {
 		synchronized(this.SQLList) {
 			this.SQLList.add(request);
+		}
+	}
+	
+	public void addTask(SQLTask task) {
+		synchronized(this.SQLTaskList) {
+			this.SQLTaskList.add(task);
 		}
 	}
 }
