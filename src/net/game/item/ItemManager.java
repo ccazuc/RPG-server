@@ -34,13 +34,13 @@ public class ItemManager {
 		StringBuilder builderSetBagItemsRequest = new StringBuilder();
 		while(i < 97) {
 			x = 1;
-			builderSetBagItemsRequest.append("slot"+Integer.toString(i)+" = ?, numberstack"+Integer.toString(i)+" = ?, ");
+			builderSetBagItemsRequest.append("slot"+i+" = ?, numberstack"+i+" = ?, ");
 			while(x <= 3) {
 				if(i == 96 && x == 3) {
-					builderSetBagItemsRequest.append("slot"+Integer.toString(i)+"_gem"+Integer.toString(x)+" = ? ");
+					builderSetBagItemsRequest.append("slot"+i+"_gem"+x+" = ? ");
 				}
 				else {
-					builderSetBagItemsRequest.append("slot"+Integer.toString(i)+"_gem"+Integer.toString(x)+" = ?, ");
+					builderSetBagItemsRequest.append("slot"+i+"_gem"+x+" = ?, ");
 				}
 				x++;
 			}

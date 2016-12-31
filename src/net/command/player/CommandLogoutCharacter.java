@@ -36,17 +36,7 @@ public class CommandLogoutCharacter extends Command {
 			return;
 		}
 		setPlayerOfflineInDB(player);
-		player.setOffline();
-		player.notifyFriendOffline();
-		player.setGuildRequest(0);
-		if(player.getGuild() != null) {
-			CommandGuild.notifyOfflinePlayer(player);
-		}
-		Server.addLoggedPlayer(player);
-		Server.removeInGamePlayer(player);
-		FriendMgr.getFriendMap().remove(player.getCharacterId());
-		player.resetDatas();
-		CommandTrade.closeTrade(player);
+		player.logoutCharacter();
 	}
 	
 	public static void setPlayerOfflineInDB(Player player) {

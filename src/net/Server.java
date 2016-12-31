@@ -133,7 +133,7 @@ public class Server {
 				readOnlinePlayers();
 				read();
 				checkKeyTimer();
-				delta = (System.currentTimeMillis()-LOOP_TICK_TIMER);
+				delta = System.currentTimeMillis()-LOOP_TICK_TIMER;
 				if(delta < LOOP_TIMER) {
 					Thread.sleep((LOOP_TIMER-(long)delta));
 				}
@@ -165,6 +165,9 @@ public class Server {
 	}
 	
 	private static void checkKeyTimer() {
+		if(keyMap.size() == 0) {
+			return;
+		}
 		for(Key key : keyMap.values()) {
 			if(LOOP_TICK_TIMER-key.getTimer() >= KEY_TIMEOUT_TIMER) {
 				removeKeyList.add(key.getValue());
@@ -209,8 +212,8 @@ public class Server {
 	}
 	
 	public static Player getNonLoggedPlayer(int id) {
-		int i = 0;
 		synchronized(nonLoggedPlayerList) {
+			int i = 0;
 			while(i < nonLoggedPlayerList.size()) {
 				if(nonLoggedPlayerList.get(i).getAccountId() == id) {
 					return nonLoggedPlayerList.get(i);
@@ -263,17 +266,6 @@ public class Server {
 				loggedPlayerKickList.add(player.getAccountId());
 			}
 		}
-	}
-	
-	public static Player getCharacter(int id) {
-		synchronized(loggedPlayerList) {
-			for(Player player : loggedPlayerList.values()) {
-				if(player.getCharacterId() == id) {
-					return player;
-				}
-			}
-		}
-		return null;
 	}
 	
 	public static Player getInGameCharacter(int id) {

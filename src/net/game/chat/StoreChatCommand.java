@@ -1129,7 +1129,7 @@ public class StoreChatCommand {
 					}
 					Player playerToAdd = null;
 					if(Server.isInteger(value[3])) {
-						playerToAdd = Server.getCharacter(Integer.parseInt(value[3]));
+						playerToAdd = Server.getInGameCharacter(Integer.parseInt(value[3]));
 					}
 					else {
 						playerToAdd = Server.getCharacter(value[3]);

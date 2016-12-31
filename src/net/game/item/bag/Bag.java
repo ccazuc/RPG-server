@@ -94,7 +94,6 @@ public class Bag extends Item implements Cloneable {
 			this.bag[j] = tempBag[j];
 			j++;
 		}
-		System.out.println("Bag length : "+this.bag.length);
 	}
 	
 	public Container getEquippedBag(int i) {

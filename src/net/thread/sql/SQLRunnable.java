@@ -7,16 +7,20 @@ import java.util.List;
 import net.game.manager.DebugMgr;
 
 public class SQLRunnable implements Runnable {
-	
+
+	private List<SQLTask> SQLTaskQueue = new ArrayList<SQLTask>();
 	private List<SQLTask> SQLTaskList = new ArrayList<SQLTask>();
-	private List<SQLRequest> SQLList = new ArrayList<SQLRequest>();
+	private List<SQLRequest> SQLRequestList = new ArrayList<SQLRequest>();
+	private List<SQLRequest> SQLRequestQueue = new ArrayList<SQLRequest>();
 	private boolean running = true;
 	private boolean shouldClose;
 	
 	private final int LOOP_TIMER;
 	
 	public SQLRunnable(int loop_timer) {
-		this.SQLList = Collections.synchronizedList(this.SQLList);
+		this.SQLTaskQueue = Collections.synchronizedList(this.SQLTaskQueue);
+		this.SQLRequestQueue = Collections.synchronizedList(this.SQLRequestQueue);
+		this.SQLRequestList = Collections.synchronizedList(this.SQLRequestList);
 		this.SQLTaskList = Collections.synchronizedList(this.SQLTaskList);
 		this.LOOP_TIMER = loop_timer;
 	}
@@ -28,6 +32,18 @@ public class SQLRunnable implements Runnable {
 		long delta;
 		while(this.running) {
 			time = System.currentTimeMillis();
+			synchronized(this.SQLTaskQueue) {
+				while(this.SQLTaskQueue.size() > 0) {
+					this.SQLTaskList.add(this.SQLTaskQueue.get(0));
+					this.SQLTaskQueue.remove(0);
+				}
+			}
+			synchronized(this.SQLRequestQueue) {
+				while(this.SQLRequestQueue.size() > 0) {
+					this.SQLRequestList.add(this.SQLRequestQueue.get(0));
+					this.SQLRequestQueue.remove(0);
+				}
+			}
 			synchronized(this.SQLTaskList) {
 				while(this.SQLTaskList.size() > 0) {
 					if(DebugMgr.getSQLRequestTimer()) {
@@ -41,17 +57,17 @@ public class SQLRunnable implements Runnable {
 					this.SQLTaskList.remove(0);
 				}
 			}
-			synchronized(this.SQLList) {
-				while(this.SQLList.size() > 0) {
-					if(this.SQLList.get(0).debugActive || DebugMgr.getSQLRequestTimer()) {
+			synchronized(this.SQLRequestList) {
+				while(this.SQLRequestList.size() > 0) {
+					if(this.SQLRequestList.get(0).debugActive || DebugMgr.getSQLRequestTimer()) {
 						long timer = System.nanoTime();
-						this.SQLList.get(0).execute();
-						System.out.println("[SQL REQUEST] "+this.SQLList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");
+						this.SQLRequestList.get(0).execute();
+						System.out.println("[SQL REQUEST] "+this.SQLRequestList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");
 					}
 					else {
-						this.SQLList.get(0).execute();
+						this.SQLRequestList.get(0).execute();
 					}
-					this.SQLList.remove(0);
+					this.SQLRequestList.remove(0);
 				}
 			}
 			delta = System.currentTimeMillis()-time;
@@ -63,7 +79,7 @@ public class SQLRunnable implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			if(this.shouldClose && this.SQLList.size() == 0) {
+			if(this.shouldClose && this.SQLRequestQueue.size() == 0 && this.SQLTaskQueue.size() == 0) {
 				this.running = false;
 			}
 		}
@@ -75,14 +91,14 @@ public class SQLRunnable implements Runnable {
 	}
 	 
 	public void addRequest(SQLRequest request) {
-		synchronized(this.SQLList) {
-			this.SQLList.add(request);
+		synchronized(this.SQLRequestQueue) {
+			this.SQLRequestQueue.add(request);
 		}
 	}
 	
 	public void addTask(SQLTask task) {
-		synchronized(this.SQLTaskList) {
-			this.SQLTaskList.add(task);
+		synchronized(this.SQLTaskQueue) {
+			this.SQLTaskQueue.add(task);
 		}
 	}
 }

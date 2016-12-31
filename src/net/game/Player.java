@@ -355,9 +355,28 @@ public class Player extends Unit {
 		return -1;
 	}
 	
+	public void logoutCharacter() {
+		setOffline();
+		notifyFriendOffline();
+		setGuildRequest(0);
+		if(this.guild != null) {
+			CommandGuild.notifyOfflinePlayer(this);
+		}
+		Server.addLoggedPlayer(this);
+		Server.removeInGamePlayer(this);
+		FriendMgr.getFriendMap().remove(this.characterId);
+		resetDatas();
+		if(this.trade != null || this.playerTrade != null) {
+			CommandTrade.closeTrade(this);
+		}
+		if(this.party != null || this.playerParty != null) {
+			CommandParty.leaveParty(this);
+		}
+	}
+	
 	public void close() {
 		//long timer = System.nanoTime();
-		if(Server.getInGamePlayerList().containsKey(this.characterId)) {
+		if(this.isOnline) {
 			notifyFriendOffline();
 			if(this.guild != null) {
 				CommandGuild.notifyOfflinePlayer(this);
