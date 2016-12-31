@@ -19,7 +19,6 @@ import net.game.guild.Guild;
 import net.game.guild.GuildMgr;
 import net.game.item.DragItem;
 import net.game.item.Item;
-import net.game.item.ItemManager;
 import net.game.item.bag.Bag;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
@@ -29,6 +28,7 @@ import net.game.item.stuff.Stuff;
 import net.game.item.weapon.WeaponType;
 import net.game.manager.CharacterMgr;
 import net.game.manager.FriendMgr;
+import net.game.manager.ItemMgr;
 import net.game.profession.Profession;
 import net.game.shortcut.Shortcut;
 import net.game.spell.Spell;
@@ -42,7 +42,7 @@ public class Player extends Unit {
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private SpellBarManager spellBarManager = new SpellBarManager();
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
-	private ItemManager itemManager = new ItemManager();
+	private ItemMgr itemManager = new ItemMgr();
 	private HashMap<Integer, Spell> spellUnlocked;
 	private ArrayList<Integer> playerWhoAreFriend;
 	private ConnectionManager connectionManager;
@@ -224,7 +224,7 @@ public class Player extends Unit {
 	}
 	
 	public void loadBagItemSQL() {
-		ItemManager.getBagItems(this);
+		ItemMgr.getBagItems(this);
 	}
 	
 	public void setBagItemSQL() {
@@ -232,7 +232,7 @@ public class Player extends Unit {
 	}
 	
 	public void loadEquippedBagSQL() {
-		ItemManager.getEquippedBags(this);
+		ItemMgr.getEquippedBags(this);
 	}
 	
 	public void setEquippedBagSQL() {
@@ -245,7 +245,7 @@ public class Player extends Unit {
 	}
 	
 	public void loadEquippedItemSQL() {
-		ItemManager.getEquippedItems(this);
+		ItemMgr.getEquippedItems(this);
 	}
 	
 	public void setEquippedItemSQL() {
