@@ -39,14 +39,16 @@ public class Buffer {
 	}
 	
 	protected final void send() throws IOException {
-		if(this.socket.isOpen()) {
-			if(this.written) {
-				send(this.buffer);
-				this.written = false;
+		synchronized(this) {
+			if(this.socket.isOpen()) {
+				if(this.written) {
+					send(this.buffer);
+					this.written = false;
+				}
 			}
-		}
-		else {
-			throw new ClosedChannelException();
+			else {
+				throw new ClosedChannelException();
+			}
 		}
 	}
 

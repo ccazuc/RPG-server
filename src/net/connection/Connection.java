@@ -64,6 +64,7 @@ public class Connection {
 	
 	public final void close() {
 		try {
+			System.out.println("SOCKET CLOSE REQUEST");
 			this.socket.close();
 		} 
 		catch (IOException e) {
@@ -84,16 +85,20 @@ public class Connection {
 	}
 	
 	public final byte read() throws IOException {
-		return this.rBuffer.read();
+		synchronized(this.rBuffer) {
+			return this.rBuffer.read();
+		}
 	}
 	
 	public final void send() {
-		try {
-			this.wBuffer.send();
-		} 
-		catch (IOException e) {
-			//e.printStackTrace();
-			System.out.println("IOException on send");
+		synchronized(this.wBuffer) {
+			try {
+				this.wBuffer.send();
+			} 
+			catch (IOException e) {
+				e.printStackTrace();
+				System.out.println("IOException on send");
+			}
 		}
 	}
 	

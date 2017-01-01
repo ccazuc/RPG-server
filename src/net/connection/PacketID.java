@@ -140,4 +140,8 @@ public class PacketID {
 	public final static short SEND_RED_ALERT = 136;
 	public final static short DELETE_ITEM = 137;
 	public final static short PLAYER_LOGGED_OUT = 138;
+	public final static short SPELL_CAST_SUCCEED = 139;
+	public final static short SPELL_CAST_START = 140;
+	public final static short SPELL_CAST_REQUEST = 141;
+	public final static short SEND_GCD = 142;
 }

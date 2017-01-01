@@ -65,9 +65,7 @@ public class Spell {
 			//if(caster.getMana() >= this.manaCost) {
 				//if(caster.canCastSpell) {
 					//if(!target.isProtectedAgainstSpell) {
-						System.out.println("before: "+target.getStamina());
 						target.setStamina(target.getStamina()-this.getDamage(caster));
-						System.out.println("after: "+target.getStamina());
 					//}
 					caster.setMana(caster.getMana()-this.manaCost);
 					return true;
@@ -148,8 +146,8 @@ public class Spell {
 	public int getSpellCd() {
 		return 0;
 	}
-	
-	public boolean equal(Spell spell) {
+
+	public boolean equals(Spell spell) {
 		return this.id == spell.getSpellId();
 	}
 	

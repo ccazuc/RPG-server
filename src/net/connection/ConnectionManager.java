@@ -24,6 +24,7 @@ import net.command.item.CommandRequestItem;
 import net.command.item.CommandStuff;
 import net.command.item.CommandWeapon;
 import net.command.player.CommandAddItem;
+import net.command.player.CommandCast;
 import net.command.player.CommandCreateCharacter;
 import net.command.player.CommandDeleteCharacter;
 import net.command.player.CommandFriend;
@@ -101,6 +102,7 @@ public class ConnectionManager {
 		loggedCommandList.put((int)WHO, new CommandWho());
 		loggedCommandList.put((int)DRAG_ITEM, new CommandDragItems());
 		loggedCommandList.put((int)DELETE_ITEM, new CommandDeleteItem());
+		loggedCommandList.put((int)SPELL_CAST, new CommandCast());
 	}
 	
 	public static void initAuthCommand() {
@@ -132,6 +134,7 @@ public class ConnectionManager {
 		//long timer = System.nanoTime();
 		if(this.player.getPingStatus() && System.currentTimeMillis()-this.player.getPingTimer() >= TIMEOUT_TIMER) {
 			this.player.close();
+			System.out.println("Ping timeout");
 		}
 		try {
 			if(this.connection.read() == 1) {
@@ -139,7 +142,7 @@ public class ConnectionManager {
 			}
 		} 
 		catch (IOException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			System.out.println("IOException on read.");
 			this.player.close();
 			//System.out.println("Read took "+(System.nanoTime()-timer)/1000+" µs");

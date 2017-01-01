@@ -57,9 +57,11 @@ public class Player extends Unit {
 	private Shortcut[] shortcut;
 	private Bag bag = new Bag();
 	private String accountName;
+	private Spell spellCasting;
 	private boolean pingStatus;
 	private Player playerTrade;
 	private Player playerParty;
+	private long endCastTimer;
 	private int numberBlueGem;
 	private Shortcut[] spells;
 	private boolean isOnline;
@@ -696,6 +698,9 @@ public class Player extends Unit {
 		}
 	}
 	
+	public boolean hasUnlockedSpell(int id) {
+		return this.spellUnlocked.containsKey(id);
+	}
 	public void resetDatas() {
 		this.stamina = 0;
 		this.maxStamina = 0;
@@ -797,6 +802,15 @@ public class Player extends Unit {
 	
 	public Profession getSecondProfession() {
 		return this.secondProfession;
+	}
+	
+	public boolean isCasting() {
+		return this.spellCasting != null && Server.getLoopTickTimer() < this.endCastTimer;
+	}
+	
+	public void cast(Spell spell) {
+		this.spellCasting = spell;
+		this.endCastTimer = Server.getLoopTickTimer()+spell.getCastTime();
 	}
 	
 	public void setSecondProfession(Profession profession) {

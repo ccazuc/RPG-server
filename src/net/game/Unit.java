@@ -18,6 +18,8 @@ public class Unit {
 	protected int id;
 	private int expGained;
 	private int goldGained;
+	private long GCDStartTimer;
+	private long GCDEndTimer;
 	
 	public Unit(UnitType unitType, int id, int stamina, int maxStamina, int mana, int maxMana, int level, String name, int armor, int critical, int strength, int expGained, int goldGained) {
 		this.stamina = stamina;
@@ -41,6 +43,22 @@ public class Unit {
 	
 	public Unit(UnitType unitType) {
 		this.unitType = unitType;
+	}
+	
+	public long getGCDStartTimer() {
+		return this.GCDStartTimer;
+	}
+	
+	public void setGCDStartTimer(long timer) {
+		this.GCDStartTimer = timer;
+	}
+	
+	public long getGCDEndTimer() {
+		return this.GCDEndTimer;
+	}
+	
+	public void setGCDEndTimer(long timer) {
+		this.GCDEndTimer = timer;
 	}
 	
 	public int getStamina() {

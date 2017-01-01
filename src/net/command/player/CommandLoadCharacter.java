@@ -23,6 +23,7 @@ public class CommandLoadCharacter extends Command {
 			Log.writePlayerLog(player, "tried to connect on someone else's character (id = "+id+')');
 			return;
 		}
+		//System.out.println("CHARACTER LOAD ID : "+id);
 		CharacterMgr.fullyLoadCharacter(player, id);
 		/*player.setOnline();
 		player.setCharacterId(id);

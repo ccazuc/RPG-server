@@ -12,7 +12,12 @@ public class SQLTask {
 		this.name = name;
 	}
 	
-	public void execute() {}
+	public void execute() {
+		gatherData();
+		this.datasList.remove(0);
+	}
+	
+	public void gatherData() {}
 	
 	public void addDatas(SQLDatas datas) {
 		synchronized(this.datasList) {

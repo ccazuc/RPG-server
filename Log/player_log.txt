@@ -4,3 +4,6 @@
 [ERROR Tue Dec 27 16:15:04 CET 2016] AccountID: 2 Invalid tradeSlot value in CommandTrade : 7
 [ERROR Thu Dec 29 21:30:05 CET 2016] AccountID: 1 tried to logout whereas he's not in-game
 [ERROR Thu Dec 29 21:36:42 CET 2016] AccountID: 1 Unknown packet: 26, last packet readed: 25
+[ERROR Sun Jan 01 16:42:16 CET 2017] PlayerName: Mideas PlayerID: 1 AccountID: 1 Unknown packet: 103, last packet readed: 53
+[ERROR Sun Jan 01 17:28:58 CET 2017] AccountID: 1 Unknown packet: 2, last packet readed: 57
+[ERROR Sun Jan 01 17:33:43 CET 2017] AccountID: 1 Unknown packet: 2, last packet readed: 57

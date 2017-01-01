@@ -12,7 +12,6 @@ import net.game.AccountRank;
 import net.game.ClassType;
 import net.game.Player;
 import net.game.Race;
-import net.game.guild.GuildMgr;
 import net.game.item.weapon.WeaponType;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
@@ -151,24 +150,24 @@ public class CharacterMgr {
 	private final static SQLTask fullyLoadCharacter = new SQLTask("Fully load character") {
 	
 		@Override
-		public void execute() {
+		public void gatherData() {
 			Player player = this.datasList.get(0).getPlayer();
 			int id = this.datasList.get(0).getIValue1();
 			player.setOnline();
 			player.setCharacterId(id);
 			player.initTable();
-			loadCharacterInfo(player);
+			player.loadCharacterInfoSQL();
 			player.sendStats();
-			ItemMgr.getEquippedBags(player);
-			ItemMgr.getEquippedItems(player);
-			ItemMgr.getBagItems(player);
-			loadFriendList(player);
+			player.loadEquippedBagSQL();
+			player.loadEquippedItemSQL();
+			player.loadBagItemSQL();
+			player.loadFriendList();
 			player.updateLastLoginTimer();
 			CommandFriend.loadFriendList(player);
 			player.notifyFriendOnline();
 			IgnoreMgr.loadIgnoreList(player.getCharacterId());
 			CommandIgnore.ignoreInit(player.getConnection(), player);
-			GuildMgr.loadGuild(player);
+			player.loadGuild();
 			if(player.getGuild() != null) {
 				CommandGuild.initGuildWhenLogin(player);
 				player.getGuild().getMember(player.getCharacterId()).setOnlineStatus(true);
@@ -214,7 +213,8 @@ public class CharacterMgr {
 				setOnline = Server.getAsyncHighPriorityJDO().prepare("UPDATE `character` SET online = 1 WHERE character_id = ?");
 			}
 			loadCharacterInfo.clear();
-			loadCharacterInfo.putInt(player.getCharacterId());
+			int id = player.getCharacterId();
+			loadCharacterInfo.putInt(id);
 			loadCharacterInfo.execute();
 			if(loadCharacterInfo.fetch()) {
 				player.setName(loadCharacterInfo.getString());

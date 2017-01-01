@@ -6,7 +6,6 @@ import net.Server;
 import net.command.Command;
 import net.game.Player;
 import net.game.log.Log;
-import net.game.manager.FriendMgr;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;
@@ -41,7 +40,6 @@ public class CommandLogoutCharacter extends Command {
 	
 	public static void setPlayerOfflineInDB(Player player) {
 		if(player.getCharacterId() != 0) {
-			//setOffline.setId(player.getCharacterId());
 			setOffline.addDatas(new SQLDatas(player.getCharacterId()));
 			Server.executeSQLRequest(setOffline);
 		}

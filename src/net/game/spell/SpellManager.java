@@ -55,7 +55,7 @@ public class SpellManager {
 						public void action(Unit target, Unit caster) {
 							this.doDamage(target, caster);
 							if(caster.getUnitType() == UnitType.PLAYER) {
-								CommandUpdateStats.write((Player)caster, PacketID.UPDATE_STATS_STAMINA, target.getid(), target.getStamina());
+								CommandUpdateStats.updateStamina((Player)caster, target.getid(), target.getStamina());
 								//((Player)caster).getConnectionManager().getCommandList().get((int)PacketID.UPDATE_STATS).write(PacketID.UPDATE_STATS_STAMINA, target.getid(), target.getStamina());
 							}
 						}

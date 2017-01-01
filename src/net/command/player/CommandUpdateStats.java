@@ -15,4 +15,14 @@ public class CommandUpdateStats extends Command {
 		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
+	
+	public static void updateStamina(Player player, int unitID, int value) {
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.UPDATE_STATS);
+		player.getConnection().writeShort(PacketID.UPDATE_STATS_STAMINA);
+		player.getConnection().writeInt(unitID);
+		player.getConnection().writeInt(value);
+		player.getConnection().endPacket();
+		player.getConnection().send();
+	}
 }

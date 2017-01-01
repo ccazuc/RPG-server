@@ -22,18 +22,18 @@ public class ItemMgr {
 	private static final HashMap<Integer, JDOStatement> getBagItemsMap = new HashMap<Integer, JDOStatement>();
 	private static final HashMap<Integer, JDOStatement> setBagItemsMap = new HashMap<Integer, JDOStatement>();
 	//private static String getBagRequest;
-	private static String setBagRequest;
+	//private static String setBagRequest;
 	//private static JDOStatement getBagItem;
-	private static JDOStatement setBagItem;
+	//private static JDOStatement setBagItem;
 	private static JDOStatement getEquippedBag;
 	private static JDOStatement setEquippedBag;
 	private static JDOStatement getEquippedItem;
 	private static JDOStatement setEquippedItem;
 	
 	public static void initSQLRequest() {
-		int x = 1;
+		/*int x = 1;
 		int i = 1;
-		/*StringBuilder builderSetBagItemsRequest = new StringBuilder();
+		StringBuilder builderSetBagItemsRequest = new StringBuilder();
 		while(i < 97) {
 			x = 1;
 			builderSetBagItemsRequest.append("slot"+i+" = ?, numberstack"+i+" = ?, ");
@@ -307,7 +307,7 @@ public class ItemMgr {
 				setBagItem = setBagItemsMap.get(player.getBag().getBag().length);
 			}
 			else  {
-				setBagItem = prepareGetBagRequest(player.getBag().getBag().length);
+				setBagItem = prepareSetBagRequest(player.getBag().getBag().length);
 				setBagItemsMap.put(player.getBag().getBag().length, setBagItem);
 			}
 			setBagItem.clear();
@@ -324,7 +324,17 @@ public class ItemMgr {
 					else if(tempBag.isStuff() || tempBag.isWeapon()) {
 						setBagItem.putInt(tempBag.getId());
 						setBagItem.putInt(0);
-						if(((Stuff)tempBag).getEquippedGem(0) == null) {
+						int j = 0;
+						while(j < 3) {
+							if(((Stuff)tempBag).getEquippedGem(j) == null) {
+								setBagItem.putInt(0);
+							}
+							else {
+								setBagItem.putInt((((Stuff)tempBag).getEquippedGem(j).getId()));
+							}
+							j++;
+						}
+						/*if(((Stuff)tempBag).getEquippedGem(0) == null) {
 							setBagItem.putInt(0);
 						}
 						else {
@@ -341,7 +351,7 @@ public class ItemMgr {
 						}
 						else {
 							setBagItem.putInt((((Stuff)tempBag).getEquippedGem(2).getId()));
-						}
+						}*/
 					}
 					else if(tempBag.isContainer() || tempBag.isGem()) {
 						setBagItem.putInt(tempBag.getId());
