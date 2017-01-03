@@ -65,18 +65,15 @@ public class Spell {
 	public void action(Unit caster, Unit target) {}
 	
 	public boolean doDamage(Unit target, Unit caster) {
-		if(this.currentCd <= 0) {
-			//if(caster.getMana() >= this.manaCost) {
-				//if(caster.canCastSpell) {
-					//if(!target.isProtectedAgainstSpell) {
-						target.setStamina(target.getStamina()-this.getDamage(caster));
-					//}
-					caster.setMana(caster.getMana()-this.manaCost);
-					return true;
+		if(caster.getMana() >= this.manaCost) {
+			//if(caster.canCastSpell) {
+				//if(!target.isProtectedAgainstSpell) {
+					target.setStamina(target.getStamina()-this.getDamage(caster));
 				//}
+				caster.setMana(caster.getMana()-this.manaCost);
+				return true;
 			//}
 		}
-		return false;
 	}
 	
 	public boolean doHeal(Unit caster, Unit target) {

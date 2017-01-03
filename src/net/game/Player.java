@@ -108,7 +108,7 @@ public class Player extends Unit {
 	
 	public void tick() {
 		if(this.spellCasting != null && this.endCastTimer <= Server.getLoopTickTimer()) {
-			CommandSendRedAlert.write(this, "Cast fini wouhou !");
+			this.spellCasting.action(this, this.target);
 			this.spellCasting = null;
 		}
 		this.connectionManager.read();
@@ -498,6 +498,10 @@ public class Player extends Unit {
 			i++;
 		}
 		return false;
+	}
+	
+	public void setTarget(Unit unit) {
+		this.target = unit;
 	}
 	
 	public void addIgnore(int id) {

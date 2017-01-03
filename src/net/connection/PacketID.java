@@ -145,4 +145,5 @@ public class PacketID {
 	public final static short SPELL_CAST_REQUEST = 141;
 	public final static short SEND_GCD = 142;
 	public final static short SEND_SPELL_CD = 143;
+	public final static short SEND_TARGET = 144;
 }

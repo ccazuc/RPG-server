@@ -43,7 +43,7 @@ public class CommandCast extends Command {
 				return;
 			}
 			if(spell.getCastTime() == 0) {
-				//spell.action(player, player.getTarget());
+				spell.action(player, player.getTarget());
 				if(spell.triggerGCD()) {
 					CommandSendGCD.sendGCD(player, Server.getLoopTickTimer(), Server.getLoopTickTimer()+Unit.GCD);
 					player.startGCD(Server.getLoopTickTimer());

@@ -132,6 +132,13 @@ public class Unit {
 		this.armor = armor;
 	}
 	
+	public float getArmorPercentageReduction(int enemyLevel) {
+		if(this.level <= 59) {
+			return (this.armor/(85*enemyLevel+this.armor+400))*100;
+		}
+		return (this.armor/(467.5f*enemyLevel+this.armor-22167.5f))*100;
+	}
+	
 	public int getCritical() {
 		return this.critical;
 	}
