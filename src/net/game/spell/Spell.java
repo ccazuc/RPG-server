@@ -17,9 +17,10 @@ public class Spell {
 	private int currentCd;
 	private int castTime;
 	private float stunRate;
+	private boolean triggerGCD;
 	private int stunDuration;
 	
-	public Spell(int id, String sprite_id, String name, SpellType type, int damage, int manaCost, float stunRate, int stunDuration, int cd, int castTime) { //Damage spells
+	public Spell(int id, String sprite_id, String name, SpellType type, int damage, int manaCost, float stunRate, int stunDuration, int cd, int castTime, boolean triggerGCD) { //Damage spells
 		this.sprite_id = sprite_id;
 		this.name = name;
 		this.type = type;
@@ -30,9 +31,10 @@ public class Spell {
 		this.cd = cd;
 		this.castTime = castTime;
 		this.id = id;
+		this.triggerGCD = triggerGCD;
 	}
 	
-	public Spell(int id, String sprite_id, String name, SpellType type, int manaCost, int heal, int cd, int castTime) { //Heal spells
+	public Spell(int id, String sprite_id, String name, SpellType type, int manaCost, int heal, int cd, int castTime, boolean triggerGCD) { //Heal spells
 		this.id = id;
 		this.sprite_id = sprite_id;
 		this.name = name;
@@ -41,9 +43,10 @@ public class Spell {
 		this.cd = cd;
 		this.manaCost = manaCost;
 		this.castTime = castTime;
+		this.triggerGCD = triggerGCD;
 	}
 
-	public Spell(int id, String sprite_id, String name, SpellType type, int damage, int manaCost, float stunRate, int stunDuration, int cd, int heal, int castTime) { //Damage and heal spells
+	public Spell(int id, String sprite_id, String name, SpellType type, int damage, int manaCost, float stunRate, int stunDuration, int cd, int heal, int castTime, boolean triggerGCD) { //Damage and heal spells
 		this.sprite_id = sprite_id;
 		this.name = name;
 		this.type = type;
@@ -55,6 +58,7 @@ public class Spell {
 		this.castTime = castTime;
 		this.id = id;
 		this.heal = heal;
+		this.triggerGCD = triggerGCD;
 	}
 	
 	@SuppressWarnings("unused")
@@ -145,6 +149,10 @@ public class Spell {
 	
 	public int getSpellCd() {
 		return 0;
+	}
+	
+	public boolean triggerGCD() {
+		return this.triggerGCD;
 	}
 
 	public boolean equals(Spell spell) {

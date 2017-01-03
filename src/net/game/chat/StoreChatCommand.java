@@ -22,6 +22,7 @@ import net.game.manager.AccountMgr;
 import net.game.manager.BanMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.DebugMgr;
+import net.game.spell.SpellManager;
 import net.thread.sql.SQLDatas;
 import net.utils.Color;
 
@@ -1289,6 +1290,48 @@ public class StoreChatCommand {
 			}
 		}
 	};
+	private final static ChatCommand reload = new ChatCommand("reload", AccountRank.ADMINISTRATOR) {
+	
+		@Override
+		public void handle(String command, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), printSubCommandError(player), MessageType.SELF);
+				return;
+			}
+			String[] value = command.split(" ");
+			if(value.length < 2) {
+				return;
+			}
+			int i = 0;
+			while(i < this.subCommandList.size()) {
+				if(this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
+					this.subCommandList.get(i).handle(value, player);
+					return;
+				}
+				i++;
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand reload_spell = new ChatSubCommand("spell", "reload", ".reload spell to reload the spells from the DB.", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			try {
+				SpellManager.loadSpells();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	
 	public static void initChatCommandMap() {
 		account.addSubCommand(account_onlinelist);
@@ -1332,6 +1375,8 @@ public class StoreChatCommand {
 		gm.addSubCommand(gm_nameannounce);
 		gm.addSubCommand(gm_notify);
 		commandMap.put(gm.getName(), gm);
+		reload.addSubCommand(reload_spell);
+		commandMap.put(reload.getName(), reload);
 	}
 	
 	static long convStringTimerToMS(String timer) {

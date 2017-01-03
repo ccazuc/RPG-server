@@ -63,7 +63,7 @@ public class Buffer {
 		}
 		catch(IOException e) {
 			buffer.clear();
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		//System.out.println("CLEARED BUFFER");
 		buffer.clear();

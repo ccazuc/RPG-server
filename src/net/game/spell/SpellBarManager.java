@@ -10,7 +10,6 @@ import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 import net.game.shortcut.PotionShortcut;
 import net.game.shortcut.Shortcut;
-import net.game.shortcut.SpellShortcut;
 import net.game.shortcut.StuffShortcut;
 
 public class SpellBarManager {
@@ -38,7 +37,7 @@ public class SpellBarManager {
 						player.setSpells(i, new PotionShortcut(PotionManager.getPotion(id)));
 					}
 					else if(SpellManager.exists(id)) {
-						player.setSpells(i, new SpellShortcut(SpellManager.getBookSpell(id)));
+						//player.setSpells(i, new SpellShortcut(SpellManager.getBookSpell(id)));
 					}
 					else if(WeaponManager.exists(id)) {
 						player.setSpells(i, new StuffShortcut(WeaponManager.getWeapon(id)));

@@ -11,6 +11,6 @@ public class CommandSendGCD {
 		player.getConnection().writeLong(startTimer);
 		player.getConnection().writeLong(endTimer);
 		player.getConnection().endPacket();
-		player.getConnection().startPacket();
+		player.getConnection().send();
 	}
 }

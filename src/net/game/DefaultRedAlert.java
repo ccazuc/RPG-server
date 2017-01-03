@@ -7,6 +7,7 @@ public enum DefaultRedAlert {
 	DEAD((byte)2, "I cannot do this while dead"),
 	CANNOT_EQUIP_ITEM((byte)3, "I cannot equip this item"),
 	CANNOT_STACK_ITEM((byte)4, "This item cannot stack"),
+	SPELL_NOT_READY_YET((byte)5, "This spell is not ready yet."),
 	;
 	
 	private byte value;

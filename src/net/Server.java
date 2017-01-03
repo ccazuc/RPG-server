@@ -177,7 +177,7 @@ public class Server {
 	
 	private static void readOnlinePlayers() {
 		for(Player player : inGamePlayerList.values()) {
-			player.getConnectionManager().read();
+			player.tick();
 		}
 	}
 	

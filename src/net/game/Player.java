@@ -11,6 +11,7 @@ import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandLogoutCharacter;
 import net.command.player.CommandParty;
+import net.command.player.CommandSendRedAlert;
 import net.command.player.CommandTrade;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
@@ -43,6 +44,7 @@ public class Player extends Unit {
 	private SpellBarManager spellBarManager = new SpellBarManager();
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
 	private ItemMgr itemManager = new ItemMgr();
+	private HashMap<Integer, Long> spellCDMap;
 	private HashMap<Integer, Spell> spellUnlocked;
 	private ArrayList<Integer> playerWhoAreFriend;
 	private ConnectionManager connectionManager;
@@ -55,7 +57,6 @@ public class Player extends Unit {
 	private boolean hasInitParty;
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
-	private Bag bag = new Bag();
 	private String accountName;
 	private Spell spellCasting;
 	private boolean pingStatus;
@@ -83,6 +84,7 @@ public class Player extends Unit {
 	private Wear wear;
 	private int gold;
 	private int exp;
+	private Bag bag;
 	//private int tailorExp;
 
 	private final static String warrior = "Warrior";
@@ -102,6 +104,14 @@ public class Player extends Unit {
 		this.maxStamina = 8000;
 		this.mana = 8000;
 		this.maxMana = 11000;
+	}
+	
+	public void tick() {
+		if(this.spellCasting != null && this.endCastTimer <= Server.getLoopTickTimer()) {
+			CommandSendRedAlert.write(this, "Cast fini wouhou !");
+			this.spellCasting = null;
+		}
+		this.connectionManager.read();
 	}
 	
 	public String getIpAdress() {
@@ -219,6 +229,7 @@ public class Player extends Unit {
 		this.friendList = new ArrayList<Integer>();
 		this.ignoreList = new ArrayList<Integer>();
 		this.bag = new Bag();
+		this.spellCDMap = new HashMap<Integer, Long>();
 	}
 	
 	public void loadGuild() {
@@ -445,6 +456,17 @@ public class Player extends Unit {
 	public ArrayList<Player> getIgnoreList() {
 		return this.ignoreList;
 	}*/
+	
+	public long getSpellCD(int spellID) {
+		if(this.spellCDMap.containsKey(spellID)) {
+			return this.spellCDMap.get(spellID);
+		}
+		return 0;
+	}
+	
+	public void setSpellCD(int spellID, long timer) {
+		this.spellCDMap.put(spellID, timer);
+	}
 	
 	public ArrayList<Integer> getFriendList() {
 		return this.friendList;
@@ -930,7 +952,7 @@ public class Player extends Unit {
 
 	public void addUnlockedSpell(int id) {
 		if(SpellManager.exists(id)) {
-			this.spellUnlocked.put(id, SpellManager.getBookSpell(id));
+			//this.spellUnlocked.put(id, SpellManager.getBookSpell(id));
 		}
 	}
 	

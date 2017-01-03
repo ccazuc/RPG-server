@@ -4,6 +4,7 @@ import net.game.manager.CharacterMgr;
 
 public class Unit {
 
+	public final static int GCD = 1500;
 	protected int level;
 	protected String name;
 	protected int maxStamina;
@@ -49,16 +50,13 @@ public class Unit {
 		return this.GCDStartTimer;
 	}
 	
-	public void setGCDStartTimer(long timer) {
-		this.GCDStartTimer = timer;
-	}
-	
 	public long getGCDEndTimer() {
 		return this.GCDEndTimer;
 	}
 	
-	public void setGCDEndTimer(long timer) {
-		this.GCDEndTimer = timer;
+	public void startGCD(long timer) {
+		this.GCDStartTimer = timer;
+		this.GCDEndTimer = timer+GCD;
 	}
 	
 	public int getStamina() {

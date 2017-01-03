@@ -1,27 +1,22 @@
 package net.game.spell;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
 import net.command.player.CommandUpdateStats;
-import net.connection.PacketID;
 import net.game.Unit;
 import net.game.UnitType;
-import net.game.shortcut.SpellShortcut;
 import net.game.Player;
 
 public class SpellManager {
 
-	private static HashMap<Integer, Integer> spellCdList = new HashMap<Integer, Integer>();
-	private static ArrayList<Spell> spellList = new ArrayList<Spell>();
-	private static ArrayList<SpellShortcut> spellShortcutList = new ArrayList<SpellShortcut>();
 	private static int numberSpellLoaded;
 	private static JDOStatement loadSpells;
 	private static JDOStatement loadDamageSpells;
 	private static JDOStatement loadHealSpells;
+	private final static HashMap<Integer, Spell> spellMap = new HashMap<Integer, Spell>();
 	
 	public static void loadSpells() throws SQLException {
 		if(loadSpells == null) {
@@ -34,7 +29,7 @@ public class SpellManager {
 			int id = loadSpells.getInt();
 			if(type.equals("DAMAGE")) {
 				if(loadDamageSpells == null) {
-					loadDamageSpells = Server.getJDO().prepare("SELECT sprite_id, name, damage, manaCost, cd, cast_time, stun_duration, stun_rate FROM SPELL WHERE id = ?");
+					loadDamageSpells = Server.getJDO().prepare("SELECT sprite_id, name, damage, manaCost, cd, cast_time, stun_duration, stun_rate, trigger_gcd FROM SPELL WHERE id = ?");
 				}
 				loadDamageSpells.clear();
 				loadDamageSpells.putInt(id);
@@ -49,8 +44,8 @@ public class SpellManager {
 					int castTime = loadDamageSpells.getInt();
 					int stunDuration = loadDamageSpells.getInt();
 					float stunRate = loadDamageSpells.getFloat();
-					spellCdList.put(id, 0);
-					spellList.add(new Spell(id, sprite_id, name, spellType, damage, manaCost, stunRate, stunDuration, cd, castTime) {
+					boolean triggerGCD = loadDamageSpells.getBoolean();
+					spellMap.put(id, new Spell(id, sprite_id, name, spellType, damage, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD) {
 						@Override
 						public void action(Unit target, Unit caster) {
 							this.doDamage(target, caster);
@@ -64,7 +59,7 @@ public class SpellManager {
 			}
 			else if(type.equals("HEAL")) {
 				if(loadHealSpells == null) {
-					loadHealSpells = Server.getJDO().prepare("SELECT sprite_id, name, heal, manaCost, cd, cast_time FROM SPELL WHERE id = ?");
+					loadHealSpells = Server.getJDO().prepare("SELECT sprite_id, name, heal, manaCost, cd, cast_time, trigger_gcd FROM SPELL WHERE id = ?");
 				}
 				loadHealSpells.clear();
 				loadHealSpells.putInt(id);
@@ -77,8 +72,8 @@ public class SpellManager {
 					int manaCost = loadHealSpells.getInt();
 					int cd = loadHealSpells.getInt();
 					int castTime = loadHealSpells.getInt();
-					spellCdList.put(id, 0);
-					spellList.add(new Spell(id, sprite_id, name, spellType, manaCost, heal, cd, castTime) {
+					boolean triggerGCD = loadHealSpells.getBoolean();
+					spellMap.put(id, new Spell(id, sprite_id, name, spellType, manaCost, heal, cd, castTime, triggerGCD) {
 						@Override
 						public void action(Unit target, Unit caster) {
 							this.doHeal(target, caster);
@@ -96,7 +91,7 @@ public class SpellManager {
 	}
 	
 	public static boolean exists(int id) {
-		return spellList.contains(getBookSpell(id));
+		return spellMap.containsKey(id);
 	}
 	
 	public static SpellType getSpellType(String type) {
@@ -115,38 +110,8 @@ public class SpellManager {
 		return null;
 	}
 	
-	public static Spell getBookSpell(int id) {
-		int i = 0;
-		while(i < spellList.size()) {
-			if(spellList.get(i).getSpellId() == id) {
-				return spellList.get(i);
-			}
-			i++;
-		}
-		return null;
-	}
-
-	public static SpellShortcut getShortcutSpell(int id) {
-		int i = 0;
-		while(i < spellShortcutList.size()) {
-			if(spellShortcutList.get(i).getSpell().getSpellId() == id) {
-				return spellShortcutList.get(i);
-			}
-			i++;
-		}
-		return null;
-	}
-	
-	public static int getCd(int id) {
-		return spellCdList.get(id);
-	}
-	
-	public static void setCd(int id, int cd) {
-		spellCdList.put(id, cd);
-	}
-	
-	public static ArrayList<SpellShortcut> getSpellShortcutList() {
-		return spellShortcutList;
+	public static Spell getSpell(int id) {
+		return spellMap.get(id);
 	}
 	
 	public static int getNumberSpellLoaded() {
