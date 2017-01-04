@@ -106,7 +106,7 @@ public class SpellMgr {
 			StoreSpell.createSpell(id, sprite_id, name, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD);
 			amount++;
 		}
-		System.out.println("Loaded "+amount+" spells in "+(System.nanoTime()-timer)+" µs.");
+		System.out.println("Loaded "+amount+" spells in "+(System.nanoTime()-timer)/1000+" µs.");
 	}
 	
 	public static boolean exists(int id) {

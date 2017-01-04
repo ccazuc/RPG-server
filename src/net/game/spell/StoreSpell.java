@@ -10,7 +10,8 @@ public class StoreSpell {
 				
 				@Override
 				public boolean action(Unit caster) {
-					
+					System.out.println(caster.getTarget().getStamina());
+					System.out.println("Mortel Strike !");
 					return true;
 				}
 			});
@@ -32,8 +33,16 @@ public class StoreSpell {
 				
 				@Override
 				public boolean action(Unit caster) {
-					
+					if(!Spell.checkSingleTarget(caster)) {
+						return false;
+					}
+					doDamage(caster, caster.getTarget(), this.effectValue);
 					return true;
+				}
+				
+				@Override
+				public boolean canCast(Unit caster) {
+					return Spell.checkSingleTarget(caster);
 				}
 			});
 		}

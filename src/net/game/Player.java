@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import net.Server;
 import net.command.item.CommandSetItem;
+import net.command.player.CommandCast;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandLogoutCharacter;
@@ -37,6 +38,7 @@ import net.game.spell.SpellMgr;
 
 public class Player extends Unit {
 
+	private final static HashMap<Integer, Integer> levelMap = new HashMap<Integer, Integer>(); //key = level, value = exp
 	//private ProfessionManager professionManager = new ProfessionManager();
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private SpellBarManager spellBarManager = new SpellBarManager();
@@ -99,15 +101,20 @@ public class Player extends Unit {
 		this.maxStamina = 8000;
 		this.mana = 8000;
 		this.maxMana = 11000;
+		this.target = new Unit(UnitType.NPC, 5, 8000, 8000, 7000, 7000, 50, "TestUnit", 50, 50, 50, 50, 50);
 	}
 	
 	@Override
 	public void tick() {
-		if(this.spellCasting != null && this.endCastTimer <= Server.getLoopTickTimer()) {
-			this.spellCasting.use(this);
-			this.spellCasting = null;
-		}
 		this.connectionManager.read();
+		checkCast();
+	}
+	
+	@Override
+	public void cast(Spell spell) {
+		this.spellCasting = spell;
+		this.endCastTimer = Server.getLoopTickTimer()+spell.getCastTime();
+		CommandCast.cast(this, spell.getSpellId(), Server.getLoopTickTimer(), spell.getCastTime());
 	}
 	
 	public String getIpAdress() {
@@ -1089,6 +1096,79 @@ public class Player extends Unit {
 			return ClassType.WARLOCK;
 		}
 		return null;
+	}
+	
+	public static void initLevelMap() {
+		levelMap.put(1, 0);
+		levelMap.put(2, 400);
+		levelMap.put(3, 900);
+		levelMap.put(4, 1400);
+		levelMap.put(5, 2100);
+		levelMap.put(6, 2800);
+		levelMap.put(7, 3600);
+		levelMap.put(8, 4500);
+		levelMap.put(9, 5400);
+		levelMap.put(10, 6500);
+		levelMap.put(11, 7600);
+		levelMap.put(12, 8700);
+		levelMap.put(13, 9800);
+		levelMap.put(14, 11000);
+		levelMap.put(15, 12300);
+		levelMap.put(16, 13600);
+		levelMap.put(17, 15000);
+		levelMap.put(18, 16400);
+		levelMap.put(19, 17800);
+		levelMap.put(20, 19300);
+		levelMap.put(21, 20800);
+		levelMap.put(22, 22400);
+		levelMap.put(23, 24000);
+		levelMap.put(24, 25500);
+		levelMap.put(25, 27200);
+		levelMap.put(26, 28900);
+		levelMap.put(27, 30500);
+		levelMap.put(28, 32200);
+		levelMap.put(29, 33900);
+		levelMap.put(30, 36300);
+		levelMap.put(31, 38800);
+		levelMap.put(32, 41600);
+		levelMap.put(33, 44600);
+		levelMap.put(34, 48000);
+		levelMap.put(35, 51400);
+		levelMap.put(36, 55000);
+		levelMap.put(37, 58700);
+		levelMap.put(38, 62400);
+		levelMap.put(39, 66200);
+		levelMap.put(40, 70200);
+		levelMap.put(41, 74300);
+		levelMap.put(42, 78500);
+		levelMap.put(43, 82800);
+		levelMap.put(44, 87100);
+		levelMap.put(45, 91600);
+		levelMap.put(46, 96300);
+		levelMap.put(47, 101000);
+		levelMap.put(48, 105800);
+		levelMap.put(49, 110700);
+		levelMap.put(50, 115700);
+		levelMap.put(51, 120900);
+		levelMap.put(52, 126100);
+		levelMap.put(53, 131500);
+		levelMap.put(54, 137000);
+		levelMap.put(55, 142500);
+		levelMap.put(56, 148200);
+		levelMap.put(57, 154000);
+		levelMap.put(58, 159900);
+		levelMap.put(59, 165800);
+		levelMap.put(60, 172000);
+		levelMap.put(61, 290000);
+		levelMap.put(62, 317000);
+		levelMap.put(63, 349000);
+		levelMap.put(64, 386000);
+		levelMap.put(65, 428000);
+		levelMap.put(66, 475000);
+		levelMap.put(67, 527000);
+		levelMap.put(68, 585000);
+		levelMap.put(69, 648000);
+		levelMap.put(70, 717000);
 	}
 	
 	public static int getLevel(int exp) {

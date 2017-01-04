@@ -3,8 +3,7 @@ package net.game;
 public enum UnitType {
 	
 	PLAYER((byte)0),
-	GM((byte)1),
-	NPC((byte)2);
+	NPC((byte)1);
 	
 	private byte value;
 	

@@ -38,16 +38,20 @@ public class Spell {
 	@SuppressWarnings("unused")
 	protected boolean action(Unit caster) {return false;}
 	
+	protected boolean canCast(Unit caster) {return false;}
+	
 	public void use(Unit caster) {
+		System.out.println("Use start");
 		if(action(caster)) {
+			System.out.println("Action confirmed");
 			if(this.triggerGCD) {
-				if(caster.getUnitType() == UnitType.PLAYER || caster.getUnitType() == UnitType.GM) {
+				if(caster.getUnitType() == UnitType.PLAYER) {
 					CommandSendGCD.sendGCD((Player)caster, Server.getLoopTickTimer(), Server.getLoopTickTimer()+Unit.GCD);
 				}
 				caster.startGCD(Server.getLoopTickTimer());
 			}
 			if(this.cd > 0) {
-				if(caster.getUnitType() == UnitType.PLAYER || caster.getUnitType() == UnitType.GM) {
+				if(caster.getUnitType() == UnitType.PLAYER) {
 					CommandSendSpellCD.sendCD((Player)caster, this.id, this.cd, Server.getLoopTickTimer());
 				}
 				caster.setSpellCD(this.id, Server.getLoopTickTimer()+this.cd);
@@ -57,17 +61,22 @@ public class Spell {
 	}
 	
 	public void cast(Unit caster) {
-		if(this.manaCost > caster.getMana()) {
-			if(caster.getUnitType() == UnitType.PLAYER || caster.getUnitType() == UnitType.GM) {
+		/*if(this.manaCost > caster.getMana()) {
+			if(caster.getUnitType() == UnitType.PLAYER) {
 				CommandSendRedAlert.write((Player)caster, DefaultRedAlert.NOT_ENOUGH_MANA);
 			}
 			return;
-		}
-		if(this.castTime == 0) {
-			use(caster);
-		}
-		else {
-			caster.cast(this);
+		}*/
+		System.out.println("Cast request");
+		if(canCast(caster)) {
+			System.out.println("Can cast");
+			if(this.castTime == 0) {
+				use(caster);
+			}
+			else {
+				System.out.println("Cast start");
+				caster.cast(this);
+			}
 		}
 	}
 	
@@ -95,8 +104,11 @@ public class Spell {
 		return player.getMana() >= this.manaCost;
 	}
 	
-	public static void doDamage(Unit target, int damage) {
+	public static void doDamage(Unit caster, Unit target, int damage) {
 		target.setStamina(target.getStamina()-damage);
+		if(caster.getUnitType() == UnitType.PLAYER) {
+			
+		}
 	}
 	
 	public void useMana(Player joueur, Spell spell) {

@@ -9,7 +9,7 @@ import net.game.spell.Spell;
 public class Unit {
 
 	public final static int GCD = 1500;
-	protected Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
+	protected Unit target;
 	protected HashMap<Integer, Long> spellCDMap;
 	protected int level;
 	protected String name;
@@ -48,7 +48,7 @@ public class Unit {
 		this.unitType = unitType;
 		this.goldGained = goldGained;
 		this.expGained = expGained;
-		this.spellCDMap = new HashMap<Integer, Long>();
+		//this.spellCDMap = new HashMap<Integer, Long>();
 	}
 	
 	public Unit(UnitType unitType) {
@@ -56,7 +56,15 @@ public class Unit {
 	}
 	
 	public void tick() {
-		
+		checkCast();
+	}
+	
+	public void checkCast() {
+		if(this.spellCasting != null && this.endCastTimer <= Server.getLoopTickTimer()) {
+			System.out.println("Cast finished");
+			this.spellCasting.use(this);
+			this.spellCasting = null;
+		}
 	}
 	
 	public long getGCDStartTimer() {
@@ -142,7 +150,7 @@ public class Unit {
 	
 	public void setLevel(int level) {
 		this.level = level;
-		CharacterMgr.setExperience(this.id, Player.getExpNeeded(this.level));
+		//CharacterMgr.setExperience(this.id, Player.getExpNeeded(this.level));
 	}
 	
 	public int getid() {
