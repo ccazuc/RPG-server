@@ -41,7 +41,6 @@ import net.command.player.CommandPing;
 import net.command.player.CommandPingConfirmed;
 import net.command.player.CommandSelectScreenLoadCharacters;
 import net.command.player.CommandSendSingleBagItem;
-import net.command.player.CommandSpellCast;
 import net.command.player.CommandTrade;
 import net.command.player.CommandUpdateStats;
 import net.command.player.CommandWho;
@@ -91,7 +90,7 @@ public class ConnectionManager {
 		loggedCommandList.put((int)PING, new CommandPing());
 		loggedCommandList.put((int)GEM, new CommandGem());
 		loggedCommandList.put((int)CONTAINER, new CommandContainer());
-		loggedCommandList.put((int)SPELL_CAST, new CommandSpellCast());
+		//loggedCommandList.put((int)SPELL_CAST, new CommandSpellCast());
 		loggedCommandList.put((int)UPDATE_STATS, new CommandUpdateStats());
 		loggedCommandList.put((int)CHARACTER_LOGOUT, new CommandLogoutCharacter());
 		loggedCommandList.put((int)TRADE, new CommandTrade());

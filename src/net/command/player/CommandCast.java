@@ -6,9 +6,8 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.DefaultRedAlert;
 import net.game.Player;
-import net.game.Unit;
 import net.game.spell.Spell;
-import net.game.spell.SpellManager;
+import net.game.spell.SpellMgr;
 
 public class CommandCast extends Command {
 
@@ -21,7 +20,7 @@ public class CommandCast extends Command {
 			if(player.getStamina() <= 0) {
 				return;
 			}
-			Spell spell = SpellManager.getSpell(id);
+			Spell spell = SpellMgr.getSpell(id);
 			if(spell == null) {
 				player.close();
 				return;
@@ -42,21 +41,14 @@ public class CommandCast extends Command {
 				CommandSendRedAlert.write(player, DefaultRedAlert.SPELL_NOT_READY_YET);
 				return;
 			}
-			if(spell.getCastTime() == 0) {
-				spell.action(player, player.getTarget());
-				if(spell.triggerGCD()) {
-					CommandSendGCD.sendGCD(player, Server.getLoopTickTimer(), Server.getLoopTickTimer()+Unit.GCD);
-					player.startGCD(Server.getLoopTickTimer());
-				}
+			spell.cast(player);
+			/*if(spell.getCastTime() == 0) {
+				spell.use(player);
 				return;
 			}
 			player.cast(spell);
 			cast(player, id, Server.getLoopTickTimer(), spell.getCastTime());
-			player.setSpellCD(id, Server.getLoopTickTimer()+spell.getSpellBaseCd());
-			CommandSendSpellCD.sendCD(player, id, spell.getSpellBaseCd(), Server.getLoopTickTimer());
-			/*if(!player.canCastSpell()) {
-				return;
-			}*/
+			CommandSendSpellCD.sendCD(player, id, spell.getSpellBaseCd(), Server.getLoopTickTimer());*/
 		}
 	}
 	

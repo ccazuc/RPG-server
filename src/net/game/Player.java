@@ -11,7 +11,6 @@ import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandLogoutCharacter;
 import net.command.player.CommandParty;
-import net.command.player.CommandSendRedAlert;
 import net.command.player.CommandTrade;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
@@ -34,17 +33,15 @@ import net.game.profession.Profession;
 import net.game.shortcut.Shortcut;
 import net.game.spell.Spell;
 import net.game.spell.SpellBarManager;
-import net.game.spell.SpellManager;
+import net.game.spell.SpellMgr;
 
 public class Player extends Unit {
 
-	private Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
 	//private ProfessionManager professionManager = new ProfessionManager();
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private SpellBarManager spellBarManager = new SpellBarManager();
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
 	private ItemMgr itemManager = new ItemMgr();
-	private HashMap<Integer, Long> spellCDMap;
 	private HashMap<Integer, Spell> spellUnlocked;
 	private ArrayList<Integer> playerWhoAreFriend;
 	private ConnectionManager connectionManager;
@@ -58,11 +55,9 @@ public class Player extends Unit {
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
 	private String accountName;
-	private Spell spellCasting;
 	private boolean pingStatus;
 	private Player playerTrade;
 	private Player playerParty;
-	private long endCastTimer;
 	private int numberBlueGem;
 	private Shortcut[] spells;
 	private boolean isOnline;
@@ -106,9 +101,10 @@ public class Player extends Unit {
 		this.maxMana = 11000;
 	}
 	
+	@Override
 	public void tick() {
 		if(this.spellCasting != null && this.endCastTimer <= Server.getLoopTickTimer()) {
-			this.spellCasting.action(this, this.target);
+			this.spellCasting.use(this);
 			this.spellCasting = null;
 		}
 		this.connectionManager.read();
@@ -457,17 +453,6 @@ public class Player extends Unit {
 		return this.ignoreList;
 	}*/
 	
-	public long getSpellCD(int spellID) {
-		if(this.spellCDMap.containsKey(spellID)) {
-			return this.spellCDMap.get(spellID);
-		}
-		return 0;
-	}
-	
-	public void setSpellCD(int spellID, long timer) {
-		this.spellCDMap.put(spellID, timer);
-	}
-	
 	public ArrayList<Integer> getFriendList() {
 		return this.friendList;
 	}
@@ -500,16 +485,8 @@ public class Player extends Unit {
 		return false;
 	}
 	
-	public void setTarget(Unit unit) {
-		this.target = unit;
-	}
-	
 	public void addIgnore(int id) {
 		this.ignoreList.add(id);
-	}
-	
-	public Unit getTarget() {
-		return this.target;
 	}
 
 	public boolean canWearWeapon(Stuff stuff) {
@@ -830,15 +807,6 @@ public class Player extends Unit {
 		return this.secondProfession;
 	}
 	
-	public boolean isCasting() {
-		return this.spellCasting != null && Server.getLoopTickTimer() < this.endCastTimer;
-	}
-	
-	public void cast(Spell spell) {
-		this.spellCasting = spell;
-		this.endCastTimer = Server.getLoopTickTimer()+spell.getCastTime();
-	}
-	
 	public void setSecondProfession(Profession profession) {
 		this.secondProfession = profession;
 	}
@@ -955,7 +923,7 @@ public class Player extends Unit {
 	}
 
 	public void addUnlockedSpell(int id) {
-		if(SpellManager.exists(id)) {
+		if(SpellMgr.exists(id)) {
 			//this.spellUnlocked.put(id, SpellManager.getBookSpell(id));
 		}
 	}

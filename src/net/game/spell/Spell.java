@@ -1,139 +1,124 @@
 package net.game.spell;
 
+import net.Server;
+import net.command.player.CommandSendGCD;
+import net.command.player.CommandSendRedAlert;
+import net.command.player.CommandSendSpellCD;
+import net.game.DefaultRedAlert;
 import net.game.Player;
 import net.game.Unit;
+import net.game.UnitType;
 
 public class Spell {
-	
-	private int id;
-	private String sprite_id;
-	private SpellType type;
-	private String name;
-	private int damage;
-	private int defaultDamage;
-	private int manaCost;
-	private int heal;
-	private int cd;
-	private int currentCd;
-	private int castTime;
-	private float stunRate;
-	private boolean triggerGCD;
-	private int stunDuration;
-	
-	public Spell(int id, String sprite_id, String name, SpellType type, int damage, int manaCost, float stunRate, int stunDuration, int cd, int castTime, boolean triggerGCD) { //Damage spells
-		this.sprite_id = sprite_id;
-		this.name = name;
-		this.type = type;
-		this.damage = damage;
-		this.manaCost = manaCost;
-		this.stunRate = stunRate;
-		this.stunDuration = stunDuration;
-		this.cd = cd;
-		this.castTime = castTime;
-		this.id = id;
-		this.triggerGCD = triggerGCD;
-	}
-	
-	public Spell(int id, String sprite_id, String name, SpellType type, int manaCost, int heal, int cd, int castTime, boolean triggerGCD) { //Heal spells
-		this.id = id;
-		this.sprite_id = sprite_id;
-		this.name = name;
-		this.type = type;
-		this.heal = heal;
-		this.cd = cd;
-		this.manaCost = manaCost;
-		this.castTime = castTime;
-		this.triggerGCD = triggerGCD;
-	}
 
-	public Spell(int id, String sprite_id, String name, SpellType type, int damage, int manaCost, float stunRate, int stunDuration, int cd, int heal, int castTime, boolean triggerGCD) { //Damage and heal spells
+	private final int id;
+	private final String sprite_id;
+	private final String name;
+	protected final int effectValue;
+	private final int manaCost;
+	private final int cd;
+	private final int castTime;
+	protected final float stunRate;
+	private final boolean triggerGCD;
+	protected final int stunDuration;
+	
+	public Spell(int id, String sprite_id, String name, int effectValue, int manaCost, float stunRate, int stunDuration, int cd, int castTime, boolean triggerGCD) { //Damage spells
 		this.sprite_id = sprite_id;
 		this.name = name;
-		this.type = type;
-		this.damage = damage;
 		this.manaCost = manaCost;
 		this.stunRate = stunRate;
 		this.stunDuration = stunDuration;
+		this.effectValue = effectValue;
 		this.cd = cd;
 		this.castTime = castTime;
 		this.id = id;
-		this.heal = heal;
 		this.triggerGCD = triggerGCD;
 	}
 	
 	@SuppressWarnings("unused")
-	public void action(Unit caster, Unit target) {}
+	protected boolean action(Unit caster) {return false;}
 	
-	public boolean doDamage(Unit target, Unit caster) {
-		if(caster.getMana() >= this.manaCost) {
-			//if(caster.canCastSpell) {
-				//if(!target.isProtectedAgainstSpell) {
-					target.setStamina(target.getStamina()-this.getDamage(caster));
-				//}
-				caster.setMana(caster.getMana()-this.manaCost);
-				return true;
-			//}
-		}
-	}
-	
-	public boolean doHeal(Unit caster, Unit target) {
-		if(this.currentCd <= 0) {
-			if(caster.getMana() >= this.manaCost) {
-				//if(caster.canCastSpell()) {
-					//if(!target.isProtectedAgainstHeal()) {
-						doHeal(target);
-					//}
-					caster.setMana(caster.getMana()-this.manaCost);
-					return true;
-				//}
+	public void use(Unit caster) {
+		if(action(caster)) {
+			if(this.triggerGCD) {
+				if(caster.getUnitType() == UnitType.PLAYER || caster.getUnitType() == UnitType.GM) {
+					CommandSendGCD.sendGCD((Player)caster, Server.getLoopTickTimer(), Server.getLoopTickTimer()+Unit.GCD);
+				}
+				caster.startGCD(Server.getLoopTickTimer());
 			}
+			if(this.cd > 0) {
+				if(caster.getUnitType() == UnitType.PLAYER || caster.getUnitType() == UnitType.GM) {
+					CommandSendSpellCD.sendCD((Player)caster, this.id, this.cd, Server.getLoopTickTimer());
+				}
+				caster.setSpellCD(this.id, Server.getLoopTickTimer()+this.cd);
+			}
+			caster.setMana(caster.getMana()-this.manaCost);
 		}
-		return false;
 	}
 	
-	public void doHeal(Unit target) {
-		target.setStamina(target.getStamina()+this.getHeal());
+	public void cast(Unit caster) {
+		if(this.manaCost > caster.getMana()) {
+			if(caster.getUnitType() == UnitType.PLAYER || caster.getUnitType() == UnitType.GM) {
+				CommandSendRedAlert.write((Player)caster, DefaultRedAlert.NOT_ENOUGH_MANA);
+			}
+			return;
+		}
+		if(this.castTime == 0) {
+			use(caster);
+		}
+		else {
+			caster.cast(this);
+		}
 	}
-
-	public int getManaCost() {
-		return this.manaCost;
+	
+	/*public boolean doDamage(Unit target, Unit caster) {
+		if(caster.getMana() < this.manaCost) {
+			if(target.getUnitType() == UnitType.PLAYER) {
+				
+			}
+			return false;
+		}
+		//if(caster.canCastSpell) {
+		//if(!target.isProtectedAgainstSpell) {
+			target.setStamina(target.getStamina()-this.getDamage(caster));
+		//}
+		caster.setMana(caster.getMana()-this.manaCost);
+		return true;
+	//}
+	}*/
+	
+	public void doHeal(Unit target, int amount) {
+		target.setStamina(target.getStamina()+amount);
 	}
 	
 	public boolean hasMana(Player player) {
 		return player.getMana() >= this.manaCost;
 	}
 	
-	public String getSpriteId() {
-		return this.sprite_id;
-	}
-	
-	public SpellType getType() {
-		return this.type;
-	}
-	
-	public int getDamage(Unit player) {
-		return (int)(player.getStrength()+this.damage*(Math.random()*.1+.95));
-	}
-	
-	public int getHeal() {
-		return (int)(this.heal*(1+Math.random()));
-	}
-	
-	public int getDefaultamage() {
-		return this.defaultDamage;
-	}
-	
-	public int getDefaultDamage() {
-		return this.defaultDamage;
-	}
-	
-	
-	public int getCastTime() {
-		return this.castTime;
+	public static void doDamage(Unit target, int damage) {
+		target.setStamina(target.getStamina()-damage);
 	}
 	
 	public void useMana(Player joueur, Spell spell) {
 		joueur.setMana(joueur.getMana()-spell.manaCost);
+	}
+
+	public boolean equals(Spell spell) {
+		return this.id == spell.getSpellId();
+	}
+	
+	public static boolean checkSingleTarget(Unit unit) {
+		if(unit.getTarget() == null) {
+			if(unit.getUnitType() == UnitType.PLAYER) {
+				CommandSendRedAlert.write((Player)unit, DefaultRedAlert.NOTHING_TO_ATTACK);
+			}
+			return false;
+		}
+		return true;
+	}
+
+	public int getManaCost() {
+		return this.manaCost;
 	}
 	
 	public String getName() {
@@ -151,23 +136,19 @@ public class Spell {
 	public boolean triggerGCD() {
 		return this.triggerGCD;
 	}
-
-	public boolean equals(Spell spell) {
-		return this.id == spell.getSpellId();
-	}
-	
-	public void setSpellCd(int number) {
-		this.currentCd = number;
-	}
-
-	public static void checkKeyboardCd(Spell spell) {
-		if(spell != null) {
-			spell.setSpellCd(spell.getSpellBaseCd());
-		}
-	}
 	
 	public int getSpellId() {
 		return this.id;
 	}
+	
+	public String getSpriteId() {
+		return this.sprite_id;
+	}
+	
+	public int getCastTime() {
+		return this.castTime;
+	}
+	
+	public boolean canCastWhileStunned() {return false;}
 }
 

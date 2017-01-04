@@ -1,10 +1,16 @@
 package net.game;
 
+import java.util.HashMap;
+
+import net.Server;
 import net.game.manager.CharacterMgr;
+import net.game.spell.Spell;
 
 public class Unit {
 
 	public final static int GCD = 1500;
+	protected Unit target = new Unit(UnitType.NPC, 100, 10000, 10000, 3000, 3000, 1, "", 0, 0, 0, 150, 150);
+	protected HashMap<Integer, Long> spellCDMap;
 	protected int level;
 	protected String name;
 	protected int maxStamina;
@@ -16,18 +22,20 @@ public class Unit {
 	protected int critical;
 	protected int strength;
 	protected UnitType unitType;
+	protected Spell spellCasting;
+	protected long endCastTimer;
 	protected int id;
 	private int expGained;
 	private int goldGained;
-	private long GCDStartTimer;
-	private long GCDEndTimer;
+	protected long GCDStartTimer;
+	protected long GCDEndTimer;
 	
 	public Unit(UnitType unitType, int id, int stamina, int maxStamina, int mana, int maxMana, int level, String name, int armor, int critical, int strength, int expGained, int goldGained) {
 		this.stamina = stamina;
 		this.maxStamina = maxStamina;
 		this.mana = mana;
 		this.maxMana = maxMana;
-		this.stamina = 3500;       //debug
+		this.stamina = 3500;
 		this.maxStamina = 5000;
 		this.mana = 6000;
 		this.maxMana = 7500;
@@ -40,10 +48,15 @@ public class Unit {
 		this.unitType = unitType;
 		this.goldGained = goldGained;
 		this.expGained = expGained;
+		this.spellCDMap = new HashMap<Integer, Long>();
 	}
 	
 	public Unit(UnitType unitType) {
 		this.unitType = unitType;
+	}
+	
+	public void tick() {
+		
 	}
 	
 	public long getGCDStartTimer() {
@@ -52,6 +65,15 @@ public class Unit {
 	
 	public long getGCDEndTimer() {
 		return this.GCDEndTimer;
+	}
+	
+	public boolean isCasting() {
+		return this.spellCasting != null && Server.getLoopTickTimer() < this.endCastTimer;
+	}
+	
+	public void cast(Spell spell) {
+		this.spellCasting = spell;
+		this.endCastTimer = Server.getLoopTickTimer()+spell.getCastTime();
 	}
 	
 	public void startGCD(long timer) {
@@ -101,6 +123,17 @@ public class Unit {
 	
 	public UnitType getUnitType() {
 		return this.unitType;
+	}
+	
+	public long getSpellCD(int spellID) {
+		if(this.spellCDMap.containsKey(spellID)) {
+			return this.spellCDMap.get(spellID);
+		}
+		return 0;
+	}
+	
+	public void setSpellCD(int spellID, long timer) {
+		this.spellCDMap.put(spellID, timer);
 	}
 	
 	public int getLevel() {
@@ -155,4 +188,11 @@ public class Unit {
 		this.strength = strength;
 	}
 	
+	public Unit getTarget() {
+		return this.target;
+	}
+	
+	public void setTarget(Unit unit) {
+		this.target = unit;
+	}
 }

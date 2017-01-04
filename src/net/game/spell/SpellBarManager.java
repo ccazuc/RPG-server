@@ -36,7 +36,7 @@ public class SpellBarManager {
 					else if(PotionManager.exists(id)) {
 						player.setSpells(i, new PotionShortcut(PotionManager.getPotion(id)));
 					}
-					else if(SpellManager.exists(id)) {
+					else if(SpellMgr.exists(id)) {
 						//player.setSpells(i, new SpellShortcut(SpellManager.getBookSpell(id)));
 					}
 					else if(WeaponManager.exists(id)) {

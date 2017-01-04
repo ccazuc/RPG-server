@@ -5,20 +5,14 @@ import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.command.player.CommandUpdateStats;
-import net.game.Unit;
-import net.game.UnitType;
-import net.game.Player;
 
-public class SpellManager {
+public class SpellMgr {
 
 	private static int numberSpellLoaded;
 	private static JDOStatement loadSpells;
-	private static JDOStatement loadDamageSpells;
-	private static JDOStatement loadHealSpells;
 	private final static HashMap<Integer, Spell> spellMap = new HashMap<Integer, Spell>();
 	
-	public static void loadSpells() throws SQLException {
+	/*public static void loadSpells() throws SQLException {
 		if(loadSpells == null) {
 			loadSpells = Server.getJDO().prepare("SELECT type, id FROM spell");
 		}
@@ -88,6 +82,31 @@ public class SpellManager {
 				
 			}
 		}
+	}*/
+	
+	public static void loadSpells() throws SQLException {
+		long timer = System.nanoTime();
+		int amount = 0;
+		if(loadSpells == null) {
+			loadSpells = Server.getJDO().prepare("SELECT id, sprite_id, name, effectValue, stun_duration, stun_rate, manaCost, trigger_gcd, cd, cast_time FROM spell");
+		}
+		loadSpells.clear();
+		loadSpells.execute();
+		while(loadSpells.fetch()) {
+			int id = loadSpells.getInt();
+			String sprite_id = loadSpells.getString();
+			String name = loadSpells.getString();
+			int effectValue = loadSpells.getInt();
+			int stunDuration = loadSpells.getInt();
+			float stunRate = loadSpells.getFloat();
+			int manaCost = loadSpells.getInt();
+			boolean triggerGCD = loadSpells.getBoolean();
+			int cd = loadSpells.getInt();
+			int castTime = loadSpells.getInt();
+			StoreSpell.createSpell(id, sprite_id, name, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD);
+			amount++;
+		}
+		System.out.println("Loaded "+amount+" spells in "+(System.nanoTime()-timer)+" µs.");
 	}
 	
 	public static boolean exists(int id) {
@@ -108,6 +127,10 @@ public class SpellManager {
 			return SpellType.OTHER;
 		}
 		return null;
+	}
+	
+	public static void store(Spell spell) {
+		spellMap.put(spell.getSpellId(), spell);
 	}
 	
 	public static Spell getSpell(int id) {

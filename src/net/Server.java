@@ -27,7 +27,7 @@ import net.game.manager.BanMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.DebugMgr;
 import net.game.manager.ItemMgr;
-import net.game.spell.SpellManager;
+import net.game.spell.SpellMgr;
 import net.thread.chatcommand.ChatCommandRequest;
 import net.thread.chatcommand.ChatCommandRunnable;
 import net.thread.chatcommand.Who;
@@ -102,7 +102,7 @@ public class Server {
 		WeaponManager.loadWeapons();
 		GemManager.loadGems();
 		ContainerManager.loadContainer();
-		SpellManager.loadSpells();
+		SpellMgr.loadSpells();
 		highPrioritySQLRunnable = new SQLRunnable(3);
 		highPrioritySQLRequestThread = new Thread(highPrioritySQLRunnable);
 		highPrioritySQLRequestThread.start();
