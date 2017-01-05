@@ -14,12 +14,13 @@ import net.game.item.stuff.StuffManager;
 
 public class WeaponManager {
 	
+	public final static String LOAD_WEAPON_REQUEST = "SELECT id, name, sprite_id, class, type, slot, quality, color1, color2, color3, gem_bonus_type, gem_bonus_value, level, armor, stamina, mana, critical, strength, sellprice FROM item_weapon";
 	private static HashMap<Integer, Stuff> weaponList = new HashMap<Integer, Stuff>();
 	private static JDOStatement loadWeapons;
 	
 	public static void loadWeapons() throws SQLException {
 		if(loadWeapons == null) {
-			loadWeapons = Server.getJDO().prepare("SELECT id, name, sprite_id, class, type, slot, quality, color1, color2, color3, gem_bonus_type, gem_bonus_value, level, armor, stamina, mana, critical, strength, sellprice FROM item_weapon");
+			loadWeapons = Server.getJDO().prepare(LOAD_WEAPON_REQUEST);
 		}
 		loadWeapons.clear();
 		loadWeapons.execute();
@@ -73,7 +74,7 @@ public class WeaponManager {
 		return null;
 	}
 	
-	private static WeaponType getType(String type) {
+	public static WeaponType getType(String type) {
 		if(type.equals("DAGGER")) {
 			return WeaponType.DAGGER;
 		}
@@ -122,7 +123,7 @@ public class WeaponManager {
 		return null;
 	}
 	
-	private static WeaponSlot getSlot(String slot) {
+	public static WeaponSlot getSlot(String slot) {
 		if(slot.equals("OFFHAND")) {
 			return WeaponSlot.OFFHAND;
 		}

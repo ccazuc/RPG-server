@@ -8,12 +8,13 @@ import net.Server;
 
 public class ContainerManager {
 	
+	public final static String LOAD_CONTAINER_REQUEST = "SELECT id, sprite_id, name, quality, size, sellprice FROM item_container";
 	private static HashMap<Integer, Container> containerList = new HashMap<Integer, Container>();
 	private static JDOStatement loadBags;
 	
 	public static void loadContainer() throws SQLException {
 		if(loadBags == null) {
-			loadBags = Server.getJDO().prepare("SELECT id, sprite_id, name, quality, size, sellprice FROM item_container");
+			loadBags = Server.getJDO().prepare(LOAD_CONTAINER_REQUEST);
 		}
 		loadBags.clear();
 		loadBags.execute();

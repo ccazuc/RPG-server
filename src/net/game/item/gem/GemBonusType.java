@@ -7,7 +7,13 @@ public enum GemBonusType {
 	MANA((byte)2),
 	STRENGTH((byte)3),
 	CRITICAL((byte)4),
-	NONE((byte)5);
+	INTELLIGENCE((byte)5),
+	SPELL_CRITICAL((byte)6),
+	HASTE((byte)7),
+	SPELL_HASTE((byte)8),
+	MP5((byte)9),
+	HEALING_POWER((byte)10),
+	NONE((byte)11);
 	
 	private byte value;
 	

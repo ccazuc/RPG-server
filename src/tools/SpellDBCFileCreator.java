@@ -19,9 +19,18 @@ public class SpellDBCFileCreator {
 	private final static String FILE_PATH = "Spell.dbc";
 	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
-		FileChannel out;
-		Buffer writeBuffer = new Buffer(1000000);
 		JDO jdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);
+		FileChannel out;
+		Buffer writeBuffer;
+		JDOStatement loadNumberLine = jdo.prepare("SELECT COUNT(*) FROM spell");
+		loadNumberLine.execute();
+		if(loadNumberLine.fetch()) {
+			writeBuffer = new Buffer(loadNumberLine.getInt()*200);
+		}
+		else {
+			System.out.println("Table `spell` is empty.");
+			return;
+		}
 		JDOStatement loadSpells = jdo.prepare(SpellMgr.LOAD_SPELL_REQUEST);
 		loadSpells.execute();
 		int position = 0;

@@ -13,13 +13,14 @@ import net.game.item.gem.GemColor;
 
 public class StuffManager {
 
+	public final static String LOAD_STUFF_REQUEST = "SELECT id, type, name, class, wear, sprite_id, quality, gem_slot1, gem_slot2, gem_slot3, gem_bonus_type, gem_bonus_value, level, armor, stamina, mana, critical, strength, sellprice FROM item_stuff";
 	private static HashMap<Integer, Stuff> stuffList = new HashMap<Integer, Stuff>();
 	private static int numberStuffLoaded;
 	private static JDOStatement loadStuff;
 	
 	public static void loadStuffs() throws SQLException {
 		if(loadStuff == null) {
-			loadStuff = Server.getJDO().prepare("SELECT id, type, name, class, wear, sprite_id, quality, gem_slot1, gem_slot2, gem_slot3, gem_bonus_type, gem_bonus_value, level, armor, stamina, mana, critical, strength, sellprice FROM item_stuff");
+			loadStuff = Server.getJDO().prepare(LOAD_STUFF_REQUEST);
 		}
 		loadStuff.clear();
 		loadStuff.execute();
@@ -125,7 +126,7 @@ public class StuffManager {
 		return tempClasses;
 	}
 	
-	private static StuffType getType(String type) {
+	public static StuffType getType(String type) {
 		if(type.equals("HEAD")) {
 			return StuffType.HEAD;
 		}
@@ -174,7 +175,7 @@ public class StuffManager {
 		return null;
 	}
 	
-	private static Wear getWear(String wear) {
+	public static Wear getWear(String wear) {
 		if(wear.equals("CLOTH")) {
 			return Wear.CLOTH;
 		}

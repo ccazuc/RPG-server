@@ -8,13 +8,14 @@ import net.Server;
 
 public class PotionManager {
 	
+	public final static String LOAD_POTION_REQUEST = "SELECT id, sprite_id, name, level, heal, mana, sellprice FROM item_potion";
 	private static HashMap<Integer, Potion> potionList = new HashMap<Integer, Potion>();
 	private static int numberPotionLoaded;
 	private static JDOStatement loadPotions;
 	
 	public static void loadPotions() throws SQLException {
 		if(loadPotions == null) {
-			loadPotions = Server.getJDO().prepare("SELECT id, sprite_id, name, level, heal, mana, sellprice FROM item_potion");
+			loadPotions = Server.getJDO().prepare(LOAD_POTION_REQUEST);
 		}
 		loadPotions.clear();
 		loadPotions.execute();

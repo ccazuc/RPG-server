@@ -8,12 +8,13 @@ import net.Server;
 
 public class GemManager {
 
+	public final static String LOAD_GEM_REQUEST = "SELECT id, sprite_id, name, quality, color, sellprice, stat1Type, stat1Value, stat2Type, stat2Value, stat3Type, stat3Value FROM item_gem";
 	private static HashMap<Integer, Gem> gemList = new HashMap<Integer, Gem>();
 	private static JDOStatement loadGems;
 	
 	public static void loadGems() throws SQLException {
 		if(loadGems == null) {
-			loadGems = Server.getJDO().prepare("SELECT id, sprite_id, name, quality, color, sellprice, pa, intellect, stamina, defense, mp5, mana, critical, spell_critical, spell_damage, heal FROM item_gem");
+			loadGems = Server.getJDO().prepare(LOAD_GEM_REQUEST);
 		}
 		loadGems.clear();
 		loadGems.execute();
@@ -25,17 +26,13 @@ public class GemManager {
 			String tempColor = loadGems.getString();
 			GemColor color = convColor(tempColor);
 			int sellPrice = loadGems.getInt();
-			int pa = loadGems.getInt();
-			int intellect = loadGems.getInt();
-			int stamina = loadGems.getInt();
-			int defense = loadGems.getInt();
-			int mp5 = loadGems.getInt();
-			int mana = loadGems.getInt();
-			int critical = loadGems.getInt();
-			int spell_critical = loadGems.getInt();
-			int spell_damage = loadGems.getInt();
-			int heal = loadGems.getInt();
-			gemList.put(id, new Gem(id, sprite_id, name, quality, color, pa, stamina, defense, mana, critical, sellPrice));
+			GemBonusType stat1Type = convGemBonusType(loadGems.getString());
+			int stat1Value = loadGems.getInt();
+			GemBonusType stat2Type = convGemBonusType(loadGems.getString());
+			int stat2Value = loadGems.getInt();
+			GemBonusType stat3Type = convGemBonusType(loadGems.getString());
+			int stat3Value = loadGems.getInt();
+			gemList.put(id, new Gem(id, sprite_id, name, quality, color, sellPrice, stat1Type, stat1Value, stat2Type, stat2Value, stat3Type, stat3Value));
 		}
 	}
 	
@@ -61,6 +58,41 @@ public class GemManager {
 		if(color.equals("NONE")) {
 			return GemColor.NONE;
 		}
+		return null;
+	}
+	
+	public static GemBonusType convGemBonusType(String bonus) {
+		if(bonus.equals("STRENGTH")) {
+			return GemBonusType.STRENGTH;
+		}
+		if(bonus.equals("STAMINA")) {
+			return GemBonusType.STAMINA;
+		}
+		if(bonus.equals("INTELLIGENCE")) {
+			return GemBonusType.INTELLIGENCE;
+		}
+		if(bonus.equals("CRITICAL")) {
+			return GemBonusType.CRITICAL;
+		}
+		if(bonus.equals("SPELL_CRITICAL")) {
+			return GemBonusType.SPELL_CRITICAL;
+		}
+		if(bonus.equals("HASTE")) {
+			return GemBonusType.HASTE;
+		}
+		if(bonus.equals("SPELL_HASTE")) {
+			return GemBonusType.SPELL_HASTE;
+		}
+		if(bonus.equals("MP5")) {
+			return GemBonusType.MP5;
+		}
+		if(bonus.equals("HEALING_POWER")) {
+			return GemBonusType.HEALING_POWER;
+		}
+		if(bonus.equals("NONE")) {
+			return GemBonusType.NONE;
+		}
+		System.out.println("Error GemManager:convGemBonusType value : "+bonus);
 		return null;
 	}
 	
