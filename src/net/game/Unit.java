@@ -3,13 +3,14 @@ package net.game;
 import java.util.HashMap;
 
 import net.Server;
-import net.game.manager.CharacterMgr;
+import net.game.aura.AppliedAura;
 import net.game.spell.Spell;
 
 public class Unit {
 
 	public final static int GCD = 1500;
 	protected Unit target;
+	protected HashMap<Integer, AppliedAura> auraMap;
 	protected HashMap<Integer, Long> spellCDMap;
 	protected int level;
 	protected String name;
@@ -48,7 +49,8 @@ public class Unit {
 		this.unitType = unitType;
 		this.goldGained = goldGained;
 		this.expGained = expGained;
-		//this.spellCDMap = new HashMap<Integer, Long>();
+		this.auraMap = new HashMap<Integer, AppliedAura>();
+		this.spellCDMap = new HashMap<Integer, Long>();
 	}
 	
 	public Unit(UnitType unitType) {
@@ -65,6 +67,10 @@ public class Unit {
 			this.spellCasting.use(this);
 			this.spellCasting = null;
 		}
+	}
+	
+	public boolean hasAura(int auraID) {
+		return this.auraMap.containsKey(auraID);
 	}
 	
 	public long getGCDStartTimer() {
