@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 
@@ -36,6 +37,10 @@ public class Buffer {
 	
 	public Buffer() {
 		this.buffer = ByteBuffer.allocateDirect(16000);
+	}
+	
+	public Buffer(int capacity) {
+		this.buffer = ByteBuffer.allocateDirect(capacity);
 	}
 	
 	protected final void send() throws IOException {
@@ -245,12 +250,20 @@ public class Buffer {
 		this.written = true;
 	}
 	
-	protected final int getPosition() {
+	public final int position() {
 		return this.buffer.position();
 	}
 	
-	protected final void setPosition(int position) {
+	public final void position(int position) {
 		this.buffer.position(position);
+	}
+	
+	public final void setOrder(ByteOrder order) {
+		this.buffer.order(order);
+	}
+	
+	public final ByteBuffer getBuffer() {
+		return this.buffer;
 	}
 	
 	public final String readString() {
@@ -267,7 +280,7 @@ public class Buffer {
 		this.buffer.clear();
 	}
 	
-	protected final void writeBoolean(final boolean b) {
+	public final void writeBoolean(final boolean b) {
 		this.buffer.put((byte)(b?1:0));
 		this.written = true;
 	}
@@ -353,7 +366,7 @@ public class Buffer {
 		}
 	}
 	
-	protected final void writeFloat(final float f) {
+	public final void writeFloat(final float f) {
 		this.buffer.putFloat(f);
 		this.written = true;
 	}

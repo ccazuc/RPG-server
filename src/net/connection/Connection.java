@@ -43,15 +43,15 @@ public class Connection {
 	}
 	
 	public int wBufferPosition() {
-		return this.wBuffer.getPosition();
+		return this.wBuffer.position();
 	}
 	
 	public void wBufferSetPosition(int position) {
-		this.wBuffer.setPosition(position);
+		this.wBuffer.position(position);
 	}
 	
 	public int rBufferPosition() {
-		return this.rBuffer.getPosition();
+		return this.rBuffer.position();
 	}
 	
 	public int rBufferRemaining() {
@@ -59,7 +59,7 @@ public class Connection {
 	}
 	
 	public void rBufferSetPosition(int position) {
-		this.rBuffer.setPosition(position);
+		this.rBuffer.position(position);
 	}
 	
 	public final void close() {
@@ -103,18 +103,18 @@ public class Connection {
 	}
 	
 	public final void startPacket() {
-		if(this.wBuffer.getPosition() >= 3*this.wBuffer.capacity()/4) {
+		if(this.wBuffer.position() >= 3*this.wBuffer.capacity()/4) {
 			send();
 		}
-		this.startPacketPosition = this.wBuffer.getPosition();
+		this.startPacketPosition = this.wBuffer.position();
 		writeInt(0);
 	}
 	
 	public final void endPacket() {
-		int position = this.wBuffer.getPosition();
-		this.wBuffer.setPosition(this.startPacketPosition);
+		int position = this.wBuffer.position();
+		this.wBuffer.position(this.startPacketPosition);
 		this.wBuffer.writeInt(position-this.startPacketPosition);
-		this.wBuffer.setPosition(position);
+		this.wBuffer.position(position);
 	}
 	
 	public final boolean hasRemaining() {
