@@ -8,6 +8,7 @@ import net.Server;
 
 public class SpellMgr {
 
+	public final static String LOAD_SPELL_REQUEST = "SELECT id, sprite_id, name, effectValue, stun_duration, stun_rate, manaCost, trigger_gcd, cd, cast_time FROM spell";
 	private static int numberSpellLoaded;
 	private static JDOStatement loadSpells;
 	private final static HashMap<Integer, Spell> spellMap = new HashMap<Integer, Spell>();
@@ -88,7 +89,7 @@ public class SpellMgr {
 		long timer = System.nanoTime();
 		int amount = 0;
 		if(loadSpells == null) {
-			loadSpells = Server.getJDO().prepare("SELECT id, sprite_id, name, effectValue, stun_duration, stun_rate, manaCost, trigger_gcd, cd, cast_time FROM spell");
+			loadSpells = Server.getJDO().prepare(LOAD_SPELL_REQUEST);
 		}
 		loadSpells.clear();
 		loadSpells.execute();

@@ -11,6 +11,8 @@ import jdo.JDO;
 import jdo.JDOStatement;
 import jdo.wrapper.MariaDB;
 import net.connection.Buffer;
+import net.game.manager.DatabaseMgr;
+import net.game.spell.SpellMgr;
 
 public class SpellDBCFileCreator {
 
@@ -19,8 +21,8 @@ public class SpellDBCFileCreator {
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		FileChannel out;
 		Buffer writeBuffer = new Buffer(1000000);
-		JDO jdo = new MariaDB("127.0.0.1", 3306, "rpg", "root", "mideas");
-		JDOStatement loadSpells = jdo.prepare("SELECT id, sprite_id, name, effectValue, stun_duration, stun_rate, manaCost, trigger_gcd, cd, cast_time FROM spell");
+		JDO jdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);
+		JDOStatement loadSpells = jdo.prepare(SpellMgr.LOAD_SPELL_REQUEST);
 		loadSpells.execute();
 		int position = 0;
 		writeBuffer.writeInt(0);
