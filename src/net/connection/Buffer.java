@@ -325,7 +325,7 @@ public class Buffer {
 		}
 	}
 	
-	protected final void writeShort(final short s) {
+	public final void writeShort(final short s) {
 		try {
 			this.buffer.putShort(s);
 		}

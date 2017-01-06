@@ -11,26 +11,26 @@ import jdo.JDO;
 import jdo.JDOStatement;
 import jdo.wrapper.MariaDB;
 import net.connection.Buffer;
+import net.game.aura.AuraMgr;
 import net.game.manager.DatabaseMgr;
-import net.game.spell.SpellMgr;
 
-public class SpellDBCFileCreator {
+public class AuraDBCFileCreator {
 
-	private final static String FILE_PATH = "Spell.dbc";
+	private final static String FILE_PATH = "Aura.dbc";
 	private final static byte[] HEADER_SIGNATURE = new byte[] {(byte)87, (byte)68, (byte)66, (byte)67};
 	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		JDO jdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);
 		FileChannel out;
 		Buffer writeBuffer;
-		JDOStatement loadNumberLine = jdo.prepare("SELECT COUNT(*) FROM spell");
+		JDOStatement loadNumberLine = jdo.prepare("SELECT COUNT(*) FROM aura");
 		loadNumberLine.execute();
 		int numberLine = 0;
 		if(loadNumberLine.fetch()) {
 			numberLine = loadNumberLine.getInt();
 		}
 		if(numberLine == 0) {
-			System.out.println("Table `spell` is empty.");
+			System.out.println("Table `aura` is empty.");
 			return;
 		}
 		writeBuffer = new Buffer(numberLine*200);
@@ -42,30 +42,35 @@ public class SpellDBCFileCreator {
 		int position = writeBuffer.position();
 		writeBuffer.writeInt(0);
 		writeBuffer.writeInt(0);
-		int numberSpellLoaded = 0;
-		JDOStatement loadSpells = jdo.prepare(SpellMgr.LOAD_SPELL_REQUEST);
-		loadSpells.execute();
-		while(loadSpells.fetch()) {
-			writeBuffer.writeInt(loadSpells.getInt());
-			writeBuffer.writeString(loadSpells.getString());
-			writeBuffer.writeString(loadSpells.getString());
-			writeBuffer.writeString(loadSpells.getString());
-			writeBuffer.writeByte(loadSpells.getByte());
-			writeBuffer.writeInt(loadSpells.getInt());
-			writeBuffer.writeInt(loadSpells.getInt());
-			writeBuffer.writeFloat(loadSpells.getFloat());
-			writeBuffer.writeInt(loadSpells.getInt());
-			writeBuffer.writeBoolean(loadSpells.getBoolean());
-			writeBuffer.writeInt(loadSpells.getInt());
-			writeBuffer.writeInt(loadSpells.getInt());
-			writeBuffer.writeByte(SpellMgr.convStringToMagicalSchool(loadSpells.getString()).getValue());
-			writeBuffer.writeBoolean(loadSpells.getBoolean());
-			numberSpellLoaded++;
+		int numberAuraLoaded = 0;
+		JDOStatement loadAuras = jdo.prepare(AuraMgr.LOAD_AURA_REQUEST);
+		loadAuras.execute();
+		while(loadAuras.fetch()) {
+			writeBuffer.writeInt(loadAuras.getInt());
+			writeBuffer.writeString(loadAuras.getString());
+			writeBuffer.writeString(loadAuras.getString());
+			writeBuffer.writeInt(loadAuras.getInt());
+			writeBuffer.writeInt(loadAuras.getInt());
+			writeBuffer.writeBoolean(loadAuras.getBoolean());
+			writeBuffer.writeInt(loadAuras.getInt());
+			writeBuffer.writeInt(loadAuras.getInt());
+			writeBuffer.writeBoolean(loadAuras.getBoolean());
+			writeBuffer.writeBoolean(loadAuras.getBoolean());
+			writeBuffer.writeByte(AuraMgr.convStringToAuraEffect(loadAuras.getString()).getValue());
+			writeBuffer.writeInt(loadAuras.getInt());
+			writeBuffer.writeByte(AuraMgr.convStringToAuraEffect(loadAuras.getString()).getValue());
+			writeBuffer.writeInt(loadAuras.getInt());
+			writeBuffer.writeByte(AuraMgr.convStringToAuraEffect(loadAuras.getString()).getValue());
+			writeBuffer.writeInt(loadAuras.getInt());
+			writeBuffer.writeBoolean(loadAuras.getBoolean());
+			writeBuffer.writeBoolean(loadAuras.getBoolean());
+			writeBuffer.writeBoolean(loadAuras.getBoolean());
+			numberAuraLoaded++;
 		}
 		int endPosition = writeBuffer.position();
 		writeBuffer.position(position);
 		writeBuffer.writeInt(endPosition);
-		writeBuffer.writeInt(numberSpellLoaded);
+		writeBuffer.writeInt(numberAuraLoaded);
 		writeBuffer.position(endPosition);
 		writeBuffer.flip();
 		writeBuffer.setOrder(ByteOrder.LITTLE_ENDIAN);

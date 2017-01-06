@@ -21,8 +21,10 @@ public class Aura {
 	protected final int spellTriggeredOnFade;
 	private final boolean isBuff;
 	private final int tickRate;
+	private final boolean isStackable;
+	private final boolean isMagical;
 	
-	public Aura(int id, String name, String sprite_id, boolean isBuff, int spellTriggeredOnFade, int duration, int defaultNumberStack, int tickRate, boolean lowDispellable, boolean highDispellable, boolean isVisible, AuraEffect effect1, int effectValue1, AuraEffect effect2, int effectValue2, AuraEffect effect3, int effectValue3) {
+	public Aura(int id, String name, String sprite_id, int spellTriggeredOnFade, int duration, boolean isStackable, int defaultNumberStack, int tickRate, boolean lowDispellable, boolean highDispellable, AuraEffect effect1, int effectValue1, AuraEffect effect2, int effectValue2, AuraEffect effect3, int effectValue3, boolean isBuff, boolean isVisible, boolean isMagical) {
 		this.id = id;
 		this.name = name;
 		this.sprite_id = sprite_id;
@@ -40,6 +42,8 @@ public class Aura {
 		this.spellTriggeredOnFade = spellTriggeredOnFade;
 		this.isBuff = isBuff;
 		this.tickRate = tickRate;
+		this.isStackable = isStackable;
+		this.isMagical = isMagical;
 	}
 	
 	@SuppressWarnings("unused")

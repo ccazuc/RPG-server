@@ -12,18 +12,21 @@ import net.game.unit.UnitType;
 
 public class Spell {
 
-	private final int id;
-	private final String sprite_id;
-	private final String name;
+	protected final int id;
+	protected final String sprite_id;
+	protected final String name;
 	protected final int effectValue;
-	private final int manaCost;
-	private final int cd;
-	private final int castTime;
+	protected final int manaCost;
+	protected final int cd;
+	protected final int castTime;
 	protected final float stunRate;
-	private final boolean triggerGCD;
+	protected final boolean triggerGCD;
 	protected final int stunDuration;
+	protected final SpellMagicalSchool magicalSchool;
+	protected final boolean isMagical;
+	protected final byte rank;
 	
-	public Spell(int id, String sprite_id, String name, int effectValue, int manaCost, float stunRate, int stunDuration, int cd, int castTime, boolean triggerGCD) { //Damage spells
+	public Spell(int id, String sprite_id, String name, byte rank, int effectValue, int manaCost, float stunRate, int stunDuration, int cd, int castTime, boolean triggerGCD, SpellMagicalSchool magicalSchool, boolean isMagical) { //Damage spells
 		this.sprite_id = sprite_id;
 		this.name = name;
 		this.manaCost = manaCost;
@@ -34,6 +37,9 @@ public class Spell {
 		this.castTime = castTime;
 		this.id = id;
 		this.triggerGCD = triggerGCD;
+		this.magicalSchool = magicalSchool;
+		this.isMagical = isMagical;
+		this.rank = rank;
 	}
 	
 	@SuppressWarnings("unused")

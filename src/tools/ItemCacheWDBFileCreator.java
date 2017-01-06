@@ -135,7 +135,12 @@ public class ItemCacheWDBFileCreator {
 			int size = loadItems.getInt();
 			int sellPrice = loadItems.getInt();
 			writeBuffer.writeByte(ItemType.CONTAINER.getValue());
-			writeBuffer.writeContainer(new Container(id, sprite_id, name, quality, size, sellPrice));
+			writeBuffer.writeInt(id);
+			writeBuffer.writeString(sprite_id);
+			writeBuffer.writeString(name);
+			writeBuffer.writeInt(quality);
+			writeBuffer.writeInt(size);
+			writeBuffer.writeInt(sellPrice);
 		}
 		loadItems = jdo.prepare(GemManager.LOAD_GEM_REQUEST);
 		loadItems.execute();

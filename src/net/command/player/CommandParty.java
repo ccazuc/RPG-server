@@ -285,9 +285,9 @@ public class CommandParty extends Command {
 		connection.writeShort(PacketID.PARTY_MEMBER_JOINED);
 		connection.writeString(joined.getName());
 		connection.writeInt(joined.getStamina());
-		connection.writeInt(joined.getMaxStamina());
+		connection.writeInt(joined.getMaxStaminaEffective());
 		connection.writeInt(joined.getMana());
-		connection.writeInt(joined.getMaxMana());
+		connection.writeInt(joined.getMaxManaEffective());
 		connection.writeInt(joined.getLevel());
 		connection.writeInt(joined.getCharacterId());
 		connection.writeByte(joined.getClasse().getValue());
@@ -302,9 +302,9 @@ public class CommandParty extends Command {
 		player.getConnection().writeBoolean(player.hasInitParty());
 		player.getConnection().writeString(joined.getName());
 		player.getConnection().writeInt(joined.getStamina());
-		player.getConnection().writeInt(joined.getMaxStamina());
+		player.getConnection().writeInt(joined.getMaxStaminaEffective());
 		player.getConnection().writeInt(joined.getMana());
-		player.getConnection().writeInt(joined.getMaxMana());
+		player.getConnection().writeInt(joined.getMaxManaEffective());
 		player.getConnection().writeInt(joined.getLevel());
 		player.getConnection().writeInt(joined.getCharacterId());
 		player.getConnection().writeByte(joined.getClasse().getValue());

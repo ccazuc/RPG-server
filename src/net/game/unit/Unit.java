@@ -1,5 +1,6 @@
 package net.game.unit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.Server;
@@ -11,18 +12,23 @@ public class Unit {
 	public final static int GCD = 1500;
 	protected Unit target;
 	protected Unit castTarget;
-	protected HashMap<Integer, AppliedAura> auraMap;
+	protected ArrayList<AppliedAura> auraList;
 	protected HashMap<Integer, Long> spellCDMap;
 	protected int level;
 	protected String name;
-	protected int maxStamina;
+	protected int maxStaminaUnAura;
+	protected int maxStaminaEffective;
 	protected int stamina;
-	protected int maxMana;
+	protected int maxManaUnAura;
+	protected int maxManaEffective;
 	protected int mana;
-	protected int armor;
+	protected int armorUnAura;
+	protected int armorEffective;
 	protected int damage;
-	protected int critical;
-	protected int strength;
+	protected int criticalUnAura;
+	protected int criticalEffective;
+	protected int strengthUnAura;
+	protected int strengthEffective;
 	protected UnitType unitType;
 	protected Spell spellCasting;
 	protected long endCastTimer;
@@ -34,23 +40,26 @@ public class Unit {
 	
 	public Unit(UnitType unitType, int id, int stamina, int maxStamina, int mana, int maxMana, int level, String name, int armor, int critical, int strength, int expGained, int goldGained) {
 		this.stamina = stamina;
-		this.maxStamina = maxStamina;
+		this.maxStaminaUnAura = maxStamina;
+		this.maxStaminaEffective = maxStamina;
 		this.mana = mana;
-		this.maxMana = maxMana;
+		this.maxManaUnAura = maxMana;
+		this.maxManaEffective = maxMana;
 		this.stamina = 3500;
-		this.maxStamina = 5000;
+		this.maxStaminaUnAura = 5000;
 		this.mana = 6000;
-		this.maxMana = 7500;
+		this.maxManaUnAura = 7500;
 		setLevel(level);
 		this.name = name;
 		this.id = id;
-		this.armor = armor;
-		this.critical = critical;
-		this.strength = strength;
+		this.armorUnAura = armor;
+		this.armorEffective = armor;
+		this.criticalUnAura = critical;
+		this.strengthUnAura = strength;
 		this.unitType = unitType;
 		this.goldGained = goldGained;
 		this.expGained = expGained;
-		this.auraMap = new HashMap<Integer, AppliedAura>();
+		this.auraList = new ArrayList<AppliedAura>();
 		this.spellCDMap = new HashMap<Integer, Long>();
 	}
 	
@@ -71,7 +80,13 @@ public class Unit {
 	}
 	
 	public boolean hasAura(int auraID) {
-		return this.auraMap.containsKey(auraID);
+		int i = this.auraList.size();
+		while(--i >= 0) {
+			if(this.auraList.get(i).getAura().getId() == auraID) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public long getGCDStartTimer() {
@@ -102,15 +117,15 @@ public class Unit {
 	}
 	
 	public void setStamina(int stamina) {
-		this.stamina = Math.max(0, Math.min(stamina, this.maxStamina));
+		this.stamina = Math.max(0, Math.min(stamina, this.maxStaminaEffective));
 	}
 	
-	public int getMaxStamina() {
-		return this.maxStamina;
+	public int getMaxStaminaEffective() {
+		return this.maxStaminaEffective;
 	}
 	
-	public void setMaxStamina(int maxStamina) {
-		this.maxStamina = maxStamina;
+	public void setMaxStaminaEffective(int maxStamina) {
+		this.maxStaminaEffective = maxStamina;
 	}
 	
 	public int getGoldGained() {
@@ -129,12 +144,12 @@ public class Unit {
 		this.mana = Math.max(0, mana);
 	}
 	
-	public int getMaxMana() {
-		return this.maxMana;
+	public int getMaxManaEffective() {
+		return this.maxManaEffective;
 	}
 	
-	public void setMaxMana(int maxMana) {
-		this.maxMana = maxMana;
+	public void setMaxManaEffective(int maxMana) {
+		this.maxManaEffective = maxMana;
 	}
 	
 	public UnitType getUnitType() {
@@ -173,35 +188,35 @@ public class Unit {
 		this.name = name;
 	}
 	
-	public int getArmor() {
-		return this.armor;
+	public int getArmorEffective() {
+		return this.armorEffective;
 	}
 	 
-	public void setArmor(int armor) {
-		this.armor = armor;
+	public void setArmorEffective(int armor) {
+		this.armorEffective = armor;
 	}
 	
 	public float getArmorPercentageReduction(int enemyLevel) {
 		if(this.level <= 59) {
-			return (this.armor/(85*enemyLevel+this.armor+400))*100;
+			return (this.armorEffective/(85*enemyLevel+this.armorEffective+400))*100;
 		}
-		return (this.armor/(467.5f*enemyLevel+this.armor-22167.5f))*100;
+		return (this.armorEffective/(467.5f*enemyLevel+this.armorEffective-22167.5f))*100;
 	}
 	
-	public int getCritical() {
-		return this.critical;
+	public int getCriticalEffective() {
+		return this.criticalEffective;
 	}
 	
-	public void setCritical(int critical) {
-		this.critical = critical;
+	public void setCriticalEffective(int critical) {
+		this.criticalEffective = critical;
 	}
 	
-	public int getStrength() {
-		return this.strength;
+	public int getStrengthEffective() {
+		return this.strengthEffective;
 	}
 	
-	public void setStrength(int strength) {
-		this.strength = strength;
+	public void setStrengthEffective(int strength) {
+		this.strengthEffective = strength;
 	}
 	
 	public Unit getTarget() {

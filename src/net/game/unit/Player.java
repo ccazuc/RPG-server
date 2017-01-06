@@ -102,9 +102,11 @@ public class Player extends Unit {
 		super(UnitType.PLAYER);
 		this.connectionManager = new ConnectionManager(this, socket);
 		this.stamina = 5000;
-		this.maxStamina = 8000;
+		this.maxStaminaUnAura = 8000;
+		this.maxStaminaEffective = 8000;
 		this.mana = 8000;
-		this.maxMana = 11000;
+		this.maxManaUnAura = 11000;
+		this.maxManaEffective = 11000;
 		this.target = new Unit(UnitType.NPC, 5, 8000, 8000, 7000, 7000, 50, "TestUnit", 50, 50, 50, 50, 50);
 	}
 	
@@ -718,10 +720,13 @@ public class Player extends Unit {
 	}
 	public void resetDatas() {
 		this.stamina = 0;
-		this.maxStamina = 0;
+		this.maxStaminaEffective = 0;
+		this.maxStaminaUnAura = 0;
 		this.mana = 0;
-		this.strength = 0;
-		this.critical = 0;
+		this.strengthUnAura = 0;
+		this.strengthEffective = 0;
+		this.criticalUnAura = 0;
+		this.criticalEffective = 0;
 		this.armor = 0;
 		this.bag = null;
 		this.characterId = 0;
@@ -828,21 +833,21 @@ public class Player extends Unit {
 	}
 
 	public void setStuffStrength(Stuff stuff) {
-		this.strength+= stuff.getStrength()+stuff.getStatsFromGems(GemBonusType.STRENGTH);
+		int strength = stuff.getStrength()+stuff.getStatsFromGems(GemBonusType.STRENGTH);
+		this.strengthUnAura+= strength;
+		//TODO: calc effective strength
 	}
 	
 	public void setStuffStamina(Stuff stuff) {
-		this.maxStamina+= stuff.getStamina()+stuff.getStatsFromGems(GemBonusType.STAMINA);
-		this.stamina+= stuff.getStamina()+stuff.getStatsFromGems(GemBonusType.STAMINA);
+		this.maxStaminaUnAura+= stuff.getStamina()+stuff.getStatsFromGems(GemBonusType.STAMINA);
 	}
 	
 	public void setStuffCritical(Stuff stuff) {
-		this.critical+= stuff.getCritical()+stuff.getStatsFromGems(GemBonusType.CRITICAL);
+		this.criticalUnAura+= stuff.getCritical()+stuff.getStatsFromGems(GemBonusType.CRITICAL);
 	}
 	
 	public void setStuffMana(Stuff stuff) {
-		this.maxMana+= stuff.getMana()+stuff.getStatsFromGems(GemBonusType.MANA);
-		this.mana+= stuff.getMana()+stuff.getStatsFromGems(GemBonusType.MANA);
+		this.maxManaUnAura+= stuff.getMana()+stuff.getStatsFromGems(GemBonusType.MANA);
 	}
 	
 	public void setNumberRedGem(int nb) {

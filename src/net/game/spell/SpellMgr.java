@@ -8,7 +8,7 @@ import net.Server;
 
 public class SpellMgr {
 
-	public final static String LOAD_SPELL_REQUEST = "SELECT id, sprite_id, name, tooltip, effectValue, stun_duration, stun_rate, manaCost, trigger_gcd, cd, cast_time FROM spell";
+	public final static String LOAD_SPELL_REQUEST = "SELECT id, sprite_id, name, tooltip, rank, effectValue, stun_duration, stun_rate, manaCost, trigger_gcd, cd, cast_time, magical_school, is_magical FROM spell";
 	private static int numberSpellLoaded;
 	private static JDOStatement loadSpells;
 	private final static HashMap<Integer, Spell> spellMap = new HashMap<Integer, Spell>();
@@ -98,6 +98,7 @@ public class SpellMgr {
 			String sprite_id = loadSpells.getString();
 			String name = loadSpells.getString();
 			String tooltip = loadSpells.getString();
+			byte rank = loadSpells.getByte();
 			int effectValue = loadSpells.getInt();
 			int stunDuration = loadSpells.getInt();
 			float stunRate = loadSpells.getFloat();
@@ -105,7 +106,9 @@ public class SpellMgr {
 			boolean triggerGCD = loadSpells.getBoolean();
 			int cd = loadSpells.getInt();
 			int castTime = loadSpells.getInt();
-			StoreSpell.createSpell(id, sprite_id, name, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD);
+			SpellMagicalSchool magicalSchool = convStringToMagicalSchool(loadSpells.getString());
+			boolean isMagical = loadSpells.getBoolean();
+			StoreSpell.createSpell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical);
 			amount++;
 		}
 		System.out.println("Loaded "+amount+" spells in "+(System.nanoTime()-timer)/1000+" µs.");
@@ -113,6 +116,29 @@ public class SpellMgr {
 	
 	public static boolean exists(int id) {
 		return spellMap.containsKey(id);
+	}
+	
+	public static SpellMagicalSchool convStringToMagicalSchool(String type) {
+		if(type.equals("SHADOW")) {
+			return SpellMagicalSchool.SHADOW;
+		}
+		if(type.equals("HOLY")) {
+			return SpellMagicalSchool.HOLY;
+		}
+		if(type.equals("FROST")) {
+			return SpellMagicalSchool.FROST;
+		}
+		if(type.equals("ARCANE")) {
+			return SpellMagicalSchool.ARCANE;
+		}
+		if(type.equals("NATURE")) {
+			return SpellMagicalSchool.NATURE;
+		}
+		if(type.equals("FIRE")) {
+			return SpellMagicalSchool.FIRE;
+		}
+		System.out.println("Unknown spell's magical school SpellMgr:convStringToMagicalSchool : "+type);
+		return null;
 	}
 	
 	public static SpellType getSpellType(String type) {
