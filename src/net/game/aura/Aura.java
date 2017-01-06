@@ -9,6 +9,10 @@ public class Aura {
 	private final int defaultNumberStack;
 	private final AuraEffect effect1;
 	private final int effectValue1;
+	private final AuraEffect effect2;
+	private final int effectValue2;
+	private final AuraEffect effect3;
+	private final int effectValue3;
 	private final boolean lowDispellable;
 	private final boolean highDispellable;
 	private final boolean isVisible;
@@ -17,7 +21,7 @@ public class Aura {
 	protected final int spellTriggeredOnFade;
 	private final boolean isBuff;
 	
-	public Aura(int id, String name, String sprite_id, boolean isBuff, int spellTriggeredOnFade, int duration, int defaultNumberStack, boolean lowDispellable, boolean highDispellable, boolean isVisible, AuraEffect effect1, int effectValue1) {
+	public Aura(int id, String name, String sprite_id, boolean isBuff, int spellTriggeredOnFade, int duration, int defaultNumberStack, boolean lowDispellable, boolean highDispellable, boolean isVisible, AuraEffect effect1, int effectValue1, AuraEffect effect2, int effectValue2, AuraEffect effect3, int effectValue3) {
 		this.id = id;
 		this.name = name;
 		this.sprite_id = sprite_id;
@@ -25,6 +29,10 @@ public class Aura {
 		this.defaultNumberStack = defaultNumberStack;
 		this.effect1 = effect1;
 		this.effectValue1 = effectValue1;
+		this.effect2 = effect2;
+		this.effectValue2 = effectValue2;
+		this.effect3 = effect3;
+		this.effectValue3 = effectValue3;
 		this.highDispellable = highDispellable;
 		this.lowDispellable = lowDispellable;
 		this.isVisible = isVisible;
@@ -40,6 +48,10 @@ public class Aura {
 	
 	public int getId() {
 		return this.id;
+	}
+	
+	public String getName() {
+		return this.name;
 	}
 	
 	public int getDuration() {

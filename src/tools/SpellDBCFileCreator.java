@@ -17,6 +17,7 @@ import net.game.spell.SpellMgr;
 public class SpellDBCFileCreator {
 
 	private final static String FILE_PATH = "Spell.dbc";
+	private final static byte[] HEADER_SIGNATURE = new byte[] {(byte)87, (byte)68, (byte)66, (byte)67};
 	
 	public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
 		JDO jdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);
@@ -31,12 +32,20 @@ public class SpellDBCFileCreator {
 			System.out.println("Table `spell` is empty.");
 			return;
 		}
+		int i = 0;
+		while(i < HEADER_SIGNATURE.length) {
+			writeBuffer.writeByte(HEADER_SIGNATURE[i]);
+			i++;
+		}
+		int position = writeBuffer.position();
+		writeBuffer.writeInt(0);
+		writeBuffer.writeInt(0);
+		int numberSpellLoaded = 0;
 		JDOStatement loadSpells = jdo.prepare(SpellMgr.LOAD_SPELL_REQUEST);
 		loadSpells.execute();
-		int position = 0;
-		writeBuffer.writeInt(0);
 		while(loadSpells.fetch()) {
 			writeBuffer.writeInt(loadSpells.getInt());
+			writeBuffer.writeString(loadSpells.getString());
 			writeBuffer.writeString(loadSpells.getString());
 			writeBuffer.writeString(loadSpells.getString());
 			writeBuffer.writeInt(loadSpells.getInt());
@@ -46,10 +55,12 @@ public class SpellDBCFileCreator {
 			writeBuffer.writeBoolean(loadSpells.getBoolean());
 			writeBuffer.writeInt(loadSpells.getInt());
 			writeBuffer.writeInt(loadSpells.getInt());
+			numberSpellLoaded++;
 		}
 		int endPosition = writeBuffer.position();
 		writeBuffer.position(position);
 		writeBuffer.writeInt(endPosition);
+		writeBuffer.writeInt(numberSpellLoaded);
 		writeBuffer.position(endPosition);
 		writeBuffer.flip();
 		writeBuffer.setOrder(ByteOrder.LITTLE_ENDIAN);

@@ -38,6 +38,7 @@ public class Spell {
 	@SuppressWarnings("unused")
 	protected boolean action(Unit caster) {return false;}
 	
+	@SuppressWarnings("unused")
 	protected boolean canCast(Unit caster) {return false;}
 	
 	public void use(Unit caster) {

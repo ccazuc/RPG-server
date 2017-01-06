@@ -8,7 +8,7 @@ import net.Server;
 
 public class SpellMgr {
 
-	public final static String LOAD_SPELL_REQUEST = "SELECT id, sprite_id, name, effectValue, stun_duration, stun_rate, manaCost, trigger_gcd, cd, cast_time FROM spell";
+	public final static String LOAD_SPELL_REQUEST = "SELECT id, sprite_id, name, tooltip, effectValue, stun_duration, stun_rate, manaCost, trigger_gcd, cd, cast_time FROM spell";
 	private static int numberSpellLoaded;
 	private static JDOStatement loadSpells;
 	private final static HashMap<Integer, Spell> spellMap = new HashMap<Integer, Spell>();
@@ -97,6 +97,7 @@ public class SpellMgr {
 			int id = loadSpells.getInt();
 			String sprite_id = loadSpells.getString();
 			String name = loadSpells.getString();
+			String tooltip = loadSpells.getString();
 			int effectValue = loadSpells.getInt();
 			int stunDuration = loadSpells.getInt();
 			float stunRate = loadSpells.getFloat();
