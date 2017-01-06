@@ -4,7 +4,7 @@ import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.Player;
+import net.game.unit.Player;
 
 public class CommandListPlayer extends Command {
 	

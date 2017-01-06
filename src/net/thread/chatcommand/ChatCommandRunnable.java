@@ -7,9 +7,9 @@ import java.util.List;
 import net.Server;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.ClassType;
-import net.game.Player;
 import net.game.manager.DebugMgr;
+import net.game.unit.ClassType;
+import net.game.unit.Player;
 import net.thread.log.LogRunnable;
 
 public class ChatCommandRunnable implements Runnable {

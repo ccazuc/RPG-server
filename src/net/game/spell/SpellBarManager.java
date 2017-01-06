@@ -4,13 +4,13 @@ import java.sql.SQLException;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.game.Player;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 import net.game.shortcut.PotionShortcut;
 import net.game.shortcut.Shortcut;
 import net.game.shortcut.StuffShortcut;
+import net.game.unit.Player;
 
 public class SpellBarManager {
 	

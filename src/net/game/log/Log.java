@@ -1,6 +1,6 @@
 package net.game.log;
 
-import net.game.Player;
+import net.game.unit.Player;
 import net.thread.log.LogRunnable;
 
 public class Log {

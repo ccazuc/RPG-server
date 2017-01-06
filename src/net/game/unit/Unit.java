@@ -1,4 +1,4 @@
-package net.game;
+package net.game.unit;
 
 import java.util.HashMap;
 

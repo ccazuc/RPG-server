@@ -44,8 +44,8 @@ import net.command.player.CommandSendSingleBagItem;
 import net.command.player.CommandTrade;
 import net.command.player.CommandUpdateStats;
 import net.command.player.CommandWho;
-import net.game.Player;
 import net.game.log.Log;
+import net.game.unit.Player;
 
 public class ConnectionManager {
 	

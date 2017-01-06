@@ -5,12 +5,12 @@ import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.game.ClassType;
 import net.game.item.gem.GemBonusType;
 import net.game.item.gem.GemManager;
 import net.game.item.gem.GemColor;
 import net.game.item.stuff.Stuff;
 import net.game.item.stuff.StuffManager;
+import net.game.unit.ClassType;
 
 public class WeaponManager {
 	

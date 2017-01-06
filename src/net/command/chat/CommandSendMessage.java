@@ -4,9 +4,9 @@ import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.Player;
 import net.game.chat.ChatCommandHandler;
 import net.game.manager.IgnoreMgr;
+import net.game.unit.Player;
 import net.utils.Color;
 
 public class CommandSendMessage extends Command {

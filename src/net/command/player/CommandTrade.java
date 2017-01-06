@@ -8,13 +8,13 @@ import net.command.chat.MessageType;
 import net.command.item.CommandSetItem;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.Player;
 import net.game.item.DragItem;
 import net.game.item.Item;
 import net.game.item.gem.GemColor;
 import net.game.item.stuff.Stuff;
 import net.game.log.Log;
 import net.game.manager.IgnoreMgr;
+import net.game.unit.Player;
 
 public class CommandTrade extends Command {
 

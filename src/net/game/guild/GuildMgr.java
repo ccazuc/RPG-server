@@ -7,8 +7,8 @@ import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.game.ClassType;
-import net.game.Player;
+import net.game.unit.ClassType;
+import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;

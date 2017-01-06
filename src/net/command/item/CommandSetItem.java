@@ -2,8 +2,8 @@ package net.command.item;
 
 import net.command.Command;
 import net.connection.PacketID;
-import net.game.Player;
 import net.game.item.DragItem;
+import net.game.unit.Player;
 
 public class CommandSetItem extends Command {
 

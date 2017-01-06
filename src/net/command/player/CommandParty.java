@@ -8,9 +8,9 @@ import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.Party;
-import net.game.Player;
 import net.game.log.Log;
 import net.game.manager.IgnoreMgr;
+import net.game.unit.Player;
 
 public class CommandParty extends Command {
 

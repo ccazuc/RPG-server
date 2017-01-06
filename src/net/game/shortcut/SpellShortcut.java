@@ -2,8 +2,8 @@ package net.game.shortcut;
 
 import java.sql.SQLException;
 
-import net.game.Player;
 import net.game.spell.Spell;
+import net.game.unit.Player;
 
 public class SpellShortcut implements Shortcut {
 	

@@ -7,7 +7,6 @@ import jdo.JDOStatement;
 import net.Server;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.Player;
 import net.game.item.bag.ContainerManager;
 import net.game.item.gem.GemColor;
 import net.game.item.gem.GemManager;
@@ -15,6 +14,7 @@ import net.game.item.potion.PotionManager;
 import net.game.item.stuff.Stuff;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
+import net.game.unit.Player;
 
 public class ItemManager {
 	

@@ -3,6 +3,7 @@ package net.game;
 import net.command.player.CommandTrade;
 import net.game.item.Item;
 import net.game.log.Log;
+import net.game.unit.Player;
 
 public class Trade {
 

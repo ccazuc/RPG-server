@@ -1,19 +1,21 @@
 package net.game;
 
+import net.game.unit.Player;
+
 public class Party {
 
+	public final static int MAXIMUM_PARTY_SIZE = 5;
 	private Player[] playerTable;
 	private Player partyLeader;
 	
 	public Party(Player leader, Player member) {
-		this.playerTable = new Player[5];
+		this.playerTable = new Player[MAXIMUM_PARTY_SIZE];
 		this.playerTable[0] = leader;
 		this.playerTable[1] = member;
 		this.partyLeader = leader;
 	}
 	
 	public boolean isPartyLeader(Player player) {
-		System.out.println(player+" "+this.partyLeader);
 		return player.getCharacterId() == this.partyLeader.getCharacterId();
 	}
 	

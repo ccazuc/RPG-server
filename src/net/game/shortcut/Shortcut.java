@@ -3,7 +3,7 @@ package net.game.shortcut;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
-import net.game.Player;
+import net.game.unit.Player;
 
 public interface Shortcut {
 

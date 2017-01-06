@@ -4,11 +4,11 @@ import net.command.Command;
 import net.command.player.CommandSendRedAlert;
 import net.connection.Connection;
 import net.game.DefaultRedAlert;
-import net.game.Player;
 import net.game.item.DragItem;
 import net.game.item.Item;
 import net.game.item.stuff.Stuff;
 import net.game.log.Log;
+import net.game.unit.Player;
 
 public class CommandDragItems extends Command {
 

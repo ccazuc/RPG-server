@@ -16,13 +16,13 @@ import net.command.chat.MessageColor;
 import net.command.chat.MessageType;
 import net.command.player.CommandSendRedAlert;
 import net.game.AccountRank;
-import net.game.Player;
 import net.game.item.Item;
 import net.game.manager.AccountMgr;
 import net.game.manager.BanMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.DebugMgr;
 import net.game.spell.SpellMgr;
+import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
 import net.utils.Color;
 

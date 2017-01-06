@@ -1,8 +1,8 @@
 package net.command.player;
 
-import net.game.Player;
 import net.connection.PacketID;
 import net.game.DefaultRedAlert;
+import net.game.unit.Player;
 
 public class CommandSendRedAlert {
 

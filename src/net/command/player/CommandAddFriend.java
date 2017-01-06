@@ -5,7 +5,7 @@ import net.command.Command;
 import net.command.chat.CommandPlayerNotFound;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.Player;
+import net.game.unit.Player;
 
 public class CommandAddFriend extends Command {
 	

@@ -1,6 +1,6 @@
 package net.game.spell;
 
-import net.game.Unit;
+import net.game.unit.Unit;
 
 public class StoreSpell {
 	

@@ -1,4 +1,4 @@
-package net.game;
+package net.game.unit;
 
 import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
@@ -16,6 +16,10 @@ import net.command.player.CommandTrade;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
+import net.game.AccountRank;
+import net.game.Party;
+import net.game.Trade;
+import net.game.Wear;
 import net.game.guild.Guild;
 import net.game.guild.GuildMgr;
 import net.game.item.DragItem;

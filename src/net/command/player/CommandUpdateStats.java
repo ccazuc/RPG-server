@@ -2,7 +2,7 @@ package net.command.player;
 
 import net.command.Command;
 import net.connection.PacketID;
-import net.game.Player;
+import net.game.unit.Player;
 
 public class CommandUpdateStats extends Command {
 	

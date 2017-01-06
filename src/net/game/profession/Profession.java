@@ -2,7 +2,7 @@ package net.game.profession;
 
 import java.util.ArrayList;
 
-import net.game.Player;
+import net.game.unit.Player;
 
 public class Profession {
 

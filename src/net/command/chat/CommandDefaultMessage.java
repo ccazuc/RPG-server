@@ -2,7 +2,7 @@ package net.command.chat;
 
 import net.command.Command;
 import net.connection.PacketID;
-import net.game.Player;
+import net.game.unit.Player;
 import net.utils.Color;
 
 public class CommandDefaultMessage extends Command {

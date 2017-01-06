@@ -5,9 +5,10 @@ import net.command.player.CommandSendGCD;
 import net.command.player.CommandSendRedAlert;
 import net.command.player.CommandSendSpellCD;
 import net.game.DefaultRedAlert;
-import net.game.Player;
-import net.game.Unit;
-import net.game.UnitType;
+import net.game.unit.Player;
+import net.game.unit.TargetType;
+import net.game.unit.Unit;
+import net.game.unit.UnitType;
 
 public class Spell {
 
@@ -42,9 +43,7 @@ public class Spell {
 	protected boolean canCast(Unit caster) {return false;}
 	
 	public void use(Unit caster) {
-		System.out.println("Use start");
 		if(action(caster)) {
-			System.out.println("Action confirmed");
 			if(this.triggerGCD) {
 				if(caster.getUnitType() == UnitType.PLAYER) {
 					CommandSendGCD.sendGCD((Player)caster, Server.getLoopTickTimer(), Server.getLoopTickTimer()+Unit.GCD);
@@ -61,14 +60,13 @@ public class Spell {
 		}
 	}
 	
-	public void cast(Unit caster) {
+	public void cast(Unit caster, TargetType type) {
 		/*if(this.manaCost > caster.getMana()) {
 			if(caster.getUnitType() == UnitType.PLAYER) {
 				CommandSendRedAlert.write((Player)caster, DefaultRedAlert.NOT_ENOUGH_MANA);
 			}
 			return;
 		}*/
-		System.out.println("Cast request");
 		if(canCast(caster)) {
 			System.out.println("Can cast");
 			if(this.castTime == 0) {

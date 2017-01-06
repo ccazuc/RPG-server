@@ -1,7 +1,7 @@
 package net.command.player;
 
 import net.connection.PacketID;
-import net.game.Player;
+import net.game.unit.Player;
 
 public class CommandSendGCD {
 

@@ -1,7 +1,7 @@
 package net.game.chat;
 
 import net.Server;
-import net.game.Player;
+import net.game.unit.Player;
 import net.thread.chatcommand.ChatCommandRequest;
 
 public class ChatCommandHandler {

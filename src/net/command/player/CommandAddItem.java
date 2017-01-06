@@ -5,12 +5,12 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.AccountRank;
-import net.game.Player;
 import net.game.item.Item;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
+import net.game.unit.Player;
 
 public class CommandAddItem extends Command {
 	

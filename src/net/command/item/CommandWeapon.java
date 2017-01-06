@@ -3,8 +3,8 @@ package net.command.item;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.Player;
 import net.game.item.weapon.WeaponManager;
+import net.game.unit.Player;
 
 public class CommandWeapon extends Command {
 

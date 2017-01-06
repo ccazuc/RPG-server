@@ -6,8 +6,8 @@ import net.command.auth.CommandPlayerIsLoggedOnWorldServer;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.AccountRank;
-import net.game.Player;
 import net.game.log.Log;
+import net.game.unit.Player;
 
 public class CommandLoginRealmPlayer extends Command {
 

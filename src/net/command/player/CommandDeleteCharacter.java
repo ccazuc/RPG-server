@@ -2,10 +2,10 @@ package net.command.player;
 
 import net.command.Command;
 import net.connection.Connection;
-import net.game.Player;
 import net.game.log.Log;
 import net.game.manager.AccountMgr;
 import net.game.manager.CharacterMgr;
+import net.game.unit.Player;
 
 public class CommandDeleteCharacter extends Command {
 	

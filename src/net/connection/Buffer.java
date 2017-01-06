@@ -8,13 +8,13 @@ import java.nio.ByteOrder;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 
-import net.game.Player;
 import net.game.item.Item;
 import net.game.item.ItemType;
 import net.game.item.bag.Container;
 import net.game.item.gem.Gem;
 import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
+import net.game.unit.Player;
 import net.utils.Color;
 
 public class Buffer {

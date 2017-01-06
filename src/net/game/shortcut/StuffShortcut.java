@@ -3,8 +3,8 @@ package net.game.shortcut;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 
-import net.game.Player;
 import net.game.item.stuff.Stuff;
+import net.game.unit.Player;
 
 public class StuffShortcut implements Shortcut {
 

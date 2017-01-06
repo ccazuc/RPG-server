@@ -7,6 +7,7 @@ public class AppliedAura {
 	private final Aura aura;
 	private long endTimer;
 	private int numberStack;
+	private long lastTick;
 	
 	public AppliedAura(Aura aura) {
 		this.aura = aura;

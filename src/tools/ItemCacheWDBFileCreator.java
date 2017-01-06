@@ -11,7 +11,6 @@ import jdo.JDO;
 import jdo.JDOStatement;
 import jdo.wrapper.MariaDB;
 import net.connection.Buffer;
-import net.game.ClassType;
 import net.game.Wear;
 import net.game.item.ItemType;
 import net.game.item.bag.Container;
@@ -27,6 +26,7 @@ import net.game.item.weapon.WeaponManager;
 import net.game.item.weapon.WeaponSlot;
 import net.game.item.weapon.WeaponType;
 import net.game.manager.DatabaseMgr;
+import net.game.unit.ClassType;
 
 public class ItemCacheWDBFileCreator {
 

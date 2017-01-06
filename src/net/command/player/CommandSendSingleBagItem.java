@@ -2,10 +2,10 @@ package net.command.player;
 
 import net.command.Command;
 import net.connection.Connection;
-import net.game.Player;
 import net.game.item.Item;
 import net.game.item.gem.GemManager;
 import net.game.item.stuff.Stuff;
+import net.game.unit.Player;
 
 public class CommandSendSingleBagItem extends Command {
 	

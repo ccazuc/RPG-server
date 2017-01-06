@@ -1,6 +1,6 @@
 package net.game.aura;
 
-import net.game.Unit;
+import net.game.unit.Unit;
 
 public class Aura {
 
@@ -20,8 +20,9 @@ public class Aura {
 	private final String sprite_id;
 	protected final int spellTriggeredOnFade;
 	private final boolean isBuff;
+	private final int tickRate;
 	
-	public Aura(int id, String name, String sprite_id, boolean isBuff, int spellTriggeredOnFade, int duration, int defaultNumberStack, boolean lowDispellable, boolean highDispellable, boolean isVisible, AuraEffect effect1, int effectValue1, AuraEffect effect2, int effectValue2, AuraEffect effect3, int effectValue3) {
+	public Aura(int id, String name, String sprite_id, boolean isBuff, int spellTriggeredOnFade, int duration, int defaultNumberStack, int tickRate, boolean lowDispellable, boolean highDispellable, boolean isVisible, AuraEffect effect1, int effectValue1, AuraEffect effect2, int effectValue2, AuraEffect effect3, int effectValue3) {
 		this.id = id;
 		this.name = name;
 		this.sprite_id = sprite_id;
@@ -38,6 +39,7 @@ public class Aura {
 		this.isVisible = isVisible;
 		this.spellTriggeredOnFade = spellTriggeredOnFade;
 		this.isBuff = isBuff;
+		this.tickRate = tickRate;
 	}
 	
 	@SuppressWarnings("unused")

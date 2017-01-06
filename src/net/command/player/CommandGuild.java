@@ -9,13 +9,13 @@ import net.command.chat.DefaultMessage;
 import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.ClassType;
-import net.game.Player;
 import net.game.guild.Guild;
 import net.game.guild.GuildMgr;
 import net.game.guild.GuildMember;
 import net.game.guild.GuildRank;
 import net.game.manager.IgnoreMgr;
+import net.game.unit.ClassType;
+import net.game.unit.Player;
 
 public class CommandGuild extends Command {
 	

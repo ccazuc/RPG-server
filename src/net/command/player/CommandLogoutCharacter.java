@@ -4,8 +4,8 @@ import java.sql.SQLException;
 
 import net.Server;
 import net.command.Command;
-import net.game.Player;
 import net.game.log.Log;
+import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;

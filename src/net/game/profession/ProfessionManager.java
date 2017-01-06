@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.game.Player;
 import net.game.item.Item;
+import net.game.unit.Player;
 
 public class ProfessionManager {
 

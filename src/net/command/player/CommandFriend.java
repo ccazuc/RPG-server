@@ -7,9 +7,9 @@ import net.command.chat.CommandSendMessage;
 import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.Player;
 import net.game.manager.CharacterMgr;
 import net.game.manager.FriendMgr;
+import net.game.unit.Player;
 
 public class CommandFriend extends Command {
 	

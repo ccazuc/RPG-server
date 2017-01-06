@@ -1,6 +1,6 @@
 package net.thread.log;
 
-import net.game.Player;
+import net.game.unit.Player;
 
 public class ServerException {
 

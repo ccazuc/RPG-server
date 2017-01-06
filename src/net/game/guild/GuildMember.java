@@ -1,6 +1,6 @@
 package net.game.guild;
 
-import net.game.ClassType;
+import net.game.unit.ClassType;
 
 public class GuildMember {
 

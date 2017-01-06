@@ -5,9 +5,10 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.DefaultRedAlert;
-import net.game.Player;
 import net.game.spell.Spell;
 import net.game.spell.SpellMgr;
+import net.game.unit.Player;
+import net.game.unit.TargetType;
 
 public class CommandCast extends Command {
 
@@ -41,14 +42,8 @@ public class CommandCast extends Command {
 				CommandSendRedAlert.write(player, DefaultRedAlert.SPELL_NOT_READY_YET);
 				return;
 			}
-			spell.cast(player);
-			/*if(spell.getCastTime() == 0) {
-				spell.use(player);
-				return;
-			}
-			player.cast(spell);
-			cast(player, id, Server.getLoopTickTimer(), spell.getCastTime());
-			CommandSendSpellCD.sendCD(player, id, spell.getSpellBaseCd(), Server.getLoopTickTimer());*/
+			TargetType type = TargetType.values()[connection.readByte()];
+			spell.cast(player, type);
 		}
 	}
 	

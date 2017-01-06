@@ -2,9 +2,9 @@ package net.command.player;
 
 import net.command.Command;
 import net.connection.PacketID;
-import net.game.Player;
-import net.game.Unit;
-import net.game.UnitType;
+import net.game.unit.Player;
+import net.game.unit.Unit;
+import net.game.unit.UnitType;
 
 public class CommandSendTarget extends Command {
 

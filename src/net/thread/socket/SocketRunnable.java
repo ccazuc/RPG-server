@@ -5,7 +5,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 import net.Server;
-import net.game.Player;
+import net.game.unit.Player;
 
 public class SocketRunnable implements Runnable {
 

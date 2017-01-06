@@ -1,6 +1,5 @@
 package net.game.item.stuff;
 
-import net.game.ClassType;
 import net.game.Wear;
 import net.game.item.Item;
 import net.game.item.ItemType;
@@ -9,6 +8,7 @@ import net.game.item.gem.GemBonusType;
 import net.game.item.gem.GemColor;
 import net.game.item.weapon.WeaponSlot;
 import net.game.item.weapon.WeaponType;
+import net.game.unit.ClassType;
 
 public class Stuff extends Item {
 

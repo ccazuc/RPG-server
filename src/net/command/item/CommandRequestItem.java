@@ -3,13 +3,13 @@ package net.command.item;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.Player;
 import net.game.item.Item;
 import net.game.item.bag.ContainerManager;
 import net.game.item.gem.GemManager;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
+import net.game.unit.Player;
 
 public class CommandRequestItem extends Command {
 

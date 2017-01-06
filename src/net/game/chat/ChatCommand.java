@@ -3,7 +3,7 @@ package net.game.chat;
 import java.util.ArrayList;
 
 import net.game.AccountRank;
-import net.game.Player;
+import net.game.unit.Player;
 
 public class ChatCommand {
 

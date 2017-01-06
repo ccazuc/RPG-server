@@ -2,8 +2,8 @@ package net.thread.chatcommand;
 
 import net.command.chat.CommandSendMessage;
 import net.command.chat.MessageType;
-import net.game.Player;
 import net.game.chat.StoreChatCommand;
+import net.game.unit.Player;
 
 public class ChatCommandRequest {
 

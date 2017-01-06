@@ -1,6 +1,6 @@
 package net.thread.sql;
 
-import net.game.Player;
+import net.game.unit.Player;
 
 public class SQLDatas {
 

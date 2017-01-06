@@ -1,7 +1,7 @@
 package net.command;
 
 import net.connection.Connection;
-import net.game.Player;
+import net.game.unit.Player;
 
 public class Command {
 	

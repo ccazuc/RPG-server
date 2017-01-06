@@ -10,8 +10,8 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import net.game.Player;
 import net.game.manager.DebugMgr;
+import net.game.unit.Player;
 
 public class LogRunnable implements Runnable {
 
