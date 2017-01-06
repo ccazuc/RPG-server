@@ -10,6 +10,7 @@ public class Unit {
 
 	public final static int GCD = 1500;
 	protected Unit target;
+	protected Unit castTarget;
 	protected HashMap<Integer, AppliedAura> auraMap;
 	protected HashMap<Integer, Long> spellCDMap;
 	protected int level;
@@ -64,7 +65,7 @@ public class Unit {
 	public void checkCast() {
 		if(this.spellCasting != null && this.endCastTimer <= Server.getLoopTickTimer()) {
 			System.out.println("Cast finished");
-			this.spellCasting.use(this);
+			this.spellCasting.use(this, this.castTarget);
 			this.spellCasting = null;
 		}
 	}
@@ -85,8 +86,9 @@ public class Unit {
 		return this.spellCasting != null && Server.getLoopTickTimer() < this.endCastTimer;
 	}
 	
-	public void cast(Spell spell) {
+	public void cast(Spell spell, Unit target) {
 		this.spellCasting = spell;
+		this.castTarget = target;
 		this.endCastTimer = Server.getLoopTickTimer()+spell.getCastTime();
 	}
 	

@@ -115,8 +115,9 @@ public class Player extends Unit {
 	}
 	
 	@Override
-	public void cast(Spell spell) {
+	public void cast(Spell spell, Unit target) {
 		this.spellCasting = spell;
+		this.castTarget = target;
 		this.endCastTimer = Server.getLoopTickTimer()+spell.getCastTime();
 		CommandCast.cast(this, spell.getSpellId(), Server.getLoopTickTimer(), spell.getCastTime());
 	}

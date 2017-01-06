@@ -9,9 +9,7 @@ public class StoreSpell {
 			SpellMgr.store(new Spell(id, sprite_id, name, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD) {
 				
 				@Override
-				public boolean action(Unit caster) {
-					System.out.println(caster.getTarget().getStamina());
-					System.out.println("Mortel Strike !");
+				public boolean action(Unit caster, Unit target) {
 					return true;
 				}
 			});
@@ -32,17 +30,17 @@ public class StoreSpell {
 			SpellMgr.store(new Spell(id, sprite_id, name, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD) {
 				
 				@Override
-				public boolean action(Unit caster) {
+				public boolean action(Unit caster, Unit target) {
 					if(!Spell.checkSingleTarget(caster)) {
 						return false;
 					}
-					doDamage(caster, caster.getTarget(), this.effectValue);
+					doDamage(caster, target, this.effectValue);
 					return true;
 				}
 				
 				@Override
-				public boolean canCast(Unit caster) {
-					return Spell.checkSingleTarget(caster);
+				public boolean canCast(Unit caster, Unit target) {
+					return true;
 				}
 			});
 		}

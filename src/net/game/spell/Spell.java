@@ -37,13 +37,13 @@ public class Spell {
 	}
 	
 	@SuppressWarnings("unused")
-	protected boolean action(Unit caster) {return false;}
+	protected boolean action(Unit caster, Unit target) {return false;}
 	
 	@SuppressWarnings("unused")
-	protected boolean canCast(Unit caster) {return false;}
+	protected boolean canCast(Unit caster, Unit target) {return false;}
 	
-	public void use(Unit caster) {
-		if(action(caster)) {
+	public void use(Unit caster, Unit target) {
+		if(action(caster, target)) {
 			if(this.triggerGCD) {
 				if(caster.getUnitType() == UnitType.PLAYER) {
 					CommandSendGCD.sendGCD((Player)caster, Server.getLoopTickTimer(), Server.getLoopTickTimer()+Unit.GCD);
@@ -60,21 +60,25 @@ public class Spell {
 		}
 	}
 	
-	public void cast(Unit caster, TargetType type) {
+	public void cast(Unit caster, TargetType type, int index) {
 		/*if(this.manaCost > caster.getMana()) {
 			if(caster.getUnitType() == UnitType.PLAYER) {
 				CommandSendRedAlert.write((Player)caster, DefaultRedAlert.NOT_ENOUGH_MANA);
 			}
 			return;
 		}*/
-		if(canCast(caster)) {
+		Unit target = getTarget(caster, type, index);
+		if(target == null) {
+			return;
+		}
+		if(canCast(caster, target)) {
 			System.out.println("Can cast");
 			if(this.castTime == 0) {
-				use(caster);
+				use(caster, target);
 			}
 			else {
 				System.out.println("Cast start");
-				caster.cast(this);
+				caster.cast(this, target);
 			}
 		}
 	}
@@ -94,6 +98,13 @@ public class Spell {
 		return true;
 	//}
 	}*/
+	
+	public static Unit getTarget(Unit caster, TargetType type, int index) {
+		if(type == TargetType.TARGET) {
+			return caster.getTarget();
+		}
+		return null;
+	}
 	
 	public void doHeal(Unit target, int amount) {
 		target.setStamina(target.getStamina()+amount);
