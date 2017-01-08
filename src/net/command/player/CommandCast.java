@@ -43,7 +43,7 @@ public class CommandCast extends Command {
 				return;
 			}
 			TargetType type = TargetType.values()[connection.readByte()];
-			int index = connection.readInt();
+			byte index = connection.readByte();
 			spell.cast(player, type, index);
 		}
 	}

@@ -18,9 +18,11 @@ public class CommandSendTarget extends Command {
 	public static void sendTarget(Player player, Unit unit) {
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.SEND_TARGET);
-		player.getConnection().writeInt(unit.getid());
+		player.getConnection().writeInt(unit.getUnitID());
 		player.getConnection().writeInt(unit.getStamina());
+		player.getConnection().writeInt(unit.getMaxStaminaEffective());
 		player.getConnection().writeInt(unit.getMana());
+		player.getConnection().writeInt(unit.getMaxManaEffective());
 		player.getConnection().writeString(unit.getName());
 		player.getConnection().writeInt(unit.getLevel());
 		player.getConnection().endPacket();

@@ -20,6 +20,7 @@ import net.game.AccountRank;
 import net.game.Party;
 import net.game.Trade;
 import net.game.Wear;
+import net.game.aura.AppliedAura;
 import net.game.guild.Guild;
 import net.game.guild.GuildMgr;
 import net.game.item.DragItem;
@@ -71,7 +72,6 @@ public class Player extends Unit {
 	private int defaultArmor;
 	private ClassType classe;
 	private int numberRedGem;
-	private int characterId;
 	private long pingTimer;
 	private boolean logged;
 	private boolean isGMOn;
@@ -108,12 +108,16 @@ public class Player extends Unit {
 		this.maxManaUnAura = 11000;
 		this.maxManaEffective = 11000;
 		this.target = new Unit(UnitType.NPC, 5, 8000, 8000, 7000, 7000, 50, "TestUnit", 50, 50, 50, 50, 50);
+		this.auraList = new ArrayList<AppliedAura>();
+		this.auraRemoveList = new ArrayList<AppliedAura>();
+		this.spellCDMap = new HashMap<Integer, Long>();
 	}
 	
 	@Override
 	public void tick() {
 		this.connectionManager.read();
 		checkCast();
+		auraTick();
 	}
 	
 	@Override
@@ -142,14 +146,6 @@ public class Player extends Unit {
 	
 	public boolean isLoggedIn() {
 		return this.logged;
-	}
-	
-	public int getCharacterId() {
-		return this.characterId;
-	}
-	
-	public void setCharacterId(int id) {
-		this.characterId = id;
 	}
 	
 	public Trade getTrade() {
@@ -223,7 +219,7 @@ public class Player extends Unit {
 	public void sendStats() {
 		this.connectionManager.getConnection().startPacket();
 		this.connectionManager.getConnection().writeShort(PacketID.LOAD_STATS);
-		this.connectionManager.getConnection().writeInt(this.characterId);
+		this.connectionManager.getConnection().writeInt(this.unitID);
 		this.connectionManager.getConnection().writeInt(this.exp);
 		this.connectionManager.getConnection().writeInt(this.gold);
 		this.connectionManager.getConnection().writeInt(this.accountRank.getValue());
@@ -308,14 +304,14 @@ public class Player extends Unit {
 	}
 	
 	public void notifyFriendOnline() {
-		if(!FriendMgr.containsKey(this.characterId)) {
+		if(!FriendMgr.containsKey(this.unitID)) {
 			return;
 		}
 		int i = 0;
-		int length = FriendMgr.getFriendMap().get(this.characterId).size();
+		int length = FriendMgr.getFriendMap().get(this.unitID).size();
 		while(i < length) {
-			if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.characterId).get(i))) {
-				CommandFriend.notifyFriendOnline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.characterId).get(i)), this);
+			if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.unitID).get(i))) {
+				CommandFriend.notifyFriendOnline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.unitID).get(i)), this);
 			}
 			i++;
 		}
@@ -323,11 +319,11 @@ public class Player extends Unit {
 	
 	public void notifyFriendOffline() {
 		int i = 0;
-		if(FriendMgr.containsKey(this.characterId)) {
-			int length = FriendMgr.getFriendMap().get(this.characterId).size();
+		if(FriendMgr.containsKey(this.unitID)) {
+			int length = FriendMgr.getFriendMap().get(this.unitID).size();
 			while(i < length) {
-				if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.characterId).get(i))) {
-					CommandFriend.notifyFriendOffline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.characterId).get(i)), this);
+				if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.unitID).get(i))) {
+					CommandFriend.notifyFriendOffline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.unitID).get(i)), this);
 				}
 				i++;
 			}
@@ -337,7 +333,7 @@ public class Player extends Unit {
 	public boolean isFriendWith(Player player) {
 		int i = 0;
 		while(i < this.friendList.size()) {
-			if(this.friendList.get(i) == player.getCharacterId()) {
+			if(this.friendList.get(i) == player.getUnitID()) {
 				return true;
 			}
 			i++;
@@ -387,7 +383,7 @@ public class Player extends Unit {
 		}
 		Server.addLoggedPlayer(this);
 		Server.removeInGamePlayer(this);
-		FriendMgr.getFriendMap().remove(this.characterId);
+		FriendMgr.getFriendMap().remove(this.unitID);
 		resetDatas();
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);
@@ -404,9 +400,9 @@ public class Player extends Unit {
 			if(this.guild != null) {
 				CommandGuild.notifyOfflinePlayer(this);
 			}
-			FriendMgr.getFriendMap().remove(this.getCharacterId());
+			FriendMgr.getFriendMap().remove(this.getUnitID());
 		}
-		FriendMgr.getFriendMap().remove(this.characterId);
+		FriendMgr.getFriendMap().remove(this.unitID);
 		CommandLogoutCharacter.setPlayerOfflineInDB(this);
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);
@@ -729,7 +725,7 @@ public class Player extends Unit {
 		this.criticalEffective = 0;
 		this.armor = 0;
 		this.bag = null;
-		this.characterId = 0;
+		this.unitID = 0;
 		this.classe = null;
 		this.damage = 0;
 		this.defaultArmor = 0;

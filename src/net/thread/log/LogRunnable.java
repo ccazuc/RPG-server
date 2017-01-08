@@ -88,7 +88,7 @@ public class LogRunnable implements Runnable {
 				outServerLog.println(calendar.getTime());
 				if(exceptionList.get(0).getPlayer() != null) {
 					if(exceptionList.get(0).getPlayer().isOnline()) {
-						outServerLog.println("AccountID : "+exceptionList.get(0).getPlayer().getAccountId()+", CharacterID : "+exceptionList.get(0).getPlayer().getCharacterId()+", CharacterName : "+exceptionList.get(0).getPlayer().getName());
+						outServerLog.println("AccountID : "+exceptionList.get(0).getPlayer().getAccountId()+", CharacterID : "+exceptionList.get(0).getPlayer().getUnitID()+", CharacterName : "+exceptionList.get(0).getPlayer().getName());
 					}
 					else {
 						outServerLog.println("AccountID : "+exceptionList.get(0).getPlayer().getAccountId());
@@ -133,7 +133,7 @@ public class LogRunnable implements Runnable {
 	public static void writePlayerLog(Player player, String text) {
 		synchronized(playerPrintList) {
 			if(player.isOnline()) {
-				playerPrintList.add("[ERROR "+calendar.getTime()+"] PlayerName: "+player.getName()+" PlayerID: "+player.getCharacterId()+" AccountID: "+player.getAccountId()+" "+text);
+				playerPrintList.add("[ERROR "+calendar.getTime()+"] PlayerName: "+player.getName()+" PlayerID: "+player.getUnitID()+" AccountID: "+player.getAccountId()+" "+text);
 			}
 			else {
 				playerPrintList.add("[ERROR "+calendar.getTime()+"] AccountID: "+player.getAccountId()+" "+text);

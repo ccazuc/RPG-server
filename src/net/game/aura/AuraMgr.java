@@ -1,12 +1,14 @@
 package net.game.aura;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
 
 public class AuraMgr {
 
+	private final static HashMap<Integer, Aura> auraMap = new HashMap<Integer, Aura>();
 	public final static String LOAD_AURA_REQUEST = "SELECT id, name, sprite_id, spell_triggered_on_fade, duration, is_stackable, default_number_stack, tick_rate, low_dispellable, high_dispellable, aura_effect1, aura_effect_value1, aura_effect2, aura_effect_value2, aura_effect3, aura_effect_value3, visible, is_buff, is_magical FROM aura";
 	private static JDOStatement loadAuras;
 	
@@ -15,10 +17,42 @@ public class AuraMgr {
 			if(loadAuras == null) {
 				loadAuras = Server.getJDO().prepare(LOAD_AURA_REQUEST);
 			}
+			loadAuras.clear();
+			loadAuras.execute();
+			while(loadAuras.fetch()) {
+				int id = loadAuras.getInt();
+				String name = loadAuras.getString();
+				String sprite_id = loadAuras.getString();
+				int spellTriggeredOnFase = loadAuras.getInt();
+				int duration = loadAuras.getInt();
+				boolean isStackable = loadAuras.getBoolean();
+				int defaultNumberStack = loadAuras.getInt();
+				int tickRate = loadAuras.getInt();
+				boolean lowDispellable = loadAuras.getBoolean();
+				boolean highDispellable = loadAuras.getBoolean();
+				AuraEffect auraEffect1 = convStringToAuraEffect(loadAuras.getString());
+				int auraEffectValue1 = loadAuras.getInt();
+				AuraEffect auraEffect2 = convStringToAuraEffect(loadAuras.getString());
+				int auraEffectValue2 = loadAuras.getInt();
+				AuraEffect auraEffect3 = convStringToAuraEffect(loadAuras.getString());
+				int auraEffectValue3 = loadAuras.getInt();
+				boolean visible = loadAuras.getBoolean();
+				boolean buff = loadAuras.getBoolean();
+				boolean magical = loadAuras.getBoolean();
+				StoreAura.createAura(id, name, sprite_id, spellTriggeredOnFase, duration, isStackable, defaultNumberStack, tickRate, lowDispellable, highDispellable, auraEffect1, auraEffectValue1, auraEffect2, auraEffectValue2, auraEffect3, auraEffectValue3, visible, buff, magical);
+			}
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void storeAura(Aura aura) {
+		auraMap.put(aura.getId(), aura);
+	}
+	
+	public static Aura getAura(int auraID) {
+		return auraMap.get(auraID);
 	}
 	
 	public static AuraEffect convStringToAuraEffect(String aura) {

@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import net.Server;
 import net.game.aura.AppliedAura;
+import net.game.aura.Aura;
 import net.game.spell.Spell;
 
 public class Unit {
@@ -13,6 +14,7 @@ public class Unit {
 	protected Unit target;
 	protected Unit castTarget;
 	protected ArrayList<AppliedAura> auraList;
+	protected ArrayList<AppliedAura> auraRemoveList;
 	protected HashMap<Integer, Long> spellCDMap;
 	protected int level;
 	protected String name;
@@ -25,6 +27,7 @@ public class Unit {
 	protected int armorUnAura;
 	protected int armorEffective;
 	protected int damage;
+	protected int unitID;
 	protected int criticalUnAura;
 	protected int criticalEffective;
 	protected int strengthUnAura;
@@ -32,7 +35,8 @@ public class Unit {
 	protected UnitType unitType;
 	protected Spell spellCasting;
 	protected long endCastTimer;
-	protected int id;
+	protected boolean isStunned;
+	protected boolean isSilenced;
 	private int expGained;
 	private int goldGained;
 	protected long GCDStartTimer;
@@ -51,7 +55,7 @@ public class Unit {
 		this.maxManaUnAura = 7500;
 		setLevel(level);
 		this.name = name;
-		this.id = id;
+		this.unitID = id;
 		this.armorUnAura = armor;
 		this.armorEffective = armor;
 		this.criticalUnAura = critical;
@@ -60,6 +64,7 @@ public class Unit {
 		this.goldGained = goldGained;
 		this.expGained = expGained;
 		this.auraList = new ArrayList<AppliedAura>();
+		this.auraRemoveList = new ArrayList<AppliedAura>();
 		this.spellCDMap = new HashMap<Integer, Long>();
 	}
 	
@@ -71,14 +76,28 @@ public class Unit {
 		checkCast();
 	}
 	
+	public void auraTick() {
+		int i = this.auraList.size();
+		while(--i >= 0) {
+			this.auraList.get(i).tick(this);
+		}
+		while(this.auraRemoveList.size() > 0) {
+			this.auraList.get(0).remove(this);
+			this.auraList.remove(0);
+			this.auraRemoveList.remove(0);
+		}
+	}
+	
 	public void checkCast() {
 		if(this.spellCasting != null && this.endCastTimer <= Server.getLoopTickTimer()) {
-			System.out.println("Cast finished");
 			this.spellCasting.use(this, this.castTarget);
 			this.spellCasting = null;
 		}
 	}
 	
+	public void removeAura(AppliedAura aura) {
+		this.auraRemoveList.add(aura);
+	}
 	public boolean hasAura(int auraID) {
 		int i = this.auraList.size();
 		while(--i >= 0) {
@@ -95,6 +114,22 @@ public class Unit {
 	
 	public long getGCDEndTimer() {
 		return this.GCDEndTimer;
+	}
+	
+	public boolean canCastDefault(Spell spell) {
+		if(this.isStunned) {
+			return false;
+		}
+		if(spell.isMagical() && this.isSilenced) {
+			return false;
+		}
+		return true;
+	}
+	
+	public void applyAura(Aura aura) {
+		AppliedAura applied = new AppliedAura(aura);
+		applied.onApply(this);
+		this.auraList.add(applied);
 	}
 	
 	public boolean isCasting() {
@@ -176,8 +211,12 @@ public class Unit {
 		//CharacterMgr.setExperience(this.id, Player.getExpNeeded(this.level));
 	}
 	
-	public int getid() {
-		return this.id;
+	public int getUnitID() {
+		return this.unitID;
+	}
+	
+	public void setUnitID(int id) {
+		this.unitID = id;
 	}
 	
 	public String getName() {

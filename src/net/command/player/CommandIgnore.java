@@ -35,12 +35,12 @@ public class CommandIgnore extends Command {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
-			if(ignore != null && !IgnoreMgr.isIgnored(player.getCharacterId(), ignore.getCharacterId())) {
-				IgnoreMgr.addIgnore(player.getCharacterId(), ignore.getCharacterId());
+			if(ignore != null && !IgnoreMgr.isIgnored(player.getUnitID(), ignore.getUnitID())) {
+				IgnoreMgr.addIgnore(player.getUnitID(), ignore.getUnitID());
 				addIgnore(connection, ignore);
 			}
-			else if(character_id != -1 && !IgnoreMgr.isIgnored(player.getCharacterId(), character_id)) {
-				IgnoreMgr.addIgnore(player.getCharacterId(), character_id);
+			else if(character_id != -1 && !IgnoreMgr.isIgnored(player.getUnitID(), character_id)) {
+				IgnoreMgr.addIgnore(player.getUnitID(), character_id);
 				addIgnore(connection, character_id, name);
 			}
 			else {
@@ -49,18 +49,18 @@ public class CommandIgnore extends Command {
 		}
 		else if(packetId == PacketID.IGNORE_REMOVE) {
 			int id = connection.readInt();
-			if(!IgnoreMgr.isIgnored(player.getCharacterId(), id)) {
+			if(!IgnoreMgr.isIgnored(player.getUnitID(), id)) {
 				CommandSendMessage.selfWithoutAuthor(connection, "This player is not in your ignore list.", MessageType.SELF);
 				return;
 			}
 			removeIgnore(connection, id);
-			IgnoreMgr.removeIgnore(player.getCharacterId(), id);
+			IgnoreMgr.removeIgnore(player.getUnitID(), id);
 		}
 	}
 	
 	public static void ignoreInit(Connection connection, Player player) {
 		int i = 0;
-		ArrayList<Integer> ignoreList = IgnoreMgr.getIgnoreList(player.getCharacterId());
+		ArrayList<Integer> ignoreList = IgnoreMgr.getIgnoreList(player.getUnitID());
 		if(ignoreList == null) {
 			return;
 		}
@@ -97,7 +97,7 @@ public class CommandIgnore extends Command {
 		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_ADD);
-		connection.writeInt(ignore.getCharacterId());
+		connection.writeInt(ignore.getUnitID());
 		connection.writeString(ignore.getName());
 		connection.endPacket();
 		connection.send();

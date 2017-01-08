@@ -25,7 +25,7 @@ public class CommandAddItem extends Command {
 		if(!(player.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue() && Item.exists(item_id))) {
 			return;
 		}
-		Player member = character_id == player.getCharacterId() ? player : Server.getInGameCharacter(character_id);
+		Player member = character_id == player.getUnitID() ? player : Server.getInGameCharacter(character_id);
 		if(member == null) {
 			return;
 		}

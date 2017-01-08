@@ -882,7 +882,7 @@ public class StoreChatCommand {
 					target = Server.getInGameCharacterByName(value[2]);
 					if(target != null) {
 						target.setLevel(target.getLevel()+1);
-						CharacterMgr.setExperience(target.getCharacterId(), Player.getExpNeeded(target.getLevel()));
+						CharacterMgr.setExperience(target.getUnitID(), Player.getExpNeeded(target.getLevel()));
 						CommandSendMessage.selfWithoutAuthor(player.getConnection(), target.getName()+" is now level "+target.getLevel(), MessageType.SELF);
 					}
 					else {
@@ -905,7 +905,7 @@ public class StoreChatCommand {
 				int level = Integer.parseInt(value[3]);
 				if(target != null) {
 					target.setLevel(level);
-					CharacterMgr.setExperience(target.getCharacterId(), Player.getExpNeeded(target.getLevel()));
+					CharacterMgr.setExperience(target.getUnitID(), Player.getExpNeeded(target.getLevel()));
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), target.getName()+" is now level "+level, MessageType.SELF);
 				}
 				else {

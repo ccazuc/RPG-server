@@ -16,7 +16,7 @@ public class Party {
 	}
 	
 	public boolean isPartyLeader(Player player) {
-		return player.getCharacterId() == this.partyLeader.getCharacterId();
+		return player.getUnitID() == this.partyLeader.getUnitID();
 	}
 	
 	public boolean addMember(Player player) {
@@ -46,7 +46,7 @@ public class Party {
 	public void removeMember(Player player) {
 		int i = 0;
 		while(i < this.playerTable.length) {
-			if(this.playerTable[i] != null && this.playerTable[i].getCharacterId() == player.getCharacterId()) {
+			if(this.playerTable[i] != null && this.playerTable[i].getUnitID() == player.getUnitID()) {
 				this.playerTable[i] = null;
 			}
 			i++;

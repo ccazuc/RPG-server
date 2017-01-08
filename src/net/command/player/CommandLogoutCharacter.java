@@ -39,8 +39,8 @@ public class CommandLogoutCharacter extends Command {
 	}
 	
 	public static void setPlayerOfflineInDB(Player player) {
-		if(player.getCharacterId() != 0) {
-			setOffline.addDatas(new SQLDatas(player.getCharacterId()));
+		if(player.getUnitID() != 0) {
+			setOffline.addDatas(new SQLDatas(player.getUnitID()));
 			Server.executeSQLRequest(setOffline);
 		}
 	}

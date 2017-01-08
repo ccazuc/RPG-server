@@ -19,28 +19,28 @@ public class CommandGet extends Command {
 		short packetID = connection.readShort();
 		if(packetID == PacketID.CHAT_GET_STAMINA) {
 			int id = connection.readInt();
-			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
 			if(member != null) {
 				write(connection, member.getStamina());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_MANA) {
 			int id = connection.readInt();
-			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
 			if(member != null) {
 				write(connection, member.getMana());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_EXPERIENCE) {
 			int id = connection.readInt();
-			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
 			if(member != null) {
 				write(connection, member.getExp());
 			}
 		}
 		else if(packetID == PacketID.CHAT_GET_GOLD) {
 			int id = connection.readInt();
-			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
 			if(member != null) {
 				write(connection, member.getGold());
 			}
@@ -64,7 +64,7 @@ public class CommandGet extends Command {
 		}
 		else if(packetID == PacketID.CHAT_GET_IP) {
 			int id = connection.readInt();
-			Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+			Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
 			if(member != null) {
 				write(connection, member.getIpAdress().substring(1));
 			}

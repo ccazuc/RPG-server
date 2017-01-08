@@ -6,5 +6,6 @@ public enum AuraRemoveList {
 	CANCEL,
 	DISPELL,
 	STEAL,
+	BREAK,
 	;
 }

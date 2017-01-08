@@ -26,7 +26,7 @@ public class Spell {
 	protected final boolean isMagical;
 	protected final byte rank;
 	
-	public Spell(int id, String sprite_id, String name, byte rank, int effectValue, int manaCost, float stunRate, int stunDuration, int cd, int castTime, boolean triggerGCD, SpellMagicalSchool magicalSchool, boolean isMagical) { //Damage spells
+	public Spell(int id, String sprite_id, String name, byte rank, int effectValue, int manaCost, float stunRate, int stunDuration, int cd, int castTime, boolean triggerGCD, SpellMagicalSchool magicalSchool, boolean isMagical) {
 		this.sprite_id = sprite_id;
 		this.name = name;
 		this.manaCost = manaCost;
@@ -66,24 +66,22 @@ public class Spell {
 		}
 	}
 	
-	public void cast(Unit caster, TargetType type, int index) {
-		/*if(this.manaCost > caster.getMana()) {
+	public void cast(Unit caster, TargetType type, byte index) {
+		if(this.manaCost > caster.getMana()) {
 			if(caster.getUnitType() == UnitType.PLAYER) {
 				CommandSendRedAlert.write((Player)caster, DefaultRedAlert.NOT_ENOUGH_MANA);
 			}
 			return;
-		}*/
+		}
 		Unit target = getTarget(caster, type, index);
 		if(target == null) {
 			return;
 		}
 		if(canCast(caster, target)) {
-			System.out.println("Can cast");
 			if(this.castTime == 0) {
 				use(caster, target);
 			}
 			else {
-				System.out.println("Cast start");
 				caster.cast(this, target);
 			}
 		}
@@ -105,7 +103,7 @@ public class Spell {
 	//}
 	}*/
 	
-	public static Unit getTarget(Unit caster, TargetType type, int index) {
+	public static Unit getTarget(Unit caster, TargetType type, byte index) {
 		if(type == TargetType.TARGET) {
 			return caster.getTarget();
 		}
@@ -143,6 +141,10 @@ public class Spell {
 			return false;
 		}
 		return true;
+	}
+	
+	public boolean isMagical() {
+		return this.isMagical;
 	}
 
 	public int getManaCost() {

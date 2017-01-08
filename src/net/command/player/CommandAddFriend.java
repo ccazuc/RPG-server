@@ -23,7 +23,7 @@ public class CommandAddFriend extends Command {
 			CommandPlayerNotFound.write(connection, name);
 			return;
 		}
-		player.addFriend(member.getCharacterId());
+		player.addFriend(member.getUnitID());
 		writeAddFriend(player, member);
 	}
 	

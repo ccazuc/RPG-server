@@ -5,15 +5,15 @@ import net.game.item.ItemType;
 
 public class Potion extends Item {
 
-	private int doHeal;
-	private int doMana;
-	private int level;
+	private final int doHeal;
+	private final int doMana;
+	private final int level;
 
 	public Potion(Potion potion) {
 		super(potion.id, potion.sprite_id, potion.itemType, potion.name, 1, potion.sellPrice, potion.maxStack, potion.amount);
 		this.doHeal = potion.doHeal;
 		this.doMana = potion.doMana;
-		
+		this.level = potion.level;
 	}
 	
 	public Potion(int id, String sprite_id, String name, int level, int doHeal, int doMana, int sellPrice, int amount) {

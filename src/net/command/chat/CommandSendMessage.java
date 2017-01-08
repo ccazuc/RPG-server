@@ -34,7 +34,7 @@ public class CommandSendMessage extends Command {
 				return;
 			}
 			writeWhisper(connection, tmp.getName(), message, false, tmp.isGMOn());
-			if(!IgnoreMgr.isIgnored(tmp.getCharacterId(), player.getCharacterId())) {
+			if(!IgnoreMgr.isIgnored(tmp.getUnitID(), player.getUnitID())) {
 				writeWhisper(tmp.getConnection(), tmp.getName(), message, true, player.isGMOn());
 			}
 			else {
@@ -48,7 +48,7 @@ public class CommandSendMessage extends Command {
 			}
 			int i = 0;
 			while(i < player.getParty().getPlayerList().length) {
-				if(player.getParty().getPlayerList()[i] != null && !IgnoreMgr.isIgnored(player.getCharacterId(), player.getParty().getPlayerList()[i].getid())) {
+				if(player.getParty().getPlayerList()[i] != null && !IgnoreMgr.isIgnored(player.getUnitID(), player.getParty().getPlayerList()[i].getUnitID())) {
 					if(player.getParty().isPartyLeader(player)) {
 						write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY_LEADER, player.isGMOn());
 					}
@@ -65,20 +65,20 @@ public class CommandSendMessage extends Command {
 				return;
 			}
 			
-			if(!player.getGuild().getMember(player.getCharacterId()).getRank().canTalkInGuildChannel()) {
+			if(!player.getGuild().getMember(player.getUnitID()).getRank().canTalkInGuildChannel()) {
 				selfWithoutAuthor(connection, "You don't have the right to do this.", MessageType.SELF);
 				return;
 			}
 			int i = 0;
 			while(i < player.getGuild().getMemberList().size()) {
-				if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel() && !IgnoreMgr.isIgnored(player.getCharacterId(), player.getGuild().getMemberList().get(i).getId())) {
+				if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel() && !IgnoreMgr.isIgnored(player.getUnitID(), player.getGuild().getMemberList().get(i).getId())) {
 					write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD, player.isGMOn());
 				}
 				i++;
 			}
 		}
 		else {
-			sendMessageToUsers(player.getCharacterId(), message, player.getName(), type, player.isGMOn());
+			sendMessageToUsers(player.getUnitID(), message, player.getName(), type, player.isGMOn());
 		}
 	}
 	
@@ -96,7 +96,7 @@ public class CommandSendMessage extends Command {
 	
 	private static void sendMessageToUsers(int id, String message, String author, MessageType type, boolean isGM) { //used for say and yell
 		for(Player player : Server.getInGamePlayerList().values()) {
-			if(!IgnoreMgr.isIgnored(id, player.getCharacterId())) {
+			if(!IgnoreMgr.isIgnored(id, player.getUnitID())) {
 				write(player.getConnection(), message, author, type, isGM);
 			}
 		}

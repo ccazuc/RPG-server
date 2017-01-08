@@ -42,9 +42,9 @@ public class CommandFriend extends Command {
 				return;
 			}
 			if(member != null) {
-				if(player.addFriend(member.getCharacterId())) {
+				if(player.addFriend(member.getUnitID())) {
 					addOnlineFriend(player, member);
-					FriendMgr.addFriendInDB(player.getCharacterId(), member.getCharacterId());
+					FriendMgr.addFriendInDB(player.getUnitID(), member.getUnitID());
 				}
 				else {
 					CommandSendMessage.selfWithoutAuthor(connection, "Your friendlist is full.", MessageType.SELF);
@@ -53,7 +53,7 @@ public class CommandFriend extends Command {
 			else if(character_id != -1) {
 				if(player.addFriend(character_id)) {
 					addOfflineFriend(connection, character_id, name);
-					FriendMgr.addFriendInDB(player.getCharacterId(), character_id);
+					FriendMgr.addFriendInDB(player.getUnitID(), character_id);
 				}
 				else {
 					CommandSendMessage.selfWithoutAuthor(connection, "Your friendlist is full.", MessageType.SELF);
@@ -62,7 +62,7 @@ public class CommandFriend extends Command {
 		}
 		else if(packetId == PacketID.FRIEND_REMOVE) {
 			int id = connection.readInt();
-			if(id == player.getCharacterId()) {
+			if(id == player.getUnitID()) {
 				CommandSendMessage.selfWithoutAuthor(connection, "You can't delete yourself.", MessageType.SELF);
 				return;
 			}
@@ -70,7 +70,7 @@ public class CommandFriend extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, "This player is not in your friendlist.", MessageType.SELF);
 				return;
 			}
-			FriendMgr.removeFriendFromDB(player.getCharacterId(), id);
+			FriendMgr.removeFriendFromDB(player.getUnitID(), id);
 			removeFriend(connection, id);
 		}
 	}
@@ -112,7 +112,7 @@ public class CommandFriend extends Command {
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.FRIEND);
 		player.getConnection().writeShort(PacketID.FRIEND_OFFLINE);
-		player.getConnection().writeInt(friend.getCharacterId());
+		player.getConnection().writeInt(friend.getUnitID());
 		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
@@ -121,7 +121,7 @@ public class CommandFriend extends Command {
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.FRIEND);
 		player.getConnection().writeShort(PacketID.FRIEND_ONLINE);
-		player.getConnection().writeInt(friend.getCharacterId());
+		player.getConnection().writeInt(friend.getUnitID());
 		player.getConnection().writeString(friend.getName());
 		player.getConnection().writeInt(friend.getLevel());
 		player.getConnection().writeByte(friend.getRace().getValue());
@@ -135,7 +135,7 @@ public class CommandFriend extends Command {
 		player.getConnection().writeShort(PacketID.FRIEND);
 		player.getConnection().writeShort(PacketID.FRIEND_ADD);
 		player.getConnection().writeBoolean(true);
-		player.getConnection().writeInt(friend.getCharacterId());
+		player.getConnection().writeInt(friend.getUnitID());
 		player.getConnection().writeString(friend.getName());
 		player.getConnection().writeInt(friend.getLevel());
 		player.getConnection().writeByte(friend.getRace().getValue());

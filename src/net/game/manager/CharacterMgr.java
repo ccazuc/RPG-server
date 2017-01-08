@@ -154,7 +154,7 @@ public class CharacterMgr {
 			Player player = this.datasList.get(0).getPlayer();
 			int id = this.datasList.get(0).getIValue1();
 			player.setOnline();
-			player.setCharacterId(id);
+			player.setUnitID(id);
 			player.initTable();
 			player.loadCharacterInfoSQL();
 			player.sendStats();
@@ -165,12 +165,12 @@ public class CharacterMgr {
 			player.updateLastLoginTimer();
 			CommandFriend.loadFriendList(player);
 			player.notifyFriendOnline();
-			IgnoreMgr.loadIgnoreList(player.getCharacterId());
+			IgnoreMgr.loadIgnoreList(player.getUnitID());
 			CommandIgnore.ignoreInit(player.getConnection(), player);
 			player.loadGuild();
 			if(player.getGuild() != null) {
 				CommandGuild.initGuildWhenLogin(player);
-				player.getGuild().getMember(player.getCharacterId()).setOnlineStatus(true);
+				player.getGuild().getMember(player.getUnitID()).setOnlineStatus(true);
 				CommandGuild.notifyOnlinePlayer(player);
 			}
 			//this.player.loadSpellUnlocked();
@@ -213,7 +213,7 @@ public class CharacterMgr {
 				setOnline = Server.getAsyncHighPriorityJDO().prepare("UPDATE `character` SET online = 1 WHERE character_id = ?");
 			}
 			loadCharacterInfo.clear();
-			int id = player.getCharacterId();
+			int id = player.getUnitID();
 			loadCharacterInfo.putInt(id);
 			loadCharacterInfo.execute();
 			if(loadCharacterInfo.fetch()) {
@@ -237,7 +237,7 @@ public class CharacterMgr {
 				player.setWeaponType(getWeaponTypes((short)weaponType));
 			}
 			setOnline.clear();
-			setOnline.putInt(player.getCharacterId());
+			setOnline.putInt(player.getUnitID());
 			setOnline.execute();
 		}
 		catch(SQLException e) {
@@ -263,18 +263,18 @@ public class CharacterMgr {
 				loadFriend = Server.getAsyncHighPriorityJDO().prepare("SELECT friend_id FROM social_friend WHERE character_id = ?");
 			}
 			loadPlayerFriend.clear();
-			loadPlayerFriend.putInt(player.getCharacterId());
+			loadPlayerFriend.putInt(player.getUnitID());
 			loadPlayerFriend.execute();
 			while(loadPlayerFriend.fetch()) {
 				int id = loadPlayerFriend.getInt();
-				if(!FriendMgr.containsKey(player.getCharacterId())) {
-					FriendMgr.getFriendMap().put(player.getCharacterId(), new ArrayList<Integer>());
+				if(!FriendMgr.containsKey(player.getUnitID())) {
+					FriendMgr.getFriendMap().put(player.getUnitID(), new ArrayList<Integer>());
 				}
-				FriendMgr.getFriendMap().get(player.getCharacterId()).add(id);
+				FriendMgr.getFriendMap().get(player.getUnitID()).add(id);
 			}
 			
 			loadFriend.clear();
-			loadFriend.putInt(player.getCharacterId());
+			loadFriend.putInt(player.getUnitID());
 			loadFriend.execute();
 			while(loadFriend.fetch()) {
 				int id = loadFriend.getInt();
@@ -306,7 +306,7 @@ public class CharacterMgr {
 	}
 	
 	public static void updateLastLoginTimer(Player player) {
-		updateLastOnlineTimer.addDatas(new SQLDatas(player.getCharacterId(), System.currentTimeMillis()));
+		updateLastOnlineTimer.addDatas(new SQLDatas(player.getUnitID(), System.currentTimeMillis()));
 		Server.executeSQLRequest(updateLastOnlineTimer);
 	}
 	
@@ -323,7 +323,7 @@ public class CharacterMgr {
 			loadSpellUnlocked = Server.getJDO().prepare("SELECT id FROM character_spell_unlocked WHERE character_id = ?");
 		}
 		loadSpellUnlocked.clear();
-		loadSpellUnlocked.putInt(player.getCharacterId());
+		loadSpellUnlocked.putInt(player.getUnitID());
 		loadSpellUnlocked.execute();
 		while(loadSpellUnlocked.fetch()) {
 			player.addUnlockedSpell(loadSpellUnlocked.getInt());

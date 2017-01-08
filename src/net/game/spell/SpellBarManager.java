@@ -25,7 +25,7 @@ public class SpellBarManager {
 			int i = 0;
 			int id;
 			loadSpellBar.clear();
-			loadSpellBar.putInt(player.getCharacterId());
+			loadSpellBar.putInt(player.getUnitID());
 			loadSpellBar.execute();
 			if(loadSpellBar.fetch()) {
 				while(i < 36) {
@@ -66,7 +66,7 @@ public class SpellBarManager {
 			setSpellBar.putInt(id);
 			i++;
 		}
-		setSpellBar.putInt(player.getCharacterId());
+		setSpellBar.putInt(player.getUnitID());
 		setSpellBar.execute();
 	}
 }

@@ -227,7 +227,7 @@ public class GuildMgr {
 			}
 			int guildId = 0;
 			loadPlayerGuild.clear();
-			loadPlayerGuild.putInt(player.getCharacterId());
+			loadPlayerGuild.putInt(player.getUnitID());
 			loadPlayerGuild.execute();
 			if(loadPlayerGuild.fetch()) {
 				guildId = loadPlayerGuild.getInt();

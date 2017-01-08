@@ -1,5 +1,6 @@
 package net.game.spell;
 
+import net.game.aura.AuraMgr;
 import net.game.unit.Unit;
 
 public class StoreSpell {
@@ -34,7 +35,7 @@ public class StoreSpell {
 					if(!Spell.checkSingleTarget(caster)) {
 						return false;
 					}
-					doDamage(caster, target, this.effectValue);
+					caster.applyAura(AuraMgr.getAura(1));
 					return true;
 				}
 				

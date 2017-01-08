@@ -33,7 +33,7 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().isLeader(player.getCharacterId()))) {
+			if(!hasEnoughRight(player, player.getGuild().isLeader(player.getUnitID()))) {
 				return;
 			}
 			GuildRank rank = player.getGuild().getRank(rank_order);
@@ -57,7 +57,7 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canInvitePlayer())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().canInvitePlayer())) {
 				return;
 			}
 			Player member = Server.getInGameCharacterByName(name);
@@ -68,7 +68,7 @@ public class CommandGuild extends Command {
 			if(member.getGuildRequest() != 0) {
 				return;
 			}
-			if(IgnoreMgr.isIgnored(member.getid(), player.getCharacterId())) {
+			if(IgnoreMgr.isIgnored(member.getUnitID(), player.getUnitID())) {
 				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+IgnoreMgr.ignoreMessage, MessageType.SELF);
 				return;
 			}
@@ -85,14 +85,14 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canKickMember())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().canKickMember())) {
 				return;
 			}
 			GuildMember member = player.getGuild().getMember(id);
 			if(!playerIsInTheSameGuild(player, member)) {
 				return;
 			}
-			if(!hasEnoughRight(player, member.getRank().getOrder() > player.getGuild().getMember(player.getCharacterId()).getRank().getOrder())) {
+			if(!hasEnoughRight(player, member.getRank().getOrder() > player.getGuild().getMember(player.getUnitID()).getRank().getOrder())) {
 				return;
 			}
 			player.getGuild().removeMember(id, player.getName());
@@ -104,7 +104,7 @@ public class CommandGuild extends Command {
 				return;
 			}
 			player.setGuild(GuildMgr.getGuild(player.getGuildRequest()));
-			player.getGuild().addMember(new GuildMember(player.getCharacterId(), player.getName(), player.getLevel(), player.getGuild().getRankList().get(player.getGuild().getRankList().size()-1), true, "", "", player.getClasse(), System.currentTimeMillis()));
+			player.getGuild().addMember(new GuildMember(player.getUnitID(), player.getName(), player.getLevel(), player.getGuild().getRankList().get(player.getGuild().getRankList().size()-1), true, "", "", player.getClasse(), System.currentTimeMillis()));
 			initGuildWhenLogin(player);
 			player.setGuildRequest(0);
 		}
@@ -116,7 +116,7 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canModifyMotd())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().canModifyMotd())) {
 				return;
 			}
 			if(msg.length() > Guild.MOTD_MAX_LENGTH) {
@@ -131,7 +131,7 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canModifyGuildInformation())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().canModifyGuildInformation())) {
 				return;
 			}
 			if(msg.length() > Guild.INFORMATION_MAX_LENGTH) {
@@ -146,7 +146,7 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canPromote())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().canPromote())) {
 				return;
 			}
 			GuildMember member = player.getGuild().getMember(id);
@@ -157,7 +157,7 @@ public class CommandGuild extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+"'s rank is too high.", MessageType.SELF);
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().getOrder() > member.getRank().getOrder())) {
 				return;
 			}
 			member.setRank(player.getGuild().getRank(member.getRank().getOrder()-1));
@@ -168,7 +168,7 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canDemote())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().canDemote())) {
 				return;
 			}
 			GuildMember member = player.getGuild().getMember(id);
@@ -179,7 +179,7 @@ public class CommandGuild extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+" has already the lowest rank.", MessageType.SELF);
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().getOrder() > member.getRank().getOrder())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().getOrder() > member.getRank().getOrder())) {
 				return;
 			}
 			member.setRank(player.getGuild().getRank(member.getRank().getOrder()+1));
@@ -189,8 +189,8 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			leaveGuild(player.getGuild(), player.getCharacterId());
-			GuildMgr.removeMemberFromDB(player.getGuild(), player.getCharacterId());
+			leaveGuild(player.getGuild(), player.getUnitID());
+			GuildMgr.removeMemberFromDB(player.getGuild(), player.getUnitID());
 			player.setGuild(null);
 		}
 		else if(packetId == PacketID.GUILD_SET_LEADER) {
@@ -198,7 +198,7 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().isLeader(player.getCharacterId()))) {
+			if(!hasEnoughRight(player, player.getGuild().isLeader(player.getUnitID()))) {
 				return;
 			}
 			GuildMember member = player.getGuild().getMember(id);
@@ -206,9 +206,9 @@ public class CommandGuild extends Command {
 				return;
 			}
 			member.setRank(player.getGuild().getRankList().get(0));
-			player.getGuild().getMember(player.getCharacterId()).setRank(player.getGuild().getRankList().get(1));
+			player.getGuild().getMember(player.getUnitID()).setRank(player.getGuild().getRankList().get(1));
 			player.getGuild().setLeaderId(id);
-			GuildMgr.updateMemberRank(player.getCharacterId(), player.getGuild().getId(), player.getGuild().getMember(player.getCharacterId()).getRank().getOrder());
+			GuildMgr.updateMemberRank(player.getUnitID(), player.getGuild().getId(), player.getGuild().getMember(player.getUnitID()).getRank().getOrder());
 			sendLeaderToClient(player.getGuild(), member.getId());
 			GuildMgr.setLeaderInDB(id, player.getGuild().getId());
 			GuildMgr.updateMemberRank(member.getId(), player.getGuild().getId(), member.getRank().getOrder());
@@ -219,7 +219,7 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canEditPublicNote())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().canEditPublicNote())) {
 				return;
 			}
 			GuildMember member = player.getGuild().getMember(id);
@@ -239,7 +239,7 @@ public class CommandGuild extends Command {
 			if(!isInAGuild(player)) {
 				return;
 			}
-			if(!hasEnoughRight(player, player.getGuild().getMember(player.getCharacterId()).getRank().canEditOfficerNote())) {
+			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().canEditOfficerNote())) {
 				return;
 			}
 			GuildMember member = player.getGuild().getMember(id);
@@ -407,7 +407,7 @@ public class CommandGuild extends Command {
 				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_ONLINE_PLAYER);
-				connection.writeInt(player.getCharacterId());
+				connection.writeInt(player.getUnitID());
 				connection.endPacket();
 				connection.send();
 			}
@@ -422,12 +422,12 @@ public class CommandGuild extends Command {
 		int i = 0;
 		while(i < player.getGuild().getMemberList().size()) {
 			GuildMember member = player.getGuild().getMemberList().get(i);
-			if(Server.getInGameCharacter(member.getId()) != null && member.getId() != player.getCharacterId()) {
+			if(Server.getInGameCharacter(member.getId()) != null && member.getId() != player.getUnitID()) {
 				Connection connection = Server.getInGameCharacter(member.getId()).getConnection();
 				connection.startPacket();
 				connection.writeShort(PacketID.GUILD);
 				connection.writeShort(PacketID.GUILD_OFFLINE_PLAYER);
-				connection.writeInt(player.getCharacterId());
+				connection.writeInt(player.getUnitID());
 				connection.endPacket();
 				connection.send();
 			}
@@ -529,8 +529,8 @@ public class CommandGuild extends Command {
 		}
 		i = 0;
 		connection.writeInt(player.getGuild().getMemberList().size());
-		connection.writeBoolean(player.getGuild().getMember(player.getCharacterId()).getRank().canSeeOfficerNote());
-		if(player.getGuild().getMember(player.getCharacterId()).getRank().canSeeOfficerNote()) {
+		connection.writeBoolean(player.getGuild().getMember(player.getUnitID()).getRank().canSeeOfficerNote());
+		if(player.getGuild().getMember(player.getUnitID()).getRank().canSeeOfficerNote()) {
 			while(i < player.getGuild().getMemberList().size()) {
 				GuildMember member = player.getGuild().getMemberList().get(i);
 				connection.writeInt(member.getId());

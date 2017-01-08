@@ -87,7 +87,7 @@ public class ItemMgr {
 		}
 		i = 0;
 		getBagItem.clear();
-		getBagItem.putInt(player.getCharacterId());
+		getBagItem.putInt(player.getUnitID());
 		getBagItem.execute();
 		if(getBagItem.fetch()) {
 			Connection connection = player.getConnectionManager().getConnection();
@@ -182,7 +182,7 @@ public class ItemMgr {
 			i = 0; 
 			int numberBagItems = 0;
 			getBagItem.clear();
-			getBagItem.putInt(player.getCharacterId());
+			getBagItem.putInt(player.getUnitID());
 			getBagItem.execute();
 			if(getBagItem.fetch()) {
 				Connection connection = player.getConnectionManager().getConnection();
@@ -377,7 +377,7 @@ public class ItemMgr {
 				}
 				i++;
 			}
-			setBagItem.putInt(player.getCharacterId());
+			setBagItem.putInt(player.getUnitID());
 			setBagItem.execute();
 		}
 		catch(SQLException e) {
@@ -391,7 +391,7 @@ public class ItemMgr {
 				getEquippedBag = Server.getAsyncHighPriorityJDO().prepare("SELECT slot1, slot2, slot3, slot4 FROM character_containers WHERE character_id = ?");
 			}
 			getEquippedBag.clear();
-			getEquippedBag.putInt(player.getCharacterId());
+			getEquippedBag.putInt(player.getUnitID());
 			getEquippedBag.execute();
 			//Connection connection = player.getConnectionManager().getConnection();
 			int i = 0;
@@ -436,7 +436,7 @@ public class ItemMgr {
 			}
 			i++;
 		}
-		setEquippedBag.putInt(player.getCharacterId());
+		setEquippedBag.putInt(player.getUnitID());
 		setEquippedBag.execute();
 	}
 	
@@ -476,7 +476,7 @@ public class ItemMgr {
 			}
 			i++;
 		}
-		setEquippedItem.putInt(player.getCharacterId());
+		setEquippedItem.putInt(player.getUnitID());
 		setEquippedItem.execute();
 	}
 	
@@ -491,7 +491,7 @@ public class ItemMgr {
 				getEquippedItem = Server.getAsyncHighPriorityJDO().prepare("SELECT head, head_gem1, head_gem2, head_gem3, necklace, necklace_gem1, necklace_gem2, necklace_gem3, shoulders, shoulders_gem1, shoulders_gem2, shoulders_gem3, back, back_gem1, back_gem2, back_gem3, chest, chest_gem1, chest_gem2, chest_gem3, wrists, wrists_gem1, wrists_gem2, wrists_gem3, gloves, gloves_gem1, gloves_gem2, gloves_gem3, belt, belt_gem1, belt_gem2, belt_gem3, leggings, leggings_gem1, leggings_gem2, leggings_gem3, boots, boots_gem1, boots_gem2, boots_gem3, ring, ring2, trinket, trinket2, mainhand, mainhand_gem1, mainhand_gem2, mainhand_gem3, offhand, offhand_gem1, offhand_gem2, offhand_gem3, ranged, ranged_gem1, ranged_gem2, ranged_gem3 FROM character_stuff WHERE character_id = ?");
 			}
 			getEquippedItem.clear();
-			getEquippedItem.putInt(player.getCharacterId());
+			getEquippedItem.putInt(player.getUnitID());
 			getEquippedItem.execute();
 			Connection connection = player.getConnectionManager().getConnection();
 			if(getEquippedItem.fetch()) {

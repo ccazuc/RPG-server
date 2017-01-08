@@ -15,7 +15,7 @@ public class CommandSet extends Command {
 		byte packetID = connection.readByte();
 		int id = connection.readInt();
 		int value = connection.readInt();
-		Player member = id == player.getCharacterId() ? player : Server.getInGameCharacter(id);
+		Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
 		if(member == null) {
 			return;
 		}

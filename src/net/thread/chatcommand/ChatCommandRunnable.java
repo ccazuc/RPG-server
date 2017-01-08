@@ -104,7 +104,7 @@ public class ChatCommandRunnable implements Runnable {
 		connection.writeShort(PacketID.WHO);
 		for(Player player : Server.getInGamePlayerList().values()) {
 			if(!player.isGMOn() && word.length() == 0 || player.getLevel() == wordValue && player.getName().contains(word) || (player.getGuild() != null && player.getGuild().getName().contains(word))) {
-				connection.writeInt(player.getCharacterId());
+				connection.writeInt(player.getUnitID());
 				connection.writeString(player.getName());
 				if(player.getGuild() == null) {
 					connection.writeString("");

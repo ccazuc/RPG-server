@@ -51,6 +51,13 @@ public class Aura {
 	
 	@SuppressWarnings("unused")
 	public void onRemove(Unit unit, AuraRemoveList removed) {}
+
+	@SuppressWarnings("unused")
+	public void onTick(Unit unit, AppliedAura appliedAura) {}
+	
+	public boolean hasEffect(AuraEffect effect) {
+		return this.effect1 == effect || this.effect2 == effect || this.effect3 == effect;
+	}
 	
 	public int getId() {
 		return this.id;

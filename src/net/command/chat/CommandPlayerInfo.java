@@ -14,7 +14,7 @@ public class CommandPlayerInfo extends Command {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		if(player.getAccountRank().getValue() >= AccountRank.MODERATOR.getValue()) {
-			if(id == player.getCharacterId()) {
+			if(id == player.getUnitID()) {
 				write(player);
 			}
 			else {

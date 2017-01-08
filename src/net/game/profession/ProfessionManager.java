@@ -27,7 +27,7 @@ public class ProfessionManager {
 			loadUnlockedCraft = Server.getJDO().prepare("SELECT craft_id FROM craft_unlocked WHERE character_id = ?");
 		}
 		loadUnlockedCraft.clear();
-		loadUnlockedCraft.putInt(player.getCharacterId());
+		loadUnlockedCraft.putInt(player.getUnitID());
 		loadUnlockedCraft.execute();
 		while(loadUnlockedCraft.fetch()) {
 			int id = loadUnlockedCraft.getInt();
@@ -42,7 +42,7 @@ public class ProfessionManager {
 			}
 			this.unlockedCraftList.add(id);
 			addUnlockedCraft.clear();
-			addUnlockedCraft.putInt(player.getCharacterId());
+			addUnlockedCraft.putInt(player.getUnitID());
 			addUnlockedCraft.putInt(id);
 			addUnlockedCraft.execute();
 		}

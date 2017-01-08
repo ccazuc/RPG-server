@@ -38,7 +38,7 @@ public class CommandTrade extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, "Can't trade with yourself.", MessageType.SELF);
 				return;
 			}
-			if(IgnoreMgr.isIgnored(trade.getCharacterId(), player.getCharacterId())) {
+			if(IgnoreMgr.isIgnored(trade.getUnitID(), player.getUnitID())) {
 				CommandSendMessage.selfWithoutAuthor(connection, trade.getName()+IgnoreMgr.ignoreMessage, MessageType.SELF);
 				return;
 			}

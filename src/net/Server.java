@@ -15,6 +15,7 @@ import jdo.JDO;
 import jdo.wrapper.MariaDB;
 import net.connection.ConnectionManager;
 import net.connection.Key;
+import net.game.aura.AuraMgr;
 import net.game.chat.StoreChatCommand;
 import net.game.guild.GuildMgr;
 import net.game.item.bag.ContainerManager;
@@ -103,6 +104,7 @@ public class Server {
 		WeaponManager.loadWeapons();
 		GemManager.loadGems();
 		ContainerManager.loadContainer();
+		AuraMgr.loadAuras();
 		SpellMgr.loadSpells();
 		highPrioritySQLRunnable = new SQLRunnable(3);
 		highPrioritySQLRequestThread = new Thread(highPrioritySQLRunnable);
@@ -125,8 +127,8 @@ public class Server {
 		ConnectionManager.initAuthCommand();
 		ConnectionManager.initPlayerCommand();
 		System.gc();
-		try {
-			while(serverRunning) {
+		while(serverRunning) {
+			try {
 				LOOP_TICK_TIMER = System.currentTimeMillis();
 				kickPlayers();
 				removeKey();
@@ -144,10 +146,10 @@ public class Server {
 					System.out.println("ms.");
 				}
 			}
-		}
-		catch(RuntimeException e) {
-			LogRunnable.writeServerLog(e);
-			System.out.println("[RUNTIME EXCEPTION OCCURED]");
+			catch(RuntimeException e) {
+				LogRunnable.writeServerLog(e);
+				System.out.println("[RUNTIME EXCEPTION OCCURED]");
+			}
 		}
 		//Save eveything of every player to the DB
 		lowPrioritySQLRunnable.close();
@@ -253,12 +255,12 @@ public class Server {
 	
 	public static void addInGamePlayer(Player player) {
 		synchronized(inGamePlayerList) {
-			inGamePlayerList.put(player.getCharacterId(), player);
+			inGamePlayerList.put(player.getUnitID(), player);
 		}
 	}
 	
 	public static void removeInGamePlayer(Player player) {
-		inGamePlayerKickList.add(player.getCharacterId());
+		inGamePlayerKickList.add(player.getUnitID());
 	}
 	
 	public static void removeLoggedPlayer(Player player) {
