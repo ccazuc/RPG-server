@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
+import net.config.ConfigMgr;
 import net.connection.ConnectionManager;
 import net.connection.Key;
 import net.game.aura.AuraMgr;
@@ -47,7 +48,7 @@ public class Server {
 	private static JDO asyncHighPriorityJdo;
 	private static ServerSocketChannel serverSocketChannel;
 	//private static SocketChannel clientSocket;
-	private static Map<Integer, Player> loggedPlayerList = Collections.synchronizedMap(new HashMap<Integer, Player>());
+	private static HashMap<Integer, Player> loggedPlayerList = new HashMap<Integer, Player>();
 	private static ArrayList<Integer> loggedPlayerKickList = new ArrayList<Integer>();
 	private static List<Player> nonLoggedPlayerList = Collections.synchronizedList(new ArrayList<Player>());
 	private static ArrayList<Player> nonLoggedPlayerKickList = new ArrayList<Player>();
@@ -69,11 +70,7 @@ public class Server {
 	private static long SERVER_START_TIMER;
 	private static long LOOP_TICK_TIMER;
 	
-	private final static String REALM_NAME = "World Server";
-	private final static int REALM_ID = 15;
-	private final static int PORT = 5721;
 	private final static int LOOP_TIMER = 15;
-	private static String SERVER_MESSAGE_OF_THE_DAY = "Welcome on blabla";
 	private static boolean serverRunning = true;
 	private static boolean isAcceptingConnection = true;
 
@@ -81,7 +78,7 @@ public class Server {
 	
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, InterruptedException {
 		SERVER_START_TIMER = System.currentTimeMillis();
-		System.out.println(REALM_NAME);
+		System.out.println(ConfigMgr.REALM_NAME);
 		long time = System.currentTimeMillis();
 		float delta;
 		jdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);
@@ -89,12 +86,13 @@ public class Server {
 		asyncHighPriorityJdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);
 		BanMgr.removeExpiredBanAccount();
 		BanMgr.removeExpiredBanCharacter();
+		//TODO: removeExpiredBanIP
 		CharacterMgr.checkOnlinePlayers();
 		GuildMgr.removeOrphanedGuildRank();
 		GuildMgr.removeOrphanedMember();
 		StoreChatCommand.initChatCommandMap();
 		nonLoggedPlayerList = Collections.synchronizedList(nonLoggedPlayerList);
-		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(PORT);
+		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(ConfigMgr.PORT);
 		serverSocketChannel = ServerSocketChannel.open();
 		//serverSocketChannel.configureBlocking(false);
 		serverSocketChannel.bind(iNetSocketAdress);
@@ -151,7 +149,7 @@ public class Server {
 				System.out.println("[RUNTIME EXCEPTION OCCURED]");
 			}
 		}
-		//Save eveything of every player to the DB
+		//TODO: Save eveything of every player to the DB
 		lowPrioritySQLRunnable.close();
 		highPrioritySQLRunnable.close();
 		socketRunnable.close();
@@ -395,7 +393,7 @@ public class Server {
 	}
 	
 	public static String getRealmName() {
-		return REALM_NAME;
+		return ConfigMgr.REALM_NAME;
 	}
 	
 	public static JDO getJDO() {
@@ -411,19 +409,11 @@ public class Server {
 	}
 	
 	public static int getRealmId() {
-		return REALM_ID;
+		return ConfigMgr.REALM_ID;
 	}
 	
 	public static int getPort() {
-		return PORT;
-	}
-	
-	public static String getServerMessageOfTheDay() {
-		return SERVER_MESSAGE_OF_THE_DAY;
-	}
-	
-	public static void setServerMessageOfTheDay(String message) {
-		SERVER_MESSAGE_OF_THE_DAY = message;
+		return ConfigMgr.PORT;
 	}
 	
 	public static boolean isInteger(String string) {

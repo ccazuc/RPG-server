@@ -15,6 +15,7 @@ import net.command.chat.DefaultMessage;
 import net.command.chat.MessageColor;
 import net.command.chat.MessageType;
 import net.command.player.CommandSendRedAlert;
+import net.config.ConfigMgr;
 import net.game.AccountRank;
 import net.game.item.Item;
 import net.game.manager.AccountMgr;
@@ -441,7 +442,7 @@ public class StoreChatCommand {
 		public void handle(String[] value, Player player) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("Server informations :\n");
-			builder.append("Server message of the day :\n"+Server.getServerMessageOfTheDay()+'\n');
+			builder.append("Server message of the day :\n"+ConfigMgr.getServerMessageOfTheDay()+'\n');
 			builder.append("Online since "+convMillisToDate(System.currentTimeMillis()-Server.getServerStartTimer())+'\n');
 			builder.append("Online player(s) : "+Server.getInGamePlayerList().size());
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
@@ -451,7 +452,7 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), Server.getServerMessageOfTheDay(), MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), ConfigMgr.getServerMessageOfTheDay(), MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand server_ram = new ChatSubCommand("ram", "server", "Syntax: .server ram\n\nDispay the ram used by the server.", AccountRank.ADMINISTRATOR) {
@@ -509,7 +510,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [motd] in .server set motd [motd]", MessageType.SELF);
 				return;
 			}
-			Server.setServerMessageOfTheDay(value[3]);
+			ConfigMgr.setServerMessageOfTheDay(value[3]);
 		}
 	};
 	private final static ChatSubCommand server_set_closed = new ChatSubCommand("closed", "server_set", "Syntax: .server set closed [on/off]\n\nSet wether the server should accept connection or not.", AccountRank.ADMINISTRATOR) {

@@ -25,6 +25,7 @@ import net.command.item.CommandRequestItem;
 import net.command.item.CommandStuff;
 import net.command.item.CommandWeapon;
 import net.command.player.CommandAddItem;
+import net.command.player.CommandAura;
 import net.command.player.CommandCast;
 import net.command.player.CommandCreateCharacter;
 import net.command.player.CommandDeleteCharacter;
@@ -103,6 +104,7 @@ public class ConnectionManager {
 		loggedCommandList.put((int)DRAG_ITEM, new CommandDragItems());
 		loggedCommandList.put((int)DELETE_ITEM, new CommandDeleteItem());
 		loggedCommandList.put((int)SPELL_CAST, new CommandCast());
+		loggedCommandList.put((int)AURA, new CommandAura());
 	}
 	
 	public static void initAuthCommand() {
@@ -134,7 +136,7 @@ public class ConnectionManager {
 		//long timer = System.nanoTime();
 		if(this.player.getPingStatus() && Server.getLoopTickTimer()-this.player.getPingTimer() >= TIMEOUT_TIMER) {
 			this.player.close();
-			System.out.println("Ping timeout");
+			return;
 		}
 		try {
 			if(this.connection.read() == 1) {

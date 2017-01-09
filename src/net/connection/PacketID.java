@@ -146,4 +146,8 @@ public class PacketID {
 	public final static short SEND_GCD = 142;
 	public final static short SEND_SPELL_CD = 143;
 	public final static short SEND_TARGET = 144;
+	public final static short AURA = 145;
+	public final static short AURA_SEND = 146;
+	public final static short AURA_UPDATE_STACK = 147;
+	public final static short AURA_CANCEL = 148;
 }

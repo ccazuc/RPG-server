@@ -26,7 +26,7 @@ public class AuraMgr {
 				int spellTriggeredOnFase = loadAuras.getInt();
 				int duration = loadAuras.getInt();
 				boolean isStackable = loadAuras.getBoolean();
-				int defaultNumberStack = loadAuras.getInt();
+				byte defaultNumberStack = loadAuras.getByte();
 				int tickRate = loadAuras.getInt();
 				boolean lowDispellable = loadAuras.getBoolean();
 				boolean highDispellable = loadAuras.getBoolean();

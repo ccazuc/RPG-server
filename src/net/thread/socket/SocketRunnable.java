@@ -27,11 +27,12 @@ public class SocketRunnable implements Runnable {
 		while(running) {
 			try {	
 				timer = System.currentTimeMillis();
-				if(this.isAcceptingConnection) {
-					this.clientSocket = this.serverSocket.accept();
-					this.clientSocket.configureBlocking(false);
-					Server.addNonLoggedPlayer(new Player(this.clientSocket));
+				this.clientSocket = this.serverSocket.accept();
+				if(!this.isAcceptingConnection && !this.clientSocket.getLocalAddress().toString().equals("/127.0.0.1")) {
+					continue;
 				}
+				this.clientSocket.configureBlocking(false);
+				Server.addNonLoggedPlayer(new Player(this.clientSocket));
 			} 
 			catch (IOException e) {
 				e.printStackTrace();

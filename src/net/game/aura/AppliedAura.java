@@ -7,7 +7,7 @@ public class AppliedAura {
 
 	private final Aura aura;
 	private long endTimer;
-	private int numberStack;
+	private byte numberStack;
 	private long lastTick;
 	private AuraRemoveList removed;
 	
@@ -52,7 +52,7 @@ public class AppliedAura {
 		return this.endTimer;
 	}
 	
-	public int getNumberStack() {
+	public byte getNumberStack() {
 		return this.numberStack;
 	}
 }
