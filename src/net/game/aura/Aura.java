@@ -7,6 +7,7 @@ public class Aura {
 	private final int id;
 	private final int duration;
 	private final byte defaultNumberStack;
+	private final byte maximumStack;
 	private final AuraEffect effect1;
 	private final int effectValue1;
 	private final AuraEffect effect2;
@@ -17,19 +18,18 @@ public class Aura {
 	private final boolean highDispellable;
 	private final boolean isVisible;
 	private final String name;
-	private final String sprite_id;
 	protected final int spellTriggeredOnFade;
 	private final boolean isBuff;
 	private final int tickRate;
 	private final boolean isStackable;
 	private final boolean isMagical;
 	
-	public Aura(int id, String name, String sprite_id, int spellTriggeredOnFade, int duration, boolean isStackable, byte defaultNumberStack, int tickRate, boolean lowDispellable, boolean highDispellable, AuraEffect effect1, int effectValue1, AuraEffect effect2, int effectValue2, AuraEffect effect3, int effectValue3, boolean isBuff, boolean isVisible, boolean isMagical) {
+	public Aura(int id, String name, String sprite_id, int spellTriggeredOnFade, int duration, boolean isStackable, byte defaultNumberStack, byte maximumStack, int tickRate, boolean lowDispellable, boolean highDispellable, AuraEffect effect1, int effectValue1, AuraEffect effect2, int effectValue2, AuraEffect effect3, int effectValue3, boolean isBuff, boolean isVisible, boolean isMagical) {
 		this.id = id;
 		this.name = name;
-		this.sprite_id = sprite_id;
 		this.duration = duration;
 		this.defaultNumberStack = defaultNumberStack;
+		this.maximumStack = maximumStack;
 		this.effect1 = effect1;
 		this.effectValue1 = effectValue1;
 		this.effect2 = effect2;
@@ -67,8 +67,24 @@ public class Aura {
 		return this.name;
 	}
 	
+	public boolean isBuff() {
+		return this.isBuff;
+	}
+	
 	public int getDuration() {
 		return this.duration;
+	}
+	
+	public byte getMaximumStack() {
+		return this.maximumStack;
+	}
+	
+	public int getTickRate() {
+		return this.tickRate;
+	}
+	
+	public int getEffectValue1() {
+		return this.effectValue1;
 	}
 	
 	public byte getDefaultNumberStack() {

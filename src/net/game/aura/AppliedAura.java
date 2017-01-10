@@ -7,29 +7,35 @@ public class AppliedAura {
 
 	private final Aura aura;
 	private long endTimer;
+	private long applyTimer;
 	private byte numberStack;
 	private long lastTick;
 	private AuraRemoveList removed;
 	
 	public AppliedAura(Aura aura) {
 		this.aura = aura;
-		this.endTimer = Server.getLoopTickTimer()+aura.getDuration();
+		this.applyTimer = Server.getLoopTickTimer();
+		this.endTimer = this.applyTimer+this.aura.getDuration();
 		this.numberStack = aura.getDefaultNumberStack();
 	}
 	
 	public void tick(Unit unit) {
+		if(this.lastTick+this.aura.getTickRate() <= Server.getLoopTickTimer() && this.applyTimer+this.aura.getTickRate() <= Server.getLoopTickTimer()) {
+			this.aura.onTick(unit, this);
+			this.lastTick = Server.getLoopTickTimer();
+		}
 		if(this.endTimer <= Server.getLoopTickTimer()) {
-			unit.removeAura(this);
-			this.removed = AuraRemoveList.TIMEOUT;
+			unit.removeAura(this, AuraRemoveList.TIMEOUT);
 			return;
 		}
-		this.aura.onTick(unit, this);
-		this.lastTick = Server.getLoopTickTimer();
 	}
 	
 	public void resetState() {
-		this.endTimer = Server.getLoopTickTimer()+this.aura.getDuration();
-		this.numberStack = this.aura.getDefaultNumberStack();
+		this.applyTimer = Server.getLoopTickTimer();
+		this.endTimer = this.applyTimer+this.aura.getDuration();
+		if(this.numberStack < this.aura.getMaximumStack()) {
+			this.numberStack++;
+		}
 	}
 	
 	public void onApply(Unit unit) {
@@ -38,6 +44,10 @@ public class AppliedAura {
 	
 	public void remove(Unit unit) {
 		this.aura.onRemove(unit, this.removed);
+	}
+	
+	public void setRemoved(AuraRemoveList removed) {
+		this.removed = removed;
 	}
 	 
 	public long getLastTickTimer() {

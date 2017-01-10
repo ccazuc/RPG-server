@@ -1,6 +1,7 @@
 package net.game.spell;
 
 import net.game.aura.AuraMgr;
+import net.game.spell.classes.WarriorSpells;
 import net.game.unit.Unit;
 
 public class StoreSpell {
@@ -27,7 +28,7 @@ public class StoreSpell {
 		else if(id == 102) {		//heroicStrike
 			
 		}
-		else if(id == 103) {		//mortalStrike
+		else if(id == WarriorSpells.MORTAL_STRIKE.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical) {
 				
 				@Override
@@ -93,8 +94,23 @@ public class StoreSpell {
 		else if(id == 602) { 		//holyNova
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 603) {		//penance
+		else if(id == 603) { 		//holyNova
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
+		}
+		else if(id == 604) {		//renovation
+			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical) {
+				
+				@Override
+				public boolean action(Unit caster, Unit target) {
+					caster.applyAura(AuraMgr.getAura(2));
+					return true;
+				}
+				
+				@Override
+				public boolean canCast(Unit caster, Unit target) {
+					return true;
+				}
+			});
 		}
 		else if(id == 701) {		//ambush
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));

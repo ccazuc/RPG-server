@@ -4,6 +4,10 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.aura.AppliedAura;
+import net.game.aura.Aura;
+import net.game.aura.AuraMgr;
+import net.game.aura.AuraRemoveList;
+import net.game.log.Log;
 import net.game.unit.Player;
 
 public class CommandAura extends Command {
@@ -13,7 +17,21 @@ public class CommandAura extends Command {
 		Connection connection = player.getConnection();
 		short packetId = connection.readShort();
 		if(packetId == PacketID.AURA_CANCEL) {
-			
+			int auraID = connection.readInt();
+			Aura aura = AuraMgr.getAura(auraID);
+			if(aura == null) {
+				Log.writePlayerLog(player, "Tried to remove a non-existing aura, auraID : "+auraID);
+				return;
+			}
+			if(!aura.isVisible()) {
+				Log.writePlayerLog(player, "Tried to remove a non-visible, auraID : "+auraID);
+				return;
+			}
+			if(!aura.isBuff()) {
+				Log.writePlayerLog(player, "Tried to remove a debuff aura, auraID : "+auraID);
+				return;
+			}
+			player.removeAura(auraID, AuraRemoveList.CANCEL);
 		}
 	}
 	
@@ -29,13 +47,24 @@ public class CommandAura extends Command {
 		player.getConnection().send();
 	}
 	
-	public static void updateStack(Player player, int unitID, AppliedAura aura) {
+	public static void updateAura(Player player, int unitID, AppliedAura aura) {
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.AURA);
-		player.getConnection().writeShort(PacketID.AURA_UPDATE_STACK);
+		player.getConnection().writeShort(PacketID.AURA_UPDATE);
 		player.getConnection().writeInt(unitID);
 		player.getConnection().writeInt(aura.getAura().getId());
+		player.getConnection().writeLong(aura.getEndTimer());
 		player.getConnection().writeByte(aura.getNumberStack());
+		player.getConnection().endPacket();
+		player.getConnection().send();
+	}
+	
+	public static void removeAura(Player player, int unitID, int auraID) {
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.AURA);
+		player.getConnection().writeShort(PacketID.AURA_CANCEL);
+		player.getConnection().writeInt(unitID);
+		player.getConnection().writeInt(auraID);
 		player.getConnection().endPacket();
 		player.getConnection().send();
 	}

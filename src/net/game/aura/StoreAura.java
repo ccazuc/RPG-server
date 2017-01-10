@@ -1,12 +1,15 @@
 package net.game.aura;
 
+import net.command.player.CommandAura;
+import net.game.unit.Player;
 import net.game.unit.Unit;
+import net.game.unit.UnitType;
 
 public class StoreAura {
 
-	public static void createAura(int id, String name, String sprite_id, int spellTriggeredOnFade, int duration, boolean isStackable, byte defaultNumberStack, int tickRate, boolean lowDispellable, boolean highDispellable, AuraEffect effect1, int effectValue1, AuraEffect effect2, int effectValue2, AuraEffect effect3, int effectValue3, boolean isBuff, boolean isVisible, boolean isMagical) {
+	public static void createAura(int id, String name, String sprite_id, int spellTriggeredOnFade, int duration, boolean isStackable, byte defaultNumberStack, byte maximumStack, int tickRate, boolean lowDispellable, boolean highDispellable, AuraEffect effect1, int effectValue1, AuraEffect effect2, int effectValue2, AuraEffect effect3, int effectValue3, boolean isBuff, boolean isVisible, boolean isMagical) {
 		if(id == 1) {
-			AuraMgr.storeAura(new Aura(id, name, sprite_id, spellTriggeredOnFade, duration, isStackable, defaultNumberStack, tickRate, lowDispellable, highDispellable, effect1, effectValue1, effect2, effectValue2, effect3, effectValue3, isBuff, isVisible, isMagical) {
+			AuraMgr.storeAura(new Aura(id, name, sprite_id, spellTriggeredOnFade, duration, isStackable, defaultNumberStack, maximumStack, tickRate, lowDispellable, highDispellable, effect1, effectValue1, effect2, effectValue2, effect3, effectValue3, isBuff, isVisible, isMagical) {
 				
 				@Override
 				public void onApply(Unit unit) {
@@ -21,6 +24,29 @@ public class StoreAura {
 				@Override
 				public void onTick(Unit unit, AppliedAura appliedAura) {
 					System.out.println("Aura tick !");
+				}
+			});
+		}
+		else if(id == 2) {
+			AuraMgr.storeAura(new Aura(id, name, sprite_id, spellTriggeredOnFade, duration, isStackable, defaultNumberStack, maximumStack, tickRate, lowDispellable, highDispellable, effect1, effectValue1, effect2, effectValue2, effect3, effectValue3, isBuff, isVisible, isMagical) {
+				
+				@Override
+				public void onApply(Unit unit) {
+					
+				}
+				
+				@Override
+				public void onRemove(Unit unit, AuraRemoveList list) {
+					System.out.println("Removed");
+					if(unit.getUnitType() == UnitType.PLAYER) {
+						CommandAura.removeAura((Player)unit, unit.getUnitID(), this.getId());
+					}
+				}
+				
+				@Override
+				public void onTick(Unit unit, AppliedAura appliedAura) {
+					unit.doHeal(appliedAura.getAura().getEffectValue1());
+					System.out.println("Tick");
 				}
 			});
 		}

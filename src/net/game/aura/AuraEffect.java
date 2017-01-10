@@ -2,7 +2,7 @@ package net.game.aura;
 
 public enum AuraEffect {
 
-	REDUCE_STAMINA((byte)0),
+	PERIODIC_DAMAGE((byte)0),
 	REDUCE_MAX_STAMINA((byte)1),
 	REDUCE_MANA((byte)2),
 	REDUCE_MAX_MANA((byte)3),
@@ -20,7 +20,7 @@ public enum AuraEffect {
 	REDUCE_SPELL_CRITICAL((byte)15),
 	REDUCE_HEALING_POWER((byte)16),
 	REDUCE_HEALING_TAKEN((byte)17),
-	INCREASE_STAMINA((byte)18),
+	PERIODIC_HEAL((byte)18),
 	INCREASE_MAX_STAMINA((byte)19),
 	INCREASE_STRENGTH((byte)20),
 	INCREASE_AGILITY((byte)21),

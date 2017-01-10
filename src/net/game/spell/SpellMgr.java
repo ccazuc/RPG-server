@@ -97,7 +97,7 @@ public class SpellMgr {
 			int id = loadSpells.getInt();
 			String sprite_id = loadSpells.getString();
 			String name = loadSpells.getString();
-			String tooltip = loadSpells.getString();
+			loadSpells.getString();
 			byte rank = loadSpells.getByte();
 			int effectValue = loadSpells.getInt();
 			int stunDuration = loadSpells.getInt();

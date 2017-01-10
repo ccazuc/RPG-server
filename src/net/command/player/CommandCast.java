@@ -18,6 +18,8 @@ public class CommandCast extends Command {
 		short packetId = connection.readShort();
 		if(packetId == PacketID.SPELL_CAST_REQUEST) {
 			int id = connection.readInt();
+			TargetType type = TargetType.values()[connection.readByte()];
+			byte index = connection.readByte();
 			if(player.getStamina() <= 0) {
 				return;
 			}
@@ -42,8 +44,6 @@ public class CommandCast extends Command {
 				CommandSendRedAlert.write(player, DefaultRedAlert.SPELL_NOT_READY_YET);
 				return;
 			}
-			TargetType type = TargetType.values()[connection.readByte()];
-			byte index = connection.readByte();
 			spell.cast(player, type, index);
 		}
 	}

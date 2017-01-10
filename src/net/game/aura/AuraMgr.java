@@ -9,7 +9,7 @@ import net.Server;
 public class AuraMgr {
 
 	private final static HashMap<Integer, Aura> auraMap = new HashMap<Integer, Aura>();
-	public final static String LOAD_AURA_REQUEST = "SELECT id, name, sprite_id, spell_triggered_on_fade, duration, is_stackable, default_number_stack, tick_rate, low_dispellable, high_dispellable, aura_effect1, aura_effect_value1, aura_effect2, aura_effect_value2, aura_effect3, aura_effect_value3, visible, is_buff, is_magical FROM aura";
+	public final static String LOAD_AURA_REQUEST = "SELECT id, name, sprite_id, spell_triggered_on_fade, duration, is_stackable, default_number_stack, max_stack, tick_rate, low_dispellable, high_dispellable, aura_effect1, aura_effect_value1, aura_effect2, aura_effect_value2, aura_effect3, aura_effect_value3, visible, is_buff, is_magical FROM aura";
 	private static JDOStatement loadAuras;
 	
 	public static void loadAuras() {
@@ -27,6 +27,7 @@ public class AuraMgr {
 				int duration = loadAuras.getInt();
 				boolean isStackable = loadAuras.getBoolean();
 				byte defaultNumberStack = loadAuras.getByte();
+				byte maximumStack = loadAuras.getByte();
 				int tickRate = loadAuras.getInt();
 				boolean lowDispellable = loadAuras.getBoolean();
 				boolean highDispellable = loadAuras.getBoolean();
@@ -39,7 +40,7 @@ public class AuraMgr {
 				boolean visible = loadAuras.getBoolean();
 				boolean buff = loadAuras.getBoolean();
 				boolean magical = loadAuras.getBoolean();
-				StoreAura.createAura(id, name, sprite_id, spellTriggeredOnFase, duration, isStackable, defaultNumberStack, tickRate, lowDispellable, highDispellable, auraEffect1, auraEffectValue1, auraEffect2, auraEffectValue2, auraEffect3, auraEffectValue3, visible, buff, magical);
+				StoreAura.createAura(id, name, sprite_id, spellTriggeredOnFase, duration, isStackable, defaultNumberStack, maximumStack, tickRate, lowDispellable, highDispellable, auraEffect1, auraEffectValue1, auraEffect2, auraEffectValue2, auraEffect3, auraEffectValue3, visible, buff, magical);
 			}
 		}
 		catch(SQLException e) {
@@ -56,8 +57,8 @@ public class AuraMgr {
 	}
 	
 	public static AuraEffect convStringToAuraEffect(String aura) {
-		if(aura.equals("REDUCE_STAMINA")) {
-			return AuraEffect.REDUCE_STAMINA;
+		if(aura.equals("PERIODIC_DAMAGE")) {
+			return AuraEffect.PERIODIC_DAMAGE;
 		}
 		if(aura.equals("REDUCE_MAX_STAMINA")) {
 			return AuraEffect.REDUCE_MAX_STAMINA;
@@ -110,8 +111,8 @@ public class AuraMgr {
 		if(aura.equals("REDUCE_HEALING_TAKEN")) {
 			return AuraEffect.REDUCE_HEALING_TAKEN;
 		}
-		if(aura.equals("INCREASE_STAMINA")) {
-			return AuraEffect.INCREASE_STAMINA;
+		if(aura.equals("PERIODIC_HEAL")) {
+			return AuraEffect.PERIODIC_HEAL;
 		}
 		if(aura.equals("INCREASE_MAX_STAMINA")) {
 			return AuraEffect.INCREASE_MAX_STAMINA;

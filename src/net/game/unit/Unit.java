@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.Server;
+import net.command.player.CommandAura;
 import net.game.aura.AppliedAura;
 import net.game.aura.Aura;
+import net.game.aura.AuraRemoveList;
 import net.game.spell.Spell;
 
 public class Unit {
@@ -95,9 +97,22 @@ public class Unit {
 		}
 	}
 	
-	public void removeAura(AppliedAura aura) {
+	public void removeAura(AppliedAura aura, AuraRemoveList removed) {
+		aura.setRemoved(removed);
 		this.auraRemoveList.add(aura);
 	}
+	
+	public void removeAura(int auraID, AuraRemoveList removed) {
+		int i = this.auraList.size();
+		while(--i >= 0) {
+			if(this.auraList.get(i).getAura().getId() == auraID) {
+				this.auraList.get(i).setRemoved(removed);
+				this.auraRemoveList.add(this.auraList.get(i));
+				return;
+			}
+		}
+	}
+	
 	public boolean hasAura(int auraID) {
 		int i = this.auraList.size();
 		while(--i >= 0) {
@@ -106,6 +121,10 @@ public class Unit {
 			}
 		}
 		return false;
+	}
+	
+	public void doHeal(int amount) {
+		setStamina(this.stamina+amount);
 	}
 	
 	public long getGCDStartTimer() {
@@ -127,9 +146,22 @@ public class Unit {
 	}
 	
 	public void applyAura(Aura aura) {
+		int i = this.auraList.size();
+		while(--i >= 0) {
+			if(this.auraList.get(i).getAura().getId() == aura.getId()) {
+				this.auraList.get(i).resetState();
+				if(this.unitType == UnitType.PLAYER) {
+					CommandAura.updateAura((Player)this, this.unitID, this.auraList.get(i));
+				}
+				return;
+			}
+		}
 		AppliedAura applied = new AppliedAura(aura);
 		applied.onApply(this);
 		this.auraList.add(applied);
+		if(this.unitType == UnitType.PLAYER) {
+			CommandAura.sendAura((Player)this, this.unitID, applied);
+		}
 	}
 	
 	public boolean isCasting() {

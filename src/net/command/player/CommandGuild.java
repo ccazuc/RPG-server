@@ -561,7 +561,6 @@ public class CommandGuild extends Command {
 				i++;
 			}
 		}
-		System.out.println("Guild send length "+connection.wBufferPosition());
 		connection.endPacket();
 		connection.send();
 	}
