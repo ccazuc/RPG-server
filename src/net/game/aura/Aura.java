@@ -59,6 +59,18 @@ public class Aura {
 		return this.effect1 == effect || this.effect2 == effect || this.effect3 == effect;
 	}
 	
+	public int getEffectValue(AuraEffect effect) {
+		if(this.effect1 == effect) {
+			return this.effectValue1;
+		}
+		if(this.effect2 == effect) {
+			return this.effectValue2;
+		}
+		if(this.effect3 == effect) {
+			return this.effectValue3;
+		}
+		return 0;
+	}
 	public int getId() {
 		return this.id;
 	}

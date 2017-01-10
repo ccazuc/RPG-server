@@ -5,8 +5,10 @@ import java.util.HashMap;
 
 import net.Server;
 import net.command.player.CommandAura;
+import net.command.player.CommandUpdateStats;
 import net.game.aura.AppliedAura;
 import net.game.aura.Aura;
+import net.game.aura.AuraEffect;
 import net.game.aura.AuraRemoveList;
 import net.game.spell.Spell;
 
@@ -51,10 +53,6 @@ public class Unit {
 		this.mana = mana;
 		this.maxManaUnAura = maxMana;
 		this.maxManaEffective = maxMana;
-		this.stamina = 3500;
-		this.maxStaminaUnAura = 5000;
-		this.mana = 6000;
-		this.maxManaUnAura = 7500;
 		setLevel(level);
 		this.name = name;
 		this.unitID = id;
@@ -102,15 +100,17 @@ public class Unit {
 		this.auraRemoveList.add(aura);
 	}
 	
-	public void removeAura(int auraID, AuraRemoveList removed) {
+	public boolean removeAura(int auraID, AuraRemoveList removed) {
 		int i = this.auraList.size();
 		while(--i >= 0) {
 			if(this.auraList.get(i).getAura().getId() == auraID) {
-				this.auraList.get(i).setRemoved(removed);
-				this.auraRemoveList.add(this.auraList.get(i));
-				return;
+				AppliedAura aura = this.auraList.get(i);
+				this.auraList.remove(i);
+				aura.remove(this, removed);
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	public boolean hasAura(int auraID) {
@@ -157,8 +157,8 @@ public class Unit {
 			}
 		}
 		AppliedAura applied = new AppliedAura(aura);
-		applied.onApply(this);
 		this.auraList.add(applied);
+		applied.onApply(this);
 		if(this.unitType == UnitType.PLAYER) {
 			CommandAura.sendAura((Player)this, this.unitID, applied);
 		}
@@ -186,6 +186,20 @@ public class Unit {
 	public void setStamina(int stamina) {
 		this.stamina = Math.max(0, Math.min(stamina, this.maxStaminaEffective));
 	}
+	
+	public void calcEffectiveMaxStamina() {
+		this.maxStaminaEffective = this.maxStaminaUnAura;
+		int i = this.auraList.size();
+		while(--i >= 0) {
+			this.maxStaminaEffective+= this.auraList.get(i).getAura().getEffectValue(AuraEffect.INCREASE_MAX_STAMINA);
+		}
+		if(this.stamina > this.maxStaminaEffective) {
+			this.stamina = this.maxStaminaEffective;
+		}
+		if(this.unitType == UnitType.PLAYER) {
+			CommandUpdateStats.updateMaxStamina((Player)this, this.unitID, this.maxStaminaEffective);
+		}
+ 	}
 	
 	public int getMaxStaminaEffective() {
 		return this.maxStaminaEffective;

@@ -1,6 +1,7 @@
 package net.game.spell;
 
 import net.game.aura.AuraMgr;
+import net.game.spell.classes.PriestSpells;
 import net.game.spell.classes.WarriorSpells;
 import net.game.unit.Unit;
 
@@ -97,12 +98,13 @@ public class StoreSpell {
 		else if(id == 603) { 		//holyNova
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 604) {		//renovation
+		else if(id == PriestSpells.RENEW.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical) {
 				
 				@Override
 				public boolean action(Unit caster, Unit target) {
 					caster.applyAura(AuraMgr.getAura(2));
+					caster.applyAura(AuraMgr.getAura(3));
 					return true;
 				}
 				

@@ -8,6 +8,8 @@ import net.Server;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandIgnore;
+import net.command.player.CommandSendPlayer;
+import net.command.player.CommandSendTarget;
 import net.game.AccountRank;
 import net.game.item.weapon.WeaponType;
 import net.game.unit.ClassType;
@@ -157,6 +159,8 @@ public class CharacterMgr {
 			player.setUnitID(id);
 			player.initTable();
 			player.loadCharacterInfoSQL();
+			CommandSendPlayer.write(player);
+			CommandSendTarget.sendTarget(player, player.getTarget());
 			player.sendStats();
 			player.loadEquippedBagSQL();
 			player.loadEquippedItemSQL();

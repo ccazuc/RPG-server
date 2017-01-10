@@ -18,6 +18,7 @@ public class CommandAura extends Command {
 		short packetId = connection.readShort();
 		if(packetId == PacketID.AURA_CANCEL) {
 			int auraID = connection.readInt();
+			System.out.println("Aura ID : "+auraID);
 			Aura aura = AuraMgr.getAura(auraID);
 			if(aura == null) {
 				Log.writePlayerLog(player, "Tried to remove a non-existing aura, auraID : "+auraID);
@@ -31,7 +32,9 @@ public class CommandAura extends Command {
 				Log.writePlayerLog(player, "Tried to remove a debuff aura, auraID : "+auraID);
 				return;
 			}
-			player.removeAura(auraID, AuraRemoveList.CANCEL);
+			if(!player.removeAura(auraID, AuraRemoveList.CANCEL)) {
+				Log.writePlayerLog(player, "Tried to remove the aura "+auraID+" whereas he's not affected by it.");
+			}
 		}
 	}
 	

@@ -42,6 +42,10 @@ public class AppliedAura {
 		this.aura.onApply(unit);
 	}
 	
+	public void remove(Unit unit, AuraRemoveList removed) {
+		this.aura.onRemove(unit, removed);
+	}
+	
 	public void remove(Unit unit) {
 		this.aura.onRemove(unit, this.removed);
 	}

@@ -13,6 +13,7 @@ import net.command.player.CommandGuild;
 import net.command.player.CommandLogoutCharacter;
 import net.command.player.CommandParty;
 import net.command.player.CommandTrade;
+import net.command.player.CommandUpdateStats;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
@@ -111,6 +112,7 @@ public class Player extends Unit {
 		this.auraList = new ArrayList<AppliedAura>();
 		this.auraRemoveList = new ArrayList<AppliedAura>();
 		this.spellCDMap = new HashMap<Integer, Long>();
+		this.wear = Wear.PLATE;
 	}
 	
 	@Override
@@ -848,6 +850,18 @@ public class Player extends Unit {
 	
 	public void setNumberRedGem(int nb) {
 		this.numberRedGem = nb;
+	}
+	
+	@Override
+	public void setMana(int mana) {
+		this.mana = Math.max(0, mana);
+		CommandUpdateStats.updateMana(this, this.unitID, this.mana);
+	}
+	
+	@Override
+	public void setStamina(int stamina) {
+		this.stamina = Math.max(0, Math.min(stamina, this.maxStaminaEffective));
+		CommandUpdateStats.updateStamina(this, this.unitID, this.stamina);
 	}
 	
 	public void setExperience(int exp) {

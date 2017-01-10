@@ -150,4 +150,6 @@ public class PacketID {
 	public final static short AURA_SEND = 146;
 	public final static short AURA_UPDATE = 147;
 	public final static short AURA_CANCEL = 148;
+	public final static short SEND_PLAYER = 149;
+	public final static short UPDATE_STATS_MAX_STAMINA = 150;
 }

@@ -13,17 +13,14 @@ public class StoreAura {
 				
 				@Override
 				public void onApply(Unit unit) {
-					System.out.println("Aura applied");
 				}
 				
 				@Override
 				public void onRemove(Unit unit, AuraRemoveList list) {
-					System.out.println("Aura removed : "+list);
 				}
 				
 				@Override
 				public void onTick(Unit unit, AppliedAura appliedAura) {
-					System.out.println("Aura tick !");
 				}
 			});
 		}
@@ -49,6 +46,31 @@ public class StoreAura {
 					System.out.println("Tick");
 				}
 			});
+		}
+		else if(id == 3) {
+			AuraMgr.storeAura(new Aura(id, name, sprite_id, spellTriggeredOnFade, duration, isStackable, defaultNumberStack, maximumStack, tickRate, lowDispellable, highDispellable, effect1, effectValue1, effect2, effectValue2, effect3, effectValue3, isBuff, isVisible, isMagical) {
+				
+				@Override
+				public void onApply(Unit unit) {
+					unit.calcEffectiveMaxStamina();
+				}
+				
+				@Override
+				public void onRemove(Unit unit, AuraRemoveList list) {
+					if(unit.getUnitType() == UnitType.PLAYER) {
+						CommandAura.removeAura((Player)unit, unit.getUnitID(), this.getId());
+					}
+					unit.calcEffectiveMaxStamina();
+				}
+				
+				@Override
+				public void onTick(Unit unit, AppliedAura appliedAura) {
+					
+				}
+			});
+		}
+		else {
+			System.out.println("[LOAD AURA] Aura not found, name : "+name+", id : "+id);
 		}
 	}
 }
