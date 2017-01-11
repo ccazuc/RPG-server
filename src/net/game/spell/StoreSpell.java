@@ -40,7 +40,7 @@ public class StoreSpell {
 					if(!Spell.checkSingleTarget(caster)) {
 						return false;
 					}
-					caster.applyAura(AuraMgr.getAura(1));
+					caster.applyAura(AuraMgr.getAura(1), caster);
 					return true;
 				}
 				
@@ -106,8 +106,8 @@ public class StoreSpell {
 				
 				@Override
 				public boolean action(Unit caster, Unit target) {
-					caster.applyAura(AuraMgr.getAura(2));
-					caster.applyAura(AuraMgr.getAura(3));
+					caster.applyAura(AuraMgr.getAura(2), caster);
+					caster.applyAura(AuraMgr.getAura(3), caster);
 					return true;
 				}
 				

@@ -10,19 +10,22 @@ public class AppliedAura {
 	private long applyTimer;
 	private byte numberStack;
 	private long lastTick;
+	private int casterID;
 	private AuraRemoveList removed;
 	
-	public AppliedAura(Aura aura) {
+	public AppliedAura(Aura aura, int casterID) {
 		this.aura = aura;
 		this.applyTimer = Server.getLoopTickTimer();
 		this.endTimer = this.applyTimer+this.aura.getDuration();
 		this.numberStack = aura.getDefaultNumberStack();
+		this.casterID = casterID;
 	}
 	
-	public AppliedAura(Aura aura, long timeLeft, byte numberStack) {
+	public AppliedAura(Aura aura, long timeLeft, byte numberStack, int casterID) {
 		this.aura = aura;
 		this.endTimer = Server.getLoopTickTimer()+timeLeft;
 		this.numberStack = numberStack;
+		this.casterID = casterID;
 	}
 	
 	public void tick(Unit unit) {
@@ -62,6 +65,10 @@ public class AppliedAura {
 	 
 	public long getLastTickTimer() {
 		return this.lastTick;
+	}
+	
+	public int getCasterID() {
+		return this.casterID;
 	}
 	
 	public Aura getAura() {

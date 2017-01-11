@@ -284,7 +284,7 @@ public class CharacterMgr {
 	private static void loadAuras(Player player) {
 		try {
 			if(loadAuras == null) {
-				loadAuras = Server.getJDO().prepare("SELECT aura_id, time_left, number_stack FROM character_aura WHERE character_id = ?");
+				loadAuras = Server.getJDO().prepare("SELECT aura_id, caster_id, time_left, number_stack FROM character_aura WHERE character_id = ?");
 			}
 			loadAuras.clear();
 			loadAuras.putInt(player.getUnitID());
@@ -292,9 +292,10 @@ public class CharacterMgr {
 			boolean hasAura = false;
 			while(loadAuras.fetch()) {
 				int auraID = loadAuras.getInt();
+				int casterID = loadAuras.getInt();
 				long time_left = loadAuras.getLong();
 				byte number_stack = loadAuras.getByte();
-				player.setAura(new AppliedAura(AuraMgr.getAura(auraID), time_left, number_stack));
+				player.setAura(new AppliedAura(AuraMgr.getAura(auraID), time_left, number_stack, casterID));
 				hasAura = true;
 			}
 			if(hasAura) {
@@ -311,13 +312,14 @@ public class CharacterMgr {
 	public static void saveAuras(Player player) {
 		try {
 			if(saveAuras == null) {
-				saveAuras = Server.getAsyncHighPriorityJDO().prepare("INSERT INTO character_aura (character_id, aura_id, time_left, number_stack) VALUES(?, ?, ?, ?)");
+				saveAuras = Server.getAsyncHighPriorityJDO().prepare("INSERT INTO character_aura (character_id, aura_id, caster_id, time_left, number_stack) VALUES(?, ?, ?, ?)");
 			}
 			int i = player.getAuraList().size();
 			while(--i >= 0) {
 				saveAuras.clear();
 				saveAuras.putInt(player.getUnitID());
 				saveAuras.putInt(player.getAuraList().get(i).getAura().getId());
+				saveAuras.putInt(player.getAuraList().get(i).getCasterID());
 				saveAuras.putLong(player.getAuraList().get(i).getEndTimer()-Server.getLoopTickTimer());
 				saveAuras.putByte(player.getAuraList().get(i).getNumberStack());
 				saveAuras.execute();

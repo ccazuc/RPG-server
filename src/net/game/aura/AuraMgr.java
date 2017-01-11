@@ -9,7 +9,7 @@ import net.Server;
 public class AuraMgr {
 
 	private final static HashMap<Integer, Aura> auraMap = new HashMap<Integer, Aura>();
-	public final static String LOAD_AURA_REQUEST = "SELECT id, name, sprite_id, spell_triggered_on_fade, duration, is_stackable, default_number_stack, max_stack, tick_rate, low_dispellable, high_dispellable, aura_effect1, aura_effect_value1, aura_effect2, aura_effect_value2, aura_effect3, aura_effect_value3, visible, is_buff, is_magical FROM aura";
+	public final static String LOAD_AURA_REQUEST = "SELECT id, name, sprite_id, spell_triggered_on_fade, duration, is_stackable, default_number_stack, max_stack, tick_rate, low_dispellable, high_dispellable, aura_effect1, aura_effect_value1, aura_effect2, aura_effect_value2, aura_effect3, aura_effect_value3, visible, is_buff, is_magical, dupli_from_diff_source FROM aura";
 	private static JDOStatement loadAuras;
 	
 	public static void loadAuras() {
@@ -40,7 +40,8 @@ public class AuraMgr {
 				boolean visible = loadAuras.getBoolean();
 				boolean buff = loadAuras.getBoolean();
 				boolean magical = loadAuras.getBoolean();
-				StoreAura.createAura(id, name, sprite_id, spellTriggeredOnFase, duration, isStackable, defaultNumberStack, maximumStack, tickRate, lowDispellable, highDispellable, auraEffect1, auraEffectValue1, auraEffect2, auraEffectValue2, auraEffect3, auraEffectValue3, visible, buff, magical);
+				boolean dupli_from_diff_source = loadAuras.getBoolean();
+				StoreAura.createAura(id, name, sprite_id, spellTriggeredOnFase, duration, isStackable, defaultNumberStack, maximumStack, tickRate, lowDispellable, highDispellable, auraEffect1, auraEffectValue1, auraEffect2, auraEffectValue2, auraEffect3, auraEffectValue3, visible, buff, magical, dupli_from_diff_source);
 			}
 		}
 		catch(SQLException e) {

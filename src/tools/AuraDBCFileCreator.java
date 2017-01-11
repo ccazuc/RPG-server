@@ -66,6 +66,7 @@ public class AuraDBCFileCreator {
 			writeBuffer.writeBoolean(loadAuras.getBoolean());
 			writeBuffer.writeBoolean(loadAuras.getBoolean());
 			writeBuffer.writeBoolean(loadAuras.getBoolean());
+			writeBuffer.writeBoolean(loadAuras.getBoolean());
 			numberAuraLoaded++;
 		}
 		int endPosition = writeBuffer.position();

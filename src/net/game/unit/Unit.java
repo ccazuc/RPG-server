@@ -149,10 +149,10 @@ public class Unit {
 		return true;
 	}
 	
-	public void applyAura(Aura aura) {
+	public void applyAura(Aura aura, Unit caster) {
 		int i = this.auraList.size();
 		while(--i >= 0) {
-			if(this.auraList.get(i).getAura().getId() == aura.getId()) {
+			if(this.auraList.get(i).getAura().getId() == aura.getId() && (!this.auraList.get(i).getAura().dupliFromDifferentSource() || (this.auraList.get(i).getAura().dupliFromDifferentSource() && this.auraList.get(i).getCasterID() == caster.getUnitID()))) {
 				this.auraList.get(i).resetState();
 				if(this.unitType == UnitType.PLAYER) {
 					CommandAura.updateAura((Player)this, this.unitID, this.auraList.get(i));
@@ -160,7 +160,7 @@ public class Unit {
 				return;
 			}
 		}
-		AppliedAura applied = new AppliedAura(aura);
+		AppliedAura applied = new AppliedAura(aura, caster.getUnitID());
 		this.auraList.add(applied);
 		applied.onApply(this);
 		if(this.unitType == UnitType.PLAYER) {
