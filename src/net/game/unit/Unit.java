@@ -123,6 +123,10 @@ public class Unit {
 		return false;
 	}
 	
+	public ArrayList<AppliedAura> getAuraList() {
+		return this.auraList;
+	}
+	
 	public void doHeal(int amount) {
 		setStamina(this.stamina+amount);
 	}
@@ -200,6 +204,15 @@ public class Unit {
 			CommandUpdateStats.updateMaxStamina((Player)this, this.unitID, this.maxStaminaEffective);
 		}
  	}
+	
+	//Used only in CharacterMgr
+	public void setAura(AppliedAura aura) {
+		this.auraList.add(aura);
+	}
+	
+	public void calcAllStats() {
+		
+	}
 	
 	public int getMaxStaminaEffective() {
 		return this.maxStaminaEffective;

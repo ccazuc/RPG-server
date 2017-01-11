@@ -9,6 +9,7 @@ import net.game.aura.AuraMgr;
 import net.game.aura.AuraRemoveList;
 import net.game.log.Log;
 import net.game.unit.Player;
+import net.game.unit.Unit;
 
 public class CommandAura extends Command {
 
@@ -18,7 +19,6 @@ public class CommandAura extends Command {
 		short packetId = connection.readShort();
 		if(packetId == PacketID.AURA_CANCEL) {
 			int auraID = connection.readInt();
-			System.out.println("Aura ID : "+auraID);
 			Aura aura = AuraMgr.getAura(auraID);
 			if(aura == null) {
 				Log.writePlayerLog(player, "Tried to remove a non-existing aura, auraID : "+auraID);
@@ -68,6 +68,23 @@ public class CommandAura extends Command {
 		player.getConnection().writeShort(PacketID.AURA_CANCEL);
 		player.getConnection().writeInt(unitID);
 		player.getConnection().writeInt(auraID);
+		player.getConnection().endPacket();
+		player.getConnection().send();
+	}
+	
+	public static void initAura(Player player, Unit unit) {
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.AURA);
+		player.getConnection().writeShort(PacketID.AURA_INIT);
+		int i = 0;
+		player.getConnection().writeInt(unit.getUnitID());
+		player.getConnection().writeShort((short)unit.getAuraList().size());
+		while(i < unit.getAuraList().size()) {
+			player.getConnection().writeInt(unit.getAuraList().get(i).getAura().getId());
+			player.getConnection().writeLong(unit.getAuraList().get(i).getEndTimer());
+			player.getConnection().writeByte(unit.getAuraList().get(i).getNumberStack());
+			i++;
+		}
 		player.getConnection().endPacket();
 		player.getConnection().send();
 	}

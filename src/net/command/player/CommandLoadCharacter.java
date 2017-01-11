@@ -24,6 +24,7 @@ public class CommandLoadCharacter extends Command {
 			return;
 		}
 		//System.out.println("CHARACTER LOAD ID : "+id);
+		player.resetTarget();
 		CharacterMgr.fullyLoadCharacter(player, id);
 		/*player.setOnline();
 		player.setCharacterId(id);

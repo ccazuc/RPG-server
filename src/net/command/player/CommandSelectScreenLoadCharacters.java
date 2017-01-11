@@ -53,6 +53,7 @@ public class CommandSelectScreenLoadCharacters extends Command {
 				connection.writeString(classe);
 				connection.writeString(race);
 			}
+			connection.writeInt(-1);
 			if(!hasSendId) {
 				connection.endPacket();
 				connection.send();

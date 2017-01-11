@@ -12,6 +12,7 @@ public class CommandSendPlayer extends Command {
 		player.getConnection().writeShort(PacketID.SEND_PLAYER);
 		player.getConnection().writeByte(player.getClasse().getValue());
 		player.getConnection().writeInt(player.getUnitID());
+		player.getConnection().writeString(player.getName());
 		player.getConnection().writeByte(player.getWear().getValue());
 		player.getConnection().writeByte((byte)player.getWeaponType().length);
 		int i = 0;
@@ -28,6 +29,5 @@ public class CommandSendPlayer extends Command {
 		player.getConnection().writeInt(5);
 		player.getConnection().endPacket();
 		player.getConnection().send();
-		System.out.println("PLAYER SENT");
 	}
 }

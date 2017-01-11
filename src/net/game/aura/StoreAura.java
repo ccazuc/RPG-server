@@ -43,7 +43,6 @@ public class StoreAura {
 				@Override
 				public void onTick(Unit unit, AppliedAura appliedAura) {
 					unit.doHeal(appliedAura.getAura().getEffectValue1());
-					System.out.println("Tick");
 				}
 			});
 		}

@@ -19,6 +19,10 @@ public class SQLDatas {
 		this.iValue1 = iValue1;
 	}
 	
+	public SQLDatas(Player player) {
+		this.player = player;
+	}
+	
 	public SQLDatas(int iValue1, int iValue2) {
 		this.iValue1 = iValue1;
 		this.iValue2 = iValue2;

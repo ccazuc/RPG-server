@@ -138,6 +138,10 @@ public class Player extends Unit {
 		return this.connectionManager;
 	}
 	
+	public void resetTarget() {
+		this.target = new Unit(UnitType.NPC, 5, 8000, 8000, 7000, 7000, 50, "TestUnit", 50, 50, 50, 50, 50);
+	}
+	
 	public HashMap<Integer, Spell> getSpellUnlocked() {
 		return this.spellUnlocked;
 	}
@@ -238,6 +242,7 @@ public class Player extends Unit {
 		this.ignoreList = new ArrayList<Integer>();
 		this.bag = new Bag();
 		this.spellCDMap = new HashMap<Integer, Long>();
+		this.auraList = new ArrayList<AppliedAura>();
 	}
 	
 	public void loadGuild() {
@@ -386,6 +391,7 @@ public class Player extends Unit {
 		Server.addLoggedPlayer(this);
 		Server.removeInGamePlayer(this);
 		FriendMgr.getFriendMap().remove(this.unitID);
+		CharacterMgr.fullySaveCharacter(this);
 		resetDatas();
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);
@@ -398,19 +404,7 @@ public class Player extends Unit {
 	public void close() {
 		//long timer = System.nanoTime();
 		if(this.isOnline) {
-			notifyFriendOffline();
-			if(this.guild != null) {
-				CommandGuild.notifyOfflinePlayer(this);
-			}
-			FriendMgr.getFriendMap().remove(this.getUnitID());
-		}
-		FriendMgr.getFriendMap().remove(this.unitID);
-		CommandLogoutCharacter.setPlayerOfflineInDB(this);
-		if(this.trade != null || this.playerTrade != null) {
-			CommandTrade.closeTrade(this);
-		}
-		if(this.party != null || this.playerParty != null) {
-			CommandParty.leaveParty(this);
+			logoutCharacter();
 		}
 		this.connectionManager.getConnection().close();
 		Server.removeNonLoggedPlayer(this);
@@ -717,23 +711,23 @@ public class Player extends Unit {
 		return this.spellUnlocked.containsKey(id);
 	}
 	public void resetDatas() {
-		this.stamina = 0;
-		this.maxStaminaEffective = 0;
-		this.maxStaminaUnAura = 0;
-		this.mana = 0;
-		this.strengthUnAura = 0;
-		this.strengthEffective = 0;
-		this.criticalUnAura = 0;
-		this.criticalEffective = 0;
-		this.armor = 0;
+		//this.stamina = 0;
+		//this.maxStaminaEffective = 0;
+		//this.maxStaminaUnAura = 0;
+		//this.mana = 0;
+		//this.strengthUnAura = 0;
+		//this.strengthEffective = 0;
+		//this.criticalUnAura = 0;
+		//this.criticalEffective = 0;
+		//this.armor = 0;
 		this.bag = null;
-		this.unitID = 0;
+		//this.unitID = 0;
 		this.classe = null;
 		this.damage = 0;
 		this.defaultArmor = 0;
 		this.exp = 0;
 		this.firstProfession = null;
-		this.gold = 0;
+		//this.gold = 0;
 		this.level = 1;
 		this.name = "";
 		this.numberBlueGem = 0;
@@ -743,7 +737,8 @@ public class Player extends Unit {
 		this.secondProfession = null;
 		this.spellUnlocked.clear();
 		this.target = null;
-		this.wear = null;
+		this.guild = null;
+		//this.wear = null;
 	}
 	
 	public void setGuildRequest(int id) {

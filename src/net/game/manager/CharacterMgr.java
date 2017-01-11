@@ -5,12 +5,15 @@ import java.util.ArrayList;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.command.player.CommandAura;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandIgnore;
 import net.command.player.CommandSendPlayer;
 import net.command.player.CommandSendTarget;
 import net.game.AccountRank;
+import net.game.aura.AppliedAura;
+import net.game.aura.AuraMgr;
 import net.game.item.weapon.WeaponType;
 import net.game.unit.ClassType;
 import net.game.unit.Player;
@@ -42,6 +45,9 @@ public class CharacterMgr {
 	private static JDOStatement removeSpellbar;
 	private static JDOStatement setExperience;
 	private static JDOStatement getExperience;
+	private static JDOStatement loadAuras;
+	private static JDOStatement removeAuras;
+	private static JDOStatement saveAuras;
 	private static SQLRequest asyncSetExperience = new SQLRequest("UPDATE `character` SET experience = ? WHERE character_id ?", "Set experience", SQLRequestPriority.HIGH) {
 		
 		@Override
@@ -169,6 +175,7 @@ public class CharacterMgr {
 			player.updateLastLoginTimer();
 			CommandFriend.loadFriendList(player);
 			player.notifyFriendOnline();
+			loadAuras(player);
 			IgnoreMgr.loadIgnoreList(player.getUnitID());
 			CommandIgnore.ignoreInit(player.getConnection(), player);
 			player.loadGuild();
@@ -180,6 +187,15 @@ public class CharacterMgr {
 			//this.player.loadSpellUnlocked();
 			Server.addInGamePlayer(player);
 			Server.removeLoggedPlayer(player);
+		}
+	};
+	private final static SQLTask fullySaveCharacter = new SQLTask("Fully save character") {
+	
+		@Override
+		public void gatherData() {
+			Player player = this.datasList.get(0).getPlayer();
+			saveAuras(player);
+			
 		}
 	};
 	private static String rogue = "ROGUE";
@@ -206,6 +222,11 @@ public class CharacterMgr {
 	public static void fullyLoadCharacter(Player player, int id) {
 		fullyLoadCharacter.addDatas(new SQLDatas(player, id));
 		Server.executeHighPrioritySQLTask(fullyLoadCharacter);
+	}
+	
+	public static void fullySaveCharacter(Player player) {
+		fullySaveCharacter.addDatas(new SQLDatas(player));
+		Server.executeHighPrioritySQLTask(fullySaveCharacter);
 	}
 	
 	public static void loadCharacterInfo(Player player) {
@@ -257,6 +278,67 @@ public class CharacterMgr {
 				player.setStuffStrength(player.getStuff(i));
 			}
 			i++;
+		}
+	}
+	
+	private static void loadAuras(Player player) {
+		try {
+			if(loadAuras == null) {
+				loadAuras = Server.getJDO().prepare("SELECT aura_id, time_left, number_stack FROM character_aura WHERE character_id = ?");
+			}
+			loadAuras.clear();
+			loadAuras.putInt(player.getUnitID());
+			loadAuras.execute();
+			boolean hasAura = false;
+			while(loadAuras.fetch()) {
+				int auraID = loadAuras.getInt();
+				long time_left = loadAuras.getLong();
+				byte number_stack = loadAuras.getByte();
+				player.setAura(new AppliedAura(AuraMgr.getAura(auraID), time_left, number_stack));
+				hasAura = true;
+			}
+			if(hasAura) {
+				player.calcAllStats();
+				CommandAura.initAura(player, player);
+				removeAuras(player);
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void saveAuras(Player player) {
+		try {
+			if(saveAuras == null) {
+				saveAuras = Server.getAsyncHighPriorityJDO().prepare("INSERT INTO character_aura (character_id, aura_id, time_left, number_stack) VALUES(?, ?, ?, ?)");
+			}
+			int i = player.getAuraList().size();
+			while(--i >= 0) {
+				saveAuras.clear();
+				saveAuras.putInt(player.getUnitID());
+				saveAuras.putInt(player.getAuraList().get(i).getAura().getId());
+				saveAuras.putLong(player.getAuraList().get(i).getEndTimer()-Server.getLoopTickTimer());
+				saveAuras.putByte(player.getAuraList().get(i).getNumberStack());
+				saveAuras.execute();
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void removeAuras(Player player) {
+		try {
+			if(removeAuras == null) {
+				removeAuras = Server.getJDO().prepare("DELETE FROM character_aura WHERE character_id = ?");
+			}
+			removeAuras.clear();
+			removeAuras.putInt(player.getUnitID());
+			removeAuras.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	

@@ -19,6 +19,12 @@ public class AppliedAura {
 		this.numberStack = aura.getDefaultNumberStack();
 	}
 	
+	public AppliedAura(Aura aura, long timeLeft, byte numberStack) {
+		this.aura = aura;
+		this.endTimer = Server.getLoopTickTimer()+timeLeft;
+		this.numberStack = numberStack;
+	}
+	
 	public void tick(Unit unit) {
 		if(this.lastTick+this.aura.getTickRate() <= Server.getLoopTickTimer() && this.applyTimer+this.aura.getTickRate() <= Server.getLoopTickTimer()) {
 			this.aura.onTick(unit, this);

@@ -1,7 +1,10 @@
 package net.game.spell;
 
 import net.game.aura.AuraMgr;
+import net.game.spell.classes.HunterSpells;
+import net.game.spell.classes.MageSpells;
 import net.game.spell.classes.PriestSpells;
+import net.game.spell.classes.RogueSpells;
 import net.game.spell.classes.WarriorSpells;
 import net.game.unit.Unit;
 
@@ -29,7 +32,7 @@ public class StoreSpell {
 		else if(id == 102) {		//heroicStrike
 			
 		}
-		else if(id == WarriorSpells.MORTAL_STRIKE.getID()) {
+		else if(id == WarriorSpells.MORTAL_STRIKE_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical) {
 				
 				@Override
@@ -53,22 +56,22 @@ public class StoreSpell {
 		else if(id == 105) {		//thunderClap
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 201) {		//arcaneShot
+		else if(id == HunterSpells.ARCANE_SHOT_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 202) {		//multiShot
+		else if(id == HunterSpells.MULTI_SHOT_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 203) {		//steadyShot
+		else if(id == HunterSpells.STEADY_SHOT_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 301) {		//fireBall
+		else if(id == MageSpells.FIREBALL_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 302) {		//flameStrike
+		else if(id == MageSpells.FLAME_STRIKE_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 303) {		//pyroBlast
+		else if(id == MageSpells.PYROBLAST_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
 		else if(id == 401) {		//tigerPalm
@@ -89,16 +92,16 @@ public class StoreSpell {
 		else if(id == 503) {		//layOfHands
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 601) {		//flashHeal
+		else if(id == PriestSpells.FLASH_HEAL_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 602) { 		//holyNova
+		else if(id == PriestSpells.HOLY_NOVA_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 603) { 		//holyNova
+		else if(id == PriestSpells.PENANCE_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == PriestSpells.RENEW.getID()) {
+		else if(id == PriestSpells.RENEW_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical) {
 				
 				@Override
@@ -114,13 +117,13 @@ public class StoreSpell {
 				}
 			});
 		}
-		else if(id == 701) {		//ambush
+		else if(id == RogueSpells.AMBUSH_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 702) {		//eviscerate
+		else if(id == RogueSpells.EVISCERATE_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
-		else if(id == 703) {		//sinisterStrike
+		else if(id == RogueSpells.SINISTER_STRIKE_R1.getID()) {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
 		else if(id == 801) {		//chainLightning

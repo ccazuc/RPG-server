@@ -64,7 +64,6 @@ public class Connection {
 	
 	public final void close() {
 		try {
-			System.out.println("SOCKET CLOSE REQUEST");
 			this.socket.close();
 		} 
 		catch (IOException e) {
