@@ -8,7 +8,7 @@ public class Container extends Item {
 	private int id;
 	private String sprite_id;
 	private String name;
-	private int size;
+	private byte size;
 	
 	public Container(Container bag) {
 		super(bag.id, bag.sprite_id, bag.itemType, bag.name, bag.quality, bag.sellPrice, 1, 1);
@@ -18,7 +18,7 @@ public class Container extends Item {
 		this.id = bag.id;
 	}
 	
-	public Container(int id,  String name, String sprite_id, int quality, int size, int sellPrice) {
+	public Container(int id,  String name, String sprite_id, byte quality, byte size, int sellPrice) {
 		super(id, sprite_id, ItemType.CONTAINER, name, quality, sellPrice, 1, 1);
 		this.sprite_id = sprite_id;
 		this.name = name;
@@ -31,7 +31,7 @@ public class Container extends Item {
 		return this.sprite_id;
 	}
 	
-	public int getSize() {
+	public byte getSize() {
 		return this.size;
 	}
 	

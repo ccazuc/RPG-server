@@ -11,7 +11,7 @@ public class BagManager {
 	private static HashMap<Integer, Container> containerList = new HashMap<Integer, Container>();
 	private static JDOStatement loadBags;
 	
-	public static void loadBags() throws SQLException {
+	/*public static void loadBags() throws SQLException {
 		if(loadBags == null) {
 			loadBags = Server.getJDO().prepare("SELECT id, sprite_id, name, quality, size, sellprice FROM item_container");
 		}
@@ -26,7 +26,7 @@ public class BagManager {
 			int sellPrice = loadBags.getInt();
 			containerList.put(id, new Container(id, sprite_id, name, quality, size, sellPrice));
 		}
-	}
+	}*/
 	
 	public static Container getContainer(int id) {
 		if(containerList.containsKey(id)) {

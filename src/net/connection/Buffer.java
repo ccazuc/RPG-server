@@ -145,7 +145,7 @@ public class Buffer {
 		writeString(stuff.getSpriteId());
 		writeInt(stuff.getId());
 		writeString(stuff.getStuffName());
-		writeInt(stuff.getQuality());
+		writeByte(stuff.getQuality());
 		writeByte(stuff.getGemSlot1().getValue());
 		writeByte(stuff.getGemSlot2().getValue());
 		writeByte(stuff.getGemSlot3().getValue());
@@ -162,14 +162,14 @@ public class Buffer {
 		this.written = true;
 	}
 	
-	protected final void writeGem(final Gem gem) {
+	public final void writeGem(final Gem gem) {
 		if(this.player != null) {
 			this.player.addItemSentToClient(gem.getId());
 		}
 		writeInt(gem.getId());
 		writeString(gem.getSpriteId());
 		writeString(gem.getStuffName());
-		writeInt(gem.getQuality());
+		writeByte(gem.getQuality());
 		writeByte(gem.getColor().getValue());
 		writeInt(gem.getSellPrice());
 		writeByte(gem.getBonus1Type().getValue());
@@ -181,7 +181,7 @@ public class Buffer {
 		this.written = true;
 	}
 	
-	protected final void writePotion(final Potion potion) {
+	public final void writePotion(final Potion potion) {
 		if(this.player != null) {
 			this.player.addItemSentToClient(potion.getId());
 		}
@@ -211,7 +211,7 @@ public class Buffer {
 		}
 		writeByte(weapon.getWeaponType().getValue());
 		writeByte(weapon.getWeaponSlot().getValue());
-		writeInt(weapon.getQuality());
+		writeByte(weapon.getQuality());
 		writeByte(weapon.getGemSlot1().getValue());
 		writeByte(weapon.getGemSlot2().getValue());
 		writeByte(weapon.getGemSlot3().getValue());
@@ -234,8 +234,8 @@ public class Buffer {
 		writeInt(bag.getId());
 		writeString(bag.getStuffName());
 		writeString(bag.getSpriteId());
-		writeInt(bag.getQuality());
-		writeInt(bag.getSize());
+		writeByte(bag.getQuality());
+		writeByte(bag.getSize());
 		writeInt(bag.getSellPrice());
 		this.written = true;
 	}

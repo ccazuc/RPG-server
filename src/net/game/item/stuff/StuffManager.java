@@ -34,7 +34,7 @@ public class StuffManager {
 			String tempWear = loadStuff.getString();
 			Wear wear = getWear(tempWear);
 			String sprite_id = loadStuff.getString();
-			int quality = loadStuff.getInt();
+			byte quality = loadStuff.getByte();
 			String tempColor =loadStuff.getString();
 			GemColor color1 = GemManager.convColor(tempColor);
 			tempColor = loadStuff.getString();

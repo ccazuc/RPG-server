@@ -22,8 +22,8 @@ public class ContainerManager {
 			int id = loadBags.getInt();
 			String sprite_id = loadBags.getString();
 			String name = loadBags.getString();
-			int quality = loadBags.getInt();
-			int size = loadBags.getInt();
+			byte quality = loadBags.getByte();
+			byte size = loadBags.getByte();
 			int sellPrice = loadBags.getInt();
 			containerList.put(id, new Container(id, sprite_id, name, quality, size, sellPrice));
 		}

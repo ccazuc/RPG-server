@@ -22,7 +22,7 @@ public class GemManager {
 			int id = loadGems.getInt();
 			String sprite_id = loadGems.getString();
 			String name = loadGems.getString();
-			int quality = loadGems.getInt();
+			byte quality = loadGems.getByte();
 			String tempColor = loadGems.getString();
 			GemColor color = convColor(tempColor);
 			int sellPrice = loadGems.getInt();

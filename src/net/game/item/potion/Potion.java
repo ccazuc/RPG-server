@@ -10,14 +10,14 @@ public class Potion extends Item {
 	private final int level;
 
 	public Potion(Potion potion) {
-		super(potion.id, potion.sprite_id, potion.itemType, potion.name, 1, potion.sellPrice, potion.maxStack, potion.amount);
+		super(potion.id, potion.sprite_id, potion.itemType, potion.name, (byte)1, potion.sellPrice, potion.maxStack, potion.amount);
 		this.doHeal = potion.doHeal;
 		this.doMana = potion.doMana;
 		this.level = potion.level;
 	}
 	
 	public Potion(int id, String sprite_id, String name, int level, int doHeal, int doMana, int sellPrice, int amount) {
-		super(id, sprite_id, ItemType.POTION, name, 1, sellPrice, 200, amount);
+		super(id, sprite_id, ItemType.POTION, name, (byte)1, sellPrice, 200, amount);
 		this.doHeal = doHeal;
 		this.doMana = doMana;
 		this.level = level;

@@ -15,9 +15,11 @@ import net.game.Wear;
 import net.game.item.ItemType;
 import net.game.item.bag.Container;
 import net.game.item.bag.ContainerManager;
+import net.game.item.gem.Gem;
 import net.game.item.gem.GemBonusType;
 import net.game.item.gem.GemColor;
 import net.game.item.gem.GemManager;
+import net.game.item.potion.Potion;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.Stuff;
 import net.game.item.stuff.StuffManager;
@@ -53,7 +55,7 @@ public class ItemCacheWDBFileCreator {
 			String tempWear = loadItems.getString();
 			Wear wear = StuffManager.getWear(tempWear);
 			String sprite_id = loadItems.getString();
-			int quality = loadItems.getInt();
+			byte quality = loadItems.getByte();
 			String tempColor = loadItems.getString();
 			GemColor color1 = GemManager.convColor(tempColor);
 			tempColor = loadItems.getString();
@@ -85,7 +87,7 @@ public class ItemCacheWDBFileCreator {
 			WeaponType type = WeaponManager.getType(tempType);
 			String tempSlot = loadItems.getString();
 			WeaponSlot slot = WeaponManager.getSlot(tempSlot);
-			int quality = loadItems.getInt();
+			byte quality = loadItems.getByte();
 			String tempColor = loadItems.getString();
 			GemColor color1 = GemManager.convColor(tempColor);
 			tempColor = loadItems.getString();
@@ -116,14 +118,15 @@ public class ItemCacheWDBFileCreator {
 			int mana = loadItems.getInt();
 			int sellPrice = loadItems.getInt();
 			writeBuffer.writeByte(ItemType.POTION.getValue());
-			writeBuffer.writeInt(id);
+			writeBuffer.writePotion(new Potion(id, sprite_id, name, level, heal, mana, sellPrice, 1));
+			/*writeBuffer.writeInt(id);
 			writeBuffer.writeString(sprite_id);
 			writeBuffer.writeString(name);
 			writeBuffer.writeInt(level);
 			writeBuffer.writeInt(heal);
 			writeBuffer.writeInt(mana);
 			writeBuffer.writeInt(sellPrice);
-			writeBuffer.writeInt(1);
+			writeBuffer.writeInt(1);*/
 		}
 		loadItems = jdo.prepare(ContainerManager.LOAD_CONTAINER_REQUEST);
 		loadItems.execute();
@@ -131,16 +134,17 @@ public class ItemCacheWDBFileCreator {
 			int id = loadItems.getInt();
 			String sprite_id = loadItems.getString();
 			String name = loadItems.getString();
-			int quality = loadItems.getInt();
-			int size = loadItems.getInt();
+			byte quality = loadItems.getByte();
+			byte size = loadItems.getByte();
 			int sellPrice = loadItems.getInt();
 			writeBuffer.writeByte(ItemType.CONTAINER.getValue());
-			writeBuffer.writeInt(id);
+			writeBuffer.writeContainer(new Container(id, sprite_id, name, quality, size, sellPrice));
+			/*writeBuffer.writeInt(id);
 			writeBuffer.writeString(sprite_id);
 			writeBuffer.writeString(name);
-			writeBuffer.writeInt(quality);
-			writeBuffer.writeInt(size);
-			writeBuffer.writeInt(sellPrice);
+			writeBuffer.writeByte(quality);
+			writeBuffer.writeByte(size);
+			writeBuffer.writeInt(sellPrice);*/
 		}
 		loadItems = jdo.prepare(GemManager.LOAD_GEM_REQUEST);
 		loadItems.execute();
@@ -148,7 +152,7 @@ public class ItemCacheWDBFileCreator {
 			int id = loadItems.getInt();
 			String sprite_id = loadItems.getString();
 			String name = loadItems.getString();
-			int quality = loadItems.getInt();
+			byte quality = loadItems.getByte();
 			String tempColor = loadItems.getString();
 			GemColor color = GemManager.convColor(tempColor);
 			int sellPrice = loadItems.getInt();
@@ -159,10 +163,12 @@ public class ItemCacheWDBFileCreator {
 			GemBonusType stat3Type = GemManager.convGemBonusType(loadItems.getString());
 			int stat3Value = loadItems.getInt();
 			writeBuffer.writeByte(ItemType.GEM.getValue());
+			writeBuffer.writeGem(new Gem(id, sprite_id, name, quality, color, sellPrice, stat1Type, stat1Value, stat2Type, stat2Value, stat3Type, stat3Value));
+			/*writeBuffer.writeByte(ItemType.GEM.getValue());
 			writeBuffer.writeInt(id);
 			writeBuffer.writeString(sprite_id);
 			writeBuffer.writeString(name);
-			writeBuffer.writeInt(quality);
+			writeBuffer.writeByte(quality);
 			writeBuffer.writeByte(color.getValue());
 			writeBuffer.writeInt(sellPrice);
 			writeBuffer.writeByte(stat1Type.getValue());
@@ -170,7 +176,7 @@ public class ItemCacheWDBFileCreator {
 			writeBuffer.writeByte(stat2Type.getValue());
 			writeBuffer.writeInt(stat2Value);
 			writeBuffer.writeByte(stat3Type.getValue());
-			writeBuffer.writeInt(stat3Value);
+			writeBuffer.writeInt(stat3Value);*/
 		}
 		int endPosition = writeBuffer.position();
 		writeBuffer.position(position);

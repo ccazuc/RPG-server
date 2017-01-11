@@ -24,7 +24,7 @@ public class Gem extends Item {
 		this.color = gem.color;
 	}
 	
-	public Gem(int id, String sprite_id, String name, int quality, GemColor color, int sellPrice, GemBonusType stat1Type, int stat1Value, GemBonusType stat2Type, int stat2Value, GemBonusType stat3Type, int stat3Value) {
+	public Gem(int id, String sprite_id, String name, byte quality, GemColor color, int sellPrice, GemBonusType stat1Type, int stat1Value, GemBonusType stat2Type, int stat2Value, GemBonusType stat3Type, int stat3Value) {
 		super(id, sprite_id, ItemType.GEM, name, quality, sellPrice, 1, 1);
 		this.stat1Type = stat1Type;
 		this.stat1Value = stat1Value;
