@@ -38,6 +38,7 @@ public class Unit {
 	protected int strengthEffective;
 	protected UnitType unitType;
 	protected Spell spellCasting;
+	protected float rawCriticalPercentage;
 	protected long endCastTimer;
 	protected boolean isStunned;
 	protected boolean isSilenced;
@@ -212,6 +213,18 @@ public class Unit {
 	
 	public void calcAllStats() {
 		
+	}
+	
+	public void calcRawCriticalPercentage() {
+		if(this.level < 10) {
+			this.rawCriticalPercentage = this.criticalEffective/26;
+		}
+		else if(this.level >= 10 && this.level < 60) {
+			this.rawCriticalPercentage = this.criticalEffective*(this.level-8)/52;
+		}
+		else if(this.level >= 60) {
+			this.rawCriticalPercentage = (float)(this.criticalEffective*(41/26)*(Math.pow((131/63), (this.level-70)/10)));
+		}
 	}
 	
 	public int getMaxStaminaEffective() {
