@@ -73,8 +73,6 @@ public class Server {
 	private final static int LOOP_TIMER = 15;
 	private static boolean serverRunning = true;
 	private static boolean isAcceptingConnection = true;
-
-	private final static Pattern isInteger = Pattern.compile("-?[0-9]+");
 	
 	public static void main(String[] args) throws IOException, InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException, InterruptedException {
 		SERVER_START_TIMER = System.currentTimeMillis();
@@ -416,8 +414,15 @@ public class Server {
 		return ConfigMgr.PORT;
 	}
 	
-	public static boolean isInteger(String string) {
-		return isInteger.matcher(string).matches();
+	public static boolean isInteger(String str) {
+		int i = -1;
+		while(++i < str.length()) {
+			char c = str.charAt(i);
+			if(c < '0' || c > '9') {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public static boolean isInteger(char c) {
