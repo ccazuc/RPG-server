@@ -4,6 +4,7 @@ import net.Server;
 import net.command.player.CommandSendGCD;
 import net.command.player.CommandSendRedAlert;
 import net.command.player.CommandSendSpellCD;
+import net.command.player.CommandUpdateStats;
 import net.game.DefaultRedAlert;
 import net.game.unit.Player;
 import net.game.unit.TargetType;
@@ -121,7 +122,7 @@ public class Spell {
 	public static void doDamage(Unit caster, Unit target, int damage) {
 		target.setStamina(target.getStamina()-damage);
 		if(caster.getUnitType() == UnitType.PLAYER) {
-			
+			CommandUpdateStats.updateStamina((Player)caster, target.getUnitID(), target.getStamina());
 		}
 	}
 	

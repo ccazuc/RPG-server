@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.command.item.CommandSendContainer;
 import net.command.player.CommandAura;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
@@ -169,6 +170,7 @@ public class CharacterMgr {
 			CommandSendTarget.sendTarget(player, player.getTarget());
 			player.sendStats();
 			player.loadEquippedBagSQL();
+			CommandSendContainer.sendContainer(player);
 			player.loadEquippedItemSQL();
 			player.loadBagItemSQL();
 			player.loadFriendList();
@@ -281,7 +283,7 @@ public class CharacterMgr {
 		}
 	}
 	
-	private static void loadAuras(Player player) {
+	static void loadAuras(Player player) {
 		try {
 			if(loadAuras == null) {
 				loadAuras = Server.getJDO().prepare("SELECT aura_id, caster_id, time_left, number_stack FROM character_aura WHERE character_id = ?");
@@ -312,7 +314,7 @@ public class CharacterMgr {
 	public static void saveAuras(Player player) {
 		try {
 			if(saveAuras == null) {
-				saveAuras = Server.getAsyncHighPriorityJDO().prepare("INSERT INTO character_aura (character_id, aura_id, caster_id, time_left, number_stack) VALUES(?, ?, ?, ?)");
+				saveAuras = Server.getAsyncHighPriorityJDO().prepare("INSERT INTO character_aura (character_id, aura_id, caster_id, time_left, number_stack) VALUES(?, ?, ?, ?, ?)");
 			}
 			int i = player.getAuraList().size();
 			while(--i >= 0) {

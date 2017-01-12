@@ -7,9 +7,10 @@ public enum DragItem {
 	BANK((byte)2),
 	GUILDBANK((byte)3),
 	TRADE((byte)4),
+	EQUIPPED_CONTAINER((byte)5),
 	;
 	
-	private byte value;
+	private final byte value;
 	
 	private DragItem(byte c) {
 		this.value = c;

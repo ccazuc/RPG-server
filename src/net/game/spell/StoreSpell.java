@@ -108,6 +108,7 @@ public class StoreSpell {
 				public boolean action(Unit caster, Unit target) {
 					caster.applyAura(AuraMgr.getAura(2), caster);
 					caster.applyAura(AuraMgr.getAura(3), caster);
+					doDamage(caster, target, 1500);
 					return true;
 				}
 				
