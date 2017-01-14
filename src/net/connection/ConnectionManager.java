@@ -25,8 +25,6 @@ import net.command.item.CommandRequestItem;
 import net.command.item.CommandStuff;
 import net.command.item.CommandWeapon;
 import net.command.player.CommandAddItem;
-import net.command.player.CommandAura;
-import net.command.player.CommandCast;
 import net.command.player.CommandCreateCharacter;
 import net.command.player.CommandDeleteCharacter;
 import net.command.player.CommandFriend;
@@ -45,6 +43,8 @@ import net.command.player.CommandSendSingleBagItem;
 import net.command.player.CommandTrade;
 import net.command.player.CommandUpdateStats;
 import net.command.player.CommandWho;
+import net.command.player.spell.CommandAura;
+import net.command.player.spell.CommandCast;
 import net.game.log.Log;
 import net.game.unit.Player;
 

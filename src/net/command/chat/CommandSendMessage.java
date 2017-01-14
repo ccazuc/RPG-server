@@ -46,8 +46,8 @@ public class CommandSendMessage extends Command {
 				selfWithoutAuthor(connection, "You are not in a party.", MessageType.SELF);
 				return;
 			}
-			int i = 0;
-			while(i < player.getParty().getPlayerList().length) {
+			int i = player.getParty().getPlayerList().length;
+			while(--i >= 0) {
 				if(player.getParty().getPlayerList()[i] != null && !IgnoreMgr.isIgnored(player.getUnitID(), player.getParty().getPlayerList()[i].getUnitID())) {
 					if(player.getParty().isPartyLeader(player)) {
 						write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY_LEADER, player.isGMOn());
@@ -56,7 +56,6 @@ public class CommandSendMessage extends Command {
 						write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY, player.isGMOn());
 					}
 				}
-				i++;
 			}
 		}
 		else if(type == MessageType.GUILD) {
@@ -69,12 +68,11 @@ public class CommandSendMessage extends Command {
 				selfWithoutAuthor(connection, "You don't have the right to do this.", MessageType.SELF);
 				return;
 			}
-			int i = 0;
-			while(i < player.getGuild().getMemberList().size()) {
+			int i = player.getGuild().getMemberList().size();
+			while(--i >= 0) {
 				if(player.getGuild().getMemberList().get(i).isOnline() && player.getGuild().getMemberList().get(i).getRank().canListenGuildChannel() && !IgnoreMgr.isIgnored(player.getUnitID(), player.getGuild().getMemberList().get(i).getId())) {
 					write(Server.getInGameCharacter(player.getGuild().getMemberList().get(i).getId()).getConnection(), message, player.getName(), MessageType.GUILD, player.isGMOn());
 				}
-				i++;
 			}
 		}
 		else {

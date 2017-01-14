@@ -154,4 +154,11 @@ public class PacketID {
 	public final static short UPDATE_STATS_MAX_STAMINA = 150;
 	public final static short AURA_INIT = 151;
 	public final static short SEND_EQUIPPED_CONTAINER = 152;
+	public final static short SPELL_UNLOCKED = 153;
+	public final static short SPELL_UNLOCKED_INIT = 154;
+	public final static short SPELL_UNLOCKED_ADD = 155;
+	public final static short SPELL_UNLOCKED_REMOVE = 156;
+	public final static short CHANNEL = 157;
+	public final static short CHANNEL_JOIN = 158;
+	public final static short CHANNEL_LEAVE = 159;
 }

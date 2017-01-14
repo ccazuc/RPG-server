@@ -1,10 +1,10 @@
 package net.game.spell;
 
 import net.Server;
-import net.command.player.CommandSendGCD;
 import net.command.player.CommandSendRedAlert;
-import net.command.player.CommandSendSpellCD;
 import net.command.player.CommandUpdateStats;
+import net.command.player.spell.CommandSendGCD;
+import net.command.player.spell.CommandSendSpellCD;
 import net.game.DefaultRedAlert;
 import net.game.unit.Player;
 import net.game.unit.TargetType;

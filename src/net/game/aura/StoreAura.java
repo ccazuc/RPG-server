@@ -1,6 +1,6 @@
 package net.game.aura;
 
-import net.command.player.CommandAura;
+import net.command.player.spell.CommandAura;
 import net.game.unit.Player;
 import net.game.unit.Unit;
 import net.game.unit.UnitType;

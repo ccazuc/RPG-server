@@ -1333,6 +1333,45 @@ public class StoreChatCommand {
 			}
 		}
 	};
+	private final static ChatCommand cooldown = new ChatCommand("cooldown", ".cooldown [spell_id]\n.cooldown [spell_id] [character_id] reset cooldown of spell [spell_id]", AccountRank.GAMEMASTER) {
+	
+		@Override
+		public void handle(String command, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			command = command.trim();
+			if(command.equalsIgnoreCase('.'+this.name)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printHelpMessage(), MessageType.SELF);
+			}
+			else {
+				String[] value = command.split(" ");
+				if(value.length < 2) {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printHelpMessage(), MessageType.SELF);
+					return;
+				}
+				if(!Server.isInteger(value[1])) {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [spell_id] in .cooldown [spell_id]", MessageType.SELF);
+					return;
+				}
+				if(value.length == 2) {
+					player.resetSpellCooldown(Integer.parseInt(value[1]));
+				}
+				else {
+					if(!Server.isInteger(value[2])) {
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [character_id] in .cooldown [spell_id] [character_id]", MessageType.SELF);
+						return;
+					}
+					Player target = Server.getInGameCharacter(Integer.parseInt(value[2]));
+					if(target == null) {
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character not found.", MessageType.SELF);
+						return;
+					}
+					target.resetSpellCooldown(Integer.parseInt(value[1]));
+				}
+			}
+		}
+	};
 	
 	public static void initChatCommandMap() {
 		account.addSubCommand(account_onlinelist);
@@ -1378,6 +1417,7 @@ public class StoreChatCommand {
 		commandMap.put(gm.getName(), gm);
 		reload.addSubCommand(reload_spell);
 		commandMap.put(reload.getName(), reload);
+		commandMap.put(cooldown.getName(), cooldown);
 	}
 	
 	static long convStringTimerToMS(String timer) {

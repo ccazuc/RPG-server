@@ -6,16 +6,18 @@ import java.util.ArrayList;
 import jdo.JDOStatement;
 import net.Server;
 import net.command.item.CommandSendContainer;
-import net.command.player.CommandAura;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandIgnore;
 import net.command.player.CommandSendPlayer;
 import net.command.player.CommandSendTarget;
+import net.command.player.spell.CommandAura;
+import net.command.player.spell.CommandSpellUnlocked;
 import net.game.AccountRank;
 import net.game.aura.AppliedAura;
 import net.game.aura.AuraMgr;
 import net.game.item.weapon.WeaponType;
+import net.game.spell.Spell;
 import net.game.unit.ClassType;
 import net.game.unit.Player;
 import net.game.unit.Race;
@@ -27,7 +29,6 @@ import net.thread.sql.SQLTask;
 public class CharacterMgr {
 
 	private static JDOStatement loadCharacterInfo;
-	private static JDOStatement loadSpellUnlocked;
 	private static JDOStatement loadRank;
 	private static JDOStatement loadWeaponType;
 	private static JDOStatement setOnline;
@@ -49,6 +50,8 @@ public class CharacterMgr {
 	private static JDOStatement loadAuras;
 	private static JDOStatement removeAuras;
 	private static JDOStatement saveAuras;
+	private static JDOStatement loadSpellsUnlocked;
+	private static JDOStatement saveSpellsUnlocked;
 	private static SQLRequest asyncSetExperience = new SQLRequest("UPDATE `character` SET experience = ? WHERE character_id ?", "Set experience", SQLRequestPriority.HIGH) {
 		
 		@Override
@@ -169,6 +172,8 @@ public class CharacterMgr {
 			CommandSendPlayer.write(player);
 			CommandSendTarget.sendTarget(player, player.getTarget());
 			player.sendStats();
+			loadSpellsUnlocked(player);
+			CommandSpellUnlocked.initSpellUnlocked(player);
 			player.loadEquippedBagSQL();
 			CommandSendContainer.sendContainer(player);
 			player.loadEquippedItemSQL();
@@ -186,7 +191,6 @@ public class CharacterMgr {
 				player.getGuild().getMember(player.getUnitID()).setOnlineStatus(true);
 				CommandGuild.notifyOnlinePlayer(player);
 			}
-			//this.player.loadSpellUnlocked();
 			Server.addInGamePlayer(player);
 			Server.removeLoggedPlayer(player);
 		}
@@ -197,6 +201,7 @@ public class CharacterMgr {
 		public void gatherData() {
 			Player player = this.datasList.get(0).getPlayer();
 			saveAuras(player);
+			saveSpellsUnlocked(player);
 			
 		}
 	};
@@ -346,6 +351,40 @@ public class CharacterMgr {
 		}
 	}
 	
+	public static void loadSpellsUnlocked(Player player) {
+		try {
+			if(loadSpellsUnlocked == null) {
+				loadSpellsUnlocked = Server.getAsyncHighPriorityJDO().prepare("SELECT spell_id FROM spell_unlocked WHERE character_id = ?");
+			}
+			loadSpellsUnlocked.clear();
+			loadSpellsUnlocked.putInt(player.getUnitID());
+			loadSpellsUnlocked.execute();
+			while(loadSpellsUnlocked.fetch()) {
+				player.addUnlockedSpell(loadSpellsUnlocked.getInt());
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void saveSpellsUnlocked(Player player) {
+		try {
+			if(saveSpellsUnlocked == null) {
+				saveSpellsUnlocked = Server.getAsyncHighPriorityJDO().prepare("INSERT INTO spell_unlocked (character_id, spell_id) VALUES (?, ?)");
+			}
+			for(Spell spell : player.getSpellUnlocked().values()) {
+				saveSpellsUnlocked.clear();
+				saveSpellsUnlocked.putInt(player.getUnitID());
+				saveSpellsUnlocked.putInt(spell.getSpellId());
+				saveSpellsUnlocked.execute();
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void loadFriendList(Player player) {
 		try {
 			if(loadPlayerFriend == null) {
@@ -396,7 +435,7 @@ public class CharacterMgr {
 	}
 	
 	public static void updateLastLoginTimer(Player player) {
-		updateLastOnlineTimer.addDatas(new SQLDatas(player.getUnitID(), System.currentTimeMillis()));
+		updateLastOnlineTimer.addDatas(new SQLDatas(player.getUnitID(), Server.getLoopTickTimer()));
 		Server.executeSQLRequest(updateLastOnlineTimer);
 	}
 	
@@ -406,18 +445,6 @@ public class CharacterMgr {
 		}
 		checkOnlinePlayers.clear();
 		checkOnlinePlayers.execute();
-	}
-	
-	public static void loadSpellUnlocked(Player player) throws SQLException {
-		if(loadSpellUnlocked == null) {
-			loadSpellUnlocked = Server.getJDO().prepare("SELECT id FROM character_spell_unlocked WHERE character_id = ?");
-		}
-		loadSpellUnlocked.clear();
-		loadSpellUnlocked.putInt(player.getUnitID());
-		loadSpellUnlocked.execute();
-		while(loadSpellUnlocked.fetch()) {
-			player.addUnlockedSpell(loadSpellUnlocked.getInt());
-		}
 	}
 	
 	public static String loadCharacterNameFromID(int id) {

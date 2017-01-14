@@ -74,14 +74,12 @@ public class IgnoreMgr {
 
 	public static boolean isIgnored(int player_id, int ignore_id) {
 		if(ignoreMap.containsKey(player_id)) {
-			int i = 0;
-			int length = ignoreMap.get(player_id).size();
+			int i = ignoreMap.get(player_id).size();
 			ArrayList<Integer> list = ignoreMap.get(player_id);
-			while(i < length) {
+			while(--i >= 0) {
 				if(list.get(i) == ignore_id) {
 					return true;
 				}
-				i++;
 			}
 		}
 		return false;
@@ -101,17 +99,15 @@ public class IgnoreMgr {
 	
 	public static void removeIgnore(int player_id, int ignore_id) {
 		if(containsKey(player_id)) {
-			int i = 0;
 			ArrayList<Integer> ignoreList = ignoreMap.get(player_id);
-			int length = ignoreList.size();
-			while(i < length) {
+			int i = ignoreList.size();
+			while(--i >= 0) {
 				if(ignoreList.get(i) == ignore_id) {
 					ignoreList.remove(i);
 					removeIgnoreFromDB.addDatas(new SQLDatas(player_id, ignore_id));
 					Server.executeSQLRequest(removeIgnoreFromDB);
 					return;
 				}
-				i++;
 			}
 		}
 	}

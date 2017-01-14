@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.Server;
-import net.command.player.CommandAura;
 import net.command.player.CommandUpdateStats;
+import net.command.player.spell.CommandAura;
 import net.game.aura.AppliedAura;
 import net.game.aura.Aura;
 import net.game.aura.AuraEffect;

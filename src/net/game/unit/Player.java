@@ -7,13 +7,13 @@ import java.util.HashMap;
 
 import net.Server;
 import net.command.item.CommandSetItem;
-import net.command.player.CommandCast;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
-import net.command.player.CommandLogoutCharacter;
 import net.command.player.CommandParty;
 import net.command.player.CommandTrade;
 import net.command.player.CommandUpdateStats;
+import net.command.player.spell.CommandCast;
+import net.command.player.spell.CommandSendSpellCD;
 import net.connection.Connection;
 import net.connection.ConnectionManager;
 import net.connection.PacketID;
@@ -140,6 +140,11 @@ public class Player extends Unit {
 	
 	public void resetTarget() {
 		this.target = new Unit(UnitType.NPC, 5, 8000, 8000, 7000, 7000, 50, "TestUnit", 50, 50, 50, 50, 50);
+	}
+	
+	public void resetSpellCooldown(int spellID) {
+		this.spellCDMap.put(spellID, 0l);
+		CommandSendSpellCD.sendCD(this, spellID, 0, 0);	
 	}
 	
 	public HashMap<Integer, Spell> getSpellUnlocked() {
@@ -289,15 +294,6 @@ public class Player extends Unit {
 	
 	public void loadFriendList() {
 		CharacterMgr.loadFriendList(this);
-	}
-	
-	public void loadSpellUnlocked() {
-		try {
-			CharacterMgr.loadSpellUnlocked(this);
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void updateLastLoginTimer() {
