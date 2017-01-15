@@ -8,6 +8,7 @@ import net.game.unit.Player;
 public class ChannelMgr {
 
 	private final static HashMap<String, ArrayList<Integer>> channelMap = new HashMap<String, ArrayList<Integer>>();
+	public final static byte MAXIMUM_CHANNEL_JOINED = 10;
 	
 	public static ArrayList<Integer> getPlayerList(String channelID) {
 		return channelMap.get(channelID);
@@ -23,9 +24,9 @@ public class ChannelMgr {
 		}
 	}
 	
-	public static void removePlayer(String channelID, Player player) {
+	public static boolean removePlayer(String channelID, Player player) {
 		if(!channelMap.containsKey(channelID)) {
-			return;
+			return false;
 		}
 		int unitID = player.getUnitID();
 		ArrayList<Integer> list = channelMap.get(channelID);
@@ -33,9 +34,10 @@ public class ChannelMgr {
 		while(--i >= 0) {
 			if(list.get(i) == unitID) {
 				list.remove(i);
-				return;
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	public static boolean playerHasJoinChannel(String channelID, Player player) {

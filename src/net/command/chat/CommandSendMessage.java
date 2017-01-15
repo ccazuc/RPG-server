@@ -1,10 +1,13 @@
 package net.command.chat;
 
+import java.util.ArrayList;
+
 import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.chat.ChatCommandHandler;
+import net.game.manager.ChannelMgr;
 import net.game.manager.IgnoreMgr;
 import net.game.unit.Player;
 import net.utils.Color;
@@ -22,6 +25,9 @@ public class CommandSendMessage extends Command {
 			ChatCommandHandler.parse(message, player);
 			return;
 		}
+		//if(player.isMuted()) {
+			//return;
+		//}
 		if(message.length() > MAXIMUM_LENGTH) {
 			message = message.substring(0, MAXIMUM_LENGTH);
 		}
@@ -75,9 +81,35 @@ public class CommandSendMessage extends Command {
 				}
 			}
 		}
+		else if(type == MessageType.CHANNEL) {
+			String channelID = connection.readString();
+			if(!ChannelMgr.playerHasJoinChannel(channelID, player)) {
+				return;
+			}
+			ArrayList<Integer> list = ChannelMgr.getPlayerList(channelID);
+			boolean isGM = player.isGMOn();
+			int i = list.size();
+			while(--i >= 0) {
+				Player channelMember = Server.getInGameCharacter(list.get(i));
+				if(channelMember != null) {
+					writeChannel(channelMember.getConnection(), channelID, message, player.getName(), isGM);
+				}
+			}
+		}
 		else {
 			sendMessageToUsers(player.getUnitID(), message, player.getName(), type, player.isGMOn());
 		}
+	}
+	
+	private static void writeChannel(Connection connection, String channelID, String message, String author, boolean isGM) {
+		connection.startPacket();
+		connection.writeShort(PacketID.SEND_MESSAGE);
+		connection.writeByte(MessageType.CHANNEL.getValue());
+		connection.writeString(channelID);
+		connection.writeString(message);
+		connection.writeBoolean(isGM);
+		connection.endPacket();
+		connection.send();
 	}
 	
 	private static void writeWhisper(Connection connection, String name, String message, boolean isTarget, boolean isGM) { //used for whisper

@@ -55,6 +55,7 @@ public class Player extends Unit {
 	private ConnectionManager connectionManager;
 	private ArrayList<Integer> friendList;
 	private ArrayList<Integer> ignoreList;
+	private byte numberChatChannelJoined;
 	private Profession secondProfession;
 	private Profession firstProfession;
 	private AccountRank accountRank;
@@ -248,6 +249,14 @@ public class Player extends Unit {
 		this.bag = new Bag();
 		this.spellCDMap = new HashMap<Integer, Long>();
 		this.auraList = new ArrayList<AppliedAura>();
+	}
+	
+	public byte getNumberChatChannelJoined() {
+		return this.numberChatChannelJoined;
+	}
+	
+	public void setNumberChatChannelJoined(byte amount) {
+		this.numberChatChannelJoined = amount;
 	}
 	
 	public void loadGuild() {
