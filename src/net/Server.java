@@ -9,7 +9,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
@@ -66,7 +65,6 @@ public class Server {
 	private static LogRunnable logRunnable;
 	private static HashMap<Double, Key> keyMap = new HashMap<Double, Key>();
 	private static ArrayList<Double> removeKeyList = new ArrayList<Double>();
-	private final static int KEY_TIMEOUT_TIMER = 15000;
 	private static long SERVER_START_TIMER;
 	private static long LOOP_TICK_TIMER;
 	
@@ -168,7 +166,7 @@ public class Server {
 			return;
 		}
 		for(Key key : keyMap.values()) {
-			if(LOOP_TICK_TIMER-key.getTimer() >= KEY_TIMEOUT_TIMER) {
+			if(LOOP_TICK_TIMER-key.getTimer() >= ConfigMgr.KEY_TIMEOUT_TIMER) {
 				removeKeyList.add(key.getValue());
 			}
 		}

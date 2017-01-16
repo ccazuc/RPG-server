@@ -19,7 +19,7 @@ public class ChannelMgr {
 		if(!channelMap.containsKey(channelID)) {
 			return true;
 		}
-		return channelMap.get(channelID).getPassword().equals(password);
+		return channelMap.get(channelID).passwordMatches(password);
 	}
 	
 	public static void addPlayer(String channelID, String password, Player player) {
@@ -44,5 +44,41 @@ public class ChannelMgr {
 			return false;
 		}
 		return channelMap.get(channelID).playerHasJoined(player.getUnitID());
+	}
+	
+	public static boolean isMuted(String channelID, Player player) {
+		if(!channelMap.containsKey(channelID)) {
+			return true;
+		}
+		return channelMap.get(channelID).isMuted(player.getUnitID());
+	}
+
+	public static boolean isModerator(String channelID, Player player) {
+		if(!channelMap.containsKey(channelID)) {
+			return true;
+		}
+		return channelMap.get(channelID).isModerator(player.getUnitID());
+	}
+
+	public static boolean isLeader(String channelID, Player player) {
+		if(!channelMap.containsKey(channelID)) {
+			return true;
+		}
+		return channelMap.get(channelID).isLeader(player.getUnitID());
+	}
+
+	public static boolean isBanned(String channelID, Player player) {
+		if(!channelMap.containsKey(channelID)) {
+			return true;
+		}
+		return channelMap.get(channelID).isBanned(player.getUnitID());
+	}
+	
+	public static void banPlayer(String channelID, Player player) {
+		channelMap.get(channelID).addBan(player.getUnitID());
+	}
+	
+	public static void setPassword(String channelID, String password) {
+		channelMap.get(channelID).setPassword(password);
 	}
 }

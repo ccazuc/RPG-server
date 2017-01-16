@@ -35,6 +35,10 @@ public class ChatChannel {
 		this.password = password;
 	}
 	
+	public boolean passwordMatches(String password) {
+		return this.password == null || this.password.length() == 0 || this.password.equals(password);
+	}
+	
 	public void addPlayer(Player player) {
 		this.playerList.add(player.getUnitID());
 		this.playerMap.put(player.getUnitID(), player);
@@ -71,6 +75,10 @@ public class ChatChannel {
 			}
 		}
 		return false;
+	}
+	
+	public void addBan(int unitID) {
+		this.banList.add(unitID);
 	}
 	
 	public boolean isMuted(int unitID) {
@@ -121,6 +129,10 @@ public class ChatChannel {
 	
 	public void addModerator(int unitID) {
 		this.moderatorList.add(unitID);
+	}
+	
+	public boolean isLeader(int unitID) {
+		return this.leaderID == unitID;
 	}
 	
 	public boolean playerHasJoined(int unitID) {

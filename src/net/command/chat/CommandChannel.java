@@ -6,6 +6,7 @@ import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.log.Log;
 import net.game.manager.ChannelMgr;
 import net.game.unit.Player;
 
@@ -44,13 +45,38 @@ public class CommandChannel extends Command {
 			player.leftChannel(channelID);
 		}
 		else if(packetId == PacketID.CHANNEL_CHANGE_PASSWORD) {
-			
+			String channelID = connection.readString();
+			String password = connection.readString();
+			if(!ChannelMgr.isLeader(channelID, player)) {
+				//send error message
+				return;
+			}
+			ChannelMgr.setPassword(channelID, password);
 		}
 		else if(packetId == PacketID.CHANNEL_INVITE_PLAYER) {
 			
 		}
 		else if(packetId == PacketID.CHANNEL_BAN_PLAYER) {
-			
+			String channelID = connection.readString();
+			String playerName = connection.readString();
+			if(!ChannelMgr.playerHasJoinChannel(channelID, player)) {
+				Log.writePlayerLog(player, "Tried to ban "+playerName+" from channel "+channelID+" whereas he hasn't joined the channel.");
+				player.close();
+				return;
+			}
+			Player target = Server.getInGameCharacterByName(playerName);
+			if(target == null) {
+				return;
+			}
+			if(ChannelMgr.isBanned(channelID, target)) {
+				return;
+			}
+			if(ChannelMgr.isLeader(channelID, player) || (ChannelMgr.isModerator(channelID, player) && !ChannelMgr.isModerator(channelID, target))) {
+				ChannelMgr.banPlayer(channelID, target);
+			}
+			else {
+				//send not enough rights
+			}
 		}
 		else if(packetId == PacketID.CHANNEL_KICK_PLAYER) {
 			

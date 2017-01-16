@@ -7,6 +7,7 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.chat.ChatCommandHandler;
+import net.game.log.Log;
 import net.game.manager.ChannelMgr;
 import net.game.manager.IgnoreMgr;
 import net.game.unit.Player;
@@ -86,6 +87,11 @@ public class CommandSendMessage extends Command {
 		else if(type == MessageType.CHANNEL) {
 			String channelID = connection.readString();
 			if(!ChannelMgr.playerHasJoinChannel(channelID, player)) {
+				Log.writePlayerLog(player, "Tried to send a message in channel "+channelID+" whereas he hasn't joined it.");
+				player.close();
+				return;
+			}
+			if(ChannelMgr.isMuted(channelID, player)) {
 				return;
 			}
 			ArrayList<Integer> list = ChannelMgr.getPlayerList(channelID);
