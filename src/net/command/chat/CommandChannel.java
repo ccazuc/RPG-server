@@ -17,24 +17,92 @@ public class CommandChannel extends Command {
 		short packetId = connection.readShort();
 		if(packetId == PacketID.CHANNEL_JOIN) {
 			String channelID = connection.readString();
+			String password = connection.readString();
 			if(player.getNumberChatChannelJoined() == ChannelMgr.MAXIMUM_CHANNEL_JOINED) {
 				return;
 			}
-			ChannelMgr.addPlayer(channelID, player);
+			if(ChannelMgr.playerHasJoinChannel(channelID, player)) {
+				return;
+			}
+			if(!ChannelMgr.checkPassword(channelID, password)) {
+				CommandSendMessage.selfWithoutAuthor(connection, "Incorrect password for the channel "+channelID, MessageType.SELF);
+				return;
+			}
+			notifyPlayerJoinedChannel(player, channelID);
+			ChannelMgr.addPlayer(channelID, password, player);
 			joinChannel(player, channelID);
-			player.setNumberChatChannelJoined((byte)(player.getNumberChatChannelJoined()+1));
+			player.joinedChannel(channelID);
+			sendMembers(player.getConnection(), channelID);
 		}
 		else if(packetId == PacketID.CHANNEL_LEAVE) {
 			String channelID = connection.readString();
 			if(!ChannelMgr.removePlayer(channelID, player)) {
 				return;
 			}
+			notifyPlayerLeftChannel(player, channelID);
 			leaveChannel(player, channelID);
-			player.setNumberChatChannelJoined((byte)(player.getNumberChatChannelJoined()-1));
+			player.leftChannel(channelID);
 		}
-		else if(packetId == PacketID.CHANNEL_SEND_MEMBERS) {
-			String channelID = connection.readString();
-			sendMembers(player.getConnection(), channelID);
+		else if(packetId == PacketID.CHANNEL_CHANGE_PASSWORD) {
+			
+		}
+		else if(packetId == PacketID.CHANNEL_INVITE_PLAYER) {
+			
+		}
+		else if(packetId == PacketID.CHANNEL_BAN_PLAYER) {
+			
+		}
+		else if(packetId == PacketID.CHANNEL_KICK_PLAYER) {
+			
+		}
+		else if(packetId == PacketID.CHANNEL_SET_LEADER) {
+			
+		}
+		else if(packetId == PacketID.CHANNEL_MUTE_PLAYER) {
+			
+		}
+	}
+	
+	public static void notifyPlayerLeftChannelOnLogout(Player player) {
+		if(player.getJoinedChannelList() == null) {
+			return;
+		}
+		int i = player.getJoinedChannelList().size();
+		while(--i >= 0) {
+			notifyPlayerLeftChannel(player, player.getJoinedChannelList().get(i));
+		}
+	}
+	
+	private static void notifyPlayerJoinedChannel(Player player, String channelID) {
+		ArrayList<Integer> list = ChannelMgr.getPlayerList(channelID);
+		int i = list.size();
+		while(--i >= 0) {
+			Player member = Server.getInGameCharacter(list.get(i));
+			if(member != null) {
+				member.getConnection().startPacket();
+				member.getConnection().writeShort(PacketID.CHANNEL);
+				member.getConnection().writeShort(PacketID.CHANNEL_MEMBER_JOINED);
+				member.getConnection().writeInt(player.getUnitID());
+				member.getConnection().writeString(player.getName());
+				member.getConnection().endPacket();
+				member.getConnection().send();
+			}
+		}
+	}
+	
+	private static void notifyPlayerLeftChannel(Player player, String channelID) {
+		ArrayList<Integer> list = ChannelMgr.getPlayerList(channelID);
+		int i = list.size();
+		while(--i >= 0) {
+			Player member = Server.getInGameCharacter(list.get(i));
+			if(member != null) {
+				member.getConnection().startPacket();
+				member.getConnection().writeShort(PacketID.CHANNEL);
+				member.getConnection().writeShort(PacketID.CHANNEL_MEMBER_LEFT);
+				member.getConnection().writeInt(player.getUnitID());
+				member.getConnection().endPacket();
+				member.getConnection().send();
+			}
 		}
 	}
 	

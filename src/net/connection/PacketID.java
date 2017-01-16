@@ -162,4 +162,12 @@ public class PacketID {
 	public final static short CHANNEL_JOIN = 158;
 	public final static short CHANNEL_LEAVE = 159;
 	public final static short CHANNEL_SEND_MEMBERS = 160;
+	public final static short CHANNEL_MEMBER_JOINED = 161;
+	public final static short CHANNEL_MEMBER_LEFT = 162;
+	public final static short CHANNEL_CHANGE_PASSWORD = 163;
+	public final static short CHANNEL_SET_LEADER = 164;
+	public final static short CHANNEL_INVITE_PLAYER = 165;
+	public final static short CHANNEL_KICK_PLAYER = 166;
+	public final static short CHANNEL_BAN_PLAYER = 167;
+	public final static short CHANNEL_MUTE_PLAYER = 168;
 }

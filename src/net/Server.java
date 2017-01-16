@@ -414,21 +414,6 @@ public class Server {
 		return ConfigMgr.PORT;
 	}
 	
-	public static boolean isInteger(String str) {
-		int i = -1;
-		while(++i < str.length()) {
-			char c = str.charAt(i);
-			if(c < '0' || c > '9') {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	public static boolean isInteger(char c) {
-		return c >= '0' && c <= '9';
-	}
-	
 	public static long getServerStartTimer() {
 		return SERVER_START_TIMER;
 	}

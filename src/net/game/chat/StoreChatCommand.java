@@ -26,6 +26,7 @@ import net.game.spell.SpellMgr;
 import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
 import net.utils.Color;
+import net.utils.StringUtils;
 
 public class StoreChatCommand {
 	
@@ -119,7 +120,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
-			if(Server.isInteger(value[4])) {
+			if(StringUtils.isInteger(value[4])) {
 				String accountName = value[3];
 				int level = Integer.parseInt(value[4]);
 				if(!(level >= 1 && level <= AccountRank.values().length)) {
@@ -198,7 +199,7 @@ public class StoreChatCommand {
 			String banTime = value[3];
 			String reason = value[4];
 			long banTimer = 0;
-			if(Server.isInteger(banTime)) {
+			if(StringUtils.isInteger(banTime)) {
 				banTimer = Integer.parseInt(banTime);
 			}
 			else {
@@ -251,7 +252,7 @@ public class StoreChatCommand {
 			String banTime = value[3];
 			String reason = value[4];
 			long banTimer = 0;
-			if(Server.isInteger(banTime)) {
+			if(StringUtils.isInteger(banTime)) {
 				banTimer = Integer.parseInt(banTime);
 			}
 			else {
@@ -308,7 +309,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
-			if(Server.isInteger(banTime)) {
+			if(StringUtils.isInteger(banTime)) {
 				banTimer = Integer.parseInt(banTime);
 			}
 			else {
@@ -575,7 +576,7 @@ public class StoreChatCommand {
 				return;
 			}
 			int accountId = 0;
-			if(Server.isInteger(value[2])) {
+			if(StringUtils.isInteger(value[2])) {
 				accountId = Integer.parseInt(value[2]);
 			}
 			else {
@@ -626,7 +627,7 @@ public class StoreChatCommand {
 				return;
 			}
 			int characterId = 0;
-			if(Server.isInteger(value[2])) {
+			if(StringUtils.isInteger(value[2])) {
 				characterId = Integer.parseInt(value[2]);
 			}
 			else {
@@ -875,7 +876,7 @@ public class StoreChatCommand {
 			}
 			Player target = null;
 			if(value.length < 4) {
-				if(Server.isInteger(value[2])) {
+				if(StringUtils.isInteger(value[2])) {
 					player.setLevel(Integer.parseInt(value[2]));
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You are now level "+player.getLevel(), MessageType.SELF);
 				}
@@ -898,7 +899,7 @@ public class StoreChatCommand {
 				}
 			}
 			else if(value.length == 4) {
-				if(!Server.isInteger(value[3])) {
+				if(!StringUtils.isInteger(value[3])) {
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [level] in .character level [character_name] [level]", MessageType.SELF);
 					return;
 				}
@@ -976,7 +977,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug looptoolongtimer [value]", MessageType.SELF);
 				return;
 			}
-			if(!Server.isInteger(value[2])) {
+			if(!StringUtils.isInteger(value[2])) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug looptoolongtimer [value]", MessageType.SELF);
 				return;
 			}
@@ -1076,7 +1077,7 @@ public class StoreChatCommand {
 					return;
 				}
 				if(value.length == 2) {
-					if(Server.isInteger(value[1])) {
+					if(StringUtils.isInteger(value[1])) {
 						Item item = Item.getItem(Integer.parseInt(value[1]));
 						if(item == null) {
 							CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
@@ -1091,7 +1092,7 @@ public class StoreChatCommand {
 				else if(value.length == 3) {
 					Player playerToAdd = player;
 					int amount = 1;
-					if(!Server.isInteger(value[2])) {
+					if(!StringUtils.isInteger(value[2])) {
 						playerToAdd = Server.getCharacter(value[2]);
 						if(playerToAdd == null) {
 							CommandPlayerNotFound.write(player.getConnection(), value[2].substring(0, 1).toUpperCase()+value[2].substring(1));
@@ -1101,7 +1102,7 @@ public class StoreChatCommand {
 					else {
 						amount = Integer.parseInt(value[2]);
 					}
-					if(Server.isInteger(value[1])) {
+					if(StringUtils.isInteger(value[1])) {
 						Item item = Item.getItem(Integer.parseInt(value[1]));
 						if(item == null) {
 							CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
@@ -1114,12 +1115,12 @@ public class StoreChatCommand {
 					}
 				}
 				else if(value.length == 4) {
-					if(!Server.isInteger(value[2])) {
+					if(!StringUtils.isInteger(value[2])) {
 						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [amount] in .additem [item_id || item_name] [amount] [character_id || character_name]", MessageType.SELF);
 						return;
 					}
 					Item item = null;
-					if(Server.isInteger(value[1])) {
+					if(StringUtils.isInteger(value[1])) {
 						item = Item.getItem(Integer.parseInt(value[1]));
 					}
 					else {
@@ -1130,7 +1131,7 @@ public class StoreChatCommand {
 						return;
 					}
 					Player playerToAdd = null;
-					if(Server.isInteger(value[3])) {
+					if(StringUtils.isInteger(value[3])) {
 						playerToAdd = Server.getInGameCharacter(Integer.parseInt(value[3]));
 					}
 					else {
@@ -1350,7 +1351,7 @@ public class StoreChatCommand {
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printHelpMessage(), MessageType.SELF);
 					return;
 				}
-				if(!Server.isInteger(value[1])) {
+				if(!StringUtils.isInteger(value[1])) {
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [spell_id] in .cooldown [spell_id]", MessageType.SELF);
 					return;
 				}
@@ -1358,7 +1359,7 @@ public class StoreChatCommand {
 					player.resetSpellCooldown(Integer.parseInt(value[1]));
 				}
 				else {
-					if(!Server.isInteger(value[2])) {
+					if(!StringUtils.isInteger(value[2])) {
 						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [character_id] in .cooldown [spell_id] [character_id]", MessageType.SELF);
 						return;
 					}
@@ -1427,7 +1428,7 @@ public class StoreChatCommand {
 		while(i < timer.length()) {
 			if(timer.charAt(i) == 'y') {
 				String tmp = timer.substring(valueStart, i);
-				if(Server.isInteger(tmp)) {
+				if(StringUtils.isInteger(tmp)) {
 					value+= Integer.parseInt(tmp)*31536000000l;
 					valueStart = i+1;
 				}
@@ -1437,7 +1438,7 @@ public class StoreChatCommand {
 			}
 			else if(timer.charAt(i) == 'm') {
 				String tmp = timer.substring(valueStart, i);
-				if(Server.isInteger(tmp)) {
+				if(StringUtils.isInteger(tmp)) {
 					value+= Integer.parseInt(tmp)*2592000000l;
 					valueStart = i+1;
 				}
@@ -1447,7 +1448,7 @@ public class StoreChatCommand {
 			}
 			else if(timer.charAt(i) == 'w') {
 				String tmp = timer.substring(valueStart, i);
-				if(Server.isInteger(tmp)) {
+				if(StringUtils.isInteger(tmp)) {
 					value+= Integer.parseInt(tmp)*604800000;
 					valueStart = i+1;
 				}
@@ -1457,7 +1458,7 @@ public class StoreChatCommand {
 			}
 			else if(timer.charAt(i) == 'd') {
 				String tmp = timer.substring(valueStart, i);
-				if(Server.isInteger(tmp)) {
+				if(StringUtils.isInteger(tmp)) {
 					value+= Integer.parseInt(tmp)*86400000;
 					valueStart = i+1;
 				}
@@ -1468,7 +1469,7 @@ public class StoreChatCommand {
 			}
 			else if(timer.charAt(i) == 'h') {
 				String tmp = timer.substring(valueStart, i);
-				if(Server.isInteger(tmp)) {
+				if(StringUtils.isInteger(tmp)) {
 					value+= Integer.parseInt(tmp)*3600000;
 					valueStart = i+1;
 				}
@@ -1478,7 +1479,7 @@ public class StoreChatCommand {
 			}
 			else if(timer.charAt(i) == 's') {
 				String tmp = timer.substring(valueStart, i);
-				if(Server.isInteger(tmp)) {
+				if(StringUtils.isInteger(tmp)) {
 					value+= Integer.parseInt(tmp)*1000;
 					valueStart = i+1;
 				}
@@ -1506,7 +1507,7 @@ public class StoreChatCommand {
 		}
 		int i = 0;
 		while(i < value.length) {
-			if(!Server.isInteger(value[i])) {
+			if(!StringUtils.isInteger(value[i])) {
 				return false;
 			}
 			int number = Integer.parseInt(value[i]);

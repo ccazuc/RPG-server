@@ -11,6 +11,7 @@ import net.game.manager.ChannelMgr;
 import net.game.manager.IgnoreMgr;
 import net.game.unit.Player;
 import net.utils.Color;
+import net.utils.StringUtils;
 
 public class CommandSendMessage extends Command {
 
@@ -31,6 +32,7 @@ public class CommandSendMessage extends Command {
 		if(message.length() > MAXIMUM_LENGTH) {
 			message = message.substring(0, MAXIMUM_LENGTH);
 		}
+		message = StringUtils.removeSpacesDuplicate(message);
 		if(type == MessageType.WHISPER) {
 			String target = connection.readString();
 			target = target.substring(0, 1).toUpperCase()+target.substring(1).toLowerCase();
@@ -106,6 +108,7 @@ public class CommandSendMessage extends Command {
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeByte(MessageType.CHANNEL.getValue());
 		connection.writeString(channelID);
+		connection.writeString(author);
 		connection.writeString(message);
 		connection.writeBoolean(isGM);
 		connection.endPacket();

@@ -52,10 +52,10 @@ public class Player extends Unit {
 	private ItemMgr itemManager = new ItemMgr();
 	private HashMap<Integer, Spell> spellUnlocked;
 	private ArrayList<Integer> playerWhoAreFriend;
+	private ArrayList<String> chatChannelJoined;
 	private ConnectionManager connectionManager;
 	private ArrayList<Integer> friendList;
 	private ArrayList<Integer> ignoreList;
-	private byte numberChatChannelJoined;
 	private Profession secondProfession;
 	private Profession firstProfession;
 	private AccountRank accountRank;
@@ -249,14 +249,29 @@ public class Player extends Unit {
 		this.bag = new Bag();
 		this.spellCDMap = new HashMap<Integer, Long>();
 		this.auraList = new ArrayList<AppliedAura>();
+		this.chatChannelJoined = new ArrayList<String>();
 	}
 	
 	public byte getNumberChatChannelJoined() {
-		return this.numberChatChannelJoined;
+		return (byte)this.chatChannelJoined.size();
 	}
 	
-	public void setNumberChatChannelJoined(byte amount) {
-		this.numberChatChannelJoined = amount;
+	public void joinedChannel(String channelID) {
+		this.chatChannelJoined.add(channelID);
+	}
+	
+	public void leftChannel(String channelID) {
+		int i = this.chatChannelJoined.size();
+		while(--i >= 0) {
+			if(this.chatChannelJoined.get(i).equals(channelID)) {
+				this.chatChannelJoined.remove(i);
+				return;
+			}
+		}
+	}
+	
+	public ArrayList<String> getJoinedChannelList() {
+		return this.chatChannelJoined;
 	}
 	
 	public void loadGuild() {
@@ -409,6 +424,7 @@ public class Player extends Unit {
 	public void close() {
 		//long timer = System.nanoTime();
 		if(this.isOnline) {
+			this.isOnline = false;
 			logoutCharacter();
 		}
 		this.connectionManager.getConnection().close();

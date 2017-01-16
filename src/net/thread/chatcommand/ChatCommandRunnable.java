@@ -11,6 +11,7 @@ import net.game.manager.DebugMgr;
 import net.game.unit.ClassType;
 import net.game.unit.Player;
 import net.thread.log.LogRunnable;
+import net.utils.StringUtils;
 
 public class ChatCommandRunnable implements Runnable {
 
@@ -90,12 +91,12 @@ public class ChatCommandRunnable implements Runnable {
 		String word = parseWho(who.getWord().toLowerCase().trim());
 		int wordValue = 0;
 		if(word.length() == 1) {
-			if(Server.isInteger(word.charAt(0))) {
+			if(StringUtils.isInteger(word.charAt(0))) {
 				wordValue = Integer.parseInt(word);
 			}
 		}
 		else {
-			if(Server.isInteger(word)) {
+			if(StringUtils.isInteger(word)) {
 				wordValue = Integer.parseInt(word);
 			}
 		}
