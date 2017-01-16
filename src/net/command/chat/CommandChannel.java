@@ -44,7 +44,7 @@ public class CommandChannel extends Command {
 			leaveChannel(player, channelID);
 			player.leftChannel(channelID);
 		}
-		else if(packetId == PacketID.CHANNEL_CHANGE_PASSWORD) {
+		else if(packetId == PacketID.CHANNEL_CHANGE_PASSWORD) { //TODO: error message and send message to all users
 			String channelID = connection.readString();
 			String password = connection.readString();
 			if(!ChannelMgr.isLeader(channelID, player)) {
@@ -56,7 +56,7 @@ public class CommandChannel extends Command {
 		else if(packetId == PacketID.CHANNEL_INVITE_PLAYER) {
 			
 		}
-		else if(packetId == PacketID.CHANNEL_BAN_PLAYER) {
+		else if(packetId == PacketID.CHANNEL_BAN_PLAYER) { //TODO: error message and send message to all users
 			String channelID = connection.readString();
 			String playerName = connection.readString();
 			if(!ChannelMgr.playerHasJoinChannel(channelID, player)) {
@@ -78,11 +78,42 @@ public class CommandChannel extends Command {
 				//send not enough rights
 			}
 		}
-		else if(packetId == PacketID.CHANNEL_KICK_PLAYER) {
-			
+		else if(packetId == PacketID.CHANNEL_KICK_PLAYER) { //TODO: error message and send message to all users
+			String channelID = connection.readString();
+			String playerName = connection.readString();
+			if(!ChannelMgr.playerHasJoinChannel(channelID, player)) {
+				Log.writePlayerLog(player, "Tried to kick "+playerName+" from channel "+channelID+" whereas he hasn't joined the channel.");
+				player.close();
+				return;
+			}
+			Player target = Server.getInGameCharacterByName(playerName);
+			if(target == null) {
+				return;
+			}
+			if(!ChannelMgr.playerHasJoinChannel(channelID, target)) {
+				return;
+			}
+			if(ChannelMgr.isLeader(channelID, player) || (ChannelMgr.isModerator(channelID, player) && !ChannelMgr.isModerator(channelID, target))) {
+				ChannelMgr.removePlayer(channelID, target);
+			}
+			else {
+				//send not enough right
+			}
 		}
 		else if(packetId == PacketID.CHANNEL_SET_LEADER) {
-			
+			String channelID = connection.readString();
+			String playerName = connection.readString();
+			if(!ChannelMgr.playerHasJoinChannel(channelID, player)) {
+				Log.writePlayerLog(player, "Tried to give "+playerName+" channel leader from channel "+channelID+" whereas he hasn't joined the channel.");
+				player.close();
+				return;
+			}
+			if(!ChannelMgr.isLeader(channelID, player)) {
+				//error message
+				return;
+			}
+			ChannelMgr.setLeader(channelID, player);
+			//send message to users
 		}
 		else if(packetId == PacketID.CHANNEL_MUTE_PLAYER) {
 			
