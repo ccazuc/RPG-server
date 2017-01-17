@@ -100,6 +100,7 @@ public class CommandChannel extends Command {
 			}
 			if(mgr.isLeader(channelID, player) || (mgr.isModerator(channelID, player) && !mgr.isModerator(channelID, target))) {
 				mgr.removePlayer(channelID, target);
+				notifyPlayerKicked(channelID, player, target);
 			}
 			else {
 				//send not enough right
@@ -147,6 +148,24 @@ public class CommandChannel extends Command {
 			}
 			else {
 				//send not enough right
+			}
+		}
+	}
+	
+	public static void notifyPlayerKicked(String channelID, Player player, Player kicked) {
+		ArrayList<Integer> list = ChannelMgr.getChannelMgr(player.getFaction()).getPlayerList(channelID);
+		int i = list.size();
+		while(--i >= 0) {
+			Player member = Server.getInGameCharacter(list.get(i));
+			if(member != null) {
+				member.getConnection().startPacket();
+				member.getConnection().writeShort(PacketID.CHANNEL);
+				member.getConnection().writeShort(PacketID.CHANNEL_KICK_PLAYER);
+				member.getConnection().writeString(channelID);
+				member.getConnection().writeString(player.getName());
+				member.getConnection().writeInt(kicked.getUnitID());
+				member.getConnection().endPacket();
+				member.getConnection().send();
 			}
 		}
 	}
