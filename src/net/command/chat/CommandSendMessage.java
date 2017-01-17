@@ -114,9 +114,9 @@ public class CommandSendMessage extends Command {
 		connection.startPacket();
 		connection.writeShort(PacketID.SEND_MESSAGE);
 		connection.writeByte(MessageType.CHANNEL.getValue());
+		connection.writeString(message);
 		connection.writeString(channelID);
 		connection.writeString(author);
-		connection.writeString(message);
 		connection.writeBoolean(isGM);
 		connection.endPacket();
 		connection.send();

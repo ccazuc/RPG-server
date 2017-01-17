@@ -24,6 +24,7 @@ import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
 import net.game.manager.BanMgr;
+import net.game.manager.ChannelMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.DatabaseMgr;
 import net.game.manager.DebugMgr;
@@ -100,6 +101,7 @@ public class Server {
 		ContainerManager.loadContainer();
 		AuraMgr.loadAuras();
 		SpellMgr.loadSpells();
+		ChannelMgr.initChannelMgr();
 		highPrioritySQLRunnable = new SQLRunnable(3);
 		highPrioritySQLRequestThread = new Thread(highPrioritySQLRunnable);
 		highPrioritySQLRequestThread.start();

@@ -33,6 +33,7 @@ import net.game.item.gem.GemBonusType;
 import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
 import net.game.item.weapon.WeaponType;
+import net.game.manager.ChannelMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.FriendMgr;
 import net.game.manager.ItemMgr;
@@ -414,6 +415,12 @@ public class Player extends Unit {
 		FriendMgr.getFriendMap().remove(this.unitID);
 		CharacterMgr.fullySaveCharacter(this);
 		resetDatas();
+		int i = 0;
+		ChannelMgr mgr = ChannelMgr.getChannelMgr(this.faction);
+		while(i < this.chatChannelJoined.size()) {
+			mgr.removePlayer(this.chatChannelJoined.get(i), this);
+			i++;
+		}
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);
 		}

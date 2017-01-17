@@ -11,6 +11,7 @@ import net.Server;
 import net.command.Command;
 import net.command.auth.CommandLoginRealmAuth;
 import net.command.auth.CommandRegisterToAuthServer;
+import net.command.chat.CommandChannel;
 import net.command.chat.CommandGet;
 import net.command.chat.CommandListPlayer;
 import net.command.chat.CommandPlayerInfo;
@@ -105,6 +106,7 @@ public class ConnectionManager {
 		loggedCommandList.put((int)DELETE_ITEM, new CommandDeleteItem());
 		loggedCommandList.put((int)SPELL_CAST, new CommandCast());
 		loggedCommandList.put((int)AURA, new CommandAura());
+		loggedCommandList.put((int)CHANNEL, new CommandChannel());
 	}
 	
 	public static void initAuthCommand() {

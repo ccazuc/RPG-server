@@ -26,7 +26,10 @@ public class CommandChannel extends Command {
 			if(mgr.playerHasJoinChannel(channelID, player)) {
 				return;
 			}
-			if(!mgr.checkPassword(channelID, password)) {
+			if(!mgr.channelExists(channelID)) {
+				mgr.createChannel(channelID, password, player);
+			}
+			else if(!mgr.checkPassword(channelID, password)) {
 				CommandSendMessage.selfWithoutAuthor(connection, "Incorrect password for the channel "+channelID, MessageType.SELF);
 				return;
 			}

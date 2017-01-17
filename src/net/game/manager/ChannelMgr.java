@@ -34,6 +34,14 @@ public class ChannelMgr {
 		return channelMgrMap.get(faction.getValue());
 	}
 	
+	public boolean channelExists(String channelID) {
+		return this.channelMap.containsKey(channelID);
+	}
+	
+	public void createChannel(String channelID, String password, Player player) {
+		this.channelMap.put(channelID, new ChatChannel(channelID, password, player.getUnitID()));
+	}
+	
 	public ArrayList<Integer> getPlayerList(String channelID) {
 		return this.channelMap.get(channelID).getPlayerList();
 	}
