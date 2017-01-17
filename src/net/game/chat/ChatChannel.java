@@ -3,6 +3,8 @@ package net.game.chat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.Server;
+import net.command.chat.CommandChannel;
 import net.game.unit.Player;
 
 public class ChatChannel {
@@ -18,7 +20,12 @@ public class ChatChannel {
 	
 	public ChatChannel(String name, String password, int leaderID) {
 		this.name = name;
-		this.password = password;
+		if(password == null) {
+			this.password = "";
+		}
+		else {
+			this.password = password;
+		}
 		this.leaderID = leaderID;
 		this.playerList = new ArrayList<Integer>();
 		this.playerMap = new HashMap<Integer, Player>();
@@ -27,8 +34,9 @@ public class ChatChannel {
 		this.banList = new ArrayList<Integer>();
 	}
 	
-	public void setLeader(int leaderID) {
-		this.leaderID = leaderID;
+	public void setLeader(Player player, boolean chatMessage) {
+		this.leaderID = player.getUnitID();
+		CommandChannel.notifyPlayerLeader(this.name, player, chatMessage);
 	}
 	
 	public void setPassword(String password) {
@@ -36,12 +44,35 @@ public class ChatChannel {
 	}
 	
 	public boolean passwordMatches(String password) {
-		return this.password == null || this.password.length() == 0 || this.password.equals(password);
+		return this.password.equals(password);
 	}
 	
 	public void addPlayer(Player player) {
+		if(this.playerList.size() == 0) {
+			setLeader(player, false);
+		}
 		this.playerList.add(player.getUnitID());
 		this.playerMap.put(player.getUnitID(), player);
+	}
+	
+	public boolean designNewLeader() {
+		int i = -1;
+		Player player = null;
+		while(++i < this.moderatorList.size()) {
+			if((player = Server.getInGameCharacter(this.moderatorList.get(i))) != null) {
+				setLeader(player, true);
+				return true;
+			}
+		}
+		i = -1;
+		while(++i < this.playerList.size()) {
+			if((player = Server.getInGameCharacter(this.playerList.get(i))) != null) {
+				setLeader(player, true);
+				return true;
+			}
+		}
+		this.leaderID = -1;
+		return false;
 	}
 	
 	public boolean removePlayer(int unitID) {
@@ -50,6 +81,9 @@ public class ChatChannel {
 		while(--i >= 0) {
 			if(this.playerList.get(i) == unitID) {
 				this.playerList.remove(i);
+				if(isLeader(unitID)) {
+					designNewLeader();
+				}
 				return true;
 			}
 		}

@@ -10,9 +10,13 @@ import net.game.unit.Player;
 
 public class ChannelMgr {
 
-	private final HashMap<String, ChatChannel> channelMap = new HashMap<String, ChatChannel>();
+	private final HashMap<String, ChatChannel> channelMap;
 	public final static byte MAXIMUM_CHANNEL_JOINED = 10;
 	private final static HashMap<Byte, ChannelMgr> channelMgrMap = new HashMap<Byte, ChannelMgr>();
+	
+	public ChannelMgr() {
+		this.channelMap = new HashMap<String, ChatChannel>();
+	}
 	
 	public static void initChannelMgr() {
 		if(ConfigMgr.ALLOW_INTERFACTION_CHANNEL) {
@@ -72,6 +76,10 @@ public class ChannelMgr {
 		return this.channelMap.get(channelID).isMuted(player.getUnitID());
 	}
 
+	public void mutePlayer(String channelID, Player player) {
+		this.channelMap.get(channelID).addMute(player.getUnitID());
+	}
+	
 	public boolean isModerator(String channelID, Player player) {
 		if(!this.channelMap.containsKey(channelID)) {
 			return true;
@@ -87,7 +95,7 @@ public class ChannelMgr {
 	}
 	
 	public void setLeader(String channelID, Player player) {
-		this.channelMap.get(channelID).setLeader(player.getUnitID());
+		this.channelMap.get(channelID).setLeader(player, true);
 	}
 
 	public boolean isBanned(String channelID, Player player) {

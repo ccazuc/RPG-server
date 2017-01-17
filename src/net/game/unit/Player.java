@@ -74,6 +74,7 @@ public class Player extends Unit {
 	private int defaultArmor;
 	private ClassType classe;
 	private int numberRedGem;
+	private Faction faction = Faction.HORDE;
 	private long pingTimer;
 	private boolean logged;
 	private boolean isGMOn;
@@ -1070,6 +1071,14 @@ public class Player extends Unit {
 	
 	public void setGMOn(boolean we) {
 		this.isGMOn = we;
+	}
+	
+	public Faction getFaction() {
+		return this.faction;
+	}
+	
+	public void setFaction(Faction faction) {
+		this.faction = faction;
 	}
 	
 	public static String convClassTypeToString(ClassType type) {

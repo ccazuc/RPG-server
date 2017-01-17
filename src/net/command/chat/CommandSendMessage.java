@@ -86,15 +86,16 @@ public class CommandSendMessage extends Command {
 		}
 		else if(type == MessageType.CHANNEL) {
 			String channelID = connection.readString();
-			if(!ChannelMgr.playerHasJoinChannel(channelID, player)) {
+			ChannelMgr mgr = ChannelMgr.getChannelMgr(player.getFaction());
+			if(!mgr.playerHasJoinChannel(channelID, player)) {
 				Log.writePlayerLog(player, "Tried to send a message in channel "+channelID+" whereas he hasn't joined it.");
 				player.close();
 				return;
 			}
-			if(ChannelMgr.isMuted(channelID, player)) {
+			if(mgr.isMuted(channelID, player)) {
 				return;
 			}
-			ArrayList<Integer> list = ChannelMgr.getPlayerList(channelID);
+			ArrayList<Integer> list = mgr.getPlayerList(channelID);
 			boolean isGM = player.isGMOn();
 			int i = list.size();
 			while(--i >= 0) {
