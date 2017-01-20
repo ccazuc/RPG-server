@@ -58,7 +58,7 @@ public class ChannelMgr {
 			this.channelMap.get(channelID).addPlayer(player);
 		}
 		else {
-			this.channelMap.put(channelID, new ChatChannel(channelID, password, player.getUnitID()));
+			createChannel(channelID, password, player);
 			this.channelMap.get(channelID).addPlayer(player);
 		}
 	}

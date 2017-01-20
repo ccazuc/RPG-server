@@ -14,12 +14,12 @@ public class ChatChannel {
 	private final ArrayList<Integer> moderatorList;
 	private final ArrayList<Integer> muteList;
 	private final ArrayList<Integer> banList;
-	private final String name;
+	private final String channelID;
 	private String password;
 	private int leaderID;
 	
-	public ChatChannel(String name, String password, int leaderID) {
-		this.name = name;
+	public ChatChannel(String channelID, String password, int leaderID) {
+		this.channelID = channelID;
 		if(password == null) {
 			this.password = "";
 		}
@@ -36,7 +36,7 @@ public class ChatChannel {
 	
 	public void setLeader(Player player, boolean chatMessage) {
 		this.leaderID = player.getUnitID();
-		CommandChannel.notifyPlayerLeader(this.name, player, chatMessage);
+		CommandChannel.notifyPlayerLeader(this.channelID, player, chatMessage);
 	}
 	
 	public void setPassword(String password) {
@@ -177,8 +177,8 @@ public class ChatChannel {
 		return this.playerList;
 	}
 	
-	public String getName() {
-		return this.name;
+	public String getChannelID() {
+		return this.channelID;
 	}
 	
 	public String getPassword() {

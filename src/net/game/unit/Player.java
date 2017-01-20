@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.Server;
+import net.command.chat.CommandChannel;
 import net.command.item.CommandSetItem;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
@@ -416,6 +417,7 @@ public class Player extends Unit {
 		CharacterMgr.fullySaveCharacter(this);
 		resetDatas();
 		int i = 0;
+		CommandChannel.notifyPlayerLeftChannelOnLogout(this);
 		ChannelMgr mgr = ChannelMgr.getChannelMgr(this.faction);
 		while(i < this.chatChannelJoined.size()) {
 			mgr.removePlayer(this.chatChannelJoined.get(i), this);

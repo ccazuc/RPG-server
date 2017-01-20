@@ -19,6 +19,7 @@ public class CommandChannel extends Command {
 		ChannelMgr mgr = ChannelMgr.getChannelMgr(player.getFaction());
 		if(packetId == PacketID.CHANNEL_JOIN) {
 			String channelID = connection.readString();
+			int value = connection.readInt();
 			String password = connection.readString();
 			if(player.getNumberChatChannelJoined() == ChannelMgr.MAXIMUM_CHANNEL_JOINED) {
 				return;
@@ -35,7 +36,7 @@ public class CommandChannel extends Command {
 			}
 			notifyPlayerJoinedChannel(player, channelID);
 			mgr.addPlayer(channelID, password, player);
-			joinChannel(player, channelID, password);
+			joinChannel(player, channelID, value, password);
 			player.joinedChannel(channelID);
 			sendMembers(player.getConnection(), channelID, player);
 		}
@@ -270,11 +271,12 @@ public class CommandChannel extends Command {
 		connection.send();
 	}
 	
-	public static void joinChannel(Player player, String channelID, String password) {
+	public static void joinChannel(Player player, String channelID, int value, String password) {
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.CHANNEL);
 		player.getConnection().writeShort(PacketID.CHANNEL_JOIN);
 		player.getConnection().writeString(channelID);
+		player.getConnection().writeInt(value);
 		player.getConnection().writeString(password);
 		player.getConnection().endPacket();
 		player.getConnection().send();
