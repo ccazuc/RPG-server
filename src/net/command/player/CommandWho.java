@@ -10,6 +10,6 @@ public class CommandWho extends Command {
 	@Override
 	public void read(Player player) {
 		String word = player.getConnection().readString();
-		Server.addNewWhoRequest(new Who(word, player.getConnection()));
+		Server.addNewWhoRequest(new Who(word, player));
 	}
 }

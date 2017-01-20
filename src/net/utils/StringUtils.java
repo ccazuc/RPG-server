@@ -3,6 +3,9 @@ package net.utils;
 public class StringUtils {
 
 	public static boolean isInteger(String str) {
+		if(str.length() == 0) {
+			return false;
+		}
 		int i = -1;
 		while(++i < str.length()) {
 			char c = str.charAt(i);

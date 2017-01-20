@@ -55,16 +55,16 @@ public class ChatCommandRunnable implements Runnable {
 				while(this.whoList.size() > 0) {
 					Who who = this.whoList.get(0);
 					if(DebugMgr.getExecuteWhoTimer()) {
-						timer = System.nanoTime();
+						time = System.nanoTime();
 					}
 					try {
 						executeWhoRequest(who);
 					}
 					catch(RuntimeException e) {
-						LogRunnable.writeServerLog(e, this.commandList.get(0).getPlayer());
+						LogRunnable.writeServerLog(e, who.getPlayer());
 					}
 					if((DebugMgr.getExecuteWhoTimer())) {
-						System.out.println("[WHO] took "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
+						System.out.println("[WHO] took "+(System.nanoTime()-time)/1000+" 탎 to execute.");
 					}
 					this.whoList.remove(0);
 				}
@@ -87,7 +87,10 @@ public class ChatCommandRunnable implements Runnable {
 	}
 	
 	private static void endListMethod(Who who) {
-		long timer = System.nanoTime();
+		long timer = 0;
+		if(DebugMgr.getExecuteWhoTimer()) {
+			timer = System.nanoTime();
+		}
 		String word = parseWho(who.getWord().toLowerCase().trim());
 		int wordValue = 0;
 		if(word.length() == 1) {
@@ -100,7 +103,7 @@ public class ChatCommandRunnable implements Runnable {
 				wordValue = Integer.parseInt(word);
 			}
 		}
-		Connection connection = who.getConnection();
+		Connection connection = who.getPlayer().getConnection();
 		connection.startPacket();
 		connection.writeShort(PacketID.WHO);
 		for(Player player : Server.getInGamePlayerList().values()) {
@@ -120,7 +123,9 @@ public class ChatCommandRunnable implements Runnable {
 			}
 		}
 		connection.writeInt(-1);
-		System.out.println("[WHO ENDLIST REGEXP] took "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
+		if(DebugMgr.getExecuteWhoTimer()) {
+			System.out.println("[WHO ENDLIST REGEXP] took "+(System.nanoTime()-timer)/1000+" 탎 to execute.");
+		}
 		connection.endPacket();
 		connection.send();
 	}

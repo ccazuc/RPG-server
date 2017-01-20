@@ -185,3 +185,17 @@ java.lang.NullPointerException
 --------------------------------------------------------------
 
 
+--------------------------------------------------------------
+Fri Jan 20 20:29:38 CET 2017
+AccountID : 1, CharacterID : 1, CharacterName : Mideas
+java.lang.NumberFormatException: For input string: ""
+	at java.lang.NumberFormatException.forInputString(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at java.lang.Integer.parseInt(Unknown Source)
+	at net.thread.chatcommand.ChatCommandRunnable.endListMethod(ChatCommandRunnable.java:100)
+	at net.thread.chatcommand.ChatCommandRunnable.executeWhoRequest(ChatCommandRunnable.java:86)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:61)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
