@@ -1,5 +1,7 @@
 package net.command.player;
 
+import java.util.ArrayList;
+
 import net.Server;
 import net.command.Command;
 import net.command.chat.CommandDefaultMessage;
@@ -10,6 +12,8 @@ import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.guild.Guild;
+import net.game.guild.GuildEvent;
+import net.game.guild.GuildJournalEventType;
 import net.game.guild.GuildMgr;
 import net.game.guild.GuildMember;
 import net.game.guild.GuildRank;
@@ -79,6 +83,7 @@ public class CommandGuild extends Command {
 			CommandSendMessage.selfWithoutAuthor(connection, "You invited "+name+" to join your guild.", MessageType.SELF);
 			joinGuildRequest(member.getConnection(), player.getName(), player.getGuild().getName());
 			member.setGuildRequest(player.getGuild().getId());
+			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_INVITED, Server.getLoopTickTimer(), player.getName(), member.getName());
 		}
 		else if(packetId == PacketID.GUILD_KICK_MEMBER) {
 			int id = connection.readInt();
@@ -97,6 +102,7 @@ public class CommandGuild extends Command {
 			}
 			player.getGuild().removeMember(id, player.getName());
 			removeMember(player.getGuild(), player.getName(), id);
+			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_KICKED, Server.getLoopTickTimer(), player.getName(), member.getName());
 		}
 		else if(packetId == PacketID.GUILD_ACCEPT_REQUEST) {
 			if(player.getGuildRequest() == 0) {
@@ -107,6 +113,7 @@ public class CommandGuild extends Command {
 			player.getGuild().addMember(new GuildMember(player.getUnitID(), player.getName(), player.getLevel(), player.getGuild().getRankList().get(player.getGuild().getRankList().size()-1), true, "", "", player.getClasse(), System.currentTimeMillis()));
 			initGuildWhenLogin(player);
 			player.setGuildRequest(0);
+			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_JOINED, Server.getLoopTickTimer(), player.getName());
 		}
 		else if(packetId == PacketID.GUILD_DECLINE_REQUEST) {
 			player.setGuildRequest(0);
@@ -162,6 +169,7 @@ public class CommandGuild extends Command {
 			}
 			member.setRank(player.getGuild().getRank(member.getRank().getOrder()-1));
 			promotePlayer(player.getGuild(), member);
+			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_PROMOTED, Server.getLoopTickTimer(), player.getName(), member.getName(), member.getRank().getOrder());
 		}
 		else if(packetId == PacketID.GUILD_DEMOTE_PLAYER) {
 			int id = connection.readInt();
@@ -184,6 +192,7 @@ public class CommandGuild extends Command {
 			}
 			member.setRank(player.getGuild().getRank(member.getRank().getOrder()+1));
 			promotePlayer(player.getGuild(), member);
+			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_DEMOTED, Server.getLoopTickTimer(), player.getName(), member.getName(), member.getRank().getOrder());
 		}
 		else if(packetId == PacketID.GUILD_LEAVE) {
 			if(!isInAGuild(player)) {
@@ -191,6 +200,7 @@ public class CommandGuild extends Command {
 			}
 			leaveGuild(player.getGuild(), player.getUnitID());
 			GuildMgr.removeMemberFromDB(player.getGuild(), player.getUnitID());
+			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_LEFT, Server.getLoopTickTimer(), player.getName());
 			player.setGuild(null);
 		}
 		else if(packetId == PacketID.GUILD_SET_LEADER) {
@@ -253,6 +263,27 @@ public class CommandGuild extends Command {
 			updateMemberOfficerNote(player.getGuild(), member);
 			GuildMgr.updateMemberOfficerNote(member.getId(), member.getOfficerNote());
 		}
+	}
+	
+	public static void sendGuildEventWhenLogin(Player player) {
+		ArrayList<GuildEvent> list = player.getGuild().getEventList();
+		int i = list.size();
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.GUILD);
+		connection.writeShort(PacketID.GUILD_INIT_JOURNAL);
+		connection.writeShort((short)list.size());
+		GuildEvent event;
+		while(--i >= 0) {
+			event = list.get(i);
+			connection.writeByte(event.getEventType().getValue());
+			connection.writeLong(event.getTimer());
+			connection.writeString(event.getPlayer1Name());
+			connection.writeString(event.getPlayer2Name());
+			connection.writeInt(event.getRankID());
+		}
+		connection.endPacket();
+		connection.send();
 	}
 	
 	public static void sendMemberNoteToClient(Guild guild, GuildMember member) {
@@ -563,6 +594,78 @@ public class CommandGuild extends Command {
 		}
 		connection.endPacket();
 		connection.send();
+	}
+	
+	public static void sendGuildEventToMembers(Guild guild, GuildJournalEventType type, long timer, String player1Name) {
+		ArrayList<GuildMember> list = guild.getMemberList();
+		Player player;
+		int i = list.size();
+		while(--i >= 0) {
+			player = Server.getInGameCharacter(list.get(i).getId());
+			if(player != null) {
+				sendGuildEvent(player, type, timer, player1Name);
+			}
+		}
+	}
+	
+	public static void sendGuildEventToMembers(Guild guild, GuildJournalEventType type, long timer, String player1Name, String player2Name) {
+		ArrayList<GuildMember> list = guild.getMemberList();
+		Player player;
+		int i = list.size();
+		while(--i >= 0) {
+			player = Server.getInGameCharacter(list.get(i).getId());
+			if(player != null) {
+				sendGuildEvent(player, type, timer, player1Name, player2Name);
+			}
+		}
+	}
+	
+	public static void sendGuildEventToMembers(Guild guild, GuildJournalEventType type, long timer, String player1Name, String player2Name, int rankID) {
+		ArrayList<GuildMember> list = guild.getMemberList();
+		Player player;
+		int i = list.size();
+		while(--i >= 0) {
+			player = Server.getInGameCharacter(list.get(i).getId());
+			if(player != null) {
+				sendGuildEvent(player, type, timer, player1Name, player2Name, rankID);
+			}
+		}
+	}
+	
+	public static void sendGuildEvent(Player player, GuildJournalEventType type, long timer, String player1Name) {
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.GUILD);
+		player.getConnection().writeShort(PacketID.GUILD_SET_JOURNAL);
+		player.getConnection().writeByte(type.getValue());
+		player.getConnection().writeLong(timer);
+		player.getConnection().writeString(player1Name);
+		player.getConnection().endPacket();
+		player.getConnection().send();
+	}
+	
+	public static void sendGuildEvent(Player player, GuildJournalEventType type, long timer, String player1Name, String player2Name) {
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.GUILD);
+		player.getConnection().writeShort(PacketID.GUILD_SET_JOURNAL);
+		player.getConnection().writeByte(type.getValue());
+		player.getConnection().writeLong(timer);
+		player.getConnection().writeString(player1Name);
+		player.getConnection().writeString(player2Name);
+		player.getConnection().endPacket();
+		player.getConnection().send();
+	}
+	
+	public static void sendGuildEvent(Player player, GuildJournalEventType type, long timer, String player1Name, String player2Name, int rankID) {
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.GUILD);
+		player.getConnection().writeShort(PacketID.GUILD_SET_JOURNAL);
+		player.getConnection().writeByte(type.getValue());
+		player.getConnection().writeLong(timer);
+		player.getConnection().writeString(player1Name);
+		player.getConnection().writeString(player2Name);
+		player.getConnection().writeInt(rankID);
+		player.getConnection().endPacket();
+		player.getConnection().send();
 	}
 	
 	private static boolean isInAGuild(Player player) {

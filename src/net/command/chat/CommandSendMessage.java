@@ -25,6 +25,9 @@ public class CommandSendMessage extends Command {
 		MessageType type = MessageType.values()[connection.readByte()];
 		if(message.length() >= 2 && message.charAt(0) == '.' && message.charAt(1) != '.') {
 			ChatCommandHandler.parse(message, player);
+			if(type == MessageType.WHISPER || type == MessageType.CHANNEL) { //TODO: find a better way to clear the buffer
+				connection.readString();
+			}
 			return;
 		}
 		//if(player.isMuted()) {

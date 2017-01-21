@@ -7,14 +7,15 @@ import net.command.player.CommandGuild;
 
 public class Guild {
 
-	private int id;
+	private final int id;
 	private int leader_id;
-	private String name;
+	private final String name;
 	private String information;
 	private String motd;
-	private ArrayList<GuildMember> memberList;
-	private HashMap<Integer, GuildMember> memberMap;
-	private ArrayList<GuildRank> rankList;
+	private final ArrayList<GuildMember> memberList;
+	private final HashMap<Integer, GuildMember> memberMap;
+	private final ArrayList<GuildRank> rankList;
+	private final ArrayList<GuildEvent> eventList;
 	
 	public final static int MEMBER_NOTE_MAX_LENGTH = 50;
 	public final static int MEMBER_OFFICER_NOTE_MAX_LENGTH = 50;
@@ -23,9 +24,10 @@ public class Guild {
 	public final static int GUILD_MASTER_PERMISSION = 32767;
 	
 	public Guild(int id, int leader_id, String name, String information, String motd, ArrayList<GuildMember> memberList, ArrayList<GuildRank> rankList) {
+		this.memberMap = new HashMap<Integer, GuildMember>();
+		this.eventList = new ArrayList<GuildEvent>();
 		this.information = information;
 		this.memberList = memberList;
-		this.memberMap = new HashMap<Integer, GuildMember>();
 		this.leader_id = leader_id;
 		this.rankList = rankList;
 		this.name = name;
@@ -56,6 +58,10 @@ public class Guild {
 		}
 		this.memberMap.remove(id);
 		GuildMgr.removeMemberFromDB(this, id);
+	}
+	
+	public ArrayList<GuildEvent> getEventList() {
+		return this.eventList;
 	}
 	
 	public int getLeaderId() {

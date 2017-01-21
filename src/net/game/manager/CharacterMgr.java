@@ -188,6 +188,7 @@ public class CharacterMgr {
 			player.loadGuild();
 			if(player.getGuild() != null) {
 				CommandGuild.initGuildWhenLogin(player);
+				CommandGuild.sendGuildEventWhenLogin(player);
 				player.getGuild().getMember(player.getUnitID()).setOnlineStatus(true);
 				CommandGuild.notifyOnlinePlayer(player);
 			}

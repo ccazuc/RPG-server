@@ -19,7 +19,7 @@ public class CommandChannel extends Command {
 		ChannelMgr mgr = ChannelMgr.getChannelMgr(player.getFaction());
 		if(packetId == PacketID.CHANNEL_JOIN) {
 			String channelName = connection.readString();
-			String channelID = channelName.toLowerCase();
+			String channelID = ChannelMgr.formatChannelName(channelName);
 			int value = connection.readInt();
 			String password = connection.readString();
 			if(player.getNumberChatChannelJoined() == ChannelMgr.MAXIMUM_CHANNEL_JOINED) {
@@ -37,7 +37,7 @@ public class CommandChannel extends Command {
 			}
 			notifyPlayerJoinedChannel(player, channelID);
 			mgr.addPlayer(channelID, password, player);
-			joinChannel(player, channelID, value, password);
+			joinChannel(player, channelName, channelID, value, password);
 			player.joinedChannel(channelID);
 			sendMembers(player.getConnection(), channelID, player);
 		}
@@ -259,6 +259,7 @@ public class CommandChannel extends Command {
 		connection.writeShort(PacketID.CHANNEL_SEND_MEMBERS);
 		ArrayList<Integer> list = ChannelMgr.getChannelMgr(player.getFaction()).getPlayerList(channelID);
 		connection.writeString(channelID);
+		connection.writeInt(ChannelMgr.getChannelMgr(player.getFaction()).getLeaderID(channelID));
 		int i = list.size();
 		while(--i >= 0) {
 			Player target = Server.getInGameCharacter(list.get(i));
@@ -272,10 +273,11 @@ public class CommandChannel extends Command {
 		connection.send();
 	}
 	
-	public static void joinChannel(Player player, String channelID, int value, String password) {
+	public static void joinChannel(Player player, String channelName, String channelID, int value, String password) {
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.CHANNEL);
 		player.getConnection().writeShort(PacketID.CHANNEL_JOIN);
+		player.getConnection().writeString(channelName);
 		player.getConnection().writeString(channelID);
 		player.getConnection().writeInt(value);
 		player.getConnection().writeString(password);

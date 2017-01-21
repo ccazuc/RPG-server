@@ -170,4 +170,5 @@ public class PacketID {
 	public final static short CHANNEL_KICK_PLAYER = 166;
 	public final static short CHANNEL_BAN_PLAYER = 167;
 	public final static short CHANNEL_MUTE_PLAYER = 168;
+	public final static short GUILD_INIT_JOURNAL = 169;
 }

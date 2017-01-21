@@ -34,6 +34,26 @@ public class ChannelMgr {
 		return channelMgrMap.get(faction.getValue());
 	}
 	
+	public static String formatChannelName(String str) {
+		if(str.length() == 0) {
+			return null;
+		}
+		char[] table = new char[str.length()];
+		int i = -1;
+		char c;
+		while(++i < str.length()) {
+			c = str.charAt(i);
+			if(c == ' ') {
+				return null;
+			}
+			if(c >= 'A' && c <= 'Z') {
+				c+= 32;
+			}
+			table[i] = c;
+		}
+		return new String(table);
+	}
+	
 	public boolean channelExists(String channelID) {
 		return this.channelMap.containsKey(channelID);
 	}
@@ -104,6 +124,10 @@ public class ChannelMgr {
 	
 	public void setLeader(String channelID, Player player) {
 		this.channelMap.get(channelID).setLeader(player, true);
+	}
+	
+	public int getLeaderID(String channelID) {
+		return this.channelMap.get(channelID).getLeaderID();
 	}
 
 	public boolean isBanned(String channelID, Player player) {

@@ -15,3 +15,8 @@
 [ERROR Tue Jan 17 05:51:30 CET 2017] PlayerName: Mideas PlayerID: 1 AccountID: 1 Unknown packet: 157, last packet readed: 15
 [ERROR Tue Jan 17 06:21:43 CET 2017] AccountID: 1 Unknown packet: 2, last packet readed: 26
 [ERROR Tue Jan 17 06:21:43 CET 2017] AccountID: 1 Tried to send a message in channel  whereas he hasn't joined it.
+[ERROR Sat Jan 21 04:14:03 CET 2017] PlayerName: Mideas PlayerID: 1 AccountID: 1 Tried to send a message in channel BLA whereas he hasn't joined it.
+[ERROR Sat Jan 21 04:48:13 CET 2017] PlayerName: Mideas PlayerID: 1 AccountID: 1 Tried to send a message in channel blaa whereas he hasn't joined it.
+[ERROR Sat Jan 21 04:48:13 CET 2017] PlayerName: Mideas PlayerID: 1 AccountID: 1 Tried to send a message in channel blaa whereas he hasn't joined it.
+[ERROR Sat Jan 21 04:50:13 CET 2017] PlayerName: Mideas PlayerID: 1 AccountID: 1 Tried to send a message in channel blaa whereas he hasn't joined it.
+[ERROR Sat Jan 21 04:50:13 CET 2017] PlayerName: Mideas PlayerID: 1 AccountID: 1 Tried to send a message in channel blaa whereas he hasn't joined it.

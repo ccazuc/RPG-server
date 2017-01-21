@@ -16,6 +16,40 @@ public class StringUtils {
 		return true;
 	}
 	
+	public static String toUpperCase(String str) {
+		if(str.length() == 0) {
+			return str;
+		}
+		final char[] table = new char[str.length()];
+		int i = -1;
+		char c;
+		while(++i < str.length()) {
+			c = str.charAt(i);
+			if(c >= 'a' && c <= 'z') {
+				c-= 32;
+			}
+			table[i] = c;
+		}
+		return new String(table);
+	}
+	
+	public static String toLowerCase(String str) {
+		if(str.length() == 0) {
+			return str;
+		}
+		final char[] table = new char[str.length()];
+		int i = -1;
+		char c;
+		while(++i < str.length()) {
+			c = str.charAt(i);
+			if(c >= 'A' && c <= 'Z') {
+				c+= 32;
+			}
+			table[i] = c;
+		}
+		return new String(table);
+	}
+	
 	public static boolean isInteger(char c) {
 		return c >= '0' && c <= '9';
 	}

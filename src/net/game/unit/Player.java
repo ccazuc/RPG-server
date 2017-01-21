@@ -10,6 +10,7 @@ import net.command.chat.CommandChannel;
 import net.command.item.CommandSetItem;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
+import net.command.player.CommandLogout;
 import net.command.player.CommandParty;
 import net.command.player.CommandTrade;
 import net.command.player.CommandUpdateStats;
@@ -445,6 +446,7 @@ public class Player extends Unit {
 	public void close() {
 		//long timer = System.nanoTime();
 		if(this.isOnline) {
+			CommandLogout.loggout(this);
 			this.isOnline = false;
 			logoutCharacter();
 		}
