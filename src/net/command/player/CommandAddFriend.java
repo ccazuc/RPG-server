@@ -6,6 +6,7 @@ import net.command.chat.CommandPlayerNotFound;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.unit.Player;
+import net.utils.StringUtils;
 
 public class CommandAddFriend extends Command {
 	
@@ -17,7 +18,7 @@ public class CommandAddFriend extends Command {
 			CommandPlayerNotFound.write(connection, name);
 			return;
 		}
-		name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
+		name = StringUtils.formatPlayerName(name);
 		Player member = Server.getCharacter(name);
 		if(member == null) {
 			CommandPlayerNotFound.write(connection, name);

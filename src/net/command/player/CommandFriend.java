@@ -10,6 +10,7 @@ import net.connection.PacketID;
 import net.game.manager.CharacterMgr;
 import net.game.manager.FriendMgr;
 import net.game.unit.Player;
+import net.utils.StringUtils;
 
 public class CommandFriend extends Command {
 	
@@ -23,7 +24,7 @@ public class CommandFriend extends Command {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
-			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
+			name = StringUtils.formatPlayerName(name);
 			Player member = Server.getInGameCharacterByName(name);
 			int character_id = 0;
 			if(member == null) { //player is offline or doesn't exist

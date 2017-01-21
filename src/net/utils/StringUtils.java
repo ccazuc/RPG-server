@@ -2,6 +2,24 @@ package net.utils;
 
 public class StringUtils {
 
+	public static String formatPlayerName(String str) {
+		if(str.length() == 0) {
+			return str;
+		}
+		final char[] table = new char[str.length()];
+		int i = table.length;
+		table[0] = toUpperCase(str.charAt(0));
+		char tmp;
+		while(--i >= 1) {
+			tmp = str.charAt(i);
+			if(tmp >= 'A' && tmp <= 'Z') {
+				tmp+= 32;
+			}
+			table[i] = tmp;
+		}
+		return new String(table);
+	}
+	
 	public static boolean isInteger(String str) {
 		if(str.length() == 0) {
 			return false;
@@ -16,14 +34,22 @@ public class StringUtils {
 		return true;
 	}
 	
+	public static char toUpperCase(char c) {
+		return c >= 'a' && c <= 'z' ? (char)(c-32) : c;
+	}
+	
+	public static char toLowerCase(char c) {
+		return c >= 'A' && c <= 'A' ? (char)(c+32) : c;
+	}
+	
 	public static String toUpperCase(String str) {
 		if(str.length() == 0) {
 			return str;
 		}
 		final char[] table = new char[str.length()];
-		int i = -1;
+		int i = table.length;
 		char c;
-		while(++i < str.length()) {
+		while(--i >= 0) {
 			c = str.charAt(i);
 			if(c >= 'a' && c <= 'z') {
 				c-= 32;
@@ -38,9 +64,9 @@ public class StringUtils {
 			return str;
 		}
 		final char[] table = new char[str.length()];
-		int i = -1;
+		int i = table.length;
 		char c;
-		while(++i < str.length()) {
+		while(--i >= 0) {
 			c = str.charAt(i);
 			if(c >= 'A' && c <= 'Z') {
 				c+= 32;

@@ -12,6 +12,7 @@ import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;
+import net.utils.StringUtils;
 
 public class CommandCreateCharacter extends Command {
 	
@@ -94,6 +95,7 @@ public class CommandCreateCharacter extends Command {
 		}
 		create_character.clear();
 		String name = connection.readString();
+		name = StringUtils.formatPlayerName(name);
 		String classe = connection.readString();
 		String race = connection.readString();
 		int characterId = 0;
@@ -102,7 +104,7 @@ public class CommandCreateCharacter extends Command {
 				return;
 			}
 			create_character.putInt(player.getAccountId());
-			create_character.putString(name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase());
+			create_character.putString(name);
 			create_character.putString(classe);
 			create_character.putString(race);
 			create_character.execute();
@@ -111,7 +113,7 @@ public class CommandCreateCharacter extends Command {
 			connection.send();
 			
 			character_id.clear();
-			character_id.putString(name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase());
+			character_id.putString(name);
 			character_id.execute();
 			if(character_id.fetch()) {
 				characterId = character_id.getInt();

@@ -11,6 +11,7 @@ import net.game.Party;
 import net.game.log.Log;
 import net.game.manager.IgnoreMgr;
 import net.game.unit.Player;
+import net.utils.StringUtils;
 
 public class CommandParty extends Command {
 
@@ -24,7 +25,7 @@ public class CommandParty extends Command {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
-			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
+			name = StringUtils.formatPlayerName(name);
 			Player member = Server.getInGameCharacterByName(name);
 			if(member == null) {
 				CommandPlayerNotFound.write(connection, name);

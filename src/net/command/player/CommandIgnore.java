@@ -12,6 +12,7 @@ import net.connection.PacketID;
 import net.game.manager.CharacterMgr;
 import net.game.manager.IgnoreMgr;
 import net.game.unit.Player;
+import net.utils.StringUtils;
 
 public class CommandIgnore extends Command {
 
@@ -25,7 +26,7 @@ public class CommandIgnore extends Command {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
-			name = name.substring(0, 1).toUpperCase()+name.substring(1).toLowerCase();
+			name = StringUtils.formatPlayerName(name);
 			Player ignore = Server.getInGameCharacterByName(name);
 			int character_id = 0;
 			if(ignore == null) {
