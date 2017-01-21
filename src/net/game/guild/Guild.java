@@ -40,6 +40,10 @@ public class Guild {
 		return this.memberMap.get(id);
 	}
 	
+	public void addEvent(GuildEvent event) {
+		this.eventList.add(event);
+	}
+	
 	public void addMember(GuildMember member) {
 		this.memberList.add(member);
 		this.memberMap.put(member.getId(), member);

@@ -7,6 +7,7 @@ import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.game.manager.CharacterMgr;
 import net.game.unit.ClassType;
 import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
@@ -19,6 +20,7 @@ public class GuildMgr {
 	private static JDOStatement loadRank;
 	private static JDOStatement loadGuildInformation;
 	private static JDOStatement loadMember;
+	private static JDOStatement loadJournal;
 	private static JDOStatement loadMemberInformation;
 	private static JDOStatement loadPlayerGuild;
 	private static JDOStatement removeOrphanedGuildRank;
@@ -219,11 +221,12 @@ public class GuildMgr {
 	public static void loadGuild(Player player) {
 		try {
 			if(loadPlayerGuild == null) {
-				loadPlayerGuild = Server.getJDO().prepare("SELECT guild_id FROM guild_member WHERE member_id = ?");
-				loadRank = Server.getJDO().prepare("SELECT rank_order, permission, name FROM guild_rank WHERE guild_id = ?");
-				loadMember = Server.getJDO().prepare("SELECT member_id, rank, note, officer_note FROM guild_member WHERE guild_id = ?");
-				loadGuildInformation = Server.getJDO().prepare("SELECT name, leader_id, information, motd FROM guild WHERE id = ?");
-				loadMemberInformation = Server.getJDO().prepare("SELECT name, online, experience, class, last_login_timer FROM `character` WHERE character_id = ?");
+				loadPlayerGuild = Server.getAsyncHighPriorityJDO().prepare("SELECT guild_id FROM guild_member WHERE member_id = ?");
+				loadRank = Server.getAsyncHighPriorityJDO().prepare("SELECT rank_order, permission, name FROM guild_rank WHERE guild_id = ?");
+				loadMember = Server.getAsyncHighPriorityJDO().prepare("SELECT member_id, rank, note, officer_note FROM guild_member WHERE guild_id = ?");
+				loadGuildInformation = Server.getAsyncHighPriorityJDO().prepare("SELECT name, leader_id, information, motd FROM guild WHERE id = ?");
+				loadMemberInformation = Server.getAsyncHighPriorityJDO().prepare("SELECT name, online, experience, class, last_login_timer FROM `character` WHERE character_id = ?");
+				loadJournal = Server.getAsyncHighPriorityJDO().prepare("SELECT event_type, player1_id, player2_id, date, rank_id FROM guild_event WHERE guild_id = ?");
 			}
 			int guildId = 0;
 			loadPlayerGuild.clear();
@@ -291,11 +294,45 @@ public class GuildMgr {
 					addGuild(new Guild(guildId, leaderId, guildName, information, motd, memberList, rankList));
 					player.setGuild(getGuild(guildId));
 				}
+				loadJournal.clear();
+				loadJournal.putInt(guildId);
+				loadJournal.execute();
+				Guild guild = getGuild(guildId);
+				while(loadJournal.fetch()) {
+					GuildJournalEventType type = GuildJournalEventType.values()[loadJournal.getByte()];
+					String player1Name = getCharacterName(loadJournal.getInt());
+					if(player1Name.length() == 0) {
+						player1Name = "<Character deleted>";
+					}
+					String player2Name = getCharacterName(loadJournal.getInt());
+					if(player2Name.length() == 0) {
+						player2Name = "<Character deleted>";
+					}
+					long timer = loadJournal.getLong();
+					int rankID = loadJournal.getInt();
+					if(type == GuildJournalEventType.MEMBER_DEMOTED || type == GuildJournalEventType.MEMBER_PROMOTED) {
+						guild.addEvent(new GuildEvent(timer, type, player1Name, player2Name, rankID));
+					}
+					else if(type == GuildJournalEventType.MEMBER_INVITED || type == GuildJournalEventType.MEMBER_KICKED) {
+						guild.addEvent(new GuildEvent(timer, type, player1Name, player2Name));
+					}
+					else if(type == GuildJournalEventType.MEMBER_LEFT || type == GuildJournalEventType.MEMBER_JOINED) {
+						guild.addEvent(new GuildEvent(timer, type, player1Name));
+					}
+				}
 			}
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private static String getCharacterName(int id) {
+		Player player = null;
+		if((player = Server.getInGameCharacter(id)) != null) {
+			return player.getName();
+		}
+		return CharacterMgr.loadCharacterNameFromIDHighAsync(id);
 	}
 	
 	public static void removeMemberFromDB(Guild guild, int id) {

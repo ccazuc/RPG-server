@@ -36,6 +36,7 @@ public class CharacterMgr {
 	private static JDOStatement loadFriend;
 	private static JDOStatement checkOnlinePlayers;
 	private static JDOStatement loadCharacterNameFromID;
+	private static JDOStatement loadCharacterNameFromIDHighAsync;
 	private static JDOStatement searchPlayer;
 	private static JDOStatement checkPlayerAccount;
 	private static JDOStatement loadCharacterIDFromName;
@@ -458,6 +459,24 @@ public class CharacterMgr {
 			loadCharacterNameFromID.execute();
 			if(loadCharacterNameFromID.fetch()) {
 				return loadCharacterNameFromID.getString();
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return "";
+	}
+	
+	public static String loadCharacterNameFromIDHighAsync(int id) {
+		try {
+			if(loadCharacterNameFromIDHighAsync == null) {
+				loadCharacterNameFromIDHighAsync = Server.getAsyncHighPriorityJDO().prepare("SELECT name FROM `character` WHERE character_id = ?");
+			}
+			loadCharacterNameFromIDHighAsync.clear();
+			loadCharacterNameFromIDHighAsync.putInt(id);
+			loadCharacterNameFromIDHighAsync.execute();
+			if(loadCharacterNameFromIDHighAsync.fetch()) {
+				return loadCharacterNameFromIDHighAsync.getString();
 			}
 		}
 		catch(SQLException e) {
