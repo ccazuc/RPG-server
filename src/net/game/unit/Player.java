@@ -50,7 +50,8 @@ public class Player extends Unit {
 	//private ProfessionManager professionManager = new ProfessionManager();
 	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
 	private SpellBarManager spellBarManager = new SpellBarManager();
-	private final static int MAXIMUM_AMOUNT_FRIENDS = 20; 
+	private final static int MAXIMUM_AMOUNT_FRIENDS = 20;
+	public final static int WHO_COMMAND_FREQUENCE = 1000;
 	private ItemMgr itemManager = new ItemMgr();
 	private HashMap<Integer, Spell> spellUnlocked;
 	private ArrayList<Integer> playerWhoAreFriend;
@@ -70,6 +71,7 @@ public class Player extends Unit {
 	private Player playerTrade;
 	private Player playerParty;
 	private int numberBlueGem;
+	private long lastWhoTimer;
 	private Shortcut[] spells;
 	private boolean isOnline;
 	private int guildRequest;
@@ -231,6 +233,15 @@ public class Player extends Unit {
 	public boolean isOnline() {
 		return this.isOnline;
 	}
+	
+	public long getLastWhoTimer() {
+		return this.lastWhoTimer;
+	}
+	
+	public void setLastWhoTimer(long timer) {
+		this.lastWhoTimer = timer;
+	}
+	
 	public void sendStats() {
 		this.connectionManager.getConnection().startPacket();
 		this.connectionManager.getConnection().writeShort(PacketID.LOAD_STATS);

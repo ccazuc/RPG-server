@@ -18,7 +18,8 @@ public class CommandChannel extends Command {
 		short packetId = connection.readShort();
 		ChannelMgr mgr = ChannelMgr.getChannelMgr(player.getFaction());
 		if(packetId == PacketID.CHANNEL_JOIN) {
-			String channelID = connection.readString();
+			String channelName = connection.readString();
+			String channelID = channelName.toLowerCase();
 			int value = connection.readInt();
 			String password = connection.readString();
 			if(player.getNumberChatChannelJoined() == ChannelMgr.MAXIMUM_CHANNEL_JOINED) {
