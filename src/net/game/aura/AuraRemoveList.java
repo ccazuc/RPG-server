@@ -8,4 +8,5 @@ public enum AuraRemoveList {
 	STEAL,
 	BREAK,
 	;
+	
 }

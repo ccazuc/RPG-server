@@ -13,6 +13,7 @@ import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;
+import net.thread.sql.SQLTask;
 
 public class GuildMgr {
 
@@ -25,6 +26,12 @@ public class GuildMgr {
 	private static JDOStatement loadPlayerGuild;
 	private static JDOStatement removeOrphanedGuildRank;
 	private static JDOStatement removeOrphanedGuildMember;
+	private static JDOStatement createGuild;
+	private static JDOStatement createGuildRank;
+	private static JDOStatement deleteGuild;
+	private static JDOStatement deleteGuildMembers;
+	private static JDOStatement deleteGuildRanks;
+	private static JDOStatement deleteGuildEvents;
 	private final static SQLRequest updateInformation = new SQLRequest("UPDATE guild SET information = ? WHERE id = ?", "Update guild information", SQLRequestPriority.LOW) {
 		
 		@Override
@@ -191,6 +198,73 @@ public class GuildMgr {
 			}
 		}
 	};
+	private final static SQLTask fullyDeleteGuild = new SQLTask("Delete guild") {
+		
+		@Override
+		public void gatherData() {
+			Guild guild = this.datasList.get(0).getGuild();
+			deleteGuild(guild);
+			deleteGuildMembers(guild);
+		}
+	};
+	
+	static void deleteGuildTable(Guild guild) {
+		try {
+			if(deleteGuild == null) {
+				deleteGuild = Server.getAsyncHighPriorityJDO().prepare("DELETE FROM guild WHERE id = ?");
+			}
+			deleteGuild.clear();
+			deleteGuild.putInt(guild.getId());
+			deleteGuild.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	static void deleteGuildRanks(Guild guild) {
+		try {
+			if(deleteGuildRanks == null) {
+				deleteGuildRanks = Server.getAsyncHighPriorityJDO().prepare("DELETE FROM guild_rank WHERE guild_id = ?");
+			}
+			deleteGuildRanks.clear();
+			deleteGuildRanks.putInt(guild.getId());
+			deleteGuildRanks.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	static void deleteGuildMembers(Guild guild) {
+		try {
+			if(deleteGuildMembers == null) {
+				deleteGuildMembers = Server.getAsyncHighPriorityJDO().prepare("DELETE FROM guild_member WHERE guild_id = ?");
+			}
+			deleteGuildMembers.clear();
+			deleteGuildMembers.putInt(guild.getId());
+			deleteGuildMembers.execute();
+			
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	static void deleteGuildEvents(Guild guild) {
+		try {
+			if(deleteGuildEvents == null) {
+				deleteGuildEvents = Server.getAsyncHighPriorityJDO().prepare("DELETE FROM guild_event WHERE guild_id = ?");
+			}
+			deleteGuildEvents.clear();
+			deleteGuildEvents.putInt(guild.getId());
+			deleteGuildEvents.execute();
+			
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public static void removeOrphanedGuildRank() {
 		try {
@@ -216,6 +290,30 @@ public class GuildMgr {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void createGuild(String guildName, int leaderID) {
+		try {
+			if(createGuild == null) {
+				createGuild = Server.getJDO().prepare("INSERT INTO guild (id, name, leader_id, information, motd) VALUES(?, ?, ?, Guild Information, Message of the day)");
+			}
+			createGuild.clear();
+			createGuild.putString(guildName);
+			createGuild.putInt(leaderID);
+			createGuild.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void deleteGuild(Guild guild) {
+		if(guild == null) {
+			System.out.println("Error in GuildMgr.deleteGuild : guild = null");
+			return;
+		}
+		fullyDeleteGuild.addDatas(new SQLDatas(guild));
+		Server.executeHighPrioritySQLTask(fullyDeleteGuild);
 	}
 	
 	public static void loadGuild(Player player) {

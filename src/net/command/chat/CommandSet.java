@@ -12,7 +12,7 @@ public class CommandSet extends Command {
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();
-		byte packetID = connection.readByte();
+		short packetID = connection.readShort();
 		int id = connection.readInt();
 		int value = connection.readInt();
 		Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);

@@ -44,7 +44,7 @@ public class CommandParty extends Command {
 			}
 			if(member.getParty() != null) {
 				CommandSendMessage.selfWithoutAuthor(connection, name+" is already in a party.", MessageType.SELF);
-				CommandSendMessage.selfWithAuthor(member.getConnection(), player.getName()+" tried to invite you in a party.", player.getName(), MessageType.SELF);
+				CommandSendMessage.selfWithAuthor(member.getConnection(), " tried to invite you in a party.", player.getName(), MessageType.SELF);
 				return;
 			}
 			inviteRequest(member.getConnection(), player.getName());

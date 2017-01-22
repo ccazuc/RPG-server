@@ -12,6 +12,7 @@ public class Guild {
 	private final String name;
 	private String information;
 	private String motd;
+	private boolean isBeingDeleted;
 	private final ArrayList<GuildMember> memberList;
 	private final HashMap<Integer, GuildMember> memberMap;
 	private final ArrayList<GuildRank> rankList;
@@ -62,6 +63,14 @@ public class Guild {
 		}
 		this.memberMap.remove(id);
 		GuildMgr.removeMemberFromDB(this, id);
+	}
+	
+	public void setGuildBeingDeleted() {
+		this.isBeingDeleted = true;
+	}
+	
+	public boolean isBeingDelete() {
+		return this.isBeingDeleted;
 	}
 	
 	public ArrayList<GuildEvent> getEventList() {

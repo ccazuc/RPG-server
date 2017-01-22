@@ -4,8 +4,8 @@ import net.game.unit.Player;
 
 public class Who {
 
-	private String word;
-	private Player player;
+	private final String word;
+	private final Player player;
 	
 	public Who(String word, Player player) {
 		this.word = word;

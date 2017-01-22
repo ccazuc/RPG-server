@@ -110,6 +110,13 @@ public class CommandGuild extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, "Nobody invited you to join their guild.", MessageType.SELF);
 				return;
 			}
+			Guild guild = GuildMgr.getGuild(player.getGuildRequest());
+			if(guild == null) {
+				return;
+			}
+			if(guild.isBeingDelete()) {
+				return;
+			}
 			player.setGuild(GuildMgr.getGuild(player.getGuildRequest()));
 			player.getGuild().addMember(new GuildMember(player.getUnitID(), player.getName(), player.getLevel(), player.getGuild().getRankList().get(player.getGuild().getRankList().size()-1), true, "", "", player.getClasse(), System.currentTimeMillis()));
 			initGuildWhenLogin(player);

@@ -1,5 +1,6 @@
 package net.thread.sql;
 
+import net.game.guild.Guild;
 import net.game.unit.Player;
 
 public class SQLDatas {
@@ -14,9 +15,14 @@ public class SQLDatas {
 	protected String stringValue2;
 	protected String stringValue3;
 	protected Player player;
+	protected Guild guild;
 	
 	public SQLDatas(int iValue1) {
 		this.iValue1 = iValue1;
+	}
+	
+	public SQLDatas(Guild guild) {
+		this.guild = guild;
 	}
 	
 	public SQLDatas(Player player) {
@@ -128,5 +134,9 @@ public class SQLDatas {
 	
 	public Player getPlayer() {
 		return this.player;
+	}
+	
+	public Guild getGuild() {
+		return this.guild;
 	}
 }
