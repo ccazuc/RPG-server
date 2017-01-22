@@ -54,8 +54,8 @@ public class Guild {
 	
 	public void removeMember(int id, String name) {
 		CommandGuild.notifyKickedMember(this, this.memberMap.get(id), name);
-		int i = 0;
-		while(i < this.memberList.size()) {
+		int i = this.memberList.size();
+		while(--i >= 0) {
 			if(this.memberList.get(i).getId() == id) {
 				this.memberList.remove(i);
 				break;
@@ -90,34 +90,31 @@ public class Guild {
 	}
 	
 	public GuildRank getRank(int order) {
-		int i = 0;
-		while(i < this.rankList.size()) { 
+		int i = this.rankList.size();
+		while(--i >= 0) { 
 			if(this.rankList.get(i).getOrder() == order) {
 				return this.rankList.get(i);
 			}
-			i++;
 		}
 		return null;
 	}
 	
 	private void initMemberMap() {
-		int i = 0;
-		while(i < this.memberList.size()) {
+		int i = this.memberList.size();
+		while(--i >= 0) {
 			this.memberMap.put(this.memberList.get(i).getId(), this.memberList.get(i));
-			i++;
 		}
 	}
 	
 	public void setRankPermission(int rank_order, int permission, String name) {
-		int i = 0;
-		while(i < this.rankList.size()) {
+		int i = this.rankList.size();
+		while(--i >= 0) {
 			if(this.rankList.get(i).getOrder() == rank_order) {
 				this.rankList.get(i).setPermission(permission);
 				this.rankList.get(i).setName(name);
 				GuildMgr.updatePermission(this, rank_order, permission, name);
 				return;
 			}
-			i++;
 		}
 	}
 	

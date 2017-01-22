@@ -4,14 +4,14 @@ import net.game.unit.ClassType;
 
 public class GuildMember {
 
-	private int id;
-	private String name;
+	private final int id;
+	private final String name;
 	private int level;
 	private GuildRank rank;
 	private boolean isOnline;
 	private String note = "";
 	private String officer_note = "";
-	private ClassType classType;
+	private final ClassType classType;
 	private long lastLoginTimer;
 	
 	public GuildMember(int id, String name, int level, GuildRank rank, boolean isOnline, String note, String officer_note, ClassType classType, long lastLoginTimer) {
