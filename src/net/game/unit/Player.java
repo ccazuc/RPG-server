@@ -68,6 +68,7 @@ public class Player extends Unit {
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
 	private String accountName;
+	private boolean isSilenced;
 	private boolean pingStatus;
 	private Player playerTrade;
 	private Player playerParty;
@@ -783,6 +784,10 @@ public class Player extends Unit {
 		this.target = null;
 		this.guild = null;
 		//this.wear = null;
+	}
+	
+	public boolean isSilenced() {
+		return this.isSilenced;
 	}
 	
 	public void setGuildRequest(int id) {

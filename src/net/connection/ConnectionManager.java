@@ -189,7 +189,7 @@ public class ConnectionManager {
 		if(this.connection == null) {
 			return;
 		}
-		while(this.connection.hasRemaining()) {
+		while(this.connection.hasRemaining() && this.connection.rBufferRemaining() > 4) {
 			int packetLength = this.connection.readInt();
 			if(this.connection.rBufferRemaining()+4 < packetLength) {
 				this.connection.rBufferSetPosition(this.connection.rBufferPosition()-4);
