@@ -46,6 +46,7 @@ import net.command.player.CommandUpdateStats;
 import net.command.player.CommandWho;
 import net.command.player.spell.CommandAura;
 import net.command.player.spell.CommandCast;
+import net.config.ConfigMgr;
 import net.game.log.Log;
 import net.game.unit.Player;
 
@@ -55,8 +56,8 @@ public class ConnectionManager {
 	private Connection connection;
 	private static SocketChannel authSocket;
 	private static Connection authConnection;
-	private static HashMap<Integer, Command> loggedCommandList = new HashMap<Integer, Command>();
-	private static HashMap<Integer, Command> nonLoggedCommandList = new HashMap<Integer, Command>();
+	private static HashMap<Short, Command> loggedCommandList = new HashMap<Short, Command>();
+	private static HashMap<Short, Command> nonLoggedCommandList = new HashMap<Short, Command>();
 	private static HashMap<Integer, Command> authCommand = new HashMap<Integer, Command>(); //TODO: make InGameCommand HM and selectedScreenCommand HM
 	private final static int TIMEOUT_TIMER = 10000;
 	private short lastPacketReaded;
@@ -69,44 +70,44 @@ public class ConnectionManager {
 	}
 	
 	public static void initPlayerCommand() {
-		nonLoggedCommandList.put((int)LOGIN_REALM, new CommandLoginRealmPlayer());
-		nonLoggedCommandList.put((int)SELECT_SCREEN_LOAD_CHARACTERS, new CommandSelectScreenLoadCharacters());
-		nonLoggedCommandList.put((int)CREATE_CHARACTER, new CommandCreateCharacter());
-		nonLoggedCommandList.put((int)DELETE_CHARACTER, new CommandDeleteCharacter());
-		nonLoggedCommandList.put((int)LOAD_CHARACTER, new CommandLoadCharacter());
-		nonLoggedCommandList.put((int)LOGIN, new CommandLogin());
-		nonLoggedCommandList.put((int)PING, new CommandPing());
-		nonLoggedCommandList.put((int)PING_CONFIRMED, new CommandPingConfirmed());
-		loggedCommandList.put((int)SEND_SINGLE_BAG_ITEM, new CommandSendSingleBagItem());
-		loggedCommandList.put((int)PING_CONFIRMED, new CommandPingConfirmed());
-		loggedCommandList.put((int)CHAT_LIST_PLAYER, new CommandListPlayer());
-		loggedCommandList.put((int)CHAT_PLAYER_INFO, new CommandPlayerInfo());
-		loggedCommandList.put((int)REQUEST_ITEM, new CommandRequestItem());
-		loggedCommandList.put((int)ADD_ITEM, new CommandAddItem());
-		loggedCommandList.put((int)WEAPON, new CommandWeapon());
-		loggedCommandList.put((int)POTION, new CommandPotion());
-		loggedCommandList.put((int)LOGOUT, new CommandLogout());
-		loggedCommandList.put((int)CHAT_SET, new CommandSet());
-		loggedCommandList.put((int)CHAT_GET, new CommandGet());
-		loggedCommandList.put((int)STUFF, new CommandStuff());
-		loggedCommandList.put((int)PING, new CommandPing());
-		loggedCommandList.put((int)GEM, new CommandGem());
-		loggedCommandList.put((int)CONTAINER, new CommandContainer());
+		nonLoggedCommandList.put(LOGIN_REALM, new CommandLoginRealmPlayer());
+		nonLoggedCommandList.put(SELECT_SCREEN_LOAD_CHARACTERS, new CommandSelectScreenLoadCharacters());
+		nonLoggedCommandList.put(CREATE_CHARACTER, new CommandCreateCharacter());
+		nonLoggedCommandList.put(DELETE_CHARACTER, new CommandDeleteCharacter());
+		nonLoggedCommandList.put(LOAD_CHARACTER, new CommandLoadCharacter());
+		nonLoggedCommandList.put(LOGIN, new CommandLogin());
+		nonLoggedCommandList.put(PING, new CommandPing());
+		nonLoggedCommandList.put(PING_CONFIRMED, new CommandPingConfirmed());
+		loggedCommandList.put(SEND_SINGLE_BAG_ITEM, new CommandSendSingleBagItem());
+		loggedCommandList.put(PING_CONFIRMED, new CommandPingConfirmed());
+		loggedCommandList.put(CHAT_LIST_PLAYER, new CommandListPlayer());
+		loggedCommandList.put(CHAT_PLAYER_INFO, new CommandPlayerInfo());
+		loggedCommandList.put(REQUEST_ITEM, new CommandRequestItem());
+		loggedCommandList.put(ADD_ITEM, new CommandAddItem());
+		loggedCommandList.put(WEAPON, new CommandWeapon());
+		loggedCommandList.put(POTION, new CommandPotion());
+		loggedCommandList.put(LOGOUT, new CommandLogout());
+		loggedCommandList.put(CHAT_SET, new CommandSet());
+		loggedCommandList.put(CHAT_GET, new CommandGet());
+		loggedCommandList.put(STUFF, new CommandStuff());
+		loggedCommandList.put(PING, new CommandPing());
+		loggedCommandList.put(GEM, new CommandGem());
+		loggedCommandList.put(CONTAINER, new CommandContainer());
 		//loggedCommandList.put((int)SPELL_CAST, new CommandSpellCast());
-		loggedCommandList.put((int)UPDATE_STATS, new CommandUpdateStats());
-		loggedCommandList.put((int)CHARACTER_LOGOUT, new CommandLogoutCharacter());
-		loggedCommandList.put((int)TRADE, new CommandTrade());
-		loggedCommandList.put((int)FRIEND, new CommandFriend());
-		loggedCommandList.put((int)SEND_MESSAGE, new CommandSendMessage());
-		loggedCommandList.put((int)PARTY, new CommandParty());
-		loggedCommandList.put((int)GUILD, new CommandGuild());
-		loggedCommandList.put((int)IGNORE, new CommandIgnore());
-		loggedCommandList.put((int)WHO, new CommandWho());
-		loggedCommandList.put((int)DRAG_ITEM, new CommandDragItems());
-		loggedCommandList.put((int)DELETE_ITEM, new CommandDeleteItem());
-		loggedCommandList.put((int)SPELL_CAST, new CommandCast());
-		loggedCommandList.put((int)AURA, new CommandAura());
-		loggedCommandList.put((int)CHANNEL, new CommandChannel());
+		loggedCommandList.put(UPDATE_STATS, new CommandUpdateStats());
+		loggedCommandList.put(CHARACTER_LOGOUT, new CommandLogoutCharacter());
+		loggedCommandList.put(TRADE, new CommandTrade());
+		loggedCommandList.put(FRIEND, new CommandFriend());
+		loggedCommandList.put(SEND_MESSAGE, new CommandSendMessage());
+		loggedCommandList.put(PARTY, new CommandParty());
+		loggedCommandList.put(GUILD, new CommandGuild());
+		loggedCommandList.put(IGNORE, new CommandIgnore());
+		loggedCommandList.put(WHO, new CommandWho());
+		loggedCommandList.put(DRAG_ITEM, new CommandDragItems());
+		loggedCommandList.put(DELETE_ITEM, new CommandDeleteItem());
+		loggedCommandList.put(SPELL_CAST, new CommandCast());
+		loggedCommandList.put(AURA, new CommandAura());
+		loggedCommandList.put(CHANNEL, new CommandChannel());
 	}
 	
 	public static void initAuthCommand() {
@@ -117,7 +118,7 @@ public class ConnectionManager {
 			authSocket = SocketChannel.open();
 			authSocket.socket().connect(new InetSocketAddress(AUTH_SERVER_IP, AUTH_SERVER_PORT), 5000);
 			if(authSocket.isConnected()) {
-				authSocket.socket().setTcpNoDelay(true);
+				authSocket.socket().setTcpNoDelay(ConfigMgr.TCP_NO_DELAY_ENABLED);
 				authSocket.configureBlocking(false);
 				if(authConnection == null) {
 					authConnection = new Connection(authSocket);
@@ -196,17 +197,17 @@ public class ConnectionManager {
 				return;
 			}
 			short packetId = this.connection.readShort();
-			if(this.player.isOnline() && loggedCommandList.containsKey((int)packetId)) {
+			if(this.player.isOnline() && loggedCommandList.containsKey(packetId)) {
 				this.lastPacketReaded = packetId;
-				loggedCommandList.get((int)packetId).read(this.player);
+				loggedCommandList.get(packetId).read(this.player);
 			}
-			else if(!this.player.isOnline() && nonLoggedCommandList.containsKey((int)packetId)) {
+			else if(!this.player.isOnline() && nonLoggedCommandList.containsKey(packetId)) {
 				this.lastPacketReaded = packetId;
-				nonLoggedCommandList.get((int)packetId).read(this.player);
+				nonLoggedCommandList.get(packetId).read(this.player);
 			}
 			else {
-				System.out.println("Unknown packet: "+(int)packetId+", last packet readed: "+this.lastPacketReaded+" for player "+this.player.getAccountId());
-				Log.writePlayerLog(this.player, "Unknown packet: "+(int)packetId+", last packet readed: "+this.lastPacketReaded);
+				System.out.println("Unknown packet: "+packetId+", last packet readed: "+this.lastPacketReaded+" for player "+this.player.getAccountId());
+				Log.writePlayerLog(this.player, "Unknown packet: "+packetId+", last packet readed: "+this.lastPacketReaded);
 				this.player.close();
 				break;
 			}

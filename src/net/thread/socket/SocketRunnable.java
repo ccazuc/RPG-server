@@ -5,6 +5,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 
 import net.Server;
+import net.config.ConfigMgr;
 import net.game.unit.Player;
 
 public class SocketRunnable implements Runnable {
@@ -31,6 +32,7 @@ public class SocketRunnable implements Runnable {
 				if(!this.isAcceptingConnection && !this.clientSocket.getLocalAddress().toString().equals("/127.0.0.1")) {
 					continue;
 				}
+				this.clientSocket.socket().setTcpNoDelay(ConfigMgr.TCP_NO_DELAY_ENABLED);
 				this.clientSocket.configureBlocking(false);
 				Server.addNonLoggedPlayer(new Player(this.clientSocket));
 			} 
