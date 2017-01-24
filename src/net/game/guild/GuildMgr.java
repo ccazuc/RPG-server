@@ -1,7 +1,6 @@
 package net.game.guild;
 
 import java.sql.SQLException;
-import java.sql.SQLTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,7 +16,12 @@ import net.thread.sql.SQLTask;
 
 public class GuildMgr {
 
-	private static HashMap<Integer, Guild> guildList = new HashMap<Integer, Guild>();
+	public final static int RANK_MEMBER_DEFAULT = 129;
+	public final static int RANK_INITIATE_DEFAULT = 129;
+	public final static int RANK_VETERAN_DEFAULT = 24705;
+	public final static int RANK_OFFICER_DEFAULT = 32231;
+	public final static int RANK_GUILD_MASTER_DEFAULT = 32767;
+	private final static HashMap<Integer, Guild> guildMap = new HashMap<Integer, Guild>();
 	private static JDOStatement loadRank;
 	private static JDOStatement loadGuildInformation;
 	private static JDOStatement loadMember;
@@ -32,6 +36,7 @@ public class GuildMgr {
 	private static JDOStatement deleteGuildMembers;
 	private static JDOStatement deleteGuildRanks;
 	private static JDOStatement deleteGuildEvents;
+	private static JDOStatement loadGuildIDByName;
 	private final static SQLRequest updateInformation = new SQLRequest("UPDATE guild SET information = ? WHERE id = ?", "Update guild information", SQLRequestPriority.LOW) {
 		
 		@Override
@@ -42,10 +47,7 @@ public class GuildMgr {
 				this.statement.putString(datas.getStringValue1());
 				this.statement.putInt(datas.getIValue1());
 				this.statement.execute();
-			} 
-			catch (SQLTimeoutException e) {
-				e.printStackTrace();
-			} 
+			}
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -61,10 +63,7 @@ public class GuildMgr {
 				this.statement.putString(datas.getStringValue1());
 				this.statement.putInt(datas.getIValue1());
 				this.statement.execute();
-			} 
-			catch (SQLTimeoutException e) {
-				e.printStackTrace();
-			} 
+			}
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -80,10 +79,7 @@ public class GuildMgr {
 				this.statement.putInt(datas.getIValue1());
 				this.statement.putInt(datas.getIValue2());
 				this.statement.execute();
-			} 
-			catch (SQLTimeoutException e) {
-				e.printStackTrace();
-			} 
+			}
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -101,10 +97,7 @@ public class GuildMgr {
 				this.statement.putInt(datas.getIValue1());
 				this.statement.putInt(datas.getIValue2());
 				this.statement.execute();
-			} 
-			catch (SQLTimeoutException e) {
-				e.printStackTrace();
-			} 
+			}
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -121,10 +114,7 @@ public class GuildMgr {
 				this.statement.putInt(datas.getIValue2());
 				this.statement.putInt(datas.getIValue3());
 				this.statement.execute();
-			} 
-			catch (SQLTimeoutException e) {
-				e.printStackTrace();
-			} 
+			}
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -141,10 +131,7 @@ public class GuildMgr {
 				this.statement.putInt(datas.getIValue2());
 				this.statement.putInt(datas.getIValue3());
 				this.statement.execute();
-			} 
-			catch (SQLTimeoutException e) {
-				e.printStackTrace();
-			} 
+			}
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -296,15 +283,69 @@ public class GuildMgr {
 		try {
 			if(createGuild == null) {
 				createGuild = Server.getJDO().prepare("INSERT INTO guild (id, name, leader_id, information, motd) VALUES(?, ?, ?, Guild Information, Message of the day)");
+				createGuildRank = Server.getJDO().prepare("INSERT INTO guild_rank (guild_id, rank_order, permission, name) VALUES(?, ?, ?, ?)");
 			}
 			createGuild.clear();
 			createGuild.putString(guildName);
 			createGuild.putInt(leaderID);
 			createGuild.execute();
+			int guildID = loadGuildID(guildName);
+			if(guildID == -1) {
+				System.out.println("Error in GuildMgr.createGuild, guild not found");
+				return;
+			}
+			createGuildRank.clear();
+			createGuildRank.putInt(guildID);
+			createGuildRank.putInt(1);
+			createGuildRank.putInt(RANK_GUILD_MASTER_DEFAULT);
+			createGuildRank.putString("Guild Master");
+			createGuildRank.execute();
+			createGuildRank.clear();
+			createGuildRank.putInt(guildID);
+			createGuildRank.putInt(2);
+			createGuildRank.putInt(RANK_OFFICER_DEFAULT);
+			createGuildRank.putString("Officer");
+			createGuildRank.execute();
+			createGuildRank.clear();
+			createGuildRank.putInt(guildID);
+			createGuildRank.putInt(3);
+			createGuildRank.putInt(RANK_VETERAN_DEFAULT);
+			createGuildRank.putString("Veteran");
+			createGuildRank.execute();
+			createGuildRank.clear();
+			createGuildRank.putInt(guildID);
+			createGuildRank.putInt(4);
+			createGuildRank.putInt(RANK_MEMBER_DEFAULT);
+			createGuildRank.putString("Member");
+			createGuildRank.execute();
+			createGuildRank.clear();
+			createGuildRank.putInt(guildID);
+			createGuildRank.putInt(5);
+			createGuildRank.putInt(RANK_INITIATE_DEFAULT);
+			createGuildRank.putString("Initiate");
+			createGuildRank.execute();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static int loadGuildID(String guildName) {
+		try {
+			if(loadGuildIDByName == null) {
+				loadGuildIDByName = Server.getJDO().prepare("SELECT id FROM guild WHERE name = ?");
+			}
+			loadGuildIDByName.clear();
+			loadGuildIDByName.putString(guildName);
+			loadGuildIDByName.execute();
+			if(loadGuildIDByName.fetch()) {
+				return loadGuildIDByName.getInt();
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 	
 	public static void deleteGuild(Guild guild) {
@@ -334,7 +375,7 @@ public class GuildMgr {
 				guildId = loadPlayerGuild.getInt();
 			}
 			if(guildId != 0) {
-				if(guildList.containsKey(guildId)) {
+				if(guildMap.containsKey(guildId)) {
 					player.setGuild(getGuild(guildId));
 					return;
 				}
@@ -479,16 +520,16 @@ public class GuildMgr {
 	}
 	
 	public static HashMap<Integer, Guild> getGuildList() {
-		return guildList;
+		return guildMap;
 	}
 	
 	public static Guild getGuild(int id) {
-		return guildList.get(id);
+		return guildMap.get(id);
 	}
 	
 	public static void addGuild(Guild guild) {
 		if(guild != null) {
-			guildList.put(guild.getId(), guild);
+			guildMap.put(guild.getId(), guild);
 		}
 	}
 }

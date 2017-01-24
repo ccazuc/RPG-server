@@ -203,23 +203,21 @@ public class Player extends Unit {
 	}
 	
 	public boolean itemHasBeenSendToClient(int id) {
-		int i = 0;
-		while(i < this.itemSentToClient.size()) {
+		int i = this.itemSentToClient.size();
+		while(--i >= 0) {
 			if(this.itemSentToClient.get(i) == id) {
 				return true;
 			}
-			i++;
 		}
 		return false;
 	}
 	
 	public boolean itemHasBeenSendToClient(Item item) {
-		int i = 0;
-		while(i < this.itemSentToClient.size()) {
+		int i = this.itemSentToClient.size();
+		while(--i >= 0) {
 			if(this.itemSentToClient.get(i) == item.getId()) {
 				return true;
 			}
-			i++;
 		}
 		return false;
 	}
@@ -350,69 +348,62 @@ public class Player extends Unit {
 		if(!FriendMgr.containsKey(this.unitID)) {
 			return;
 		}
-		int i = 0;
-		int length = FriendMgr.getFriendMap().get(this.unitID).size();
-		while(i < length) {
-			if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.unitID).get(i))) {
-				CommandFriend.notifyFriendOnline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.unitID).get(i)), this);
+		int i = FriendMgr.getFriendList(this.unitID).size();
+		while(--i >= 0) {
+			if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendList(this.unitID).get(i))) {
+				CommandFriend.notifyFriendOnline(Server.getInGameCharacter(FriendMgr.getFriendList(this.unitID).get(i)), this);
 			}
-			i++;
 		}
 	}
 	
 	public void notifyFriendOffline() {
-		int i = 0;
-		if(FriendMgr.containsKey(this.unitID)) {
-			int length = FriendMgr.getFriendMap().get(this.unitID).size();
-			while(i < length) {
-				if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendMap().get(this.unitID).get(i))) {
-					CommandFriend.notifyFriendOffline(Server.getInGameCharacter(FriendMgr.getFriendMap().get(this.unitID).get(i)), this);
-				}
-				i++;
+		if(!FriendMgr.containsKey(this.unitID)) {
+			return;
+		}
+		int i = FriendMgr.getFriendList(this.unitID).size();
+		while(--i >= 0) {
+			if(Server.getInGamePlayerList().containsKey(FriendMgr.getFriendList(this.unitID).get(i))) {
+				CommandFriend.notifyFriendOffline(Server.getInGameCharacter(FriendMgr.getFriendList(this.unitID).get(i)), this);
 			}
 		}
 	}
 	
 	public boolean isFriendWith(Player player) {
-		int i = 0;
-		while(i < this.friendList.size()) {
+		int i = this.friendList.size();
+		while(--i >= 0) {
 			if(this.friendList.get(i) == player.getUnitID()) {
 				return true;
 			}
-			i++;
 		}
 		return false;
 	}
 	
 	public boolean isFriendWith(int character_id) {
-		int i = 0;
-		while(i < this.friendList.size()) {
+		int i = this.friendList.size();
+		while(--i >= 0) {
 			if(this.friendList.get(i) == character_id) {
 				return true;
 			}
-			i++;
 		}
 		return false;
 	}
 	
 	public int getItemBagSlot(Item item) {
-		int i = 0;
-		while(i < this.bag.getBag().length) {
+		int i = this.bag.getBag().length;
+		while(--i >= 0) {
 			if(this.bag.getBag(i) == item) {
 				return i;
 			}
-			i++;
 		}
 		return -1;
 	}
 	
 	public int getItemInventorySlot(Item item) {
-		int i = 0;
-		while(i < this.stuff.length) {
+		int i = this.stuff.length;
+		while(--i >= 0) {
 			if(this.stuff[i] == item) {
 				return i;
 			}
-			i++;
 		}
 		return -1;
 	}
@@ -426,7 +417,7 @@ public class Player extends Unit {
 		}
 		Server.addLoggedPlayer(this);
 		Server.removeInGamePlayer(this);
-		FriendMgr.getFriendMap().remove(this.unitID);
+		FriendMgr.removeList(this.unitID);
 		CharacterMgr.fullySaveCharacter(this);
 		resetDatas();
 		int i = 0;
@@ -460,8 +451,8 @@ public class Player extends Unit {
 	
 	public void updateBagItem() {
 		this.bag.getItemList().clear();
-		int i = 0;
-		while(i < this.bag.getBag().length) {
+		int i = this.bag.getBag().length;
+		while(--i >= 0) {
 			if(this.bag.getBag(i) != null) {
 				if(this.bag.getItemList().containsKey(this.bag.getBag(i).getId())) {
 					if(this.bag.getBag(i).isStackable()) {
@@ -480,7 +471,6 @@ public class Player extends Unit {
 					}
 				}
 			}
-			i++;
 		}
 	}
 	
@@ -541,12 +531,11 @@ public class Player extends Unit {
 	}
 
 	public boolean canWearWeapon(Stuff stuff) {
-		int i = 0;
-		while(i < this.weaponType.length) {
+		int i = this.weaponType.length;
+		while(--i >= 0) {
 			if(this.weaponType[i] == stuff.getWeaponType()) {
 				return true;
 			}
-			i++;
 		}
 		return false;
 	}
@@ -643,9 +632,9 @@ public class Player extends Unit {
 		if(item == null) {
 			return false;
 		}
-		int i = 0;
+		int i = this.bag.getBag().length;
 		boolean returns = false;
-		while(i < this.bag.getBag().length && number > 0) {
+		while(--i >= 0 && number > 0) {
 			if(this.bag.getBag(i) == null) {
 				if(item.isStuff() || item.isWeapon()) {
 					this.bag.setBag(i, new Stuff((Stuff)item));
@@ -672,9 +661,7 @@ public class Player extends Unit {
 					returns = true;
 				}
 			}
-			i++;
 		}
-		//this.itemManager.setBagItems(this);
 		return returns;
 	}
 	
@@ -682,14 +669,13 @@ public class Player extends Unit {
 		if(item == null) {
 			return;
 		}
-		int i = 0;
-		while(i < this.bag.getBag().length) {
+		int i = this.bag.getBag().length;
+		while(--i >= 0) {
 			if(this.bag.getBag(i) == item) {
 				this.bag.setBag(i, null);
 				CommandSetItem.setNull(this, DragItem.BAG, i);
 				return;
 			}
-			i++;
 		}
 	}
 	

@@ -56,8 +56,24 @@ public class FriendMgr {
 		return friendMap.containsKey(id);
 	}
 	
-	public static HashMap<Integer, ArrayList<Integer>> getFriendMap() {
+	public static HashMap<Integer, ArrayList<Integer>> getFriendMaps() {
 		return friendMap;
+	}
+	
+	public static ArrayList<Integer> getFriendList(int id) {
+		return friendMap.get(id);
+	}
+	
+	public static void removeList(int id) {
+		friendMap.remove(id);
+	}
+	
+	public static void addList(int id, ArrayList<Integer> list) {
+		friendMap.put(id, list);
+	}
+	
+	public static void addFriend(int character_id, int friend_id) {
+		friendMap.get(character_id).add(friend_id);
 	}
 	
 	public static void addFriendInDB(int character_id, int friend_id) {

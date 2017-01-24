@@ -399,9 +399,10 @@ public class CharacterMgr {
 			while(loadPlayerFriend.fetch()) {
 				int id = loadPlayerFriend.getInt();
 				if(!FriendMgr.containsKey(player.getUnitID())) {
-					FriendMgr.getFriendMap().put(player.getUnitID(), new ArrayList<Integer>());
+					FriendMgr.addList(player.getUnitID(), new ArrayList<Integer>());
 				}
-				FriendMgr.getFriendMap().get(player.getUnitID()).add(id);
+				FriendMgr.addFriend(player.getUnitID(), id);
+				
 			}
 			
 			loadFriend.clear();
