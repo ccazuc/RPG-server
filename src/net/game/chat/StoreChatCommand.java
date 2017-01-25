@@ -1498,25 +1498,6 @@ public class StoreChatCommand {
 		return true;
 	}
 	
-	/*static boolean isValidIpAdresse(String ip) {
-		String[] value = ip.split(".");
-		if(value.length != 4) {
-			return false;
-		}
-		int i = 0;
-		while(i < value.length) {
-			if(!StringUtils.isInteger(value[i])) {
-				return false;
-			}
-			int number = Integer.parseInt(value[i]);
-			if(number < 0 && number > 255) {
-				return false;
-			}
-			i++;
-		}
-		return true;
-	}*/
-	
 	static boolean isValidIpAdress(String ip) {
 		return isValidIP.matcher(ip).matches();
 	}

@@ -39,7 +39,7 @@ public class CommandFriend extends Command {
 				return;
 			}
 			if(!((member != null && !player.isFriendWith(member)) || (character_id != -1 && !player.isFriendWith(character_id)))) {
-				CommandSendMessage.selfWithoutAuthor(connection, name+" is already in your friendlist.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, name.concat(" is already in your friendlist."), MessageType.SELF);
 				return;
 			}
 			if(member != null) {

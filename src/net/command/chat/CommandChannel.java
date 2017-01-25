@@ -6,7 +6,6 @@ import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
-import net.game.log.Log;
 import net.game.manager.ChannelMgr;
 import net.game.unit.Player;
 
@@ -67,8 +66,6 @@ public class CommandChannel extends Command {
 			String channelID = connection.readString();
 			String playerName = connection.readString();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
-				Log.writePlayerLog(player, "Tried to ban "+playerName+" from channel "+channelID+" whereas he hasn't joined the channel.");
-				player.close();
 				return;
 			}
 			Player target = Server.getInGameCharacterByName(playerName);
@@ -89,8 +86,6 @@ public class CommandChannel extends Command {
 			String channelID = connection.readString();
 			String playerName = connection.readString();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
-				Log.writePlayerLog(player, "Tried to kick "+playerName+" from channel "+channelID+" whereas he hasn't joined the channel.");
-				player.close();
 				return;
 			}
 			Player target = Server.getInGameCharacterByName(playerName);
@@ -112,8 +107,6 @@ public class CommandChannel extends Command {
 			String channelID = connection.readString();
 			String playerName = connection.readString();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
-				Log.writePlayerLog(player, "Tried to give "+playerName+" channel leader from channel "+channelID+" whereas he hasn't joined the channel.");
-				player.close();
 				return;
 			}
 			if(!mgr.isLeader(channelID, player)) {
@@ -133,8 +126,6 @@ public class CommandChannel extends Command {
 			String channelID = connection.readString();
 			String playerName = connection.readString();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
-				Log.writePlayerLog(player, "Tried to mute "+playerName+" from channel "+channelID+" whereas he hasn't joined the channel.");
-				player.close();
 				return;
 			}
 			Player target = Server.getInGameCharacterByName(playerName);

@@ -45,7 +45,7 @@ public class CommandIgnore extends Command {
 				addIgnore(connection, character_id, name);
 			}
 			else {
-				CommandSendMessage.selfWithoutAuthor(connection, name+" is already in your ignore list.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, name.concat(" is already in your ignore list."), MessageType.SELF);
 			}
 		}
 		else if(packetId == PacketID.IGNORE_REMOVE) {

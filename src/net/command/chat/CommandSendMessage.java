@@ -39,7 +39,7 @@ public class CommandSendMessage extends Command {
 		message = StringUtils.removeSpacesDuplicate(message);
 		if(type == MessageType.WHISPER) {
 			String target = connection.readString();
-			target = target.substring(0, 1).toUpperCase()+target.substring(1).toLowerCase();
+			target = StringUtils.formatPlayerName(target);
 			Player tmp = Server.getInGameCharacterByName(target);
 			if(tmp == null) {
 				CommandPlayerNotFound.write(connection, target);
@@ -91,8 +91,6 @@ public class CommandSendMessage extends Command {
 			String channelID = connection.readString();
 			ChannelMgr mgr = ChannelMgr.getChannelMgr(player.getFaction());
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
-				Log.writePlayerLog(player, "Tried to send a message in channel "+channelID+" whereas he hasn't joined it.");
-				player.close();
 				return;
 			}
 			if(mgr.isMuted(channelID, player)) {

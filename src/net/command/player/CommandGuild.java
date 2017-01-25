@@ -78,10 +78,10 @@ public class CommandGuild extends Command {
 				return;
 			}
 			if(member.getGuild() != null) {
-				CommandSendMessage.selfWithoutAuthor(connection, name+" is already in a guild.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, name.concat(" is already in a guild."), MessageType.SELF);
 				return;
 			}
-			CommandSendMessage.selfWithoutAuthor(connection, "You invited "+name+" to join your guild.", MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(connection, new StringBuilder().append("You invited ").append(name).append(" to join your guild.").toString(), MessageType.SELF);
 			joinGuildRequest(member.getConnection(), player.getName(), player.getGuild().getName());
 			member.setGuildRequest(player.getGuild().getId());
 			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_INVITED, Server.getLoopTickTimer(), player.getName(), member.getName());
@@ -169,7 +169,7 @@ public class CommandGuild extends Command {
 				return;
 			}
 			if(!(member.getRank().getOrder() < 2)) {
-				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+"'s rank is too high.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, member.getName().concat("'s rank is too high."), MessageType.SELF);
 				return;
 			}
 			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().getOrder() > member.getRank().getOrder())) {
@@ -192,7 +192,7 @@ public class CommandGuild extends Command {
 				return;
 			}
 			if(!(member.getRank().getOrder() < player.getGuild().getRankList().size())) {
-				CommandSendMessage.selfWithoutAuthor(connection, member.getName()+" has already the lowest rank.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(connection, member.getName().concat(" has already the lowest rank."), MessageType.SELF);
 				return;
 			}
 			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().getOrder() > member.getRank().getOrder())) {
