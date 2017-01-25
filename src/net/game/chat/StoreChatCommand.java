@@ -53,7 +53,7 @@ public class StoreChatCommand {
 		public void handle(String command, Player player) {
 			command = command.trim();
 			if(command.equalsIgnoreCase('.'+this.name)) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account level : "+(player.getAccountRank().getValue()), MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account level : ".concat(String.valueOf(player.getAccountRank().getValue())), MessageType.SELF);
 			}
 			else {
 				String[] value = command.split(" ");
@@ -82,7 +82,7 @@ public class StoreChatCommand {
 			}
 			StringBuilder builder = new StringBuilder();
 			for(Player players : Server.getInGamePlayerList().values()) {
-				builder.append(players.getAccountName()+" : "+players.getAccountId());
+				builder.append(players.getAccountName()).append(" : ").append(player.getAccountId());
 			}
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}
@@ -129,7 +129,9 @@ public class StoreChatCommand {
 				}
 				int accountId = AccountMgr.loadAccountIDFromName(accountName);
 				if(accountId == -1) {
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountName+" not found.", MessageType.SELF);
+					StringBuilder builder = new StringBuilder();
+					builder.append("Account ").append(accountName).append(" not found.");
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 					return;
 				}
 				AccountMgr.updateAccountRank(accountId, level);
@@ -211,7 +213,7 @@ public class StoreChatCommand {
 			}
 			int accountId = AccountMgr.loadAccountIDFromName(accountName);
 			if(accountId == -1) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountName+" not found.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Account ").append(accountName).append(" not found.").toString(), MessageType.SELF);
 				return;
 			}
 			long timer = System.currentTimeMillis();
@@ -224,10 +226,10 @@ public class StoreChatCommand {
 			reason = builder.toString();
 			if(banTimer < 0) {
 				banTimer = -1-timer;
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountId+" banned permanently for : "+reason, MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Account ").append(accountId).append(" banned permanently for : ").append(reason).toString(), MessageType.SELF);
 			}
 			else {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+accountId+" banned "+banTime+" for : "+reason, MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Account ").append(accountId).append(" banned ").append(banTime).append(" for : ").append(reason).toString(), MessageType.SELF);
 			}
 			BanMgr.banAccount(accountId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacterByAccount(accountId);
@@ -264,7 +266,7 @@ public class StoreChatCommand {
 			}
 			int characterId = CharacterMgr.loadCharacterIDFromName(characterName);
 			if(characterId == -1) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" not found.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Character ").append(characterName).append(" not found.").toString(), MessageType.SELF);
 				return;
 			}
 			StringBuilder builder = new StringBuilder();
@@ -277,10 +279,10 @@ public class StoreChatCommand {
 			long timer = System.currentTimeMillis();
 			if(banTimer < 0) {
 				banTimer = -1-timer;
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" banned permanently for : "+reason, MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Character ").append(characterName).append(" banned permanently for : ").append(reason).toString(), MessageType.SELF);
 			}
 			else {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+characterName+" banned "+banTime+" for : "+reason, MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Character ").append(characterName).append(" banned ").append(banTime).append(" for : ").append(reason).toString(), MessageType.SELF);
 			}
 			BanMgr.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacter(characterId);
@@ -329,10 +331,10 @@ public class StoreChatCommand {
 			reason = builder.toString();
 			if(banTimer < 0) {
 				banTimer = -1-timer;
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "IPAdress "+ipAdress+" banned permanently for : "+reason, MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("IPAdress ").append(ipAdress).append(" banned permanently for : ").append(reason).toString(), MessageType.SELF);
 			}
 			else {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "IPAdress "+ipAdress+" banned "+banTime+" for : "+reason, MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("IPAdress ").append(ipAdress).append(" banned ").append(banTime).append(" for : ").append(reason).toString(), MessageType.SELF);
 			}
 			BanMgr.banIPAdress(ipAdress, timer, banTimer+timer, player.getName(), reason);
 			ArrayList<Player> bannedList = Server.getAllInGameCharacterByIP('/'+ipAdress);
@@ -356,7 +358,7 @@ public class StoreChatCommand {
 				builder.append("Available commands:");
 				for(ChatCommand chatCommand : commandMap.values()) {
 					if(player.getAccountRank().superiorOrEqualsTo(chatCommand.getRank())) {
-						builder.append("\n"+chatCommand.getName());
+						builder.append("\n").append(chatCommand.getName());
 					}
 				}
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
@@ -433,7 +435,7 @@ public class StoreChatCommand {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			System.out.println("[SERVER EXIT] requested by "+player.getName());
+			System.out.println("[SERVER EXIT] requested by ".concat(player.getName()));
 			Server.close();
 		}
 	};
@@ -443,9 +445,9 @@ public class StoreChatCommand {
 		public void handle(String[] value, Player player) {
 			StringBuilder builder = new StringBuilder();
 			builder.append("Server informations :\n");
-			builder.append("Server message of the day :\n"+ConfigMgr.getServerMessageOfTheDay()+'\n');
-			builder.append("Online since "+convMillisToDate(System.currentTimeMillis()-Server.getServerStartTimer())+'\n');
-			builder.append("Online player(s) : "+Server.getInGamePlayerList().size());
+			builder.append("Server message of the day :\n").append(ConfigMgr.getServerMessageOfTheDay()).append('\n');
+			builder.append("Online since ").append(convMillisToDate(Server.getLoopTickTimer()-Server.getServerStartTimer())).append('\n');
+			builder.append("Online player(s) : ").append(Server.getInGamePlayerList().size());
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}
 	};
@@ -463,7 +465,7 @@ public class StoreChatCommand {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Server is using "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)+" Mb of ram.", MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Server is using ").append((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)).append(" Mb of ram.").toString(), MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand server_gc = new ChatSubCommand("gc", "server", "Syntax: .server gc\n\nPerform a gc and display the ram used before and after the gc.", AccountRank.ADMINISTRATOR) {
@@ -473,9 +475,9 @@ public class StoreChatCommand {
 			if(!checkRank(player, this.rank)) {
 				return;
 			}
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Used ram before gc: "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)+" Mb", MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Used ram before gc: ").append((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)).append(" Mb").toString(), MessageType.SELF);
 			System.gc();
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Used ram after gc: "+(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)+" Mb", MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Used ram after gc: ").append((Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory())/(1024f*1024f)).append(" Mb").toString(), MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand server_set = new ChatSubCommand("set", "server", AccountRank.ADMINISTRATOR) {
@@ -601,11 +603,11 @@ public class StoreChatCommand {
 					StringBuilder builder = new StringBuilder();
 					Date banDate = new Date(ban_date);
 					if(unban_date == -1) {
-						builder.append("Account "+value[2]+" has been permanently banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason);
+						builder.append("Account ").append(value[2]).append(" has been permanently banned the ").append(banDate.toString()).append(" by ").append(banned_by).append(" for :\n").append(ban_reason);
 					}
 					else {
 						Date unbanDate = new Date(unban_date);
-						builder.append("Account "+value[2]+" has been banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason+"\nBan will expire the "+unbanDate.toString());
+						builder.append("Account ").append(value[2]).append(" has been banned the ").append(banDate.toString()).append(" by ").append(banned_by).append(" for :\n").append(ban_reason).append("\nBan will expire the ").append(unbanDate.toString());
 					}
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 				}
@@ -634,7 +636,7 @@ public class StoreChatCommand {
 				characterId = CharacterMgr.loadCharacterIDFromName(value[2]);
 			}
 			if(characterId == -1) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character "+value[2]+" not found.", MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Character ").append(value[2]).append(" not found.").toString(), MessageType.SELF);
 				return;
 			}
 			try {
@@ -652,11 +654,11 @@ public class StoreChatCommand {
 					StringBuilder builder = new StringBuilder();
 					Date banDate = new Date(ban_date);
 					if(unban_date == -1) {
-						builder.append("Character "+value[2]+" has been permanently banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason);
+						builder.append("Character ").append(value[2]).append(" has been permanently banned the ").append(banDate.toString()).append(" by ").append(banned_by).append(" for :\n").append(ban_reason);
 					}
 					else {
 						Date unbanDate = new Date(unban_date);
-						builder.append("Character "+value[2]+" has been banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason+"\nBan will expire the "+unbanDate.toString());
+						builder.append("Character ").append(value[2]).append(" has been banned the ").append(banDate.toString()).append(" by ").append(banned_by).append(" for :\n").append(ban_reason).append("\nBan will expire the ").append(unbanDate.toString());
 					}
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 				}
@@ -696,11 +698,11 @@ public class StoreChatCommand {
 					StringBuilder builder = new StringBuilder();
 					Date banDate = new Date(ban_date);
 					if(unban_date == -1) {
-						builder.append("Ip adress "+value[2]+" has been permanently banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason);
+						builder.append("Ip adress ").append(value[2]).append(" has been permanently banned the ").append(banDate.toString()).append(" by ").append(banned_by).append(" for :\n").append(ban_reason);
 					}
 					else {
 						Date unbanDate = new Date(unban_date);
-						builder.append("Ip adress "+value[2]+" has been banned the "+banDate.toString()+" by "+banned_by+" for :\n"+ban_reason+"\nBan will expire the "+unbanDate.toString());
+						builder.append("Ip adress ").append(value[2]).append(" has been banned the ").append(banDate.toString()).append(" by ").append(banned_by).append(" for :\n").append(ban_reason).append("\nBan will expire the ").append(unbanDate.toString());
 					}
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 				}
@@ -757,7 +759,7 @@ public class StoreChatCommand {
 					while(getBanListAccount.fetch()) {
 						String name = AccountMgr.loadAccountNameFromID(getBanListAccount.getInt());
 						if(name != null) {
-							builder.append("\n    "+name);
+							builder.append("\n").append(name);
 						}
 					}
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
@@ -768,11 +770,11 @@ public class StoreChatCommand {
 					}
 					ArrayList<SQLDatas> accountIDList = AccountMgr.loadAccountIDAndNameFromNamePattern(value[2]);
 					if(accountIDList == null || accountIDList.size() == 0) {
-						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "No account match "+value[2], MessageType.SELF);
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "No account match ".concat(value[2]), MessageType.SELF);
 						return;
 					}
 					StringBuilder builder = new StringBuilder();
-					builder.append("List of banned account matching "+value[2]+':');
+					builder.append("List of banned account matching ").append(value[2]).append(':');
 					int i = 0;
 					while(i < accountIDList.size()) {
 						getBanListAccountPattern.clear();
@@ -781,7 +783,7 @@ public class StoreChatCommand {
 						if(getBanListAccountPattern.fetch()) {
 							int number = getBanListAccountPattern.getInt();
 							if(number > 0) {
-								builder.append("\n"+accountIDList.get(i).getStringValue1());
+								builder.append("\n").append(accountIDList.get(i).getStringValue1());
 							}
 						}
 						i++;
@@ -811,11 +813,11 @@ public class StoreChatCommand {
 				}
 				ArrayList<SQLDatas> characterIDList = CharacterMgr.loadCharacterIDAndNameFromNamePattern(value[2]);
 				if(characterIDList == null || characterIDList.size() == 0) {
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "No character match "+value[2], MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "No character match ".concat(value[2]), MessageType.SELF);
 					return;
 				}
 				StringBuilder builder = new StringBuilder();
-				builder.append("List of banned character matching "+value[2]+':');
+				builder.append("List of banned character matching ").append(value[2]).append(':');
 				int i = 0;
 				while(i < characterIDList.size()) {
 					getBanListCharacterPattern.clear();
@@ -823,7 +825,7 @@ public class StoreChatCommand {
 					getBanListCharacterPattern.execute();
 					if(getBanListCharacterPattern.fetch()) {
 						if(getBanListCharacterPattern.getInt() > 0) {
-							builder.append("\n"+characterIDList.get(i).getStringValue1());
+							builder.append("\n").append(characterIDList.get(i).getStringValue1());
 						}
 					}
 					i++;
@@ -878,14 +880,14 @@ public class StoreChatCommand {
 			if(value.length < 4) {
 				if(StringUtils.isInteger(value[2])) {
 					player.setLevel(Integer.parseInt(value[2]));
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You are now level "+player.getLevel(), MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You are now level ".concat(String.valueOf(player.getLevel())), MessageType.SELF);
 				}
 				else {
 					target = Server.getInGameCharacterByName(value[2]);
 					if(target != null) {
 						target.setLevel(target.getLevel()+1);
 						CharacterMgr.setExperience(target.getUnitID(), Player.getExpNeeded(target.getLevel()));
-						CommandSendMessage.selfWithoutAuthor(player.getConnection(), target.getName()+" is now level "+target.getLevel(), MessageType.SELF);
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append(target.getName()).append(" is now level ").append(target.getLevel()).toString(), MessageType.SELF);
 					}
 					else {
 						int id = CharacterMgr.loadCharacterIDFromName(value[2]);
@@ -894,7 +896,7 @@ public class StoreChatCommand {
 						}
 						int level = Player.getLevel(CharacterMgr.getExperience(id));
 						CharacterMgr.setExperience(id, Player.getExpNeeded(level+1));
-						CommandSendMessage.selfWithoutAuthor(player.getConnection(), value[2]+" is now level "+level+1, MessageType.SELF);
+						CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append(value[2]).append(" is now level ").append(level+1).toString(), MessageType.SELF);
 					}
 				}
 			}
@@ -908,7 +910,7 @@ public class StoreChatCommand {
 				if(target != null) {
 					target.setLevel(level);
 					CharacterMgr.setExperience(target.getUnitID(), Player.getExpNeeded(target.getLevel()));
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), target.getName()+" is now level "+level, MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append(target.getName()).append(" is now level ").append(level).toString(), MessageType.SELF);
 				}
 				else {
 					int id = CharacterMgr.loadCharacterIDFromName(value[2]);
@@ -916,7 +918,7 @@ public class StoreChatCommand {
 						return;
 					}
 					CharacterMgr.setExperience(id, Player.getExpNeeded(level));
-					CommandSendMessage.selfWithoutAuthor(player.getConnection(), value[2]+" is now level "+level, MessageType.SELF);
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append(value[2]).append(" is now level ").append(level).toString(), MessageType.SELF);
 				}
 			}
 		}
@@ -999,8 +1001,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug printsqltimer [true || false]", MessageType.SELF);
 				return;
 			}
-			boolean b = value[2].equalsIgnoreCase("true") ? true : false;
-			DebugMgr.setSQLRequestTimer(b);
+			DebugMgr.setSQLRequestTimer(value[2].equalsIgnoreCase("true") ? true : false);
 		}
 	};
 	private final static ChatSubCommand debug_printlogfiletimer = new ChatSubCommand("printlogfiletimer", "debug", ".debug printlogfiletimer [true || false]\n\nSet wether the time to write in the log file should be printed.", AccountRank.ADMINISTRATOR) {
@@ -1018,8 +1019,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug printlogfiletimer [true || false]", MessageType.SELF);
 				return;
 			}
-			boolean b = value[2].equalsIgnoreCase("true") ? true : false;
-			DebugMgr.setWriteLogFileTimer(b);
+			DebugMgr.setWriteLogFileTimer(value[2].equalsIgnoreCase("true") ? true : false);
 		}
 	};
 	private final static ChatSubCommand debug_chatcommandtimer = new ChatSubCommand("chatcommandtimer", "debug", ".debug chatcommandtimer [true || false]\n\nSet wether the time to execute the chat command should be printed.", AccountRank.ADMINISTRATOR) {
@@ -1037,8 +1037,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug chatcommandtimer [true || false]", MessageType.SELF);
 				return;
 			}
-			boolean b = value[2].equalsIgnoreCase("true") ? true : false;
-			DebugMgr.setChatCommandTimer(b);
+			DebugMgr.setChatCommandTimer(value[2].equalsIgnoreCase("true") ? true : false);
 		}
 	};
 	private final static ChatSubCommand debug_whotimer = new ChatSubCommand("whotimer", "debug", ".debug whotimer [true || false]\n\nSet wether the time to execute the who command should be printed.", AccountRank.ADMINISTRATOR) {
@@ -1056,8 +1055,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug whotimer [true || false]", MessageType.SELF);
 				return;
 			}
-			boolean b = value[2].equalsIgnoreCase("true") ? true : false;
-			DebugMgr.setExecuteWhoTimer(b);
+			DebugMgr.setExecuteWhoTimer(value[2].equalsIgnoreCase("true") ? true : false);
 		}
 	};
 	private final static ChatCommand additem = new ChatCommand("additem", "List of possible syntax: \n.additem [item_id || \"item_name\"] to add the item to yourself.\n.additem [item_id || \"item_name\"] [character_name]\n.additem [item_id || \"item_name\"] [amount] [character_id || character_name]\nItem name should not contains space, for example : Potion_of_healing", AccountRank.GAMEMASTER) {
@@ -1095,7 +1093,7 @@ public class StoreChatCommand {
 					if(!StringUtils.isInteger(value[2])) {
 						playerToAdd = Server.getCharacter(value[2]);
 						if(playerToAdd == null) {
-							CommandPlayerNotFound.write(player.getConnection(), value[2].substring(0, 1).toUpperCase()+value[2].substring(1));
+							CommandPlayerNotFound.write(player.getConnection(), StringUtils.formatPlayerName(value[2]));
 							return;
 						}
 					}
@@ -1158,7 +1156,7 @@ public class StoreChatCommand {
 				if(!checkRank(player, AccountRank.MODERATOR)) {
 					return;
 				}
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Current GM mode : "+player.isGMOn(), MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Current GM mode : ".concat(Boolean.toString(player.isGMOn())), MessageType.SELF);
 				return;
 			}
 			String[] value = command.split(" ");
@@ -1208,7 +1206,7 @@ public class StoreChatCommand {
 						builder.append("List of available gamemaster : ");
 						init = true;
 					}
-					builder.append("\n- name : "+players.getName()+" rank : "+player.getAccountRank().getName()+" GM status enabled : "+player.isGMOn());
+					builder.append("\n- name : ").append(players.getName()).append(" rank : ").append(player.getAccountRank().getName()).append(" GM status enabled : ").append(player.isGMOn());
 				}
 			}
 			if(!init) {

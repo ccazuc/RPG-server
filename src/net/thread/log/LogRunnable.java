@@ -133,10 +133,10 @@ public class LogRunnable implements Runnable {
 	public static void writePlayerLog(Player player, String text) {
 		synchronized(playerPrintList) {
 			if(player.isOnline()) {
-				playerPrintList.add("[ERROR "+calendar.getTime()+"] PlayerName: "+player.getName()+" PlayerID: "+player.getUnitID()+" AccountID: "+player.getAccountId()+" "+text);
+				playerPrintList.add("[ERROR "+calendar.getTime()+"] AccountID : "+player.getAccountId()+" PlayerName: "+player.getName()+" PlayerID: "+player.getUnitID()+", "+text);
 			}
 			else {
-				playerPrintList.add("[ERROR "+calendar.getTime()+"] AccountID: "+player.getAccountId()+" "+text);
+				playerPrintList.add("[ERROR "+calendar.getTime()+"] AccountID: "+player.getAccountId()+", "+text);
 			}
 		}
 	}
