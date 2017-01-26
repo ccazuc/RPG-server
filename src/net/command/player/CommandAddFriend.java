@@ -1,4 +1,4 @@
-package net.command.player;
+/*package net.command.player;
 
 import net.Server;
 import net.command.Command;
@@ -14,11 +14,11 @@ public class CommandAddFriend extends Command {
 	public void read(Player player) {
 		Connection connection = player.getConnection();
 		String name = connection.readString();
-		if(name.length() <= 2) {
+		name = StringUtils.formatPlayerName(name);
+		if(name == null) {
 			CommandPlayerNotFound.write(connection, name);
 			return;
 		}
-		name = StringUtils.formatPlayerName(name);
 		Player member = Server.getCharacter(name);
 		if(member == null) {
 			CommandPlayerNotFound.write(connection, name);
@@ -39,4 +39,4 @@ public class CommandAddFriend extends Command {
 		player.getConnection().endPacket();
 		player.getConnection().send();
 	}
-}
+}*/

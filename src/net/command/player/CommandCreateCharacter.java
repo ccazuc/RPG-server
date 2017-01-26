@@ -95,7 +95,6 @@ public class CommandCreateCharacter extends Command {
 		}
 		create_character.clear();
 		String name = connection.readString();
-		name = StringUtils.formatPlayerName(name);
 		String classe = connection.readString();
 		String race = connection.readString();
 		int characterId = 0;
@@ -103,6 +102,7 @@ public class CommandCreateCharacter extends Command {
 			if(!checkCharacterName(connection, name)) {
 				return;
 			}
+			name = StringUtils.formatPlayerName(name);
 			create_character.putInt(player.getAccountId());
 			create_character.putString(name);
 			create_character.putString(classe);
@@ -138,32 +138,29 @@ public class CommandCreateCharacter extends Command {
 	
 	private static boolean checkCharacterName(Connection connection, String name) throws SQLException {
 		int i = 0;
-		if(name.length() >= 2 && name.length() <= 10) {
-			while(i < name.length()) {
-				char c = name.charAt(i);
-				if(!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) && c != 'é' && c != 'è' && c != 'ç' && c != 'à' && c != 'ê' && c != 'â' && c != 'û' && c != 'ë' && c != 'ä' && c != 'ü') {
-					connection.startPacket();
-					connection.writeShort(PacketID.CREATE_CHARACTER);
-					connection.writeShort(PacketID.ERROR_NAME_ALPHABET);
-					connection.endPacket();
-					connection.send();
-					return false;
-				}
-				if(i < name.length()-3) {
-					if(name.charAt(i) == name.charAt(i+1) && name.charAt(i+1) == name.charAt(i+2)) {
-						return false;
-					}
-				}
-				i++;
-			}
-		}
-		else {
+		if(name.length() < 3 || name.length() > 10) {
 			connection.startPacket();
 			connection.writeShort(PacketID.CREATE_CHARACTER);
 			connection.writeShort(PacketID.ERROR_NAME_LENGTH);
 			connection.endPacket();
 			connection.send();
-			return false;
+		}
+		while(i < name.length()) {
+			char c = name.charAt(i);
+			if(!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) && c != 'é' && c != 'è' && c != 'ç' && c != 'à' && c != 'ê' && c != 'â' && c != 'û' && c != 'ë' && c != 'ä' && c != 'ü') {
+				connection.startPacket();
+				connection.writeShort(PacketID.CREATE_CHARACTER);
+				connection.writeShort(PacketID.ERROR_NAME_ALPHABET);
+				connection.endPacket();
+				connection.send();
+				return false;
+			}
+			if(i < name.length()-3) {
+				if(name.charAt(i) == name.charAt(i+1) && name.charAt(i+1) == name.charAt(i+2)) {
+					return false;
+				}
+			}
+			i++;
 		}
 		if(check_character == null) {
 			check_character = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");

@@ -37,7 +37,6 @@ public class CommandChannel extends Command {
 			notifyPlayerJoinedChannel(player, channelID);
 			mgr.addPlayer(channelID, password, player);
 			joinChannel(player, channelName, channelID, value, password);
-			player.joinedChannel(channelID);
 			sendMembers(player.getConnection(), channelID, player);
 		}
 		else if(packetId == PacketID.CHANNEL_LEAVE) {
@@ -47,7 +46,6 @@ public class CommandChannel extends Command {
 			}
 			notifyPlayerLeftChannel(player, channelID);
 			leaveChannel(player, channelID);
-			player.leftChannel(channelID);
 		}
 		else if(packetId == PacketID.CHANNEL_CHANGE_PASSWORD) { //TODO: error message and send message to all users
 			String channelID = connection.readString();
@@ -64,31 +62,34 @@ public class CommandChannel extends Command {
 		}
 		else if(packetId == PacketID.CHANNEL_BAN_PLAYER) { //TODO: error message and send message to all users
 			String channelID = connection.readString();
-			String playerName = connection.readString();
+			int playerID = connection.readInt();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
 				return;
 			}
-			Player target = Server.getInGameCharacterByName(playerName);
+			if(!mgr.isLeader(channelID, player) && !mgr.isModerator(channelID, player)) {
+				//TODO: not enought rights
+				return;
+			}
+			Player target = Server.getInGameCharacter(playerID);
 			if(target == null) {
+				return;
+			}
+			if(mgr.isModerator(channelID, target)) {
+				//TODO: send not enough right
 				return;
 			}
 			if(mgr.isBanned(channelID, target)) {
 				return;
 			}
-			if(mgr.isLeader(channelID, player) || (mgr.isModerator(channelID, player) && !mgr.isModerator(channelID, target))) {
-				mgr.banPlayer(channelID, target);
-			}
-			else {
-				//send not enough rights
-			}
+			mgr.banPlayer(channelID, target);
 		}
 		else if(packetId == PacketID.CHANNEL_KICK_PLAYER) { //TODO: error message and send message to all users
 			String channelID = connection.readString();
-			String playerName = connection.readString();
+			int playerID = connection.readInt();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
 				return;
 			}
-			Player target = Server.getInGameCharacterByName(playerName);
+			Player target = Server.getInGameCharacter(playerID);
 			if(target == null) {
 				return;
 			}
@@ -105,7 +106,7 @@ public class CommandChannel extends Command {
 		}
 		else if(packetId == PacketID.CHANNEL_SET_LEADER) {
 			String channelID = connection.readString();
-			String playerName = connection.readString();
+			int playerID = connection.readInt();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
 				return;
 			}
@@ -113,9 +114,8 @@ public class CommandChannel extends Command {
 				//error message
 				return;
 			}
-			Player target = Server.getInGameCharacterByName(playerName);
+			Player target = Server.getInGameCharacter(playerID);
 			if(target == null) {
-				CommandPlayerNotFound.write(connection, playerName);
 				return;
 			}
 			mgr.setLeader(channelID, target);
@@ -124,13 +124,12 @@ public class CommandChannel extends Command {
 		}
 		else if(packetId == PacketID.CHANNEL_MUTE_PLAYER) {
 			String channelID = connection.readString();
-			String playerName = connection.readString();
+			int playerID = connection.readInt();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
 				return;
 			}
-			Player target = Server.getInGameCharacterByName(playerName);
+			Player target = Server.getInGameCharacter(playerID);
 			if(target == null) {
-				CommandPlayerNotFound.write(connection, playerName);
 				return;
 			}
 			if(!mgr.playerHasJoinChannel(channelID, target)) {
@@ -142,6 +141,23 @@ public class CommandChannel extends Command {
 			else {
 				//send not enough right
 			}
+		}
+		else if(packetId == PacketID.CHANNEL_SET_MODERATOR) {
+			String channelID = connection.readString();
+			int playerID = connection.readInt();
+			boolean isModerator = connection.readBoolean();
+			Player target = Server.getInGameCharacter(playerID);
+			if(target == null) {
+				return;
+			}
+			if(!mgr.playerHasJoinChannel(channelID, target)) {
+				return;
+			}
+			if(!mgr.isLeader(channelID, player)) {
+				//TODO: send not enough rights
+				return;
+			}
+			mgr.setModerator(channelID, target, isModerator);
 		}
 	}
 	

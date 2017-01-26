@@ -7,7 +7,6 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.chat.ChatCommandHandler;
-import net.game.log.Log;
 import net.game.manager.ChannelMgr;
 import net.game.manager.IgnoreMgr;
 import net.game.unit.Player;
@@ -40,6 +39,10 @@ public class CommandSendMessage extends Command {
 		if(type == MessageType.WHISPER) {
 			String target = connection.readString();
 			target = StringUtils.formatPlayerName(target);
+			if(!StringUtils.checkPlayerNameLength(target)) {
+				CommandPlayerNotFound.write(connection, target);
+				return;
+			}
 			Player tmp = Server.getInGameCharacterByName(target);
 			if(tmp == null) {
 				CommandPlayerNotFound.write(connection, target);

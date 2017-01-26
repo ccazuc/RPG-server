@@ -81,13 +81,18 @@ public class ChannelMgr {
 			createChannel(channelID, password, player);
 			this.channelMap.get(channelID).addPlayer(player);
 		}
+		player.joinedChannel(channelID);
 	}
 	
 	public boolean removePlayer(String channelID, Player player) {
 		if(!this.channelMap.containsKey(channelID)) {
 			return false;
 		}
-		return this.channelMap.get(channelID).removePlayer(player.getUnitID());
+		if(this.channelMap.get(channelID).removePlayer(player.getUnitID())) {
+			player.leftChannel(channelID);
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean playerHasJoinChannel(String channelID, Player player) {
@@ -113,6 +118,15 @@ public class ChannelMgr {
 			return true;
 		}
 		return this.channelMap.get(channelID).isModerator(player.getUnitID());
+	}
+	
+	public void setModerator(String channelID, Player player, boolean isModerator) {
+		if(isModerator) {
+			this.channelMap.get(channelID).addModerator(player.getUnitID());
+		}
+		else {
+			this.channelMap.get(channelID).removeModerator(player.getUnitID());
+		}
 	}
 
 	public boolean isLeader(String channelID, Player player) {

@@ -65,6 +65,10 @@ public class CommandGuild extends Command {
 			if(!hasEnoughRight(player, player.getGuild().getMember(player.getUnitID()).getRank().canInvitePlayer())) {
 				return;
 			}
+			if(!StringUtils.checkPlayerNameLength(name)) {
+				CommandPlayerNotFound.write(connection, name);
+				return;
+			}
 			Player member = Server.getInGameCharacterByName(name);
 			if(member == null) {
 				CommandPlayerNotFound.write(connection, name);

@@ -166,8 +166,11 @@ public class CharacterMgr {
 		public void gatherData() {
 			Player player = this.datasList.get(0).getPlayer();
 			int id = this.datasList.get(0).getIValue1();
-			player.setOnline();
 			player.setUnitID(id);
+			if(BanMgr.isCharacterBannedHighAsync(id)) {
+				return;
+			}
+			player.setOnline();
 			player.initTable();
 			player.loadCharacterInfoSQL();
 			CommandSendPlayer.write(player);

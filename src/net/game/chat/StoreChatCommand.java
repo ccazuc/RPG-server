@@ -1067,7 +1067,7 @@ public class StoreChatCommand {
 					if(!StringUtils.isInteger(value[2])) {
 						playerToAdd = Server.getCharacter(value[2]);
 						if(playerToAdd == null) {
-							CommandPlayerNotFound.write(player.getConnection(), StringUtils.formatPlayerName(value[2]));
+							CommandPlayerNotFound.write(player.getConnection(), value[2]);
 							return;
 						}
 					}

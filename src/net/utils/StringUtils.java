@@ -20,6 +20,10 @@ public class StringUtils {
 		return new String(table);
 	}
 	
+	public static boolean checkPlayerNameLength(String str) {
+		return str.length() >= 3 && str.length() <= 10;
+	}
+	
 	public static boolean isInteger(String str) {
 		if(str.length() == 0) {
 			return false;

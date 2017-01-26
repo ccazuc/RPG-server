@@ -25,6 +25,10 @@ public class CommandFriend extends Command {
 				return;
 			}
 			name = StringUtils.formatPlayerName(name);
+			if(!StringUtils.checkPlayerNameLength(name)) {
+				CommandPlayerNotFound.write(connection, name);
+				return;
+			}
 			Player member = Server.getInGameCharacterByName(name);
 			int character_id = 0;
 			if(member == null) { //player is offline or doesn't exist

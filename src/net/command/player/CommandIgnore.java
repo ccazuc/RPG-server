@@ -27,6 +27,10 @@ public class CommandIgnore extends Command {
 				return;
 			}
 			name = StringUtils.formatPlayerName(name);
+			if(!StringUtils.checkPlayerNameLength(name)) {
+				CommandPlayerNotFound.write(connection, name);
+				return;
+			}
 			Player ignore = Server.getInGameCharacterByName(name);
 			int character_id = 0;
 			if(ignore == null) {

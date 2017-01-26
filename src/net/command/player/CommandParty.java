@@ -26,6 +26,10 @@ public class CommandParty extends Command {
 				return;
 			}
 			name = StringUtils.formatPlayerName(name);
+			if(!StringUtils.checkPlayerNameLength(name)) {
+				CommandPlayerNotFound.write(connection, name);
+				return;
+			}
 			Player member = Server.getInGameCharacterByName(name);
 			if(member == null) {
 				CommandPlayerNotFound.write(connection, name);

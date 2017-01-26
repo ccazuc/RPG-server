@@ -2,18 +2,16 @@ package net.game.manager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.command.chat.CommandSendMessage;
-import net.command.chat.MessageType;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;
 
 public class BanMgr {
 
+	private static JDOStatement isCharacterBannedIDHighAsync;
 	private static JDOStatement getBanListAccountIDLowAsync;
 	private static JDOStatement getBanInfoIPAdressLowAsync;
 	private static JDOStatement getBanInfoAccountIDLowAsync;
@@ -212,6 +210,24 @@ public class BanMgr {
 		catch(SQLException e) {
 			e.printStackTrace();;
 		}
+	}
+	
+	public static boolean isCharacterBannedHighAsync(int characterID) {
+		try {
+			if(isCharacterBannedIDHighAsync == null) {
+				isCharacterBannedIDHighAsync = Server.getAsyncHighPriorityJDO().prepare("SELECT COUNT(character_id) FROM character_banned WHERE character_id = ?");
+			}
+			isCharacterBannedIDHighAsync.clear();
+			isCharacterBannedIDHighAsync.putInt(characterID);
+			isCharacterBannedIDHighAsync.execute();
+			if(isCharacterBannedIDHighAsync.fetch()) {
+				return isCharacterBannedIDHighAsync.getInt() > 0;
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 	public static void banAccount(int account_id, long ban_date, long unban_date, String banned_by, String ban_reason) {
