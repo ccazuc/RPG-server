@@ -25,14 +25,28 @@ public class StringUtils {
 			return false;
 		}
 		int i = -1;
+		char c;
 		while(++i < str.length()) {
-			char c = str.charAt(i);
+			c = str.charAt(i);
 			if(c < '0' || c > '9') {
 				return false;
 			}
 		}
 		return true;
 	}
+	
+	public static boolean containsOnlySpace(String str) {
+		if(str.length() == 0) {
+			return false;
+		}
+		int i = str.length();
+		while(--i >= 0) {
+			if(str.charAt(i) != ' ') {
+				return true;
+			}
+		}
+		return false;
+ 	}
 	
 	public static char toUpperCase(char c) {
 		return c >= 'a' && c <= 'z' ? (char)(c-32) : c;

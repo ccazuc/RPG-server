@@ -1,15 +1,23 @@
 package net.game.manager;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.command.chat.CommandSendMessage;
+import net.command.chat.MessageType;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;
 
 public class BanMgr {
 
+	private static JDOStatement getBanListAccountIDLowAsync;
+	private static JDOStatement getBanInfoIPAdressLowAsync;
+	private static JDOStatement getBanInfoAccountIDLowAsync;
+	private static JDOStatement getBanInfoCharacterIDLowAsync;
 	private static JDOStatement selectAllBanAccount;
 	private static JDOStatement removeExpiredBanAccount;
 	private static JDOStatement selectAllBanCharacter;
@@ -92,6 +100,96 @@ public class BanMgr {
 		catch(SQLException e) {
 			e.printStackTrace();;
 		}
+	}
+	
+	public static SQLDatas getBanInfoAccountIDLowAsync(int accountID) {
+		try {
+			if(getBanInfoAccountIDLowAsync == null) {
+				getBanInfoAccountIDLowAsync = Server.getAsyncLowPriorityJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM account_banned WHERE account_id = ?");
+			}
+			getBanInfoAccountIDLowAsync.clear();
+			getBanInfoAccountIDLowAsync.putInt(accountID);
+			getBanInfoAccountIDLowAsync.execute();
+			if(getBanInfoAccountIDLowAsync.fetch()) {
+				long ban_date = getBanInfoAccountIDLowAsync.getLong();
+				long unban_date = getBanInfoAccountIDLowAsync.getLong();
+				String banned_by = getBanInfoAccountIDLowAsync.getString();
+				String ban_reason = getBanInfoAccountIDLowAsync.getString();
+				return new SQLDatas(ban_date, unban_date, banned_by, ban_reason);
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static SQLDatas getBanInfoCharacterIDLowAsync(int characterID) {
+		try {
+			if(getBanInfoCharacterIDLowAsync == null) {
+				getBanInfoCharacterIDLowAsync = Server.getAsyncLowPriorityJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM character_banned WHERE character_id = ?");
+			}
+			getBanInfoCharacterIDLowAsync.clear();
+			getBanInfoCharacterIDLowAsync.putInt(characterID);
+			getBanInfoCharacterIDLowAsync.execute();
+			if(getBanInfoCharacterIDLowAsync.fetch()) {
+				long ban_date = getBanInfoCharacterIDLowAsync.getLong();
+				long unban_date = getBanInfoCharacterIDLowAsync.getLong();
+				String banned_by = getBanInfoCharacterIDLowAsync.getString();
+				String ban_reason = getBanInfoCharacterIDLowAsync.getString();
+				return new SQLDatas(ban_date, unban_date, banned_by, ban_reason);
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static SQLDatas getBanInfoIPAdressLowAsync(String IPAdress) {
+		try {
+			if(getBanInfoIPAdressLowAsync == null) {
+				getBanInfoIPAdressLowAsync = Server.getAsyncLowPriorityJDO().prepare("SELECT ban_date, unban_date, banned_by, ban_reason FROM ip_banned WHERE ip_adress = ?");
+			}
+			getBanInfoIPAdressLowAsync.clear();
+			getBanInfoIPAdressLowAsync.putString(IPAdress);
+			getBanInfoIPAdressLowAsync.execute();
+			if(getBanInfoIPAdressLowAsync.fetch()) {
+				long ban_date = getBanInfoIPAdressLowAsync.getLong();
+				long unban_date = getBanInfoIPAdressLowAsync.getLong();
+				String banned_by = getBanInfoIPAdressLowAsync.getString();
+				String ban_reason = getBanInfoIPAdressLowAsync.getString();
+				return new SQLDatas(ban_date, unban_date, banned_by, ban_reason);
+			}
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList<Integer> getBanListAccountIDLowAsync() {
+		try {
+			if(getBanListAccountIDLowAsync == null) {
+				getBanListAccountIDLowAsync = Server.getAsyncLowPriorityJDO().prepare("SELECT account_id FROM account_banned");
+			}
+			getBanListAccountIDLowAsync.clear();
+			getBanListAccountIDLowAsync.execute();
+			ArrayList<Integer> list = null;
+			boolean init = false;
+			while(getBanListAccountIDLowAsync.fetch()) {
+				if(!init) {
+					list = new ArrayList<Integer>();
+					init = true;
+				}
+				list.add(getBanListAccountIDLowAsync.getInt());
+			}
+			return list;
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public static void removeExpiredBanCharacter() {
