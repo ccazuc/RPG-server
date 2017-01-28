@@ -5,17 +5,18 @@ import net.game.unit.Player;
 
 public class SQLDatas {
 
-	protected int iValue1;
-	protected int iValue2;
-	protected int iValue3;
-	protected long lValue1;
-	protected long lValue2;
-	protected byte bValue1;
-	protected String stringValue1;
-	protected String stringValue2;
-	protected String stringValue3;
-	protected Player player;
-	protected Guild guild;
+	private int iValue1;
+	private int iValue2;
+	private int iValue3;
+	private long lValue1;
+	private long lValue2;
+	private byte bValue1;
+	private byte bValue2;
+	private String stringValue1;
+	private String stringValue2;
+	private String stringValue3;
+	private Player player;
+	private Guild guild;
 	
 	public SQLDatas(int iValue1) {
 		this.iValue1 = iValue1;
@@ -96,6 +97,15 @@ public class SQLDatas {
 		this.stringValue3 = stringValue3;
 	}
 	
+	public SQLDatas(int iValue1, byte bValue1, int iValue2, int iValue3, byte bValue2) {
+		this.iValue1 = iValue1;
+		this.iValue2 = iValue2;
+		this.bValue1 = bValue1;
+		this.iValue2 = iValue2;
+		this.iValue3 = iValue3;
+		this.bValue2 = bValue2;
+	}
+	
 	public int getIValue1() {
 		return this.iValue1;
 	}
@@ -118,6 +128,10 @@ public class SQLDatas {
 	
 	public byte getBValue1() {
 		return this.bValue1;
+	}
+	
+	public byte getBValue2() {
+		return this.bValue2;
 	}
 	
 	public String getStringValue1() {

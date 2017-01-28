@@ -52,17 +52,30 @@ public class Guild {
 		GuildMgr.addMemberInDB(this, member.getId());
 	}
 	
-	public void removeMember(int id, String name) {
-		CommandGuild.notifyKickedMember(this, this.memberMap.get(id), name);
+	public void memberKicked(int officerID, int removedID, String name) {
+		CommandGuild.notifyKickedMember(this, this.memberMap.get(removedID), name);
 		int i = this.memberList.size();
 		while(--i >= 0) {
-			if(this.memberList.get(i).getId() == id) {
+			if(this.memberList.get(i).getId() == removedID) {
 				this.memberList.remove(i);
 				break;
 			}
 		}
-		this.memberMap.remove(id);
-		GuildMgr.removeMemberFromDB(this, id);
+		this.memberMap.remove(removedID);
+		GuildMgr.memberKicked(this, officerID, removedID);
+	}
+	
+	public void memberLeft(int removedID) {
+		//TODO: left the guild
+		int i = this.memberList.size();
+		while(--i >= 0) {
+			if(this.memberList.get(i).getId() == removedID) {
+				this.memberList.remove(i);
+				break;
+			}
+		}
+		this.memberMap.remove(removedID);
+		GuildMgr.memberLeft(this, removedID);
 	}
 	
 	public void setGuildBeingDeleted() {

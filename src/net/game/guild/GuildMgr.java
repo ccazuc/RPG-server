@@ -185,6 +185,26 @@ public class GuildMgr {
 			}
 		}
 	};
+	private final static SQLRequest updateGuildJournal = new SQLRequest("INSERT INTO guild_event(guild_id, event_type, player1_id, player2_id, date, rank) VALUES(?, ?, ?, ?, ?, ?)", "Update guild journal", SQLRequestPriority.LOW) {
+		
+		@Override
+		public void gatherData() {
+			try {
+				SQLDatas datas = this.datasList.get(0);
+				this.statement.clear();
+				this.statement.putInt(datas.getIValue1());
+				this.statement.putByte(datas.getBValue1());
+				this.statement.putInt(datas.getIValue2());
+				this.statement.putInt(datas.getIValue3());
+				this.statement.putLong(Server.getLoopTickTimer());
+				this.statement.putByte(datas.getBValue2());
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	};
 	private final static SQLTask fullyDeleteGuild = new SQLTask("Delete guild") {
 		
 		@Override
@@ -384,7 +404,7 @@ public class GuildMgr {
 				loadRank.putInt(guildId);
 				loadRank.execute();
 				while(loadRank.fetch()) {
-					int rank_order = loadRank.getInt();
+					byte rank_order = loadRank.getByte();
 					int permission = loadRank.getInt();
 					String name = loadRank.getString();
 					rankList.add(new GuildRank(rank_order, permission, name));
@@ -474,14 +494,22 @@ public class GuildMgr {
 		return CharacterMgr.loadCharacterNameFromIDHighAsync(id);
 	}
 	
-	public static void removeMemberFromDB(Guild guild, int id) {
-		removeMember.addDatas(new SQLDatas(id, guild.getId()));
+	public static void memberKicked(Guild guild, int officerID, int removedID) {
+		removeMember.addDatas(new SQLDatas(removedID, guild.getId()));
 		Server.executeSQLRequest(removeMember);
+		updateGuildEvent(guild, GuildJournalEventType.MEMBER_KICKED, officerID, removedID, (byte)0);
 	}
 	
-	public static void addMemberInDB(Guild guild, int id) {
-		addMemberInDB.addDatas(new SQLDatas(id, guild.getId(), guild.getRankList().size()-1));
+	public static void memberLeft(Guild guild, int removedID) {
+		removeMember.addDatas(new SQLDatas(removedID, guild.getId()));
+		Server.executeSQLRequest(removeMember);
+		updateGuildEvent(guild, GuildJournalEventType.MEMBER_LEFT, removedID, 0, (byte)0);
+	}
+	
+	public static void addMemberInDB(Guild guild, int addedID) {
+		addMemberInDB.addDatas(new SQLDatas(addedID, guild.getId(), guild.getRankList().size()-1));
 		Server.executeSQLRequest(addMemberInDB);
+		updateGuildEvent(guild, GuildJournalEventType.MEMBER_JOINED, addedID, 0, (byte)0);
 	}
 	
 	public static void updatePermission(Guild guild, int rank_order, int permission, String name) {
@@ -499,9 +527,18 @@ public class GuildMgr {
 		Server.executeSQLRequest(updateMotd);
 	}
 	
-	public static void updateMemberRank(int playerId, int guildId, int rank) {
-		updateMemberRank.addDatas(new SQLDatas(rank, guildId, playerId));
+	public static void promoteMember(Guild guild, int officerID, int promotedID, byte rank) {
+		updateMemberRank.addDatas(new SQLDatas(rank, guild.getId(), promotedID));
 		Server.executeSQLRequest(updateMemberRank);
+		updateGuildEvent(guild, GuildJournalEventType.MEMBER_PROMOTED, officerID, promotedID, rank);
+	}
+	
+	public static void demoteMember(Guild guild, int officerID, int demotedID, byte rank, boolean isEvent) {
+		updateMemberRank.addDatas(new SQLDatas(rank, guild.getId(), demotedID));
+		Server.executeSQLRequest(updateMemberRank);
+		if(isEvent) {
+			updateGuildEvent(guild, GuildJournalEventType.MEMBER_DEMOTED, officerID, demotedID, rank);
+		}
 	}
 	
 	public static void setLeaderInDB(int player_id, int guild_id) {
@@ -517,6 +554,15 @@ public class GuildMgr {
 	public static void updateMemberOfficerNote(int player_id, String officerNote) {
 		setMemberOfficerNoteInDB.addDatas(new SQLDatas(player_id, officerNote));
 		Server.executeSQLRequest(setMemberOfficerNoteInDB);
+	}
+	
+	public static void updateGuildEvent(Guild guild, GuildJournalEventType event, int player1ID, int player2ID, byte rank) {
+		updateGuildJournal.addDatas(new SQLDatas(guild.getId(), event.getValue(), player1ID, player2ID, rank));
+		Server.executeSQLRequest(updateGuildJournal);
+	}
+	
+	public static void playerInvitedEvent(Guild guild, int officerID, int invitedID) {
+		updateGuildEvent(guild, GuildJournalEventType.MEMBER_INVITED, officerID, invitedID, (byte)0);
 	}
 	
 	public static HashMap<Integer, Guild> getGuildList() {

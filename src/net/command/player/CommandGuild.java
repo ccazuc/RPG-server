@@ -54,7 +54,7 @@ public class CommandGuild extends Command {
 		}
 		else if(packetId == PacketID.GUILD_INVITE_PLAYER) {
 			String name = connection.readString();
-			if(!(name.length() > 2)) {
+			if(name.length() <= 2) {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
@@ -75,6 +75,7 @@ public class CommandGuild extends Command {
 				return;
 			}
 			if(member.getGuildRequest() != 0) {
+				CommandSendMessage.selfWithoutAuthor(connection, "Someone has already invited "+name+" in a guild.", MessageType.SELF);
 				return;
 			}
 			if(IgnoreMgr.isIgnored(member.getUnitID(), player.getUnitID())) {
@@ -89,6 +90,7 @@ public class CommandGuild extends Command {
 			joinGuildRequest(member.getConnection(), player.getName(), player.getGuild().getName());
 			member.setGuildRequest(player.getGuild().getId());
 			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_INVITED, Server.getLoopTickTimer(), player.getName(), member.getName());
+			GuildMgr.playerInvitedEvent(player.getGuild(), player.getUnitID(), member.getUnitID());
 		}
 		else if(packetId == PacketID.GUILD_KICK_MEMBER) {
 			int id = connection.readInt();
@@ -105,7 +107,7 @@ public class CommandGuild extends Command {
 			if(!hasEnoughRight(player, member.getRank().getOrder() > player.getGuild().getMember(player.getUnitID()).getRank().getOrder())) {
 				return;
 			}
-			player.getGuild().removeMember(id, player.getName());
+			player.getGuild().memberKicked(player.getUnitID(), id, player.getName());
 			removeMember(player.getGuild(), player.getName(), id);
 			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_KICKED, Server.getLoopTickTimer(), player.getName(), member.getName());
 		}
@@ -182,6 +184,7 @@ public class CommandGuild extends Command {
 			member.setRank(player.getGuild().getRank(member.getRank().getOrder()-1));
 			promotePlayer(player.getGuild(), member);
 			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_PROMOTED, Server.getLoopTickTimer(), player.getName(), member.getName(), member.getRank().getOrder());
+			GuildMgr.promoteMember(player.getGuild(), player.getUnitID(), member.getId(), member.getRank().getOrder());
 		}
 		else if(packetId == PacketID.GUILD_DEMOTE_PLAYER) {
 			int id = connection.readInt();
@@ -205,13 +208,14 @@ public class CommandGuild extends Command {
 			member.setRank(player.getGuild().getRank(member.getRank().getOrder()+1));
 			promotePlayer(player.getGuild(), member);
 			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_DEMOTED, Server.getLoopTickTimer(), player.getName(), member.getName(), member.getRank().getOrder());
+			GuildMgr.demoteMember(player.getGuild(), player.getUnitID(), member.getId(), member.getRank().getOrder(), true);
 		}
 		else if(packetId == PacketID.GUILD_LEAVE) {
 			if(!isInAGuild(player)) {
 				return;
 			}
+			player.getGuild().memberLeft(player.getUnitID());
 			leaveGuild(player.getGuild(), player.getUnitID());
-			GuildMgr.removeMemberFromDB(player.getGuild(), player.getUnitID());
 			sendGuildEventToMembers(player.getGuild(), GuildJournalEventType.MEMBER_LEFT, Server.getLoopTickTimer(), player.getName());
 			player.setGuild(null);
 		}
@@ -230,10 +234,10 @@ public class CommandGuild extends Command {
 			member.setRank(player.getGuild().getRankList().get(0));
 			player.getGuild().getMember(player.getUnitID()).setRank(player.getGuild().getRankList().get(1));
 			player.getGuild().setLeaderId(id);
-			GuildMgr.updateMemberRank(player.getUnitID(), player.getGuild().getId(), player.getGuild().getMember(player.getUnitID()).getRank().getOrder());
+			//GuildMgr.updateMemberRank(player.getUnitID(), player.getGuild().getId(), player.getGuild().getMember(player.getUnitID()).getRank().getOrder());
 			sendLeaderToClient(player.getGuild(), member.getId());
 			GuildMgr.setLeaderInDB(id, player.getGuild().getId());
-			GuildMgr.updateMemberRank(member.getId(), player.getGuild().getId(), member.getRank().getOrder());
+			GuildMgr.demoteMember(player.getGuild(), player.getUnitID(), member.getId(), member.getRank().getOrder(), false);
 		}
 		else if(packetId == PacketID.GUILD_SET_MEMBER_NOTE) {
 			int id = connection.readInt();

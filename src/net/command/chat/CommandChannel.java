@@ -15,13 +15,14 @@ public class CommandChannel extends Command {
 	public void read(Player player) {
 		Connection connection = player.getConnection();
 		short packetId = connection.readShort();
-		ChannelMgr mgr = ChannelMgr.getChannelMgr(player.getFaction());
+		final ChannelMgr mgr = ChannelMgr.getChannelMgr(player.getFaction());
 		if(packetId == PacketID.CHANNEL_JOIN) {
 			String channelName = connection.readString();
 			String channelID = ChannelMgr.formatChannelName(channelName);
 			int value = connection.readInt();
 			String password = connection.readString();
 			if(player.getNumberChatChannelJoined() == ChannelMgr.MAXIMUM_CHANNEL_JOINED) {
+				CommandSendMessage.selfWithoutAuthor(connection, "You cannot join more than 10 channels", MessageType.SELF);
 				return;
 			}
 			if(mgr.playerHasJoinChannel(channelID, player)) {
@@ -32,6 +33,10 @@ public class CommandChannel extends Command {
 			}
 			else if(!mgr.checkPassword(channelID, password)) {
 				CommandSendMessage.selfWithoutAuthor(connection, "Incorrect password for the channel "+channelID, MessageType.SELF);
+				return;
+			}
+			else if(mgr.isBanned(channelID, player)) {
+				CommandSendMessage.selfWithoutAuthor(connection, "You are banned from this channel.", MessageType.SELF);
 				return;
 			}
 			notifyPlayerJoinedChannel(player, channelID);

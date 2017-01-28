@@ -2,7 +2,7 @@ package net.game.guild;
 
 public class GuildRank {
 
-	private int order;
+	private byte order;
 	private int permission;
 	private boolean[] permissionList;
 	private String name;
@@ -24,7 +24,7 @@ public class GuildRank {
 	public final static int CAN_WITHDRAW_GOLD = 13;
 	public final static int CAN_USE_GOLD_REPARATION = 14;
 	
-	public GuildRank(int order, int permission, String name) {
+	public GuildRank(byte order, int permission, String name) {
 		this.order = order;
 		this.permission = permission;
 		this.name = name;
@@ -109,11 +109,11 @@ public class GuildRank {
 		return this.permissionList[CAN_USE_GOLD_REPARATION];
 	}
 	
-	public int getOrder() {
+	public byte getOrder() {
 		return this.order;
 	}
 	
-	public void setOrder(int order) {
+	public void setOrder(byte order) {
 		this.order = order;
 	}
 	

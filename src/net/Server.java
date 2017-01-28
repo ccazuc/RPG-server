@@ -105,12 +105,14 @@ public class Server {
 		highPrioritySQLRunnable = new SQLRunnable(3);
 		highPrioritySQLRequestThread = new Thread(highPrioritySQLRunnable);
 		highPrioritySQLRequestThread.start();
+		highPrioritySQLRequestThread.setPriority(Thread.MAX_PRIORITY);
 		lowPrioritySQLRunnable = new SQLRunnable(15);
 		lowPrioritySQLRequestThread = new Thread(lowPrioritySQLRunnable);
 		lowPrioritySQLRequestThread.start();
 		socketRunnable = new SocketRunnable(serverSocketChannel);
 		socketThread = new Thread(socketRunnable);
 		socketThread.start();
+		socketThread.setPriority(1);
 		chatCommandRunnable = new ChatCommandRunnable();
 		chatCommandThread = new Thread(chatCommandRunnable);
 		chatCommandThread.start();
