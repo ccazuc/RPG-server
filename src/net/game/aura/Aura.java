@@ -77,7 +77,11 @@ public class Aura {
 		return this.id;
 	}
 	
-	public String getName() {
+	public boolean isStackable() {
+		return this.isStackable;
+	}
+	
+ 	public String getName() {
 		return this.name;
 	}
 	

@@ -52,13 +52,13 @@ import net.game.unit.Player;
 
 public class ConnectionManager {
 	
-	private Player player;
-	private Connection connection;
+	private final Player player;
+	private final Connection connection;
 	private static SocketChannel authSocket;
 	private static Connection authConnection;
-	private static HashMap<Short, Command> loggedCommandList = new HashMap<Short, Command>();
-	private static HashMap<Short, Command> nonLoggedCommandList = new HashMap<Short, Command>();
-	private static HashMap<Integer, Command> authCommand = new HashMap<Integer, Command>(); //TODO: make InGameCommand HM and selectedScreenCommand HM
+	private final static HashMap<Short, Command> loggedCommandList = new HashMap<Short, Command>();
+	private final static HashMap<Short, Command> nonLoggedCommandList = new HashMap<Short, Command>();
+	private final static HashMap<Short, Command> authCommand = new HashMap<Short, Command>();
 	private final static int TIMEOUT_TIMER = 10000;
 	private short lastPacketReaded;
 	private final static String AUTH_SERVER_IP = "127.0.0.1";
@@ -111,7 +111,7 @@ public class ConnectionManager {
 	}
 	
 	public static void initAuthCommand() {
-		authCommand.put((int)LOGIN_REALM, new CommandLoginRealmAuth());
+		authCommand.put(LOGIN_REALM, new CommandLoginRealmAuth());
 	}
 	public static final boolean connectAuthServer() {
 		try {
@@ -209,7 +209,7 @@ public class ConnectionManager {
 				System.out.println("Unknown packet: "+packetId+", last packet readed: "+this.lastPacketReaded+" for player "+this.player.getAccountId());
 				Log.writePlayerLog(this.player, "Unknown packet: "+packetId+", last packet readed: "+this.lastPacketReaded);
 				this.player.close();
-				break;
+				return;
 			}
 		}
 	}
@@ -218,18 +218,18 @@ public class ConnectionManager {
 		if(authConnection == null) {
 			return;
 		}
-		while(authConnection.hasRemaining()) {
+		while(authConnection.hasRemaining() && authConnection.rBufferRemaining() > 4) {
 			int packetLength = authConnection.readInt();
 			if(authConnection.rBufferRemaining()+4 < packetLength) {
 				authConnection.rBufferSetPosition(authConnection.rBufferPosition()-4);
 				return;
 			}
 			short packetId = authConnection.readShort();
-			if(authCommand.containsKey((int)packetId)) {
-				authCommand.get((int)packetId).read(authConnection);
+			if(authCommand.containsKey(packetId)) {
+				authCommand.get(packetId).read(authConnection);
 			}
 			else {
-				System.out.println("Unknown packet: "+(int)packetId+" for authServer");
+				System.out.println("Unknown packet: "+packetId+" for authServer");
 			}
 		}
 	}
