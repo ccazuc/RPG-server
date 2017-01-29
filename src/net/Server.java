@@ -274,9 +274,11 @@ public class Server {
 	}
 	
 	public static Player getInGameCharacterByName(String name) {
-		for(Player player : inGamePlayerList.values()) {
-			if(player.getName().equals(name)) {
-				return player;
+		synchronized(inGamePlayerList) {
+			for(Player player : inGamePlayerList.values()) {
+				if(player.getName().equals(name)) {
+					return player;
+				}
 			}
 		}
 		return null;
@@ -285,22 +287,26 @@ public class Server {
 	public static ArrayList<Player> getAllInGameCharacterByIP(String ip) {
 		boolean init = false;
 		ArrayList<Player> list = null;
-		for(Player player : inGamePlayerList.values()) {
-			if(player.getIpAdress().equals(ip)) {
-				if(!init) {
-					list = new ArrayList<Player>();
-					init = true;
+		synchronized(inGamePlayerList) {
+			for(Player player : inGamePlayerList.values()) {
+				if(player.getIpAdress().equals(ip)) {
+					if(!init) {
+						list = new ArrayList<Player>();
+						init = true;
+					}
+					list.add(player);
 				}
-				list.add(player);
 			}
 		}
 		return list;
 	}
 	
 	public static Player getInGameCharacterByAccount(int accountId) {
-		for(Player player : inGamePlayerList.values()) {
-			if(player.getAccountId() == accountId) {
-				return player;
+		synchronized(inGamePlayerList) {
+			for(Player player : inGamePlayerList.values()) {
+				if(player.getAccountId() == accountId) {
+					return player;
+				}
 			}
 		}
 		return null;
@@ -351,10 +357,6 @@ public class Server {
 		ConnectionManager.readAuthServer();
 	}
 	
-	/*public static void executeHighPrioritySQL(SQLRequest request) {
-		highPrioritySQLRunnable.addRequest(request);
-	}*/
-	
 	public static void executeSQLRequest(SQLRequest request) {
 		if(request.getPriority() == SQLRequestPriority.HIGH) {
 			highPrioritySQLRunnable.addRequest(request);
@@ -367,10 +369,6 @@ public class Server {
 	public static void executeHighPrioritySQLTask(SQLTask task) {
 		highPrioritySQLRunnable.addTask(task);
 	}
-	
-	/*public static void executeLowPrioritySQL(SQLRequest request) {
-		lowPrioritySQLRunnable.addRequest(request);
-	}*/
 	
 	public static void addNewWhoRequest(Who who) {
 		chatCommandRunnable.addWhoRequest(who);
@@ -406,14 +404,6 @@ public class Server {
 	
 	public static JDO getAsyncHighPriorityJDO() {
 		return asyncHighPriorityJdo;
-	}
-	
-	public static int getRealmId() {
-		return ConfigMgr.REALM_ID;
-	}
-	
-	public static int getPort() {
-		return ConfigMgr.PORT;
 	}
 	
 	public static long getServerStartTimer() {

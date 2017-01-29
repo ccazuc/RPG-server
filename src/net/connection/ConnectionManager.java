@@ -131,6 +131,7 @@ public class ConnectionManager {
 		}
 		catch(IOException e) {
 			e.printStackTrace();
+			Server.close();
 		}
 		return false;
 	}
