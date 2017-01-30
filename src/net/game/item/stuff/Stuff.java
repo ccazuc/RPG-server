@@ -29,11 +29,10 @@ public class Stuff extends Item {
 	private Wear wear;
 	private int price;
 	private int armor;
-	private int level;
 	private int mana;
 
 	public Stuff(Stuff stuff) {
-		super(stuff.id, stuff.sprite_id, stuff.itemType, stuff.name, stuff.quality.getValue(), stuff.sellPrice, 1, 1);
+		super(stuff.id, stuff.sprite_id, stuff.itemType, stuff.name, stuff.level, stuff.quality.getValue(), stuff.sellPrice, 1, 1);
 		this.gemBonusValue = stuff.gemBonusValue;
 		this.gemBonusType = stuff.gemBonusType;
 		this.classType = stuff.classType;
@@ -43,15 +42,14 @@ public class Stuff extends Item {
 		this.color1 = stuff.color1;
 		this.color2 = stuff.color2;
 		this.color3 = stuff.color3;
-		this.level = stuff.level;
 		this.armor = stuff.armor;
 		this.type = stuff.type;
 		this.wear = stuff.wear;
 		this.mana = stuff.mana;
 	}
 	
-	public Stuff(StuffType type, ClassType[] classType, String sprite_id, int id, String name, byte quality, GemColor color1, GemColor color2, GemColor color3, GemBonusType gemBonusType, int gemBonusValue, int level, Wear wear, int critical, int strength, int stamina, int armor, int mana, int sellPrice) {
-		super(id, sprite_id, ItemType.STUFF, name, quality, sellPrice, 1, 1);
+	public Stuff(StuffType type, ClassType[] classType, String sprite_id, int id, String name, byte quality, GemColor color1, GemColor color2, GemColor color3, GemBonusType gemBonusType, int gemBonusValue, byte level, Wear wear, int critical, int strength, int stamina, int armor, int mana, int sellPrice) {
+		super(id, sprite_id, ItemType.STUFF, name, level, quality, sellPrice, 1, 1);
 		this.gemBonusValue = gemBonusValue;
 		this.gemBonusType = gemBonusType;
 		this.classType = classType;
@@ -61,7 +59,6 @@ public class Stuff extends Item {
 		this.color1 = color1;
 		this.color2 = color2;
 		this.color3 = color3;
-		this.level = level;
 		this.armor = armor;
 		this.type = type;
 		this.wear = wear;
@@ -69,7 +66,7 @@ public class Stuff extends Item {
 	}
 
 	public Stuff(Stuff weapon, @SuppressWarnings("unused") int i) { //weapon constructor
-		super(weapon.id, weapon.sprite_id, weapon.itemType, weapon.name, weapon.quality.getValue(), weapon.sellPrice, 1, 1);
+		super(weapon.id, weapon.sprite_id, weapon.itemType, weapon.name, weapon.level, weapon.quality.getValue(), weapon.sellPrice, 1, 1);
 		this.gemBonusValue = weapon.gemBonusValue;
 		this.gemBonusType = weapon.gemBonusType;
 		this.weaponType = weapon.weaponType;
@@ -81,13 +78,12 @@ public class Stuff extends Item {
 		this.color1 = weapon.color1;
 		this.color2 = weapon.color2;
 		this.color3 = weapon.color3;
-		this.level = weapon.level;
 		this.armor = weapon.armor;
 		this.mana = weapon.mana;
 	}
 	
-	public Stuff(int id, String name, String sprite_id, ClassType[] classType, WeaponType weaponType, WeaponSlot weaponSlot, byte quality, GemColor color1, GemColor color2, GemColor color3, GemBonusType gemBonusType, int gemBonusValue, int level, int armor, int stamina, int mana, int critical, int strength, int sellPrice) {
-		super(id, sprite_id, ItemType.WEAPON, name, quality, sellPrice, 1, 1);
+	public Stuff(int id, String name, String sprite_id, ClassType[] classType, WeaponType weaponType, WeaponSlot weaponSlot, byte quality, GemColor color1, GemColor color2, GemColor color3, GemBonusType gemBonusType, int gemBonusValue, byte level, int armor, int stamina, int mana, int critical, int strength, int sellPrice) {
+		super(id, sprite_id, ItemType.WEAPON, name, quality, level, sellPrice, 1, 1);
 		this.gemBonusValue = gemBonusValue;
 		this.gemBonusType = gemBonusType;
 		this.weaponType = weaponType;
@@ -99,7 +95,6 @@ public class Stuff extends Item {
 		this.color1 = color1;
 		this.color2 = color2;
 		this.color3 = color3;
-		this.level = level;
 		this.armor = armor;
 		this.mana = mana;
 	}
@@ -280,10 +275,6 @@ public class Stuff extends Item {
 	
 	public int getMana() {
 		return this.mana;
-	}
-	
-	public int getLevel() {
-		return this.level;
 	}
 	
 	public Wear getWear() {

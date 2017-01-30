@@ -23,7 +23,7 @@ public class PotionManager {
 			int id = loadPotions.getInt();
 			String sprite_id = loadPotions.getString();
 			String name = loadPotions.getString();
-			int level = loadPotions.getInt();
+			byte level = loadPotions.getByte();
 			int heal = loadPotions.getInt();
 			int mana = loadPotions.getInt();
 			int sellPrice = loadPotions.getInt();

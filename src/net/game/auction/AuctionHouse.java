@@ -2,35 +2,197 @@ package net.game.auction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class AuctionHouse {
 
-	private final ArrayList<ArrayList<AuctionEntry>> filterList;
+	private final ArrayList<LinkedList<AuctionEntry>> sortedList;
 	private final HashMap<Integer, AuctionEntry> entryMap;
 	
 	public AuctionHouse() {
-		this.filterList = new ArrayList<ArrayList<AuctionEntry>>();
+		this.sortedList = new ArrayList<LinkedList<AuctionEntry>>();
 		this.entryMap = new HashMap<Integer, AuctionEntry>();
 	}
 	
 	public void addItem(AuctionEntry entry) {
 		entry.setID(AuctionHouseMgr.generateEntryID());
 		this.entryMap.put(entry.getID(), entry);
-		//TODO: add item in the correct filterList
+		addEntryInBidAscendingList(entry);
+		addEntryInBidDescendingList(entry);
+		addEntryInSellerAscendingList(entry);
+		addEntryInSellerDescendingList(entry);
+		addEntryInTimeLeftAscendingList(entry);
+		addEntryInTimeLeftDescendingList(entry);
+		addEntryInLevelAscendingList(entry);
+		addEntryInLevelDescendingList(entry);
+		addEntryInQualityAscendingList(entry);
+		addEntryInQualityDescendingList(entry);
 	}
 	
 	public HashMap<Integer, AuctionEntry> getRawEntryList() {
 		return this.entryMap;
 	}
 	
-	public ArrayList<AuctionEntry> getEntryList(AuctionHouseFilter itemTypeFilter, AuctionHouseSort sorted, AuctionHouseQualityFilter qualityFilter, short page) {
-		ArrayList<AuctionEntry> list = this.filterList.get(itemTypeFilter.getValue());
-		list = filterListByQuality(list, qualityFilter);
-		list = sortList(list, sorted);
+	public LinkedList<AuctionEntry> getEntryList(AuctionHouseFilter itemTypeFilter, AuctionHouseSort sorted, AuctionHouseQualityFilter qualityFilter, short page, byte minLevel, byte maxLevel, String search, boolean equipable) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(sorted.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		LinkedList<AuctionEntry> result = null;
+		boolean init = false;
+		boolean searchName = search.length() == 0;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(entry.getItem().getLevel() < minLevel || entry.getItem().getLevel() > maxLevel) {
+				continue;
+			}
+			//TODO: filter quality and itemType
+			if(equipable) {
+				//TODO: filter equipable items
+			}
+			if(!searchName) {
+				//TODO: filter by name
+			}
+			if(!init) {
+				result = new LinkedList<AuctionEntry>();
+				init = true;
+			}
+			result.add(entry);
+		}
 		return list;
 	}
 	
-	private static ArrayList<AuctionEntry> filterListByQuality(ArrayList<AuctionEntry> list, AuctionHouseQualityFilter qualityFilter) {
+	private void addEntryInBidAscendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.BID_ASCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getBidPrice() >= entry.getBidPrice()) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private void addEntryInBidDescendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.BID_DESCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getBidPrice() <= entry.getBidPrice()) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private void addEntryInSellerAscendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.VENDOR_ASCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getSellerName().compareTo(entry.getSellerName()) >= 0) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private void addEntryInSellerDescendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.VENDOR_ASCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getSellerName().compareTo(entry.getSellerName()) <= 0) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private void addEntryInTimeLeftAscendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.TIME_LEFT_ASCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getAuctionEndTimer() >= entry.getAuctionEndTimer()) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private void addEntryInTimeLeftDescendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.TIME_LEFT_DESCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getAuctionEndTimer() <= entry.getAuctionEndTimer()) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private void addEntryInLevelAscendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.LEVEL_ASCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getItem().getLevel() >= entry.getItem().getLevel()) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private void addEntryInLevelDescendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.LEVEL_DESCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getAuctionEndTimer() <= entry.getAuctionEndTimer()) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private void addEntryInQualityAscendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.LEVEL_ASCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getItem().getQuality().getValue() >= entry.getItem().getQuality().getValue()) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private void addEntryInQualityDescendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.LEVEL_DESCENDING.getValue());
+		final ListIterator<AuctionEntry> iterator = list.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(auction.getItem().getQuality().getValue() <= entry.getItem().getQuality().getValue()) {
+				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	/*private static ArrayList<AuctionEntry> filterListByQuality(ArrayList<AuctionEntry> list, AuctionHouseQualityFilter qualityFilter) {
 		if(qualityFilter == AuctionHouseQualityFilter.ALL) {
 			return list;
 		}
@@ -139,5 +301,5 @@ public class AuctionHouse {
 		      sortByBidDescending(list, index, right);
 	      }
 	      return list;
-	}
+	}*/
 }

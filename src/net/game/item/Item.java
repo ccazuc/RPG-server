@@ -16,8 +16,9 @@ public class Item implements Cloneable {
 	protected ItemQuality quality;
 	protected int id;
 	protected int amount;
+	protected byte level;
 	
-	public Item(int id, String sprite_id, ItemType itemType, String name, byte quality, int sellPrice, int maxStack, int amount) {
+	public Item(int id, String sprite_id, ItemType itemType, String name, byte level, byte quality, int sellPrice, int maxStack, int amount) {
 		this.sellPrice = sellPrice;
 		this.sprite_id = sprite_id;
 		this.maxStack = maxStack;
@@ -32,6 +33,10 @@ public class Item implements Cloneable {
 
 	public int getId() {
 		return this.id;
+	}
+	
+	public byte getLevel() {
+		return this.level;
 	}
 	
 	public void setAmount(int amount) {

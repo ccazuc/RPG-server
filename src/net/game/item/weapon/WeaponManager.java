@@ -44,7 +44,7 @@ public class WeaponManager {
 			String tempBonusType = loadWeapons.getString();
 			GemBonusType bonusType = StuffManager.convBonusType(tempBonusType);
 			int bonusValue = loadWeapons.getInt();
-			int level = loadWeapons.getInt();
+			byte level = loadWeapons.getByte();
 			int armor = loadWeapons.getInt();
 			int stamina = loadWeapons.getInt();
 			int mana = loadWeapons.getInt();
