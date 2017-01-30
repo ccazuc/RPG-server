@@ -126,7 +126,7 @@ public class CommandDragItems extends Command {
 			return;
 		}
 		if(player.getBag().getBag(destination) == null) {
-			Item item = Item.getItem(player.getBag().getBag(source).getId());
+			Item item = Item.getItemClone(player.getBag().getBag(source).getId());
 			if(item == null) {
 				return;
 			}

@@ -3,7 +3,9 @@ package net.game.guild;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.Server;
 import net.command.player.CommandGuild;
+import net.game.unit.Player;
 
 public class Guild {
 
@@ -37,6 +39,16 @@ public class Guild {
 		initMemberMap();
 	}
 	
+	public void removeMemberOnDelete() {
+		int i = this.memberList.size();
+		Player player;
+		while(--i >= 0) {
+			if((player = Server.getInGameCharacter(this.memberList.get(i).getId())) != null) {
+				player.setGuild(null);
+			}
+		}
+	}
+	
 	public GuildMember getMember(int id) {
 		return this.memberMap.get(id);
 	}
@@ -46,6 +58,10 @@ public class Guild {
 	}
 	
 	public void addMember(GuildMember member) {
+		if(this.isBeingDeleted) {
+			System.out.println("Tried to add member whereas the guild is being deleted");
+			return;
+		}
 		this.memberList.add(member);
 		this.memberMap.put(member.getId(), member);
 		CommandGuild.notifyNewMember(this, member);

@@ -11,7 +11,7 @@ public class Container extends Item {
 	private byte size;
 	
 	public Container(Container bag) {
-		super(bag.id, bag.sprite_id, bag.itemType, bag.name, bag.quality, bag.sellPrice, 1, 1);
+		super(bag.id, bag.sprite_id, bag.itemType, bag.name, bag.quality.getValue(), bag.sellPrice, 1, 1);
 		this.sprite_id = bag.sprite_id;
 		this.name = bag.name;
 		this.size = bag.size;

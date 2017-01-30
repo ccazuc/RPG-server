@@ -1050,7 +1050,7 @@ public class StoreChatCommand {
 				}
 				if(value.length == 2) {
 					if(StringUtils.isInteger(value[1])) {
-						Item item = Item.getItem(Integer.parseInt(value[1]));
+						Item item = Item.getItemClone(Integer.parseInt(value[1]));
 						if(item == null) {
 							CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
 							return;
@@ -1075,7 +1075,7 @@ public class StoreChatCommand {
 						amount = Integer.parseInt(value[2]);
 					}
 					if(StringUtils.isInteger(value[1])) {
-						Item item = Item.getItem(Integer.parseInt(value[1]));
+						Item item = Item.getItemClone(Integer.parseInt(value[1]));
 						if(item == null) {
 							CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Item not found.", MessageType.SELF);
 							return;
@@ -1093,7 +1093,7 @@ public class StoreChatCommand {
 					}
 					Item item = null;
 					if(StringUtils.isInteger(value[1])) {
-						item = Item.getItem(Integer.parseInt(value[1]));
+						item = Item.getItemClone(Integer.parseInt(value[1]));
 					}
 					else {
 						//TODO: find item by name efficency

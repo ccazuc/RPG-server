@@ -12,13 +12,13 @@ import net.game.item.potion.Potion;
 import net.game.item.stuff.Stuff;
 import net.game.unit.Player;
 
-public class CommandAddItem extends Command {
+public class CommandAddItem extends Command { //UNUSED
 	
 	public CommandAddItem() {}
 	
 	@Override
 	public void read(Player player) {
-		Connection connection = player.getConnection();
+		/*Connection connection = player.getConnection();
 		int character_id = connection.readInt();
 		int item_id = connection.readInt();
 		int number = connection.readInt();
@@ -34,7 +34,7 @@ public class CommandAddItem extends Command {
 		}
 		else {
 			writeUnknownItem(member, item_id, number);
-		}
+		}*/
 	}
 	
 	private static void writeKnownItem(Player player, int id, int number) {
@@ -48,7 +48,7 @@ public class CommandAddItem extends Command {
 	}
 	
 	private static void writeUnknownItem(Player player, int id, int number) {
-		Item temp = Item.getItem(id);
+		Item temp = Item.getItemClone(id);
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.ADD_ITEM);
 		player.getConnection().writeShort(PacketID.UNKNOWN_ITEM);

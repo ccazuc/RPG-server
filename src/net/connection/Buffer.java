@@ -145,7 +145,7 @@ public class Buffer {
 		writeString(stuff.getSpriteId());
 		writeInt(stuff.getId());
 		writeString(stuff.getStuffName());
-		writeByte(stuff.getQuality());
+		writeByte(stuff.getQuality().getValue());
 		writeByte(stuff.getGemSlot1().getValue());
 		writeByte(stuff.getGemSlot2().getValue());
 		writeByte(stuff.getGemSlot3().getValue());
@@ -169,7 +169,7 @@ public class Buffer {
 		writeInt(gem.getId());
 		writeString(gem.getSpriteId());
 		writeString(gem.getStuffName());
-		writeByte(gem.getQuality());
+		writeByte(gem.getQuality().getValue());
 		writeByte(gem.getColor().getValue());
 		writeInt(gem.getSellPrice());
 		writeByte(gem.getBonus1Type().getValue());
@@ -211,7 +211,7 @@ public class Buffer {
 		}
 		writeByte(weapon.getWeaponType().getValue());
 		writeByte(weapon.getWeaponSlot().getValue());
-		writeByte(weapon.getQuality());
+		writeByte(weapon.getQuality().getValue());
 		writeByte(weapon.getGemSlot1().getValue());
 		writeByte(weapon.getGemSlot2().getValue());
 		writeByte(weapon.getGemSlot3().getValue());
@@ -234,7 +234,7 @@ public class Buffer {
 		writeInt(bag.getId());
 		writeString(bag.getStuffName());
 		writeString(bag.getSpriteId());
-		writeByte(bag.getQuality());
+		writeByte(bag.getQuality().getValue());
 		writeByte(bag.getSize());
 		writeInt(bag.getSellPrice());
 		this.written = true;

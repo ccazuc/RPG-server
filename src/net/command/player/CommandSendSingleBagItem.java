@@ -7,14 +7,14 @@ import net.game.item.gem.GemManager;
 import net.game.item.stuff.Stuff;
 import net.game.unit.Player;
 
-public class CommandSendSingleBagItem extends Command {
+public class CommandSendSingleBagItem extends Command { //UNUSED
 	
 	@Override
 	public void read(Player player) {
-		Connection connection = player.getConnection();
+		/*Connection connection = player.getConnection();
 		int i = connection.readInt();
 		int id = connection.readInt();
-		Item item = Item.getItem(id);
+		Item item = Item.getItemClone(id);
 		if(item.isContainer() || item.isGem()) {
 			player.getBag().setBag(i, item);
 		}
@@ -32,7 +32,7 @@ public class CommandSendSingleBagItem extends Command {
 		else if(item.isItem() || item.isPotion()) {
 			int amount = connection.readInt();
 			player.getBag().setBag(i, item, amount);
-		}
+		}*/
 	}
 	
 	@Override

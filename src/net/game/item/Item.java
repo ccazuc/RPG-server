@@ -13,7 +13,7 @@ public class Item implements Cloneable {
 	protected int sellPrice;
 	protected int maxStack;
 	protected String name;
-	protected byte quality;
+	protected ItemQuality quality;
 	protected int id;
 	protected int amount;
 	
@@ -22,7 +22,7 @@ public class Item implements Cloneable {
 		this.sprite_id = sprite_id;
 		this.maxStack = maxStack;
 		this.itemType = itemType;
-		this.quality = quality;
+		this.quality = ItemQuality.values()[quality];
 		this.name = name;
 		this.id = id;
 		this.amount = amount;
@@ -62,7 +62,7 @@ public class Item implements Cloneable {
 		return this.itemType == ItemType.ITEM || this.itemType == ItemType.POTION;
 	}
 	
-	public byte getQuality() {
+	public ItemQuality getQuality() {
 		return this.quality;
 	}
 	
@@ -98,7 +98,7 @@ public class Item implements Cloneable {
 		return this.itemType == ItemType.CONTAINER;
 	}
 	
-	public static Item getItem(int id) {
+	public static Item getItemClone(int id) {
 		if(ContainerManager.exists(id)) {
 			return ContainerManager.getClone(id);
 		}
@@ -113,6 +113,25 @@ public class Item implements Cloneable {
 		}
 		if(PotionManager.exists(id)) {
 			return PotionManager.getClone(id);
+		}
+		return null;
+	}
+	
+	public static Item getItem(int id) {
+		if(ContainerManager.exists(id)) {
+			return ContainerManager.getContainer(id);
+		}
+		if(StuffManager.exists(id)) {
+			return StuffManager.getStuff(id);
+		}
+		if(WeaponManager.exists(id)) {
+			return WeaponManager.getWeapon(id);
+		}
+		if(GemManager.exists(id)) {
+			return GemManager.getGem(id);
+		}
+		if(PotionManager.exists(id)) {
+			return PotionManager.getPotion(id);
 		}
 		return null;
 	}

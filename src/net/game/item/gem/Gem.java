@@ -14,7 +14,7 @@ public class Gem extends Item {
 	private GemColor color;
 
 	public Gem(Gem gem) {
-		super(gem.id, gem.sprite_id, gem.itemType, gem.name, gem.quality, gem.sellPrice, 1, 1);
+		super(gem.id, gem.sprite_id, gem.itemType, gem.name, gem.quality.getValue(), gem.sellPrice, 1, 1);
 		this.stat1Type = gem.stat1Type;
 		this.stat1Value = gem.stat1Value;
 		this.stat2Type = gem.stat2Type;

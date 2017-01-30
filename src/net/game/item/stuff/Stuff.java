@@ -33,7 +33,7 @@ public class Stuff extends Item {
 	private int mana;
 
 	public Stuff(Stuff stuff) {
-		super(stuff.id, stuff.sprite_id, stuff.itemType, stuff.name, stuff.quality, stuff.sellPrice, 1, 1);
+		super(stuff.id, stuff.sprite_id, stuff.itemType, stuff.name, stuff.quality.getValue(), stuff.sellPrice, 1, 1);
 		this.gemBonusValue = stuff.gemBonusValue;
 		this.gemBonusType = stuff.gemBonusType;
 		this.classType = stuff.classType;
@@ -69,7 +69,7 @@ public class Stuff extends Item {
 	}
 
 	public Stuff(Stuff weapon, @SuppressWarnings("unused") int i) { //weapon constructor
-		super(weapon.id, weapon.sprite_id, weapon.itemType, weapon.name, weapon.quality, weapon.sellPrice, 1, 1);
+		super(weapon.id, weapon.sprite_id, weapon.itemType, weapon.name, weapon.quality.getValue(), weapon.sellPrice, 1, 1);
 		this.gemBonusValue = weapon.gemBonusValue;
 		this.gemBonusType = weapon.gemBonusType;
 		this.weaponType = weapon.weaponType;

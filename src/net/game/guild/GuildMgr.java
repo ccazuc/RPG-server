@@ -21,7 +21,7 @@ public class GuildMgr {
 	public final static int RANK_VETERAN_DEFAULT = 24705;
 	public final static int RANK_OFFICER_DEFAULT = 32231;
 	public final static int RANK_GUILD_MASTER_DEFAULT = 32767;
-	private final static HashMap<Integer, Guild> guildMap = new HashMap<Integer, Guild>();
+	final static HashMap<Integer, Guild> guildMap = new HashMap<Integer, Guild>();
 	private static JDOStatement loadRank;
 	private static JDOStatement loadGuildInformation;
 	private static JDOStatement loadMember;
@@ -212,6 +212,8 @@ public class GuildMgr {
 			Guild guild = this.datasList.get(0).getGuild();
 			deleteGuild(guild);
 			deleteGuildMembers(guild);
+			guild.removeMemberOnDelete();
+			guildMap.remove(guild.getId());
 		}
 	};
 	
@@ -575,6 +577,9 @@ public class GuildMgr {
 	
 	public static void addGuild(Guild guild) {
 		if(guild != null) {
+			if(guildMap.containsKey(guild.getId())) {
+				System.out.println("**ERROR** tried to add a guild in GuildMgr whereas there is already a guild with this ID.");
+			}
 			guildMap.put(guild.getId(), guild);
 		}
 	}
