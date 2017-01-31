@@ -1,6 +1,7 @@
 package net.thread.sql;
 
 import net.game.guild.Guild;
+import net.game.unit.Faction;
 import net.game.unit.Player;
 
 public class SQLDatas {
@@ -8,6 +9,10 @@ public class SQLDatas {
 	private int iValue1;
 	private int iValue2;
 	private int iValue3;
+	private int iValue4;
+	private int iValue5;
+	private int iValue6;
+	private int iValue7;
 	private long lValue1;
 	private long lValue2;
 	private byte bValue1;
@@ -17,6 +22,7 @@ public class SQLDatas {
 	private String stringValue3;
 	private Player player;
 	private Guild guild;
+	private Faction faction;
 	
 	public SQLDatas(int iValue1) {
 		this.iValue1 = iValue1;
@@ -74,6 +80,15 @@ public class SQLDatas {
 		this.stringValue1 = text;
 	}
 	
+	public SQLDatas(int iValue1, byte bValue1, int iValue2, int iValue3, byte bValue2) {
+		this.iValue1 = iValue1;
+		this.iValue2 = iValue2;
+		this.bValue1 = bValue1;
+		this.iValue2 = iValue2;
+		this.iValue3 = iValue3;
+		this.bValue2 = bValue2;
+	}
+	
 	public SQLDatas(long lValue1, long lValue2, String stringValue1, String stringValue2) {
 		this.lValue1 = lValue1;
 		this.lValue2 = lValue2;
@@ -97,13 +112,19 @@ public class SQLDatas {
 		this.stringValue3 = stringValue3;
 	}
 	
-	public SQLDatas(int iValue1, byte bValue1, int iValue2, int iValue3, byte bValue2) {
+	public SQLDatas(int iValue1, Faction faction, int iValue2, int iValue3, int iValue4, int iValue5, int iValue6, int iValue7) {
+		this.faction = faction;
 		this.iValue1 = iValue1;
 		this.iValue2 = iValue2;
-		this.bValue1 = bValue1;
-		this.iValue2 = iValue2;
 		this.iValue3 = iValue3;
-		this.bValue2 = bValue2;
+		this.iValue4 = iValue4;
+		this.iValue5 = iValue5;
+		this.iValue6 = iValue6;
+		this.iValue7 = iValue7;
+	}
+	
+	public Faction getFaction() {
+		return this.faction;
 	}
 	
 	public int getIValue1() {
@@ -116,6 +137,22 @@ public class SQLDatas {
 	
 	public int getIValue3() {
 		return this.iValue3;
+	}
+	
+	public int getIValue4() {
+		return this.iValue4;
+	}
+	
+	public int getIValue5() {
+		return this.iValue5;
+	}
+	
+	public int getIValue6() {
+		return this.iValue6;
+	}
+	
+	public int getIValue7() {
+		return this.iValue7;
 	}
 	
 	public long getLValue1() {

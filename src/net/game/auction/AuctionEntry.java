@@ -10,20 +10,29 @@ public class AuctionEntry {
 	private final Item item;
 	private final int buyoutPrice;
 	private final int initialBidPrice;
+	private int lastBidderID;
 	private int bidPrice;
 	private final int sellerID;
 	private final String sellerName;
 	private final long depositTimer;
 	private final long auctionEndTimer;
 	
-	public AuctionEntry(Player seller, int itemID, int buyoutPrice, int initialBidPrice, int auctionLength) {
-		this.item = Item.getItem(itemID);
+	public AuctionEntry(Player seller, Item item, int buyoutPrice, int initialBidPrice, AuctionHouseDuration duration) {
+		this.item = item;
 		this.buyoutPrice = buyoutPrice;
 		this.sellerID = seller.getUnitID();
 		this.sellerName = seller.getName();
 		this.initialBidPrice = initialBidPrice;
 		this.depositTimer = Server.getLoopTickTimer();
-		this.auctionEndTimer = Server.getLoopTickTimer()+auctionLength;
+		this.auctionEndTimer = Server.getLoopTickTimer()+duration.getDuration();
+	}
+	
+	public int getLastBidderID() {
+		return this.lastBidderID;
+	}
+	
+	public void setLastBidderID(int bidderID) {
+		this.lastBidderID = bidderID;
 	}
 	
 	public int getID() {

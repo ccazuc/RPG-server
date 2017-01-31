@@ -17,6 +17,7 @@ import net.command.chat.CommandListPlayer;
 import net.command.chat.CommandPlayerInfo;
 import net.command.chat.CommandSendMessage;
 import net.command.chat.CommandSet;
+import net.command.item.CommandAuction;
 import net.command.item.CommandContainer;
 import net.command.item.CommandDeleteItem;
 import net.command.item.CommandDragItems;
@@ -108,6 +109,7 @@ public class ConnectionManager {
 		loggedCommandList.put(SPELL_CAST, new CommandCast());
 		loggedCommandList.put(AURA, new CommandAura());
 		loggedCommandList.put(CHANNEL, new CommandChannel());
+		loggedCommandList.put(AUCTION, new CommandAuction());
 	}
 	
 	public static void initAuthCommand() {

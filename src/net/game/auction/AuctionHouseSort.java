@@ -2,16 +2,17 @@ package net.game.auction;
 
 public enum AuctionHouseSort {
 
-	RARITY_ASCENDING((byte)0),
-	RARITY_DESCENDING((byte)1),
-	LEVEL_ASCENDING((byte)2),
-	LEVEL_DESCENDING((byte)3),
-	TIME_LEFT_ASCENDING((byte)4),
-	TIME_LEFT_DESCENDING((byte)5),
-	VENDOR_ASCENDING((byte)6),
-	VENDOR_DESCENDING((byte)7),
-	BID_ASCENDING((byte)8),
-	BID_DESCENDING((byte)9),
+	ERROR((byte)0),
+	RARITY_ASCENDING((byte)1),
+	RARITY_DESCENDING((byte)2),
+	LEVEL_ASCENDING((byte)3),
+	LEVEL_DESCENDING((byte)4),
+	TIME_LEFT_ASCENDING((byte)5),
+	TIME_LEFT_DESCENDING((byte)6),
+	VENDOR_ASCENDING((byte)7),
+	VENDOR_DESCENDING((byte)8),
+	BID_ASCENDING((byte)9),
+	BID_DESCENDING((byte)10),
 	
 	;
 	
@@ -23,5 +24,12 @@ public enum AuctionHouseSort {
 	
 	public byte getValue() {
 		return this.value;
+	}
+	
+	public static AuctionHouseSort getSort(byte value) {
+		if(value >= 0 && value < values().length) {
+			return values()[value];
+		}
+		return ERROR;
 	}
 }

@@ -174,4 +174,10 @@ public class PacketID {
 	public final static short CHANNEL_UNBAN_PLAYER = 170;
 	public final static short CHANNEL_SET_MODERATOR = 171;
 	public final static short GUILD_INIT_JOURNAL = 172;
+	public final static short AUCTION = 173;
+	public final static short AUCTION_SEARCH_QUERY = 174;
+	public final static short AUCTION_BUYOUT = 175;
+	public final static short AUCTION_BID = 176;
+	public final static short AUCTION_SELL_ITEM = 177;
+	public final static short AUCTION_CANCEL_SELL = 178;
 }

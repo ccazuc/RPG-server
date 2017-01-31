@@ -2,12 +2,13 @@ package net.game.auction;
 
 public enum AuctionHouseQualityFilter {
 
-	ALL((byte)0),
-	POOR((byte)1),
-	COMMON((byte)2),
-	UNCOMMON((byte)3),
-	RARE((byte)4),
-	LEGENDARY((byte)5),
+	ERROR((byte)0),
+	ALL((byte)1),
+	POOR((byte)2),
+	COMMON((byte)3),
+	UNCOMMON((byte)4),
+	RARE((byte)5),
+	LEGENDARY((byte)6),
 	
 	;
 	
@@ -19,5 +20,12 @@ public enum AuctionHouseQualityFilter {
 	
 	public byte getValue() {
 		return this.value;
+	}
+	
+	public static AuctionHouseQualityFilter getQualityFilter(byte value) {
+		if(value >= 0 && value < values().length) {
+			return values()[value];
+		}
+		return ERROR;
 	}
 }

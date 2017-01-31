@@ -32,7 +32,7 @@ public class SQLRequest {
 		this.debugActive = true;
 	}
 	
-	public void execute() {
+	public final void execute() {
 		gatherData();
 		if(this.datasList.size() > 0) {
 			this.datasList.remove(0);

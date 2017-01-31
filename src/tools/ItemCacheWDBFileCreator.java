@@ -65,7 +65,7 @@ public class ItemCacheWDBFileCreator {
 			String tempBonusType = loadItems.getString();
 			GemBonusType bonusType = StuffManager.convBonusType(tempBonusType);
 			int bonusValue = loadItems.getInt();
-			int level = loadItems.getInt();
+			byte level = loadItems.getByte();
 			int armor = loadItems.getInt();
 			int stamina = loadItems.getInt();
 			int mana = loadItems.getInt();
@@ -97,7 +97,7 @@ public class ItemCacheWDBFileCreator {
 			String tempBonusType = loadItems.getString();
 			GemBonusType bonusType = StuffManager.convBonusType(tempBonusType);
 			int bonusValue = loadItems.getInt();
-			int level = loadItems.getInt();
+			byte level = loadItems.getByte();
 			int armor = loadItems.getInt();
 			int stamina = loadItems.getInt();
 			int mana = loadItems.getInt();
@@ -113,7 +113,7 @@ public class ItemCacheWDBFileCreator {
 			int id = loadItems.getInt();
 			String sprite_id = loadItems.getString();
 			String name = loadItems.getString();
-			int level = loadItems.getInt();
+			byte level = loadItems.getByte();
 			int heal = loadItems.getInt();
 			int mana = loadItems.getInt();
 			int sellPrice = loadItems.getInt();
