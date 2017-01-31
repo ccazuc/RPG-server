@@ -1,15 +1,11 @@
 package net.game.item.bag;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 
-import jdo.JDOStatement;
-import net.Server;
-
-public class BagManager {
+public class BagManager { //UNUSED
 	
 	private static HashMap<Integer, Container> containerList = new HashMap<Integer, Container>();
-	private static JDOStatement loadBags;
+	//private static JDOStatement loadBags;
 	
 	/*public static void loadBags() throws SQLException {
 		if(loadBags == null) {

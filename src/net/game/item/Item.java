@@ -5,6 +5,7 @@ import net.game.item.gem.GemManager;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
+import net.utils.StringUtils;
 
 public class Item implements Cloneable {
 
@@ -13,6 +14,7 @@ public class Item implements Cloneable {
 	protected int sellPrice;
 	protected int maxStack;
 	protected String name;
+	protected String lowerCaseName;
 	protected ItemQuality quality;
 	protected int id;
 	protected int amount;
@@ -23,8 +25,10 @@ public class Item implements Cloneable {
 		this.sprite_id = sprite_id;
 		this.maxStack = maxStack;
 		this.itemType = itemType;
+		this.level = level;
 		this.quality = ItemQuality.values()[quality];
 		this.name = name;
+		this.lowerCaseName = StringUtils.toLowerCase(this.name);
 		this.id = id;
 		this.amount = amount;
 	}
@@ -61,6 +65,10 @@ public class Item implements Cloneable {
 	
 	public String getStuffName() {
 		return this.name;
+	}
+	
+	public String getLowerCaseName() {
+		return this.lowerCaseName;
 	}
 	
 	public boolean isStackable() {

@@ -5,7 +5,7 @@ import net.game.auction.AuctionHouseMgr;
 import net.game.item.Item;
 import net.game.unit.Player;
 
-public class SellItemRequest {
+public class SellItemRequest implements AuctionHouseTask {
 	
 	private final Player player;
 	private final Item item;
@@ -21,6 +21,7 @@ public class SellItemRequest {
 		this.duration = duration;
 	}
 	
+	@Override
 	public void execute() {
 		AuctionHouseMgr.addAuction(this.player, this.item, this.bidPrice, this.buyoutPrice, this.duration);
 	}

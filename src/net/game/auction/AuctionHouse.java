@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 import net.thread.auctionhouse.SearchRequest;
+import net.utils.StringUtils;
 
 public class AuctionHouse {
 
@@ -44,8 +45,8 @@ public class AuctionHouse {
 		}
 	}
 	
-	public HashMap<Integer, AuctionEntry> getRawEntryList() {
-		return this.entryMap;
+	public AuctionEntry getEntry(int entryID) {
+		return this.entryMap.get(entryID);
 	}
 	
 	public LinkedList<AuctionEntry> getEntryList(SearchRequest request) {
@@ -58,6 +59,9 @@ public class AuctionHouse {
 		int minLevel = request.getMinLevel();
 		int maxLevel = request.getMaxLevel();
 		boolean usable = request.isUsable();
+		byte quality = (byte)(request.getQualityFilter().getValue()+1);
+		boolean qualityAll = request.getQualityFilter() == AuctionHouseQualityFilter.ALL;
+		String search = StringUtils.toLowerCase(request.getSearch());
 		if(minLevel > maxLevel) {
 			return null;
 		}
@@ -66,12 +70,17 @@ public class AuctionHouse {
 			if(entry.getItem().getLevel() < minLevel || entry.getItem().getLevel() > maxLevel) {
 				continue;
 			}
-			//TODO: filter quality and itemType
+			if(!qualityAll && quality != entry.getItem().getQuality().getValue()) {
+				continue;
+			}
+			//TODO: filter itemType
 			if(usable) {
 				//TODO: filter equipable items
 			}
 			if(!searchName) {
-				//TODO: filter by name
+				if(!entry.getItem().getLowerCaseName().contains(search)) {
+					continue;
+				}
 			}
 			if(!init) {
 				result = new LinkedList<AuctionEntry>();

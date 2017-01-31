@@ -2,6 +2,7 @@ package net.thread.auctionhouse;
 
 import java.util.ArrayList;
 
+import net.game.auction.AuctionEntry;
 import net.game.auction.AuctionHouseDuration;
 import net.game.auction.AuctionHouseFilter;
 import net.game.auction.AuctionHouseQualityFilter;
@@ -11,10 +12,8 @@ import net.game.unit.Player;
 
 public class AuctionHouseRunnable implements Runnable {
 
-	private final static ArrayList<SearchRequest> searchRequestQueue = new ArrayList<SearchRequest>();
-	private final static ArrayList<SearchRequest> searchRequestExecute = new ArrayList<SearchRequest>();
-	private final static ArrayList<SellItemRequest> sellItemQueue = new ArrayList<SellItemRequest>();
-	private final static ArrayList<SellItemRequest> sellItemExecute = new ArrayList<SellItemRequest>();
+	private final static ArrayList<AuctionHouseTask> taskWaitingQueue = new ArrayList<AuctionHouseTask>();
+	private final static ArrayList<AuctionHouseTask> taskQueue = new ArrayList<AuctionHouseTask>();
 	private final static int LOOP_TIMER = 10;
 	private static boolean shouldClose;
 	
@@ -25,25 +24,15 @@ public class AuctionHouseRunnable implements Runnable {
 		long time;
 		while(running) {
 			time = System.currentTimeMillis();
-			synchronized(searchRequestQueue) {
-				while(searchRequestQueue.size() > 0) {
-					searchRequestExecute.add(searchRequestQueue.get(0));
-					searchRequestQueue.remove(0);
+			synchronized(taskWaitingQueue) {
+				while(taskWaitingQueue.size() > 0) {
+					taskQueue.add(taskWaitingQueue.get(0));
+					taskWaitingQueue.remove(0);
 				}
 			}
-			synchronized(sellItemQueue) {
-				while(sellItemQueue.size() > 0) {
-					sellItemExecute.add(sellItemQueue.get(0));
-					sellItemQueue.remove(0);
-				}
-			}
-			while(searchRequestExecute.size() > 0) {
-				searchRequestExecute.get(0).execute();
-				searchRequestExecute.remove(0);
-			}
-			while(sellItemExecute.size() > 0) {
-				sellItemExecute.get(0).execute();
-				sellItemExecute.remove(0);
+			while(taskQueue.size() > 0) {
+				taskQueue.get(0).execute();
+				taskQueue.remove(0);
 			}
 			delta = System.currentTimeMillis()-time;
 			if(delta < LOOP_TIMER) {
@@ -54,21 +43,27 @@ public class AuctionHouseRunnable implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			if(shouldClose && searchRequestQueue.size() == 0 && searchRequestExecute.size() == 0) {
+			if(shouldClose && taskWaitingQueue.size() == 0 && taskQueue.size() == 0) {
 				running = false;
 			}
 		}
 	}
 	
 	public static void addSearchRequest(Player player, String search, short page, byte minLevel, byte maxLevel, AuctionHouseQualityFilter qualityFilter, AuctionHouseSort sort, AuctionHouseFilter filter, boolean isUsable) {
-		synchronized(searchRequestQueue) {
-			searchRequestQueue.add(new SearchRequest(player, search, page, minLevel, maxLevel, qualityFilter, sort, filter, isUsable));
+		synchronized(taskWaitingQueue) {
+			taskWaitingQueue.add(new SearchRequest(player, search, page, minLevel, maxLevel, qualityFilter, sort, filter, isUsable));
 		}
 	}
 	
 	public static void sellItem(Player player, Item item, int buyoutPrice, int bidPrice, AuctionHouseDuration duration) {
-		synchronized(sellItemQueue) {
-			sellItemQueue.add(new SellItemRequest(player, item, buyoutPrice, bidPrice, duration));
+		synchronized(taskWaitingQueue) {
+			taskWaitingQueue.add(new SellItemRequest(player, item, buyoutPrice, bidPrice, duration));
+		}
+	}
+	
+	public static void buyoutItem(Player player, AuctionEntry entry) {
+		synchronized(taskWaitingQueue) {
+			taskWaitingQueue.add(new BuyoutRequest(player, entry));
 		}
 	}
 	

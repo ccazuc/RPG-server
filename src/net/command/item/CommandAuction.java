@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.ListIterator;
 
 import net.command.Command;
+import net.command.chat.CommandSendMessage;
+import net.command.chat.MessageType;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.auction.AuctionEntry;
@@ -67,25 +69,72 @@ public class CommandAuction extends Command {
 			}
 			int depositPrice = AuctionHouseMgr.calculateDepositPrice(item, duration);
 			if(player.getGold() < depositPrice) {
-				//send not enough money
+				//TODO: send not enough money
 				return;
 			}
 			player.setGold(player.getGold()-depositPrice);
 			player.getBag().setBag(bagSlot, null);
 			AuctionHouseRunnable.sellItem(player, item, buyoutPrice, bidPrice, duration);
 		}
+		else if(packetId == PacketID.AUCTION_BUYOUT) {
+			int entryID = connection.readInt();
+			AuctionEntry entry = AuctionHouseMgr.getEntry(player, entryID);
+			if(entry == null) {
+				return;
+			}
+			if(entry.hasBeenBought()) {
+				//TODO: send item has been bought
+				return;
+			}
+			if(!entry.canBeBuy()) {
+				Log.writePlayerLog(player, "Tried to buy an auction with no buyout price.");
+				return;
+			}
+			if(player.getGold() < entry.getBuyoutPrice()) {
+				//TODO: send  not enough money
+				return;
+			}
+			entry.setHasBeenBuy();
+			player.setGold(player.getGold()-entry.getBuyoutPrice());
+			AuctionHouseRunnable.buyoutItem(player, entry);
+		}
+		else if(packetId == PacketID.AUCTION_MAKE_BID) {
+			int entryID = connection.readInt();
+			int bidValue = connection.readInt();
+			AuctionEntry entry = AuctionHouseMgr.getEntry(player, entryID);
+			if(entry == null) {
+				return;
+			}
+			if(entry.hasBeenBought()) {
+				//TODO: send item has been bought
+				return;
+			}
+			if(bidValue < entry.getBidPrice()) {
+				//TODO: send error
+				return;
+			}
+			if(player.getGold() < bidValue) {
+				//TODO: not enough gold
+				return;
+			}
+			entry.setBid(bidValue);
+			entry.setLastBidderID(player.getUnitID());
+			player.setGold(player.getGold()-bidValue);
+			CommandSendMessage.selfWithoutAuthor(connection, "Offer accepted.", MessageType.SELF);
+		}
 	}
 	
 	public static void sendQuery(Player player, LinkedList<AuctionEntry> list, int startIndex) {
 		ListIterator<AuctionEntry> ite = list.listIterator(startIndex);
 		int i = -1;
+		byte amountResult = (byte)Math.min(list.size()-startIndex, (byte)50);
 		Connection connection = player.getConnection();
 		connection.startPacket();
 		connection.writeShort(PacketID.AUCTION);
 		connection.writeShort(PacketID.AUCTION_SEARCH_QUERY);
-		connection.writeByte((byte)Math.min(list.size()-startIndex, (byte)50));
+		connection.writeByte(amountResult);
 		AuctionEntry entry = null;
-		while(ite.hasNext() && ++i < AuctionHouseMgr.NUMBER_RESULT_PER_PAGE) {
+		while(ite.hasNext() && ++i < amountResult) {
 			entry = ite.next();
 			connection.writeInt(entry.getEntryID());
 			connection.writeString(entry.getSellerName());
@@ -95,6 +144,32 @@ public class CommandAuction extends Command {
 			connection.writeInt(entry.getBidPrice());
 			connection.writeByte(entry.getUpdatedDuration().getValue());
 		}
+		connection.endPacket();
+		connection.send();
+	}
+	
+	public static void sendSellItem(Player player, AuctionEntry entry) {
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.AUCTION);
+		connection.writeShort(PacketID.AUCTION_SELL_ITEM);
+		connection.writeInt(entry.getEntryID());
+		connection.writeInt(entry.getItemID());
+		connection.writeInt(entry.getItem().getAmount());
+		connection.writeByte(entry.getUpdatedDuration().getValue());
+		connection.writeInt(entry.getBidPrice());
+		connection.writeInt(entry.getBuyoutPrice());
+		connection.endPacket();
+		connection.send();
+	}
+	
+	public static void madeBid(Player player, AuctionEntry entry) {
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.AUCTION);
+		connection.writeShort(PacketID.AUCTION_MAKE_BID);
+		connection.writeInt(entry.getEntryID());
+		connection.writeInt(entry.getBidPrice());
 		connection.endPacket();
 		connection.send();
 	}

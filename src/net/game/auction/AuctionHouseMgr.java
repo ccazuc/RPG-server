@@ -3,6 +3,9 @@ package net.game.auction;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import net.Server;
+import net.command.chat.CommandSendMessage;
+import net.command.chat.MessageType;
 import net.config.ConfigMgr;
 import net.game.item.Item;
 import net.game.unit.Faction;
@@ -28,7 +31,12 @@ public class AuctionHouseMgr {
 	}
 	
 	public static LinkedList<AuctionEntry> getEntryList(Player player, SearchRequest request) {
-		return auctionHouseMap.get(player.getFaction()).getEntryList(request);
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
+		if(ah == null) {
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			return null;
+		}
+		return ah.getEntryList(request);
 	}
 	
 	public static void addAuction(Player player, Item item, int bidPrice, int buyoutPrice, AuctionHouseDuration duration) {
@@ -40,6 +48,30 @@ public class AuctionHouseMgr {
 		AuctionEntry entry = new AuctionEntry(generateEntryID(), player, item, buyoutPrice, bidPrice, duration);
 		ah.addItem(entry);
 		AuctionHouseDBMgr.addAuctionInDB(player, entry);
+	}
+	
+	public static AuctionEntry getEntry(Player player, int entryID) {
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
+		if(ah == null) {
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			return null;
+		}
+		return ah.getEntry(entryID);
+	}
+	
+	public static void buyoutAuction(Player player, AuctionEntry entry) {
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
+		if(ah == null) {
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			return;
+		}
+		ah.removeItem(entry);
+		AuctionHouseDBMgr.removeAuction(entry);
+		Player seller = Server.getInGameCharacter(entry.getSellerID());
+		if(seller != null) {
+			CommandSendMessage.selfWithoutAuthor(seller.getConnection(), "A buy has been found for your auction of ".concat(entry.getItem().getStuffName()), MessageType.SELF);
+		}
+		//TODO: send mail to the seller and buyer
 	}
 	
 	public static int calculateDepositPrice(Item item, AuctionHouseDuration duration) {

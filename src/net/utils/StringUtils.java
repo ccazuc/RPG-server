@@ -61,12 +61,19 @@ public class StringUtils {
 	}
 	
 	public static String toUpperCase(String str) {
-		if(str.length() == 0) {
+		int i = str.length();
+		char c;
+		scan : {
+			while(--i >= 0) {
+				c = str.charAt(i);
+				if(c != toUpperCase(c)) {
+					break scan;
+				}
+			}
 			return str;
 		}
 		final char[] table = new char[str.length()];
-		int i = table.length;
-		char c;
+		i = table.length;
 		while(--i >= 0) {
 			c = str.charAt(i);
 			if(c >= 'a' && c <= 'z') {
@@ -78,12 +85,19 @@ public class StringUtils {
 	}
 	
 	public static String toLowerCase(String str) {
-		if(str.length() == 0) {
+		int i = str.length();
+		char c;
+		scan : {
+			while(--i >= 0) {
+				c = str.charAt(i);
+				if(c != toLowerCase(c)) {
+					break scan;
+				}
+			}
 			return str;
 		}
 		final char[] table = new char[str.length()];
-		int i = table.length;
-		char c;
+		i = table.length;
 		while(--i >= 0) {
 			c = str.charAt(i);
 			if(c >= 'A' && c <= 'Z') {

@@ -10,7 +10,7 @@ import net.game.auction.AuctionHouseQualityFilter;
 import net.game.auction.AuctionHouseSort;
 import net.game.unit.Player;
 
-public class SearchRequest {
+public class SearchRequest implements AuctionHouseTask {
 
 	private final Player player;
 	private final String search;
@@ -34,6 +34,7 @@ public class SearchRequest {
 		this.isUsable = isUsable;
 	}
 	
+	@Override
 	public void execute() {
 		LinkedList<AuctionEntry> entryList = AuctionHouseMgr.getEntryList(this.player, this);
 		if(entryList == null || entryList.size() == 0) {

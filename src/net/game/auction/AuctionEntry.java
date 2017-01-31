@@ -16,6 +16,8 @@ public class AuctionEntry {
 	private final String sellerName;
 	private final long depositTimer;
 	private final long auctionEndTimer;
+	private final boolean canBeBuy;
+	private boolean bought;
 	
 	public AuctionEntry(int entryID, Player seller, Item item, int buyoutPrice, int initialBidPrice, AuctionHouseDuration duration) {
 		this.item = item;
@@ -26,11 +28,24 @@ public class AuctionEntry {
 		this.initialBidPrice = initialBidPrice;
 		this.depositTimer = Server.getLoopTickTimer();
 		this.auctionEndTimer = Server.getLoopTickTimer()+duration.getDuration();
+		this.canBeBuy = buyoutPrice > 0;
 	}
 	
 	public AuctionHouseDuration getUpdatedDuration() {
 		int timeLeft = (int)(this.auctionEndTimer-Server.getLoopTickTimer());
 		return AuctionHouseDuration.getDuration(timeLeft);
+	}
+	
+	public boolean canBeBuy() {
+		return this.canBeBuy;
+	}
+	
+	public void setHasBeenBuy() {
+		this.bought = true;
+	}
+	
+	public boolean hasBeenBought() {
+		return this.bought;
 	}
 	
 	public int getLastBidderID() {
@@ -39,6 +54,10 @@ public class AuctionEntry {
 	
 	public void setLastBidderID(int bidderID) {
 		this.lastBidderID = bidderID;
+	}
+	
+	public void setBid(int bid) {
+		this.bidPrice = bid;
 	}
 	
 	public int getEntryID() {
