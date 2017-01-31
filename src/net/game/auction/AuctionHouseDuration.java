@@ -37,4 +37,14 @@ public enum AuctionHouseDuration {
 		}
 		return ERROR;
 	}
+	
+	public static AuctionHouseDuration getDuration(int timeLeft) {
+		if(timeLeft >= VERY_LONG.duration) {
+			return VERY_LONG;
+		}
+		if(timeLeft >= LONG.duration) {
+			return LONG;
+		}
+		return NORMAL;
+	}
 }

@@ -57,18 +57,16 @@ public class SQLRunnable implements Runnable {
 					this.SQLTaskList.remove(0);
 				}
 			}
-			synchronized(this.SQLRequestList) {
-				while(this.SQLRequestList.size() > 0) {
-					if(this.SQLRequestList.get(0).debugActive || DebugMgr.getSQLRequestTimer()) {
-						long timer = System.nanoTime();
-						this.SQLRequestList.get(0).execute();
-						System.out.println("[SQL REQUEST] "+this.SQLRequestList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");
-					}
-					else {
-						this.SQLRequestList.get(0).execute();
-					}
-					this.SQLRequestList.remove(0);
+			while(this.SQLRequestList.size() > 0) {
+				if(this.SQLRequestList.get(0).debugActive || DebugMgr.getSQLRequestTimer()) {
+					long timer = System.nanoTime();
+					this.SQLRequestList.get(0).execute();
+					System.out.println("[SQL REQUEST] "+this.SQLRequestList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");
 				}
+				else {
+					this.SQLRequestList.get(0).execute();
+				}
+				this.SQLRequestList.remove(0);
 			}
 			delta = System.currentTimeMillis()-time;
 			if(delta < this.LOOP_TIMER) {

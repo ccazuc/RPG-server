@@ -27,6 +27,11 @@ public class AuctionEntry {
 		this.auctionEndTimer = Server.getLoopTickTimer()+duration.getDuration();
 	}
 	
+	public AuctionHouseDuration getUpdatedDuration() {
+		int timeLeft = (int)(this.auctionEndTimer-Server.getLoopTickTimer());
+		return AuctionHouseDuration.getDuration(timeLeft);
+	}
+	
 	public int getLastBidderID() {
 		return this.lastBidderID;
 	}

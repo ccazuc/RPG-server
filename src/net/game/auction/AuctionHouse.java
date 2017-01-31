@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import net.thread.auctionhouse.SearchRequest;
+
 public class AuctionHouse {
 
 	private final ArrayList<LinkedList<AuctionEntry>> sortedList;
@@ -34,20 +36,26 @@ public class AuctionHouse {
 		return this.entryMap;
 	}
 	
-	public LinkedList<AuctionEntry> getEntryList(AuctionHouseFilter itemTypeFilter, AuctionHouseSort sorted, AuctionHouseQualityFilter qualityFilter, short page, byte minLevel, byte maxLevel, String search, boolean equipable) {
-		LinkedList<AuctionEntry> list = this.sortedList.get(sorted.getValue());
+	public LinkedList<AuctionEntry> getEntryList(SearchRequest request) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(request.getSort().getValue());
 		final ListIterator<AuctionEntry> iterator = list.listIterator();
 		AuctionEntry entry;
 		LinkedList<AuctionEntry> result = null;
 		boolean init = false;
-		boolean searchName = search.length() == 0;
+		boolean searchName = request.getSearch().length() == 0;
+		int minLevel = request.getMinLevel();
+		int maxLevel = request.getMaxLevel();
+		boolean usable = request.isUsable();
+		if(minLevel > maxLevel) {
+			return null;
+		}
 		while(iterator.hasNext()) {
 			entry = iterator.next();
 			if(entry.getItem().getLevel() < minLevel || entry.getItem().getLevel() > maxLevel) {
 				continue;
 			}
 			//TODO: filter quality and itemType
-			if(equipable) {
+			if(usable) {
 				//TODO: filter equipable items
 			}
 			if(!searchName) {
