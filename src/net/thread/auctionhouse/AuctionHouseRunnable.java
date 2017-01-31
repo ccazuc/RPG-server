@@ -67,6 +67,12 @@ public class AuctionHouseRunnable implements Runnable {
 		}
 	}
 	
+	public static void cancelAuction(Player player, AuctionEntry entry) {
+		synchronized(taskWaitingQueue) {
+			taskWaitingQueue.add(new CancelAuctionRequest(player, entry));
+		}
+	}
+	
 	public static void close() {
 		shouldClose = true;
 	}

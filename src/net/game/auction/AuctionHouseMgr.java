@@ -50,6 +50,26 @@ public class AuctionHouseMgr {
 		AuctionHouseDBMgr.addAuctionInDB(player, entry);
 	}
 	
+	public static void cancelAuction(Player player, AuctionEntry entry) {
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
+		if(ah == null) {
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			return;
+		}
+		ah.removeItem(entry);
+		AuctionHouseDBMgr.removeAuction(entry);
+		Player buyer = null;
+		if(entry.getBidPrice() != entry.getInitialBidPrice()) {
+			buyer = Server.getInGameCharacter(entry.getLastBidderID());
+		}
+		if(buyer == null) {
+			//TODO: add a mail with the money in the db
+		}
+		else {
+			//TODO: send a mail with the money
+		}
+	}
+	
 	public static AuctionEntry getEntry(Player player, int entryID) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
 		if(ah == null) {

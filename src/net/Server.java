@@ -31,6 +31,7 @@ import net.game.manager.DebugMgr;
 import net.game.manager.ItemMgr;
 import net.game.spell.SpellMgr;
 import net.game.unit.Player;
+import net.thread.ThreadMgr;
 import net.thread.chatcommand.ChatCommandRequest;
 import net.thread.chatcommand.ChatCommandRunnable;
 import net.thread.chatcommand.Who;
@@ -54,16 +55,6 @@ public class Server {
 	private static ArrayList<Player> nonLoggedPlayerKickList = new ArrayList<Player>();
 	private static HashMap<Integer, Player> inGamePlayerList = new HashMap<Integer, Player>();
 	private static ArrayList<Integer> inGamePlayerKickList = new ArrayList<Integer>();
-	private static Thread highPrioritySQLRequestThread;
-	private static Thread lowPrioritySQLRequestThread;
-	private static SQLRunnable highPrioritySQLRunnable;
-	private static SQLRunnable lowPrioritySQLRunnable;
-	private static SocketRunnable socketRunnable;
-	private static Thread socketThread;
-	private static ChatCommandRunnable chatCommandRunnable;
-	private static Thread chatCommandThread;
-	private static Thread logThread;
-	private static LogRunnable logRunnable;
 	private static HashMap<Double, Key> keyMap = new HashMap<Double, Key>();
 	private static ArrayList<Double> removeKeyList = new ArrayList<Double>();
 	private static long SERVER_START_TIMER;
@@ -102,23 +93,6 @@ public class Server {
 		AuraMgr.loadAuras();
 		SpellMgr.loadSpells();
 		ChannelMgr.initChannelMgr();
-		highPrioritySQLRunnable = new SQLRunnable(3);
-		highPrioritySQLRequestThread = new Thread(highPrioritySQLRunnable);
-		highPrioritySQLRequestThread.start();
-		highPrioritySQLRequestThread.setPriority(Thread.MAX_PRIORITY);
-		lowPrioritySQLRunnable = new SQLRunnable(15);
-		lowPrioritySQLRequestThread = new Thread(lowPrioritySQLRunnable);
-		lowPrioritySQLRequestThread.start();
-		socketRunnable = new SocketRunnable(serverSocketChannel);
-		socketThread = new Thread(socketRunnable);
-		socketThread.start();
-		socketThread.setPriority(1);
-		chatCommandRunnable = new ChatCommandRunnable();
-		chatCommandThread = new Thread(chatCommandRunnable);
-		chatCommandThread.start();
-		logRunnable = new LogRunnable();
-		logThread = new Thread(logRunnable);
-		logThread.start();
 		System.out.println("Init took "+(System.currentTimeMillis()-time)+" ms.");
 		ConnectionManager.connectAuthServer();
 		ConnectionManager.registerToAuthServer();
@@ -150,11 +124,7 @@ public class Server {
 			}
 		}
 		//TODO: Save eveything of every player to the DB
-		lowPrioritySQLRunnable.close();
-		highPrioritySQLRunnable.close();
-		socketRunnable.close();
-		chatCommandRunnable.close();
-		logRunnable.close();
+		ThreadMgr.closeThreads();
 		
 	}
 	
@@ -358,24 +328,19 @@ public class Server {
 	}
 	
 	public static void executeSQLRequest(SQLRequest request) {
-		if(request.getPriority() == SQLRequestPriority.HIGH) {
-			highPrioritySQLRunnable.addRequest(request);
-		}
-		else {
-			lowPrioritySQLRunnable.addRequest(request);
-		}
+		ThreadMgr.executeSQLRequest(request);
 	}
 	
 	public static void executeHighPrioritySQLTask(SQLTask task) {
-		highPrioritySQLRunnable.addTask(task);
+		ThreadMgr.executeHighPrioritySQLTask(task);
 	}
 	
 	public static void addNewWhoRequest(Who who) {
-		chatCommandRunnable.addWhoRequest(who);
+		ThreadMgr.executeWhoRequest(who);
 	}
 	
 	public static void addNewChatCommandRequest(ChatCommandRequest request) {
-		chatCommandRunnable.addChatCommandRequest(request);
+		ThreadMgr.executeChatCommandRequest(request);
 	}
 	
 	public static HashMap<Integer, Player> getInGamePlayerList() {
@@ -408,6 +373,10 @@ public class Server {
 	
 	public static long getServerStartTimer() {
 		return SERVER_START_TIMER;
+	}
+	
+	public static ServerSocketChannel getServerSocketChannel() {
+		return serverSocketChannel;
 	}
 	
 	public static void mTime(long time, String text) {

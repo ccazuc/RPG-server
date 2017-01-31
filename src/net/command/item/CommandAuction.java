@@ -122,6 +122,30 @@ public class CommandAuction extends Command {
 			player.setGold(player.getGold()-bidValue);
 			CommandSendMessage.selfWithoutAuthor(connection, "Offer accepted.", MessageType.SELF);
 		}
+		else if(packetId == PacketID.AUCTION_CANCEL_SELL) {
+			int entryID = connection.readInt();
+			AuctionEntry entry = AuctionHouseMgr.getEntry(player, entryID);
+			if(entry == null) {
+				return;
+			}
+			if(entry.hasBeenBought()) {
+				//TODO: send item has been bought
+				return;
+			}
+			if(entry.getSellerID() != player.getUnitID()) {
+				player.close();
+				Log.writePlayerLog(player, "tried to cancel someone else's auction (CommandAuction.AUCTION_CANCEL_SELL)");
+				return;
+			}
+			int cost = 0;
+			if(entry.getBidPrice() != entry.getInitialBidPrice()) {
+				cost+= .05f*entry.getBidPrice();
+			}
+			//TODO: verify that the cost formula is correct
+			player.setGold(player.getGold()-cost);
+			entry.setHasBeenBuy();
+			AuctionHouseRunnable.cancelAuction(player, entry);
+		}
 	}
 	
 	public static void sendQuery(Player player, LinkedList<AuctionEntry> list, int startIndex) {
