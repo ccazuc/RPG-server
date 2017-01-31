@@ -15,11 +15,15 @@ public class AuctionHouse {
 	public AuctionHouse() {
 		this.sortedList = new ArrayList<LinkedList<AuctionEntry>>();
 		this.entryMap = new HashMap<Integer, AuctionEntry>();
+		int i = 0;
+		while(i < AuctionHouseSort.values().length) {
+			this.sortedList.add(new LinkedList<AuctionEntry>());
+			i++;
+		}
 	}
 	
 	public void addItem(AuctionEntry entry) {
-		entry.setID(AuctionHouseMgr.generateEntryID());
-		this.entryMap.put(entry.getID(), entry);
+		this.entryMap.put(entry.getEntryID(), entry);
 		addEntryInBidAscendingList(entry);
 		addEntryInBidDescendingList(entry);
 		addEntryInSellerAscendingList(entry);
@@ -30,6 +34,14 @@ public class AuctionHouse {
 		addEntryInLevelDescendingList(entry);
 		addEntryInQualityAscendingList(entry);
 		addEntryInQualityDescendingList(entry);
+	}
+	
+	public void removeItem(AuctionEntry entry) {
+		this.entryMap.remove(entry.getEntryID());
+		int i = this.sortedList.size();
+		while(--i >= 0) {
+			removeItemInSortedList(this.sortedList.get(i), entry);
+		}
 	}
 	
 	public HashMap<Integer, AuctionEntry> getRawEntryList() {
@@ -195,6 +207,18 @@ public class AuctionHouse {
 			entry = iterator.next();
 			if(auction.getItem().getQuality().getValue() <= entry.getItem().getQuality().getValue()) {
 				iterator.add(auction);
+				return;
+			}
+		}
+	}
+	
+	private static void removeItemInSortedList(LinkedList<AuctionEntry> sortedList, AuctionEntry removedEntry) {
+		final ListIterator<AuctionEntry> iterator = sortedList.listIterator();
+		AuctionEntry entry;
+		while(iterator.hasNext()) {
+			entry = iterator.next();
+			if(entry == removedEntry) {
+				iterator.remove();
 				return;
 			}
 		}

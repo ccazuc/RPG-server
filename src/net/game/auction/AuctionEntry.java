@@ -6,7 +6,7 @@ import net.game.unit.Player;
 
 public class AuctionEntry {
 
-	private int id;
+	private final int entryID;
 	private final Item item;
 	private final int buyoutPrice;
 	private final int initialBidPrice;
@@ -17,8 +17,9 @@ public class AuctionEntry {
 	private final long depositTimer;
 	private final long auctionEndTimer;
 	
-	public AuctionEntry(Player seller, Item item, int buyoutPrice, int initialBidPrice, AuctionHouseDuration duration) {
+	public AuctionEntry(int entryID, Player seller, Item item, int buyoutPrice, int initialBidPrice, AuctionHouseDuration duration) {
 		this.item = item;
+		this.entryID = entryID;
 		this.buyoutPrice = buyoutPrice;
 		this.sellerID = seller.getUnitID();
 		this.sellerName = seller.getName();
@@ -40,12 +41,8 @@ public class AuctionEntry {
 		this.lastBidderID = bidderID;
 	}
 	
-	public int getID() {
-		return this.id;
-	}
-	
-	public void setID(int id) {
-		this.id = id;
+	public int getEntryID() {
+		return this.entryID;
 	}
 	
 	public String getSellerName() {

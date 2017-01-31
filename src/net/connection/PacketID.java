@@ -177,7 +177,9 @@ public class PacketID {
 	public final static short AUCTION = 173;
 	public final static short AUCTION_SEARCH_QUERY = 174;
 	public final static short AUCTION_BUYOUT = 175;
-	public final static short AUCTION_BID = 176;
+	public final static short AUCTION_MAKE_BID = 176;
 	public final static short AUCTION_SELL_ITEM = 177;
 	public final static short AUCTION_CANCEL_SELL = 178;
+	public final static short AUCTION_INIT_BID = 179;
+	public final static short AUCTION_REMOVE_BID = 180;
 }

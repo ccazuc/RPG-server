@@ -7,10 +7,13 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.auction.AuctionEntry;
+import net.game.auction.AuctionHouseDuration;
 import net.game.auction.AuctionHouseFilter;
 import net.game.auction.AuctionHouseMgr;
 import net.game.auction.AuctionHouseQualityFilter;
 import net.game.auction.AuctionHouseSort;
+import net.game.item.Item;
+import net.game.log.Log;
 import net.game.unit.Player;
 import net.thread.auctionhouse.AuctionHouseRunnable;
 
@@ -43,6 +46,34 @@ public class CommandAuction extends Command {
 			String search = connection.readString();
 			AuctionHouseRunnable.addSearchRequest(player, search, page, minLevel, maxLevel, qualityFilter, sort, filter, isUsable);
 		}
+		else if(packetId == PacketID.AUCTION_SELL_ITEM) {
+			byte bagSlot = connection.readByte();
+			int buyoutPrice = connection.readInt();
+			int bidPrice = connection.readInt();
+			AuctionHouseDuration duration = AuctionHouseDuration.getDuration(connection.readByte());
+			if(duration == AuctionHouseDuration.ERROR) {
+				player.close();
+				return;
+			}
+			if(buyoutPrice < 0 || bidPrice <= 0) {
+				player.close();
+				return;
+			}
+			Item item = player.getBag().getBag(bagSlot);
+			if(item == null) {
+				Log.writePlayerLog(player, "Tried to sell an item whereas his bag his empty (CommandAuction.AUCTION_SELL_ITEM).");
+				player.close();
+				return;
+			}
+			int depositPrice = AuctionHouseMgr.calculateDepositPrice(item, duration);
+			if(player.getGold() < depositPrice) {
+				//send not enough money
+				return;
+			}
+			player.setGold(player.getGold()-depositPrice);
+			player.getBag().setBag(bagSlot, null);
+			AuctionHouseRunnable.sellItem(player, item, buyoutPrice, bidPrice, duration);
+		}
 	}
 	
 	public static void sendQuery(Player player, LinkedList<AuctionEntry> list, int startIndex) {
@@ -56,7 +87,7 @@ public class CommandAuction extends Command {
 		AuctionEntry entry = null;
 		while(ite.hasNext() && ++i < AuctionHouseMgr.NUMBER_RESULT_PER_PAGE) {
 			entry = ite.next();
-			connection.writeInt(entry.getID());
+			connection.writeInt(entry.getEntryID());
 			connection.writeString(entry.getSellerName());
 			connection.writeInt(entry.getItemID());
 			connection.writeInt(entry.getItem().getAmount());

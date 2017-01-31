@@ -32,7 +32,7 @@ public class AuctionHouseDBMgr {
 		}
 	};
 	public static void addAuctionInDB(Player player, AuctionEntry entry) {
-		addAuctionInDB.addDatas(new SQLDatas(entry.getID(), player.getFaction(), entry.getItemID(), entry.getSellerID(), entry.getBuyoutPrice(), entry.getBidPrice(), entry.getLastBidderID(), (int)(entry.getAuctionEndTimer()-Server.getLoopTickTimer())));
+		addAuctionInDB.addDatas(new SQLDatas(entry.getEntryID(), player.getFaction(), entry.getItemID(), entry.getSellerID(), entry.getBuyoutPrice(), entry.getBidPrice(), entry.getLastBidderID(), (int)(entry.getAuctionEndTimer()-Server.getLoopTickTimer())));
 		Server.executeSQLRequest(addAuctionInDB);
 	}
 }
