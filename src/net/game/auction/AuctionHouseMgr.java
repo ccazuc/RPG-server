@@ -31,7 +31,7 @@ public class AuctionHouseMgr {
 	}
 	
 	public static LinkedList<AuctionEntry> getEntryList(Player player, SearchRequest request) {
-		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
 			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
 			return null;
@@ -40,7 +40,7 @@ public class AuctionHouseMgr {
 	}
 	
 	public static void addAuction(Player player, Item item, int bidPrice, int buyoutPrice, AuctionHouseDuration duration) {
-		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
 			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
 			return;
@@ -50,8 +50,17 @@ public class AuctionHouseMgr {
 		AuctionHouseDBMgr.addAuctionInDB(player, entry);
 	}
 	
+	public static void addAuction(Faction faction, AuctionEntry entry) {
+		AuctionHouse ah = auctionHouseMap.get(faction.getValue());
+		if(ah == null) {
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			return;
+		}
+		ah.addItem(entry);
+	}
+	
 	public static void cancelAuction(Player player, AuctionEntry entry) {
-		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
 			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
 			return;
@@ -71,7 +80,7 @@ public class AuctionHouseMgr {
 	}
 	
 	public static AuctionEntry getEntry(Player player, int entryID) {
-		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
 			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
 			return null;
@@ -80,7 +89,7 @@ public class AuctionHouseMgr {
 	}
 	
 	public static void buyoutAuction(Player player, AuctionEntry entry) {
-		AuctionHouse ah = auctionHouseMap.get(player.getFaction());
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
 			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
 			return;

@@ -1,5 +1,6 @@
 package net.thread.sql;
 
+import net.game.auction.AuctionEntry;
 import net.game.guild.Guild;
 import net.game.unit.Faction;
 import net.game.unit.Player;
@@ -23,6 +24,7 @@ public class SQLDatas {
 	private Player player;
 	private Guild guild;
 	private Faction faction;
+	private AuctionEntry entry;
 	
 	public SQLDatas(int iValue1) {
 		this.iValue1 = iValue1;
@@ -59,6 +61,11 @@ public class SQLDatas {
 	public SQLDatas(int iValue1, String stringValue1) {
 		this.iValue1 = iValue1;
 		this.stringValue1 = stringValue1;
+	}
+	
+	public SQLDatas(AuctionEntry entry, Faction faction) {
+		this.entry = entry;
+		this.faction = faction;
 	}
 	
 	public SQLDatas(int iValue1, int iValue2, int iValue3) {
@@ -112,15 +119,8 @@ public class SQLDatas {
 		this.stringValue3 = stringValue3;
 	}
 	
-	public SQLDatas(int iValue1, Faction faction, int iValue2, int iValue3, int iValue4, int iValue5, int iValue6, int iValue7) {
-		this.faction = faction;
-		this.iValue1 = iValue1;
-		this.iValue2 = iValue2;
-		this.iValue3 = iValue3;
-		this.iValue4 = iValue4;
-		this.iValue5 = iValue5;
-		this.iValue6 = iValue6;
-		this.iValue7 = iValue7;
+	public AuctionEntry getEntry() {
+		return this.entry;
 	}
 	
 	public Faction getFaction() {

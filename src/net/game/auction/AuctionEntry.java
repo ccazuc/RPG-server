@@ -31,9 +31,27 @@ public class AuctionEntry {
 		this.canBeBuy = buyoutPrice > 0;
 	}
 	
+	public AuctionEntry(int entryID, int sellerID, String sellerName, Item item, int buyoutPrice, int initialBidPrice, int bidPrice, int lastBidderID, int timeLeft, long depositTimer) {
+		this.entryID = entryID;
+		this.sellerID = sellerID;
+		this.sellerName = sellerName;
+		this.item = item;
+		this.buyoutPrice = buyoutPrice;
+		this.initialBidPrice = initialBidPrice;
+		this.bidPrice = bidPrice;
+		this.lastBidderID = lastBidderID;
+		this.canBeBuy = buyoutPrice > 0;
+		this.depositTimer = depositTimer;
+		this.auctionEndTimer = depositTimer+timeLeft;
+	}
+	
 	public AuctionHouseDuration getUpdatedDuration() {
 		int timeLeft = (int)(this.auctionEndTimer-Server.getLoopTickTimer());
 		return AuctionHouseDuration.getDuration(timeLeft);
+	}
+	
+	public int getTimeLeft() {
+		return (int)(this.auctionEndTimer-Server.getLoopTickTimer());
 	}
 	
 	public boolean canBeBuy() {

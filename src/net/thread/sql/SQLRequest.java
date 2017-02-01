@@ -9,10 +9,10 @@ import net.Server;
 public class SQLRequest {
 	
 	protected JDOStatement statement;
-	protected ArrayList<SQLDatas> datasList;
-	protected String name;
-	protected SQLRequestPriority priority;
-	protected boolean debugActive;
+	protected final ArrayList<SQLDatas> datasList;
+	protected final String name;
+	protected final SQLRequestPriority priority;
+	protected final boolean debugActive;
 	
 	public SQLRequest(String request, String name, SQLRequestPriority priority) {
 		try {
@@ -34,9 +34,7 @@ public class SQLRequest {
 	
 	public final void execute() {
 		gatherData();
-		if(this.datasList.size() > 0) {
-			this.datasList.remove(0);
-		}
+		this.datasList.remove(0);
 	}
 	
 	public String getName() {
