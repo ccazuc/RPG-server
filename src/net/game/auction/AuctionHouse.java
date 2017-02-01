@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
+import net.game.unit.Player;
 import net.thread.auctionhouse.SearchRequest;
 import net.utils.StringUtils;
 
@@ -43,6 +44,26 @@ public class AuctionHouse {
 		while(--i >= 0) {
 			removeItemInSortedList(this.sortedList.get(i), entry);
 		}
+	}
+	
+	public ArrayList<AuctionEntry> getItemSoldByPlayerList(Player player) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(0);
+		ArrayList<AuctionEntry> resultList = null;
+		AuctionEntry entry;
+		ListIterator<AuctionEntry> ite = list.listIterator();
+		boolean init = false;
+		int playerID = player.getUnitID();
+		while(ite.hasNext()) {
+			entry = ite.next();
+			if(entry.getSellerID() == playerID) {
+				if(!init) {
+					resultList = new ArrayList<AuctionEntry>();
+					init = true;
+				}
+				resultList.add(entry);
+			}
+		}
+		return resultList;
 	}
 	
 	public AuctionEntry getEntry(int entryID) {

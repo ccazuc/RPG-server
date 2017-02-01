@@ -13,6 +13,10 @@ public class CommandDeleteItem extends Command {
 		Connection connection = player.getConnection();
 		DragItem type = DragItem.values()[connection.readByte()];
 		int slot = connection.readInt();
+		if(type == null) {
+			player.close();
+			return;
+		}
 		if(type == DragItem.INVENTORY) {
 			player.setStuff(slot, null);
 			write(connection, type, slot);

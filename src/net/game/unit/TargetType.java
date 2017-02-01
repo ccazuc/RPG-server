@@ -27,4 +27,11 @@ public enum TargetType {
 	public byte getMaxIndex() {
 		return this.maxIndex;
 	}
+	
+	public static TargetType getValue(byte b) {
+		if(b >= 0 && b < values().length) {
+			return values()[b];
+		}
+		return null;
+	}
 }

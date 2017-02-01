@@ -1,5 +1,6 @@
 package net.game.auction;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -77,6 +78,15 @@ public class AuctionHouseMgr {
 		else {
 			//TODO: send a mail with the money
 		}
+	}
+	
+	public static ArrayList<AuctionEntry> getItemSoldByPlayerList(Player player) {
+		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
+		if(ah == null) {
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			return null;
+		}
+		return ah.getItemSoldByPlayerList(player);
 	}
 	
 	public static AuctionEntry getEntry(Player player, int entryID) {

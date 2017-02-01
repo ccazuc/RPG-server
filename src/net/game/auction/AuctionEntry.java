@@ -17,7 +17,7 @@ public class AuctionEntry {
 	private final long depositTimer;
 	private final long auctionEndTimer;
 	private final boolean canBeBuy;
-	private boolean bought;
+	private boolean locked;
 	
 	public AuctionEntry(int entryID, Player seller, Item item, int buyoutPrice, int initialBidPrice, AuctionHouseDuration duration) {
 		this.item = item;
@@ -58,12 +58,12 @@ public class AuctionEntry {
 		return this.canBeBuy;
 	}
 	
-	public void setHasBeenBuy() {
-		this.bought = true;
+	public void lock() {
+		this.locked = true;
 	}
 	
-	public boolean hasBeenBought() {
-		return this.bought;
+	public boolean isLocked() {
+		return this.locked;
 	}
 	
 	public int getLastBidderID() {

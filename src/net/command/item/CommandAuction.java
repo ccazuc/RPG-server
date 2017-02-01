@@ -1,13 +1,16 @@
 package net.command.item;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ListIterator;
 
 import net.command.Command;
 import net.command.chat.CommandSendMessage;
 import net.command.chat.MessageType;
+import net.command.player.CommandSendRedAlert;
 import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.DefaultRedAlert;
 import net.game.auction.AuctionEntry;
 import net.game.auction.AuctionHouseDuration;
 import net.game.auction.AuctionHouseFilter;
@@ -69,7 +72,7 @@ public class CommandAuction extends Command {
 			}
 			int depositPrice = AuctionHouseMgr.calculateDepositPrice(item, duration);
 			if(player.getGold() < depositPrice) {
-				//TODO: send not enough money
+				CommandSendRedAlert.write(player, DefaultRedAlert.NOT_ENOUGH_GOLD);
 				return;
 			}
 			player.setGold(player.getGold()-depositPrice);
@@ -82,7 +85,7 @@ public class CommandAuction extends Command {
 			if(entry == null) {
 				return;
 			}
-			if(entry.hasBeenBought()) {
+			if(entry.isLocked()) {
 				//TODO: send item has been bought
 				return;
 			}
@@ -91,10 +94,10 @@ public class CommandAuction extends Command {
 				return;
 			}
 			if(player.getGold() < entry.getBuyoutPrice()) {
-				//TODO: send  not enough money
+				CommandSendRedAlert.write(player, DefaultRedAlert.NOT_ENOUGH_GOLD);
 				return;
 			}
-			entry.setHasBeenBuy();
+			entry.lock();
 			player.setGold(player.getGold()-entry.getBuyoutPrice());
 			AuctionHouseRunnable.buyoutItem(player, entry);
 		}
@@ -105,7 +108,7 @@ public class CommandAuction extends Command {
 			if(entry == null) {
 				return;
 			}
-			if(entry.hasBeenBought()) {
+			if(entry.isLocked()) {
 				//TODO: send item has been bought
 				return;
 			}
@@ -114,7 +117,7 @@ public class CommandAuction extends Command {
 				return;
 			}
 			if(player.getGold() < bidValue) {
-				//TODO: not enough gold
+				CommandSendRedAlert.write(player, DefaultRedAlert.NOT_ENOUGH_GOLD);
 				return;
 			}
 			entry.setBid(bidValue);
@@ -128,7 +131,7 @@ public class CommandAuction extends Command {
 			if(entry == null) {
 				return;
 			}
-			if(entry.hasBeenBought()) {
+			if(entry.isLocked()) {
 				//TODO: send item has been bought
 				return;
 			}
@@ -143,7 +146,7 @@ public class CommandAuction extends Command {
 			}
 			//TODO: verify that the cost formula is correct
 			player.setGold(player.getGold()-cost);
-			entry.setHasBeenBuy();
+			entry.lock();
 			AuctionHouseRunnable.cancelAuction(player, entry);
 		}
 	}
@@ -167,6 +170,31 @@ public class CommandAuction extends Command {
 			connection.writeInt(entry.getBuyoutPrice());
 			connection.writeInt(entry.getBidPrice());
 			connection.writeByte(entry.getUpdatedDuration().getValue());
+		}
+		connection.endPacket();
+		connection.send();
+	}
+	
+	public static void initSellItem(Player player) {
+		ArrayList<AuctionEntry> list = AuctionHouseMgr.getItemSoldByPlayerList(player);
+		if(list == null || list.size() == 0) {
+			return;
+		}
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.AUCTION);
+		connection.writeShort(PacketID.AUCTION_INIT_SELL_ITEM);
+		connection.writeShort((short)list.size());
+		int i = -1;
+		AuctionEntry entry;
+		while(++i < list.size()) {
+			entry = list.get(i);
+			connection.writeInt(entry.getEntryID());
+			connection.writeInt(entry.getItemID());
+			connection.writeInt(entry.getItem().getAmount());
+			connection.writeByte(entry.getUpdatedDuration().getValue());
+			connection.writeInt(entry.getBidPrice());
+			connection.writeInt(entry.getBuyoutPrice());
 		}
 		connection.endPacket();
 		connection.send();

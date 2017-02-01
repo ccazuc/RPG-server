@@ -18,8 +18,12 @@ public class CommandCast extends Command {
 		short packetId = connection.readShort();
 		if(packetId == PacketID.SPELL_CAST_REQUEST) {
 			int id = connection.readInt();
-			TargetType type = TargetType.values()[connection.readByte()];
+			TargetType type = TargetType.getValue(connection.readByte());
 			byte index = connection.readByte();
+			if(type == null) {
+				player.close();
+				return;
+			}
 			if(player.getStamina() <= 0) {
 				return;
 			}

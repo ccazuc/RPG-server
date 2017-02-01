@@ -10,10 +10,11 @@ public enum DefaultRedAlert {
 	SPELL_NOT_READY_YET((byte)5, "This spell is not ready yet."),
 	NOTHING_TO_ATTACK((byte)6, "There is nothing to attack."),
 	NOT_ENOUGH_MANA(((byte)7), "I don't have enough mana to do this."),
+	NOT_ENOUGH_GOLD(((byte)8), "I don't have enough gold."),
 	;
 	
-	private byte value;
-	private String message;
+	private final byte value;
+	private final String message;
 	
 	private DefaultRedAlert(byte value, String message) {
 		this.message = message;

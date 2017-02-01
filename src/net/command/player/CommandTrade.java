@@ -15,6 +15,7 @@ import net.game.item.stuff.Stuff;
 import net.game.log.Log;
 import net.game.manager.IgnoreMgr;
 import net.game.unit.Player;
+import net.utils.StringUtils;
 
 public class CommandTrade extends Command {
 
@@ -28,7 +29,11 @@ public class CommandTrade extends Command {
 				CommandPlayerNotFound.write(connection, traded);
 				return;
 			}
-			traded = traded.substring(0, 1).toUpperCase()+traded.substring(1).toLowerCase();
+			traded = StringUtils.formatPlayerName(traded);
+			if(!StringUtils.checkPlayerNameLength(traded)) {
+				CommandPlayerNotFound.write(connection, traded);
+				return;
+			}
 			Player trade = Server.getInGameCharacterByName(traded);
 			if(trade == null) {
 				CommandPlayerNotFound.write(connection, traded);
@@ -63,6 +68,7 @@ public class CommandTrade extends Command {
 		else if(packetID == PacketID.TRADE_ADD_ITEM) { //add an item on trade's frame
 			if(player.getTrade() == null) {
 				Log.writePlayerLog(player, "Tried to add an item to the trade whereas he's not trading.");
+				player.close();
 				return;
 			}
 			DragItem slotType = DragItem.values()[connection.readByte()];
@@ -151,10 +157,12 @@ public class CommandTrade extends Command {
 			int slot = connection.readInt();
 			if(player.getTrade() == null) {
 				Log.writePlayerLog(player, "Tried to remove item from a trade whereas he's not trading.");
+				player.close();
 				return;
 			}
 			if(slot < 0 || slot > 6) {
 				Log.writePlayerLog(player, "Tried to remove remove an item from trade slot : "+slot+'.');
+				player.close();
 				return;
 			}
 			removeItem(player, slot);
@@ -164,6 +172,7 @@ public class CommandTrade extends Command {
 		else if(packetID == PacketID.TRADE_ACCEPT) { //lock the trade
 			if(player.getTrade() == null) {
 				Log.writePlayerLog(player, "Tried to accept the trade whereas he's not trading.");
+				player.close();
 				return;
 			}
 			tradeAccept(player.getPlayerTrade());
@@ -178,6 +187,7 @@ public class CommandTrade extends Command {
 		else if(packetID == PacketID.TRADE_CLOSE) { //cancel the trade
 			if(player.getTrade() == null) {
 				Log.writePlayerLog(player, "Tried to close the trade whereas he's not trading.");
+				player.close();
 				return;
 			}
 			closeTrade(player);
