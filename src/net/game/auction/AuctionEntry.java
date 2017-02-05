@@ -19,7 +19,7 @@ public class AuctionEntry {
 	private final boolean canBeBuy;
 	private boolean locked;
 	
-	public AuctionEntry(int entryID, Player seller, Item item, int buyoutPrice, int initialBidPrice, AuctionHouseDuration duration) {
+	public AuctionEntry(int entryID, Player seller, Item item, int buyoutPrice, int initialBidPrice, AuctionHouseInitialDuration duration) {
 		this.item = item;
 		this.entryID = entryID;
 		this.buyoutPrice = buyoutPrice;
@@ -45,9 +45,8 @@ public class AuctionEntry {
 		this.auctionEndTimer = depositTimer+timeLeft;
 	}
 	
-	public AuctionHouseDuration getUpdatedDuration() {
-		int timeLeft = (int)(this.auctionEndTimer-Server.getLoopTickTimer());
-		return AuctionHouseDuration.getDuration(timeLeft);
+	public AuctionHouseLeftDuration getUpdatedDuration() {
+		return AuctionHouseLeftDuration.getDuration((int)(this.auctionEndTimer-Server.getLoopTickTimer()));
 	}
 	
 	public int getTimeLeft() {

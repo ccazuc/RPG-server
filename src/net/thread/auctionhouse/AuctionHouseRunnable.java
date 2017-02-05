@@ -3,7 +3,7 @@ package net.thread.auctionhouse;
 import java.util.ArrayList;
 
 import net.game.auction.AuctionEntry;
-import net.game.auction.AuctionHouseDuration;
+import net.game.auction.AuctionHouseInitialDuration;
 import net.game.auction.AuctionHouseFilter;
 import net.game.auction.AuctionHouseQualityFilter;
 import net.game.auction.AuctionHouseSort;
@@ -55,7 +55,7 @@ public class AuctionHouseRunnable implements Runnable {
 		}
 	}
 	
-	public static void sellItem(Player player, Item item, int buyoutPrice, int bidPrice, AuctionHouseDuration duration) {
+	public static void sellItem(Player player, Item item, int buyoutPrice, int bidPrice, AuctionHouseInitialDuration duration) {
 		synchronized(taskWaitingQueue) {
 			taskWaitingQueue.add(new SellItemRequest(player, item, buyoutPrice, bidPrice, duration));
 		}

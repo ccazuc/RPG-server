@@ -40,7 +40,7 @@ public class AuctionHouseMgr {
 		return ah.getEntryList(request);
 	}
 	
-	public static void addAuction(Player player, Item item, int bidPrice, int buyoutPrice, AuctionHouseDuration duration) {
+	public static void addAuction(Player player, Item item, int bidPrice, int buyoutPrice, AuctionHouseInitialDuration duration) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
 			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
@@ -113,7 +113,7 @@ public class AuctionHouseMgr {
 		//TODO: send mail to the seller and buyer
 	}
 	
-	public static int calculateDepositPrice(Item item, AuctionHouseDuration duration) {
+	public static int calculateDepositPrice(Item item, AuctionHouseInitialDuration duration) {
 		return (int)(item.getAmount()*item.getSellPrice()*duration.getCoefficient());
 	}
 	

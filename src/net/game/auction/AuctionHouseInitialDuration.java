@@ -1,6 +1,6 @@
 package net.game.auction;
 
-public enum AuctionHouseDuration {
+public enum AuctionHouseInitialDuration {
 
 	ERROR((byte)0, 0, 0),
 	NORMAL((byte)1, .15f, 43200000),	//12 hours
@@ -13,7 +13,7 @@ public enum AuctionHouseDuration {
 	private final float feesCoefficient;
 	private final int duration;
 	
-	private AuctionHouseDuration(byte value, float f, int duration) {
+	private AuctionHouseInitialDuration(byte value, float f, int duration) {
 		this.value = value;
 		this.feesCoefficient = f;
 		this.duration = duration;
@@ -31,14 +31,14 @@ public enum AuctionHouseDuration {
 		return this.value;
 	}
 	
-	public static AuctionHouseDuration getDuration(byte value) {
+	public static AuctionHouseInitialDuration getDuration(byte value) {
 		if(value >= 0 && value < values().length) {
 			return values()[value];
 		}
 		return ERROR;
 	}
 	
-	public static AuctionHouseDuration getDuration(int timeLeft) {
+	public static AuctionHouseInitialDuration getDuration(int timeLeft) {
 		if(timeLeft >= VERY_LONG.duration) {
 			return VERY_LONG;
 		}

@@ -11,6 +11,7 @@ public enum DefaultRedAlert {
 	NOTHING_TO_ATTACK((byte)6, "There is nothing to attack."),
 	NOT_ENOUGH_MANA(((byte)7), "I don't have enough mana to do this."),
 	NOT_ENOUGH_GOLD(((byte)8), "I don't have enough gold."),
+	MUST_MEET_MIN_BID(((byte)9), "You must meet min bid."),
 	;
 	
 	private final byte value;

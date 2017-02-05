@@ -12,7 +12,7 @@ import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.DefaultRedAlert;
 import net.game.auction.AuctionEntry;
-import net.game.auction.AuctionHouseDuration;
+import net.game.auction.AuctionHouseInitialDuration;
 import net.game.auction.AuctionHouseFilter;
 import net.game.auction.AuctionHouseMgr;
 import net.game.auction.AuctionHouseQualityFilter;
@@ -55,8 +55,8 @@ public class CommandAuction extends Command {
 			byte bagSlot = connection.readByte();
 			int buyoutPrice = connection.readInt();
 			int bidPrice = connection.readInt();
-			AuctionHouseDuration duration = AuctionHouseDuration.getDuration(connection.readByte());
-			if(duration == AuctionHouseDuration.ERROR) {
+			AuctionHouseInitialDuration duration = AuctionHouseInitialDuration.getDuration(connection.readByte());
+			if(duration == AuctionHouseInitialDuration.ERROR) {
 				player.close();
 				return;
 			}
@@ -86,7 +86,7 @@ public class CommandAuction extends Command {
 				return;
 			}
 			if(entry.isLocked()) {
-				//TODO: send item has been bought
+				CommandSendMessage.selfWithoutAuthor(connection, "This item is no longer available", MessageType.SELF);
 				return;
 			}
 			if(!entry.canBeBuy()) {
@@ -109,7 +109,7 @@ public class CommandAuction extends Command {
 				return;
 			}
 			if(entry.isLocked()) {
-				//TODO: send item has been bought
+				CommandSendMessage.selfWithoutAuthor(connection, "This item is no longer available", MessageType.SELF);
 				return;
 			}
 			if(bidValue < entry.getBidPrice()) {
@@ -132,7 +132,7 @@ public class CommandAuction extends Command {
 				return;
 			}
 			if(entry.isLocked()) {
-				//TODO: send item has been bought
+				CommandSendMessage.selfWithoutAuthor(connection, "This item is no longer available", MessageType.SELF);
 				return;
 			}
 			if(entry.getSellerID() != player.getUnitID()) {
@@ -147,24 +147,46 @@ public class CommandAuction extends Command {
 			//TODO: verify that the cost formula is correct
 			player.setGold(player.getGold()-cost);
 			entry.lock();
+			cancelSell(player, entry);
 			AuctionHouseRunnable.cancelAuction(player, entry);
 		}
 	}
 	
-	public static void sendQuery(Player player, LinkedList<AuctionEntry> list, int startIndex) {
-		ListIterator<AuctionEntry> ite = list.listIterator(startIndex);
-		int i = -1;
-		byte amountResult = (byte)Math.min(list.size()-startIndex, (byte)50);
+	public static void cancelSell(Player player, AuctionEntry entry) {
 		Connection connection = player.getConnection();
 		connection.startPacket();
 		connection.writeShort(PacketID.AUCTION);
+		connection.writeShort(PacketID.AUCTION_CANCEL_SELL);
+		connection.writeInt(entry.getEntryID());
+		connection.endPacket();
+		connection.send();
+	}
+	
+	public static void sendQuery(Player player, LinkedList<AuctionEntry> list, int startIndex) {
+		Connection connection = player.getConnection();
+		if(list == null || list.size() == 0) {
+			connection.startPacket();
+			connection.writeShort(PacketID.AUCTION);
+			connection.writeShort(PacketID.AUCTION_SEARCH_QUERY);
+			connection.writeBoolean(false);
+			connection.endPacket();
+			connection.send();
+			return;
+		}
+		ListIterator<AuctionEntry> ite = list.listIterator(startIndex);
+		int i = -1;
+		byte amountResult = (byte)Math.min(list.size()-startIndex, (byte)50);
+		connection.startPacket();
+		connection.writeShort(PacketID.AUCTION);
 		connection.writeShort(PacketID.AUCTION_SEARCH_QUERY);
+		connection.writeBoolean(true);
 		connection.writeByte(amountResult);
 		AuctionEntry entry = null;
 		while(ite.hasNext() && ++i < amountResult) {
 			entry = ite.next();
 			connection.writeInt(entry.getEntryID());
 			connection.writeString(entry.getSellerName());
+			connection.writeInt(entry.getItem().getItemType().getValue());
 			connection.writeInt(entry.getItemID());
 			connection.writeInt(entry.getItem().getAmount());
 			connection.writeInt(entry.getBuyoutPrice());

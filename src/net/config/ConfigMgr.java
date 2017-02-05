@@ -10,7 +10,7 @@ public class ConfigMgr {
 	public final static int KEY_TIMEOUT_TIMER = 15000;
 	public final static boolean ALLOW_INTERFACTION_CHANNEL = true;
 	public final static boolean ALLOW_INTERFACTION_AUCTION_HOUSE = true;
-	public final static boolean TCP_NO_DELAY_ENABLED = false;
+	public final static boolean TCP_NO_DELAY_ENABLED = true;
 	
 	public static String getServerMessageOfTheDay() {
 		return SERVER_MESSAGE_OF_THE_DAY;
