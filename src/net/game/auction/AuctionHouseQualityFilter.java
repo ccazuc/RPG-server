@@ -8,7 +8,8 @@ public enum AuctionHouseQualityFilter {
 	COMMON((byte)3),
 	UNCOMMON((byte)4),
 	RARE((byte)5),
-	LEGENDARY((byte)6),
+	EPIC((byte)6),
+	LEGENDARY((byte)7),
 	
 	;
 	

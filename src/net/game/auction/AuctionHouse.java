@@ -34,8 +34,8 @@ public class AuctionHouse {
 		addEntryInTimeLeftDescendingList(entry);
 		addEntryInLevelAscendingList(entry);
 		addEntryInLevelDescendingList(entry);
-		addEntryInQualityAscendingList(entry);
-		addEntryInQualityDescendingList(entry);
+		addEntryInRarityAscendingList(entry);
+		addEntryInRarityDescendingList(entry);
 	}
 	
 	public void removeItem(AuctionEntry entry) {
@@ -76,19 +76,22 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		LinkedList<AuctionEntry> result = null;
 		boolean init = false;
-		boolean searchName = request.getSearch().length() == 0;
-		int minLevel = request.getMinLevel();
-		int maxLevel = request.getMaxLevel();
+		boolean searchName = request.getSearch().length() != 0;
+		short minLevel = request.getMinLevel();
+		short maxLevel = request.getMaxLevel();
 		boolean usable = request.isUsable();
 		byte quality = (byte)(request.getQualityFilter().getValue()+1);
+		boolean exactWord = request.getExactWord();
 		boolean qualityAll = request.getQualityFilter() == AuctionHouseQualityFilter.ALL;
 		String search = StringUtils.toLowerCase(request.getSearch());
-		if(minLevel > maxLevel) {
+		if(minLevel > maxLevel && maxLevel != 0) {
 			return null;
 		}
+		boolean hasMaxLevel = maxLevel != 0;
+		boolean hasMinLevel = minLevel != 0;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(entry.getItem().getLevel() < minLevel || entry.getItem().getLevel() > maxLevel) {
+			if((hasMinLevel && entry.getItem().getLevel() < minLevel) || (hasMaxLevel && entry.getItem().getLevel() > maxLevel)) {
 				continue;
 			}
 			if(!qualityAll && quality != entry.getItem().getQuality().getValue()) {
@@ -98,8 +101,8 @@ public class AuctionHouse {
 			if(usable) {
 				//TODO: filter equipable items
 			}
-			if(!searchName) {
-				if(!entry.getItem().getLowerCaseName().contains(search)) {
+			if(searchName) {
+				if(!(exactWord && entry.getItem().getLowerCaseName().equals(search)) && (!exactWord && !entry.getItem().getLowerCaseName().contains(search))) {
 					continue;
 				}
 			}
@@ -109,7 +112,7 @@ public class AuctionHouse {
 			}
 			result.add(entry);
 		}
-		return list;
+		return result;
 	}
 	
 	private void addEntryInBidAscendingList(AuctionEntry auction) {
@@ -123,6 +126,7 @@ public class AuctionHouse {
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
 	private void addEntryInBidDescendingList(AuctionEntry auction) {
@@ -136,6 +140,7 @@ public class AuctionHouse {
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
 	private void addEntryInSellerAscendingList(AuctionEntry auction) {
@@ -149,6 +154,7 @@ public class AuctionHouse {
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
 	private void addEntryInSellerDescendingList(AuctionEntry auction) {
@@ -162,6 +168,7 @@ public class AuctionHouse {
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
 	private void addEntryInTimeLeftAscendingList(AuctionEntry auction) {
@@ -175,6 +182,7 @@ public class AuctionHouse {
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
 	private void addEntryInTimeLeftDescendingList(AuctionEntry auction) {
@@ -188,6 +196,7 @@ public class AuctionHouse {
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
 	private void addEntryInLevelAscendingList(AuctionEntry auction) {
@@ -201,6 +210,7 @@ public class AuctionHouse {
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
 	private void addEntryInLevelDescendingList(AuctionEntry auction) {
@@ -214,10 +224,11 @@ public class AuctionHouse {
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
-	private void addEntryInQualityAscendingList(AuctionEntry auction) {
-		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.LEVEL_ASCENDING.getValue());
+	private void addEntryInRarityAscendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.RARITY_ASCENDING.getValue());
 		final ListIterator<AuctionEntry> iterator = list.listIterator();
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
@@ -229,8 +240,8 @@ public class AuctionHouse {
 		}
 	}
 	
-	private void addEntryInQualityDescendingList(AuctionEntry auction) {
-		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.LEVEL_DESCENDING.getValue());
+	private void addEntryInRarityDescendingList(AuctionEntry auction) {
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.RARITY_DESCENDING.getValue());
 		final ListIterator<AuctionEntry> iterator = list.listIterator();
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
@@ -240,6 +251,7 @@ public class AuctionHouse {
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
 	private static void removeItemInSortedList(LinkedList<AuctionEntry> sortedList, AuctionEntry removedEntry) {

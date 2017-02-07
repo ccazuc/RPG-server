@@ -24,6 +24,9 @@ public class CommandRequestItem extends Command {
 		if(isGem) {
 			gemSlot = connection.readInt();
 		}
+		if(id == 0) {
+			return;
+		}
 		Item item = null;
 		boolean knownItem = player.itemHasBeenSendToClient(id);
 		if(!knownItem) {

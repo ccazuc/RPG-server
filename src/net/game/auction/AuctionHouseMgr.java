@@ -34,7 +34,7 @@ public class AuctionHouseMgr {
 	public static LinkedList<AuctionEntry> getEntryList(Player player, SearchRequest request) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.getEntryList");
 			return null;
 		}
 		return ah.getEntryList(request);
@@ -63,7 +63,7 @@ public class AuctionHouseMgr {
 	public static void cancelAuction(Player player, AuctionEntry entry) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.cancelAuction");
 			return;
 		}
 		ah.removeItem(entry);
@@ -83,7 +83,7 @@ public class AuctionHouseMgr {
 	public static ArrayList<AuctionEntry> getItemSoldByPlayerList(Player player) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.getItemSoldByPlayerList");
 			return null;
 		}
 		return ah.getItemSoldByPlayerList(player);
@@ -92,7 +92,7 @@ public class AuctionHouseMgr {
 	public static AuctionEntry getEntry(Player player, int entryID) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.getEntry");
 			return null;
 		}
 		return ah.getEntry(entryID);
@@ -101,7 +101,7 @@ public class AuctionHouseMgr {
 	public static void buyoutAuction(Player player, AuctionEntry entry) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.buyoutAuction");
 			return;
 		}
 		ah.removeItem(entry);

@@ -31,7 +31,10 @@ public class AuctionHouseRunnable implements Runnable {
 				}
 			}
 			while(taskQueue.size() > 0) {
+				long timer = System.nanoTime();
 				taskQueue.get(0).execute();
+				delta = System.nanoTime()-timer;
+				System.out.println("Auction task took "+(delta/1000)+" µs to execute.");
 				taskQueue.remove(0);
 			}
 			delta = System.currentTimeMillis()-time;
@@ -49,9 +52,9 @@ public class AuctionHouseRunnable implements Runnable {
 		}
 	}
 	
-	public static void addSearchRequest(Player player, String search, short page, byte minLevel, byte maxLevel, AuctionHouseQualityFilter qualityFilter, AuctionHouseSort sort, AuctionHouseFilter filter, boolean isUsable) {
+	public static void addSearchRequest(Player player, String search, short page, short minLevel, short maxLevel, AuctionHouseQualityFilter qualityFilter, AuctionHouseSort sort, AuctionHouseFilter filter, boolean exactWord, boolean isUsable) {
 		synchronized(taskWaitingQueue) {
-			taskWaitingQueue.add(new SearchRequest(player, search, page, minLevel, maxLevel, qualityFilter, sort, filter, isUsable));
+			taskWaitingQueue.add(new SearchRequest(player, search, page, minLevel, maxLevel, qualityFilter, sort, filter, exactWord, isUsable));
 		}
 	}
 	
@@ -73,7 +76,7 @@ public class AuctionHouseRunnable implements Runnable {
 		}
 	}
 	
-	public static void close() {
+	public void close() {
 		shouldClose = true;
 	}
 }

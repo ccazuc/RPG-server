@@ -16,6 +16,7 @@ import net.config.ConfigMgr;
 import net.connection.ConnectionManager;
 import net.connection.Key;
 import net.game.auction.AuctionHouseDBMgr;
+import net.game.auction.AuctionHouseMgr;
 import net.game.aura.AuraMgr;
 import net.game.chat.StoreChatCommand;
 import net.game.guild.GuildMgr;
@@ -87,6 +88,7 @@ public class Server {
 		WeaponManager.loadWeapons();
 		GemManager.loadGems();
 		ContainerManager.loadContainer();
+		AuctionHouseMgr.initAuctionHouseMgr();
 		AuctionHouseDBMgr.loadAllAuction();
 		AuraMgr.loadAuras();
 		SpellMgr.loadSpells();

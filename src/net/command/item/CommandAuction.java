@@ -46,10 +46,11 @@ public class CommandAuction extends Command {
 			}
 			short page = connection.readShort();
 			boolean isUsable = connection.readBoolean();
-			byte minLevel = connection.readByte();
-			byte maxLevel = connection.readByte();
+			short minLevel = connection.readShort();
+			short maxLevel = connection.readShort();
+			boolean exactWord = connection.readBoolean();
 			String search = connection.readString();
-			AuctionHouseRunnable.addSearchRequest(player, search, page, minLevel, maxLevel, qualityFilter, sort, filter, isUsable);
+			AuctionHouseRunnable.addSearchRequest(player, search, page, minLevel, maxLevel, qualityFilter, sort, filter, exactWord, isUsable);
 		}
 		else if(packetId == PacketID.AUCTION_SELL_ITEM) {
 			byte bagSlot = connection.readByte();
@@ -162,12 +163,12 @@ public class CommandAuction extends Command {
 		connection.send();
 	}
 	
-	public static void sendQuery(Player player, LinkedList<AuctionEntry> list, int startIndex) {
+	public static void sendQuery(Player player, LinkedList<AuctionEntry> list, int startIndex, short page) {
 		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.AUCTION);
+		connection.writeShort(PacketID.AUCTION_SEARCH_QUERY);
 		if(list == null || list.size() == 0) {
-			connection.startPacket();
-			connection.writeShort(PacketID.AUCTION);
-			connection.writeShort(PacketID.AUCTION_SEARCH_QUERY);
 			connection.writeBoolean(false);
 			connection.endPacket();
 			connection.send();
@@ -176,17 +177,16 @@ public class CommandAuction extends Command {
 		ListIterator<AuctionEntry> ite = list.listIterator(startIndex);
 		int i = -1;
 		byte amountResult = (byte)Math.min(list.size()-startIndex, (byte)50);
-		connection.startPacket();
-		connection.writeShort(PacketID.AUCTION);
-		connection.writeShort(PacketID.AUCTION_SEARCH_QUERY);
 		connection.writeBoolean(true);
+		connection.writeInt(list.size());
+		connection.writeShort(page);
 		connection.writeByte(amountResult);
 		AuctionEntry entry = null;
 		while(ite.hasNext() && ++i < amountResult) {
 			entry = ite.next();
 			connection.writeInt(entry.getEntryID());
 			connection.writeString(entry.getSellerName());
-			connection.writeInt(entry.getItem().getItemType().getValue());
+			connection.writeByte(entry.getItem().getItemType().getValue());
 			connection.writeInt(entry.getItemID());
 			connection.writeInt(entry.getItem().getAmount());
 			connection.writeInt(entry.getBuyoutPrice());

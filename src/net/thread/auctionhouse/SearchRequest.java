@@ -15,14 +15,15 @@ public class SearchRequest implements AuctionHouseTask {
 	private final Player player;
 	private final String search;
 	private final short page;
-	private final byte minLevel;
-	private final byte maxLevel;
+	private final short minLevel;
+	private final short maxLevel;
 	private final AuctionHouseQualityFilter qualityFilter;
 	private final AuctionHouseSort sort;
 	private final AuctionHouseFilter filter;
+	private final boolean exactWord;
 	private final boolean isUsable;
 	
-	public SearchRequest(Player player, String search, short page, byte minLevel, byte maxLevel, AuctionHouseQualityFilter qualityFilter, AuctionHouseSort sort, AuctionHouseFilter filter, boolean isUsable) {
+	public SearchRequest(Player player, String search, short page, short minLevel, short maxLevel, AuctionHouseQualityFilter qualityFilter, AuctionHouseSort sort, AuctionHouseFilter filter, boolean exactWord, boolean isUsable) {
 		this.player = player;
 		this.search = search;
 		this.minLevel = minLevel;
@@ -31,6 +32,7 @@ public class SearchRequest implements AuctionHouseTask {
 		this.qualityFilter = qualityFilter;
 		this.sort = sort;
 		this.filter = filter;
+		this.exactWord = exactWord;
 		this.isUsable = isUsable;
 	}
 	
@@ -38,13 +40,13 @@ public class SearchRequest implements AuctionHouseTask {
 	public void execute() {
 		LinkedList<AuctionEntry> entryList = AuctionHouseMgr.getEntryList(this.player, this);
 		if(entryList == null || entryList.size() == 0) {
-			//TODO: send no result found
+			CommandAuction.sendQuery(this.player, null, 0, (short)0);
 			return;
 		}
 		if(this.page > Math.ceil(entryList.size()/(double)AuctionHouseMgr.NUMBER_RESULT_PER_PAGE)) {
 			return;
 		}
-		CommandAuction.sendQuery(this.player, entryList, this.page*AuctionHouseMgr.NUMBER_RESULT_PER_PAGE);
+		CommandAuction.sendQuery(this.player, entryList, (this.page-1)*AuctionHouseMgr.NUMBER_RESULT_PER_PAGE, this.page);
 	}
 	
 	public Player getPlayer() {
@@ -55,11 +57,11 @@ public class SearchRequest implements AuctionHouseTask {
 		return this.search;
 	}
 	
-	public byte getMinLevel() {
+	public short getMinLevel() {
 		return this.minLevel;
 	}
 	
-	public byte getMaxLevel() {
+	public short getMaxLevel() {
 		return this.maxLevel;
 	}
 	
@@ -73,6 +75,10 @@ public class SearchRequest implements AuctionHouseTask {
 	
 	public AuctionHouseFilter getFilter() {
 		return this.filter;
+	}
+	
+	public boolean getExactWord() {
+		return this.exactWord;
 	}
 	
 	public boolean isUsable() {

@@ -78,7 +78,7 @@ public class AuctionHouseDBMgr {
 	public static void loadAllAuction() {
 		try {
 			if(loadAllAuction == null) {
-				loadAllAuction = Server.getJDO().prepare("SELECT entry_id, faction, item_id, seller_id, buyout_price, bid_price, initial_bid_price, last_bidder_id, time_left FROM auction_entry");
+				loadAllAuction = Server.getJDO().prepare("SELECT entry_id, faction, item_id, seller_id, buyout_price, bid_price, initial_bid_price, last_bidder_id, time_left, deposit_timer FROM auction_entry");
 			}
 			loadAllAuction.clear();
 			loadAllAuction.execute();

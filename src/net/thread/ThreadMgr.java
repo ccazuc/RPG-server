@@ -34,29 +34,29 @@ public class ThreadMgr {
 	
 	public static void initThread() {
 		highPrioritySQLRunnable = new SQLRunnable(3);
-		highPrioritySQLRequestThread = new Thread(highPrioritySQLRunnable);
+		highPrioritySQLRequestThread = new Thread(highPrioritySQLRunnable, "High priority SQL thread");
 		highPrioritySQLRequestThread.start();
 		highPrioritySQLRequestThread.setPriority(Thread.MAX_PRIORITY);
 		
 		lowPrioritySQLRunnable = new SQLRunnable(15);
-		lowPrioritySQLRequestThread = new Thread(lowPrioritySQLRunnable);
+		lowPrioritySQLRequestThread = new Thread(lowPrioritySQLRunnable, "Low priority SQL thread");
 		lowPrioritySQLRequestThread.start();
 		
 		socketRunnable = new SocketRunnable(Server.getServerSocketChannel());
-		socketThread = new Thread(socketRunnable);
+		socketThread = new Thread(socketRunnable, "Socket thread");
 		socketThread.start();
 		socketThread.setPriority(1);
 		
 		chatCommandRunnable = new ChatCommandRunnable();
-		chatCommandThread = new Thread(chatCommandRunnable);
+		chatCommandThread = new Thread(chatCommandRunnable, "Chat command thread");
 		chatCommandThread.start();
 		
 		logRunnable = new LogRunnable();
-		logThread = new Thread(logRunnable);
+		logThread = new Thread(logRunnable, "Log thread");
 		logThread.start();
 		
 		auctionHouseRunnable = new AuctionHouseRunnable();
-		auctionHouseThread = new Thread(auctionHouseRunnable);
+		auctionHouseThread = new Thread(auctionHouseRunnable, "Auction house thread");
 		auctionHouseThread.start();
 	}
 	
