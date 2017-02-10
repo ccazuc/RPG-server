@@ -16,9 +16,7 @@ public class BanMgr {
 	private static JDOStatement getBanInfoIPAdressLowAsync;
 	private static JDOStatement getBanInfoAccountIDLowAsync;
 	private static JDOStatement getBanInfoCharacterIDLowAsync;
-	private static JDOStatement selectAllBanAccount;
 	private static JDOStatement removeExpiredBanAccount;
-	private static JDOStatement selectAllBanCharacter;
 	private static JDOStatement removeExpiredBanCharacter;
 	private final static SQLRequest banAccount = new SQLRequest("INSERT INTO ban_account (id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban account", SQLRequestPriority.HIGH) {
 		
@@ -82,18 +80,11 @@ public class BanMgr {
 		try {
 			long timer = System.currentTimeMillis();
 			if(removeExpiredBanAccount == null) {
-				removeExpiredBanAccount = Server.getJDO().prepare("DELETE FROM account_banned WHERE account_id = ?");
-				selectAllBanAccount = Server.getJDO().prepare("SELECT account_id FROM account_banned WHERE unban_date >= 0 AND unban_date <= ?");
+				removeExpiredBanAccount = Server.getJDO().prepare("DELETE account_id FROM account_banned WHERE unban_date > 0 AND unban_date <= ?");
 			}
-			selectAllBanAccount.clear();
-			selectAllBanAccount.putLong(timer);
-			selectAllBanAccount.execute();
-			while(selectAllBanAccount.fetch()) {
-				int accountId = selectAllBanAccount.getInt();
-				removeExpiredBanAccount.clear();
-				removeExpiredBanAccount.putInt(accountId);
-				removeExpiredBanAccount.execute();
-			}
+			removeExpiredBanAccount.clear();
+			removeExpiredBanAccount.putLong(timer);
+			removeExpiredBanAccount.execute();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();;
@@ -194,18 +185,11 @@ public class BanMgr {
 		try {
 			long timer = System.currentTimeMillis();
 			if(removeExpiredBanCharacter == null) {
-				removeExpiredBanCharacter = Server.getJDO().prepare("DELETE FROM characted_banned WHERE character_id = ?");
-				selectAllBanCharacter = Server.getJDO().prepare("SELECT character_id FROM character_banned WHERE unban_date >= 0 AND unban_date <= ?");
+				removeExpiredBanCharacter = Server.getJDO().prepare("DELETE character_id FROM character_banned WHERE unban_date >= 0 AND unban_date <= ?");
 			}
-			selectAllBanCharacter.clear();
-			selectAllBanCharacter.putLong(timer);
-			selectAllBanCharacter.execute();
-			while(selectAllBanCharacter.fetch()) {
-				int accountId = selectAllBanCharacter.getInt();
-				removeExpiredBanCharacter.clear();
-				removeExpiredBanCharacter.putInt(accountId);
-				removeExpiredBanCharacter.execute();
-			}
+			removeExpiredBanCharacter.clear();
+			removeExpiredBanCharacter.putLong(timer);
+			removeExpiredBanCharacter.execute();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();;

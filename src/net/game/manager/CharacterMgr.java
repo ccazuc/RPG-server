@@ -321,6 +321,12 @@ public class CharacterMgr {
 		}
 	}
 	
+	public static void saveEveryPlayer() {
+		for(Player player : Server.getInGamePlayerList().values()) {
+			fullySaveCharacter(player);
+		}
+	}
+	
 	public static void saveAuras(Player player) {
 		try {
 			if(saveAuras == null) {

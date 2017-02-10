@@ -124,9 +124,8 @@ public class Server {
 				System.out.println("[RUNTIME EXCEPTION OCCURED]");
 			}
 		}
-		//TODO: Save eveything of every player to the DB
+		CharacterMgr.saveEveryPlayer();
 		ThreadMgr.closeThreads();
-		
 	}
 	
 	private static void removeKey() {
