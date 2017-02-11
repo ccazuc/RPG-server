@@ -188,7 +188,7 @@ public class Buffer {
 		writeInt(potion.getId());
 		writeString(potion.getSpriteId());
 		writeString(potion.getStuffName());
-		writeInt(potion.getLevel());
+		writeByte(potion.getLevel());
 		writeInt(potion.getPotionHeal());
 		writeInt(potion.getPotionMana());
 		writeInt(potion.getSellPrice());
@@ -217,7 +217,7 @@ public class Buffer {
 		writeByte(weapon.getGemSlot3().getValue());
 		writeByte(weapon.getGemBonusType().getValue());
 		writeInt(weapon.getGemBonusValue());
-		writeInt(weapon.getLevel());
+		writeByte(weapon.getLevel());
 		writeInt(weapon.getArmor());
 		writeInt(weapon.getStamina());
 		writeInt(weapon.getMana());

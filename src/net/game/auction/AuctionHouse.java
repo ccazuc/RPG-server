@@ -121,7 +121,8 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getBidPrice() >= entry.getBidPrice()) {
+			if(auction.getBuyoutPrice() < entry.getBuyoutPrice()) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}
@@ -135,7 +136,8 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getBidPrice() <= entry.getBidPrice()) {
+			if(auction.getBuyoutPrice() > entry.getBuyoutPrice()) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}
@@ -149,7 +151,8 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getSellerName().compareTo(entry.getSellerName()) >= 0) {
+			if(auction.getSellerName().compareTo(entry.getSellerName()) > 0) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}
@@ -158,12 +161,13 @@ public class AuctionHouse {
 	}
 	
 	private void addEntryInSellerDescendingList(AuctionEntry auction) {
-		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.VENDOR_ASCENDING.getValue());
+		LinkedList<AuctionEntry> list = this.sortedList.get(AuctionHouseSort.VENDOR_DESCENDING.getValue());
 		final ListIterator<AuctionEntry> iterator = list.listIterator();
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getSellerName().compareTo(entry.getSellerName()) <= 0) {
+			if(auction.getSellerName().compareTo(entry.getSellerName()) < 0) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}
@@ -177,7 +181,8 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getAuctionEndTimer() >= entry.getAuctionEndTimer()) {
+			if(auction.getAuctionEndTimer() > entry.getAuctionEndTimer()) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}
@@ -191,7 +196,8 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getAuctionEndTimer() <= entry.getAuctionEndTimer()) {
+			if(auction.getAuctionEndTimer() < entry.getAuctionEndTimer()) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}
@@ -205,7 +211,8 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getItem().getLevel() >= entry.getItem().getLevel()) {
+			if(auction.getItem().getLevel() > entry.getItem().getLevel()) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}
@@ -219,7 +226,8 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getAuctionEndTimer() <= entry.getAuctionEndTimer()) {
+			if(auction.getAuctionEndTimer() < entry.getAuctionEndTimer()) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}
@@ -233,11 +241,13 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getItem().getQuality().getValue() >= entry.getItem().getQuality().getValue()) {
+			if(auction.getItem().getQuality().getValue() > entry.getItem().getQuality().getValue()) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}
 		}
+		iterator.add(auction);
 	}
 	
 	private void addEntryInRarityDescendingList(AuctionEntry auction) {
@@ -246,7 +256,8 @@ public class AuctionHouse {
 		AuctionEntry entry;
 		while(iterator.hasNext()) {
 			entry = iterator.next();
-			if(auction.getItem().getQuality().getValue() <= entry.getItem().getQuality().getValue()) {
+			if(auction.getItem().getQuality().getValue() < entry.getItem().getQuality().getValue()) {
+				iterator.previous();
 				iterator.add(auction);
 				return;
 			}

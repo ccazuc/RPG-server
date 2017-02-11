@@ -30,21 +30,7 @@ public class CommandRequestItem extends Command {
 		Item item = null;
 		boolean knownItem = player.itemHasBeenSendToClient(id);
 		if(!knownItem) {
-			if(StuffManager.exists(id)) {
-				item = StuffManager.getStuff(id);
-			}
-			else if(WeaponManager.exists(id)) {
-				item = WeaponManager.getWeapon(id);
-			}
-			else if(GemManager.exists(id)) {
-				item = GemManager.getGem(id);
-			}
-			else if(PotionManager.exists(id)) {
-				item = PotionManager.getPotion(id);
-			}
-			else if(ContainerManager.exists(id)) {
-				item = ContainerManager.getContainer(id);
-			}
+			item = Item.getItem(id);
 			if(item == null) {
 				return;
 			}

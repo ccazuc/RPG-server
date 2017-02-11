@@ -80,7 +80,7 @@ public class BanMgr {
 		try {
 			long timer = System.currentTimeMillis();
 			if(removeExpiredBanAccount == null) {
-				removeExpiredBanAccount = Server.getJDO().prepare("DELETE account_id FROM account_banned WHERE unban_date > 0 AND unban_date <= ?");
+				removeExpiredBanAccount = Server.getJDO().prepare("DELETE FROM account_banned WHERE unban_date > 0 AND unban_date <= ?");
 			}
 			removeExpiredBanAccount.clear();
 			removeExpiredBanAccount.putLong(timer);
@@ -185,7 +185,7 @@ public class BanMgr {
 		try {
 			long timer = System.currentTimeMillis();
 			if(removeExpiredBanCharacter == null) {
-				removeExpiredBanCharacter = Server.getJDO().prepare("DELETE character_id FROM character_banned WHERE unban_date >= 0 AND unban_date <= ?");
+				removeExpiredBanCharacter = Server.getJDO().prepare("DELETE FROM character_banned WHERE unban_date >= 0 AND unban_date <= ?");
 			}
 			removeExpiredBanCharacter.clear();
 			removeExpiredBanCharacter.putLong(timer);
