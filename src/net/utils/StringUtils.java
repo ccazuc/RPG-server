@@ -57,7 +57,7 @@ public class StringUtils {
 	}
 	
 	public static char toLowerCase(char c) {
-		return c >= 'A' && c <= 'A' ? (char)(c+32) : c;
+		return c >= 'A' && c <= 'Z' ? (char)(c+32) : c;
 	}
 	
 	public static String toUpperCase(String str) {
