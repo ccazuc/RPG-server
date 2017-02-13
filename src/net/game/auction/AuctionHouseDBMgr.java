@@ -76,6 +76,7 @@ public class AuctionHouseDBMgr {
 	}
 	
 	public static void loadAllAuction() {
+		long timer = Server.getLoopTickTimer();
 		try {
 			if(loadAllAuction == null) {
 				loadAllAuction = Server.getJDO().prepare("SELECT entry_id, faction, item_id, seller_id, buyout_price, bid_price, initial_bid_price, last_bidder_id, time_left, deposit_timer FROM auction_entry");
@@ -109,5 +110,6 @@ public class AuctionHouseDBMgr {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Load all auctions took : "+(System.currentTimeMillis()-timer)+" ms.");
 	}
 }

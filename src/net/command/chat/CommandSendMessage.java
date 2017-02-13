@@ -6,7 +6,12 @@ import net.Server;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.auction.AuctionEntry;
+import net.game.auction.AuctionHouseDBMgr;
+import net.game.auction.AuctionHouseMgr;
+import net.game.auction.AuctionHouseInitialDuration;
 import net.game.chat.ChatCommandHandler;
+import net.game.item.Item;
 import net.game.manager.ChannelMgr;
 import net.game.manager.IgnoreMgr;
 import net.game.unit.Player;
@@ -23,6 +28,14 @@ public class CommandSendMessage extends Command {
 		String message = connection.readString();
 		MessageType type = MessageType.values()[connection.readByte()];
 		if(message.length() >= 2 && message.charAt(0) == '.' && message.charAt(1) != '.') {
+			if(message.equals(".auction")) {
+				int i = 0;
+				while(i < 15000) {
+					AuctionHouseDBMgr.addAuctionInDB(player, new AuctionEntry(AuctionHouseMgr.generateEntryID(), player, Item.getItem(1001), 1500, 1800, AuctionHouseInitialDuration.LONG));
+					i++;
+				}
+				return;
+			}
 			ChatCommandHandler.parse(message, player);
 			if(type == MessageType.WHISPER || type == MessageType.CHANNEL) { //TODO: find a better way to clear the buffer
 				connection.readString();
