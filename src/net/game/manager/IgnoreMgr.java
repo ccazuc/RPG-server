@@ -18,33 +18,19 @@ public class IgnoreMgr {
 	private final static SQLRequest addIgnoreInDB = new SQLRequest("INSERT INTO social_ignore (character_id, ignore_id) VALUES (?, ?)", "Add ignore", SQLRequestPriority.LOW) {
 		
 		@Override
-		public void gatherData() {
-			try {
-				SQLDatas datas = this.datasList.get(0);
-				this.statement.clear();
-				this.statement.putInt(datas.getIValue1());
-				this.statement.putInt(datas.getIValue2());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+			this.statement.putInt(datas.getIValue2());
 		}
 	};
 	private final static SQLRequest removeIgnoreFromDB = new SQLRequest("DELETE FROM social_ignore WHERE character_id = ? AND ignore_id = ?", "Remove ignore", SQLRequestPriority.LOW) {
 		
 		@Override
-		public void gatherData() {
-			try {
-				SQLDatas datas = this.datasList.get(0);
-				this.statement.clear();
-				this.statement.putInt(datas.getIValue1());
-				this.statement.putInt(datas.getIValue2());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+			this.statement.putInt(datas.getIValue2());
 		}
 	};
 	

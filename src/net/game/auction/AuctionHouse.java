@@ -80,7 +80,7 @@ public class AuctionHouse {
 		short minLevel = request.getMinLevel();
 		short maxLevel = request.getMaxLevel();
 		boolean usable = request.isUsable();
-		byte quality = (byte)(request.getQualityFilter().getValue()+1);
+		byte quality = (byte)(request.getQualityFilter().getValue()-2);
 		boolean exactWord = request.getExactWord();
 		boolean qualityAll = request.getQualityFilter() == AuctionHouseQualityFilter.ALL;
 		String search = StringUtils.toLowerCase(request.getSearch());

@@ -21,57 +21,30 @@ public class CommandCreateCharacter extends Command {
 	private static JDOStatement character_id;
 	private static SQLRequest insert_bag = new SQLRequest("INSERT INTO `bag` (character_id) VALUES (?)", "Create character insert_bag", SQLRequestPriority.HIGH) {
 		@Override
-		public void gatherData() {
-			this.statement.clear();
-			try {
-				this.statement.putInt(this.datasList.get(0).getIValue1());
-				this.statement.execute();
-			} 
-			catch (SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			this.statement.putInt(this.datasList.get(0).getIValue1());
+			this.statement.execute();
 			
 		}
 	};
 	private static SQLRequest character_containers = new SQLRequest("INSERT INTO character_containers (character_id) VALUES (?)", "Create character character_containers", SQLRequestPriority.HIGH) {
 		@Override
-		public void gatherData() {
-			this.statement.clear();
-			try {
-				this.statement.putInt(this.datasList.get(0).getIValue1());
-				this.statement.execute();
-			} 
-			catch (SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			this.statement.putInt(this.datasList.get(0).getIValue1());
 			
 		}
 	};
 	private static SQLRequest character_stuff = new SQLRequest("INSERT INTO character_stuff (character_id) VALUES (?)", "Create character character_stuff", SQLRequestPriority.HIGH) {
 		@Override
-		public void gatherData() {
-			this.statement.clear();
-			try {
-				this.statement.putInt(this.datasList.get(0).getIValue1());
-				this.statement.execute();
-			} 
-			catch (SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			this.statement.putInt(this.datasList.get(0).getIValue1());
 			
 		}
 	};
 	private static SQLRequest spellbar = new SQLRequest("INSERT INTO spellbar (character_id) VALUES (?)", "Create character spellbar", SQLRequestPriority.HIGH) {
 		@Override
-		public void gatherData() {
-			this.statement.clear();
-			try {
-				this.statement.putInt(this.datasList.get(0).getIValue1());
-				this.statement.execute();
-			} 
-			catch (SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			this.statement.putInt(this.datasList.get(0).getIValue1());
 			
 		}
 	};

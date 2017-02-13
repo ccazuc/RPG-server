@@ -19,7 +19,7 @@ public class AuctionEntry {
 	private final boolean canBeBuy;
 	private boolean locked;
 	
-	public AuctionEntry(int entryID, Player seller, Item item, int buyoutPrice, int initialBidPrice, AuctionHouseInitialDuration duration) {
+	public AuctionEntry(int entryID, Player seller, Item item, int buyoutPrice, int initialBidPrice, AuctionHouseInitialDuration duration) { //Used when a player sell an item
 		this.item = item;
 		this.entryID = entryID;
 		this.buyoutPrice = buyoutPrice;
@@ -31,7 +31,7 @@ public class AuctionEntry {
 		this.canBeBuy = buyoutPrice > 0;
 	}
 	
-	public AuctionEntry(int entryID, int sellerID, String sellerName, Item item, int buyoutPrice, int initialBidPrice, int bidPrice, int lastBidderID, int timeLeft, long depositTimer) {
+	public AuctionEntry(int entryID, int sellerID, String sellerName, Item item, int buyoutPrice, int initialBidPrice, int bidPrice, int lastBidderID, int timeLeft, long depositTimer) { //Used when all auctions are loaded from the DB
 		this.entryID = entryID;
 		this.sellerID = sellerID;
 		this.sellerName = sellerName;

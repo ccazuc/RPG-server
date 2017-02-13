@@ -15,15 +15,8 @@ public class CommandLogoutCharacter extends Command {
 	private static SQLRequest setOffline = new SQLRequest("UPDATE `character` SET online = 0 WHERE character_id = ?", "Set offline", SQLRequestPriority.LOW) {
 		
 		@Override
-		public void gatherData() {
-			try {
-				this.statement.clear();
-				this.statement.putInt(this.datasList.get(0).getIValue1());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}	
+		public void gatherData() throws SQLException {
+			this.statement.putInt(this.datasList.get(0).getIValue1());	
 		}
 	};
 
