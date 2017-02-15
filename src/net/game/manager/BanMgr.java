@@ -18,6 +18,7 @@ public class BanMgr {
 	private static JDOStatement getBanInfoCharacterIDLowAsync;
 	private static JDOStatement removeExpiredBanAccount;
 	private static JDOStatement removeExpiredBanCharacter;
+	private static JDOStatement removeExpiredBanIP;
 	private final static SQLRequest banAccount = new SQLRequest("INSERT INTO ban_account (id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban account", SQLRequestPriority.HIGH) {
 		
 		@Override
@@ -64,6 +65,21 @@ public class BanMgr {
 			removeExpiredBanAccount.clear();
 			removeExpiredBanAccount.putLong(timer);
 			removeExpiredBanAccount.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();;
+		}
+	}
+	
+	public static void removeExpiredBanIP() {
+		try {
+			long timer = System.currentTimeMillis();
+			if(removeExpiredBanIP == null) {
+				removeExpiredBanIP = Server.getJDO().prepare("DELETE FROM ip_banned WHERE unban_date > 0 AND unban_date <= ?");
+			}
+			removeExpiredBanIP.clear();
+			removeExpiredBanIP.putLong(timer);
+			removeExpiredBanIP.execute();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();;

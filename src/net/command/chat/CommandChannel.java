@@ -52,11 +52,11 @@ public class CommandChannel extends Command {
 			notifyPlayerLeftChannel(player, channelID);
 			leaveChannel(player, channelID);
 		}
-		else if(packetId == PacketID.CHANNEL_CHANGE_PASSWORD) { //TODO: error message and send message to all users
+		else if(packetId == PacketID.CHANNEL_CHANGE_PASSWORD) {
 			String channelID = connection.readString();
 			String password = connection.readString();
 			if(!mgr.isLeader(channelID, player)) {
-				//send error message
+				sendNotEnoughtRight(connection, channelID);
 				return;
 			}
 			mgr.setPassword(channelID, password);
@@ -65,14 +65,14 @@ public class CommandChannel extends Command {
 		else if(packetId == PacketID.CHANNEL_INVITE_PLAYER) {
 			
 		}
-		else if(packetId == PacketID.CHANNEL_BAN_PLAYER) { //TODO: error message and send message to all users
+		else if(packetId == PacketID.CHANNEL_BAN_PLAYER) {
 			String channelID = connection.readString();
 			int playerID = connection.readInt();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
 				return;
 			}
 			if(!mgr.isLeader(channelID, player) && !mgr.isModerator(channelID, player)) {
-				//TODO: not enought rights
+				sendNotEnoughtRight(connection, channelID);
 				return;
 			}
 			Player target = Server.getInGameCharacter(playerID);
@@ -80,7 +80,7 @@ public class CommandChannel extends Command {
 				return;
 			}
 			if(mgr.isModerator(channelID, target)) {
-				//TODO: send not enough right
+				sendNotEnoughtRight(connection, channelID);
 				return;
 			}
 			if(mgr.isBanned(channelID, target)) {
@@ -88,7 +88,7 @@ public class CommandChannel extends Command {
 			}
 			mgr.banPlayer(channelID, target);
 		}
-		else if(packetId == PacketID.CHANNEL_KICK_PLAYER) { //TODO: error message and send message to all users
+		else if(packetId == PacketID.CHANNEL_KICK_PLAYER) {
 			String channelID = connection.readString();
 			int playerID = connection.readInt();
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
@@ -106,7 +106,7 @@ public class CommandChannel extends Command {
 				notifyPlayerKicked(channelID, player, target);
 			}
 			else {
-				//send not enough right
+				sendNotEnoughtRight(connection, channelID);
 			}
 		}
 		else if(packetId == PacketID.CHANNEL_SET_LEADER) {
@@ -116,7 +116,7 @@ public class CommandChannel extends Command {
 				return;
 			}
 			if(!mgr.isLeader(channelID, player)) {
-				//error message
+				sendNotEnoughtRight(connection, channelID);
 				return;
 			}
 			Player target = Server.getInGameCharacter(playerID);
@@ -125,7 +125,6 @@ public class CommandChannel extends Command {
 			}
 			mgr.setLeader(channelID, target);
 			notifyPlayerLeader(channelID, target, true);
-			//send message to users
 		}
 		else if(packetId == PacketID.CHANNEL_MUTE_PLAYER) {
 			String channelID = connection.readString();
@@ -144,7 +143,27 @@ public class CommandChannel extends Command {
 				mgr.mutePlayer(channelID, target);
 			}
 			else {
-				//send not enough right
+				sendNotEnoughtRight(connection, channelID);
+			}
+		}
+		else if(packetId == PacketID.CHANNEL_UNMUTE_PLAYER) {
+			String channelID = connection.readString();
+			int playerID = connection.readInt();
+			if(!mgr.playerHasJoinChannel(channelID, player)) {
+				return;
+			}
+			Player target = Server.getInGameCharacter(playerID);
+			if(target == null) {
+				return;
+			}
+			if(!mgr.playerHasJoinChannel(channelID, target)) {
+				return;
+			}
+			if(mgr.isLeader(channelID, player) || (mgr.isModerator(channelID, player) && !mgr.isModerator(channelID, target))) {
+				mgr.unmutePlayer(channelID, target);
+			}
+			else {
+				sendNotEnoughtRight(connection, channelID);
 			}
 		}
 		else if(packetId == PacketID.CHANNEL_SET_MODERATOR) {
@@ -159,11 +178,15 @@ public class CommandChannel extends Command {
 				return;
 			}
 			if(!mgr.isLeader(channelID, player)) {
-				//TODO: send not enough rights
+				sendNotEnoughtRight(connection, channelID);
 				return;
 			}
 			mgr.setModerator(channelID, target, isModerator);
 		}
+	}
+	
+	public static void sendNotEnoughtRight(Connection connection, String channelID) {
+		CommandSendMessage.writeChannel(connection, channelID, "You don't have enough right.");
 	}
 	
 	public static void notifyPlayerKicked(String channelID, Player player, Player kicked) {
@@ -223,7 +246,6 @@ public class CommandChannel extends Command {
 				member.getConnection().writeShort(PacketID.CHANNEL_CHANGE_PASSWORD);
 				member.getConnection().writeString(channelID);
 				member.getConnection().writeInt(player.getUnitID());
-				member.getConnection().writeString(player.getName());
 				member.getConnection().endPacket();
 				member.getConnection().send();
 			}

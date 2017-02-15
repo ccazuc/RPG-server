@@ -352,11 +352,10 @@ public class CharacterMgr {
 			loadPlayerFriend.putInt(player.getUnitID());
 			loadPlayerFriend.execute();
 			while(loadPlayerFriend.fetch()) {
-				int id = loadPlayerFriend.getInt();
 				if(!FriendMgr.containsKey(player.getUnitID())) {
 					FriendMgr.addList(player.getUnitID(), new ArrayList<Integer>());
 				}
-				FriendMgr.addFriend(player.getUnitID(), id);
+				FriendMgr.addFriend(player.getUnitID(), loadPlayerFriend.getInt());
 				
 			}
 			
@@ -364,8 +363,7 @@ public class CharacterMgr {
 			loadFriend.putInt(player.getUnitID());
 			loadFriend.execute();
 			while(loadFriend.fetch()) {
-				int id = loadFriend.getInt();
-				player.getFriendList().add(id);
+				player.getFriendList().add(loadFriend.getInt());
 			}
 		}
 		catch(SQLException e) {
@@ -492,7 +490,6 @@ public class CharacterMgr {
 					 list = new ArrayList<SQLDatas>();
 					 init = true;
 				}
-				System.out.println("FETCH");
 				list.add(new SQLDatas(loadCharacterIDAndNameFromNamePattern.getInt(), loadCharacterIDAndNameFromNamePattern.getString()));
 			}
 			return list;
