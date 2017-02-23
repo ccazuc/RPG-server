@@ -18,61 +18,41 @@ public class BanMgr {
 	private static JDOStatement getBanInfoCharacterIDLowAsync;
 	private static JDOStatement removeExpiredBanAccount;
 	private static JDOStatement removeExpiredBanCharacter;
+	private static JDOStatement removeExpiredBanIP;
 	private final static SQLRequest banAccount = new SQLRequest("INSERT INTO ban_account (id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban account", SQLRequestPriority.HIGH) {
 		
 		@Override
-		public void gatherData() {
-			try {
-				this.statement.clear();
-				SQLDatas datas = this.datasList.get(0);
-				this.statement.putInt(datas.getIValue1());
-				this.statement.putLong(datas.getLValue1());
-				this.statement.putLong(datas.getLValue2());
-				this.statement.putString(datas.getStringValue1());
-				this.statement.putString(datas.getStringValue2());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+			this.statement.putLong(datas.getLValue1());
+			this.statement.putLong(datas.getLValue2());
+			this.statement.putString(datas.getStringValue1());
+			this.statement.putString(datas.getStringValue2());
 		}
 	};
 	private final static SQLRequest banCharacter = new SQLRequest("INSERT INTO character_banned (character_id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban character", SQLRequestPriority.HIGH) {
 		
 		@Override
-		public void gatherData() {
-			try {
-				this.statement.clear();
-				SQLDatas datas = this.datasList.get(0);
-				this.statement.putInt(datas.getIValue1());
-				this.statement.putLong(datas.getLValue1());
-				this.statement.putLong(datas.getLValue2());
-				this.statement.putString(datas.getStringValue1());
-				this.statement.putString(datas.getStringValue2());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+			this.statement.putLong(datas.getLValue1());
+			this.statement.putLong(datas.getLValue2());
+			this.statement.putString(datas.getStringValue1());
+			this.statement.putString(datas.getStringValue2());
 		}
 	};
 	private final static SQLRequest banIPAdress = new SQLRequest("INSERT INTO ip_banned (ip_adress, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban IP adress", SQLRequestPriority.HIGH) {
 		
 		@Override
-		public void gatherData() {
-			try {
-				this.statement.clear();
-				SQLDatas datas = this.datasList.get(0);
-				this.statement.putString(datas.getStringValue1());
-				this.statement.putLong(datas.getLValue1());
-				this.statement.putLong(datas.getLValue2());
-				this.statement.putString(datas.getStringValue2());
-				this.statement.putString(datas.getStringValue3());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putString(datas.getStringValue1());
+			this.statement.putLong(datas.getLValue1());
+			this.statement.putLong(datas.getLValue2());
+			this.statement.putString(datas.getStringValue2());
+			this.statement.putString(datas.getStringValue3());
 		}
 	};
 	
@@ -85,6 +65,21 @@ public class BanMgr {
 			removeExpiredBanAccount.clear();
 			removeExpiredBanAccount.putLong(timer);
 			removeExpiredBanAccount.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();;
+		}
+	}
+	
+	public static void removeExpiredBanIP() {
+		try {
+			long timer = System.currentTimeMillis();
+			if(removeExpiredBanIP == null) {
+				removeExpiredBanIP = Server.getJDO().prepare("DELETE FROM ip_banned WHERE unban_date > 0 AND unban_date <= ?");
+			}
+			removeExpiredBanIP.clear();
+			removeExpiredBanIP.putLong(timer);
+			removeExpiredBanIP.execute();
 		}
 		catch(SQLException e) {
 			e.printStackTrace();;

@@ -33,7 +33,14 @@ public class SQLRequest {
 	}
 	
 	public final void execute() {
-		gatherData();
+		this.statement.clear();
+		try {
+			gatherData();
+			this.statement.execute();
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
 		this.datasList.remove(0);
 	}
 	
@@ -53,5 +60,6 @@ public class SQLRequest {
 		return this.priority;
 	}
 	
-	public void gatherData() {}
+	@SuppressWarnings("unused")
+	public void gatherData() throws SQLException {}
 }

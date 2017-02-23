@@ -30,7 +30,6 @@ import net.game.manager.ChannelMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.DatabaseMgr;
 import net.game.manager.DebugMgr;
-import net.game.manager.ItemMgr;
 import net.game.spell.SpellMgr;
 import net.game.unit.Player;
 import net.thread.ThreadMgr;
@@ -72,7 +71,7 @@ public class Server {
 		asyncHighPriorityJdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);
 		BanMgr.removeExpiredBanAccount();
 		BanMgr.removeExpiredBanCharacter();
-		//TODO: removeExpiredBanIP
+		BanMgr.removeExpiredBanIP();
 		CharacterMgr.checkOnlinePlayers();
 		GuildMgr.removeOrphanedGuildRank();
 		GuildMgr.removeOrphanedMember();
@@ -121,7 +120,7 @@ public class Server {
 			}
 			catch(RuntimeException e) {
 				LogRunnable.writeServerLog(e);
-				System.out.println("[RUNTIME EXCEPTION OCCURED]");
+				System.out.println("[RUNTIME EXCEPTION OCCURED] ("+e.getClass()+')');
 			}
 		}
 		CharacterMgr.saveEveryPlayer();

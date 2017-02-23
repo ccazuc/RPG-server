@@ -20,25 +20,18 @@ public class AuctionHouseDBMgr {
 	private final static SQLRequest addAuctionInDB = new SQLRequest("INSERT INTO auction_entry (entry_id, faction, item_id, seller_id, buyout_price, bid_price, initial_bid_price, last_bidder_id, time_left, deposit_timer) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", "Add auction in DB", SQLRequestPriority.HIGH) {
 		
 		@Override
-		public void gatherData() {
-			try {
-				AuctionEntry entry = this.datasList.get(0).getEntry();
-				this.statement.clear();
-				this.statement.putInt(entry.getEntryID());
-				this.statement.putByte(this.datasList.get(0).getFaction().getValue());
-				this.statement.putInt(entry.getItemID());
-				this.statement.putInt(entry.getSellerID());
-				this.statement.putInt(entry.getBuyoutPrice());
-				this.statement.putInt(entry.getBidPrice());
-				this.statement.putInt(entry.getInitialBidPrice());
-				this.statement.putInt(entry.getLastBidderID());
-				this.statement.putInt(entry.getTimeLeft());
-				this.statement.putLong(entry.getDepositTimer());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
+		public void gatherData() throws SQLException {
+			AuctionEntry entry = this.datasList.get(0).getEntry();
+			this.statement.putInt(entry.getEntryID());
+			this.statement.putByte(this.datasList.get(0).getFaction().getValue());
+			this.statement.putInt(entry.getItemID());
+			this.statement.putInt(entry.getSellerID());
+			this.statement.putInt(entry.getBuyoutPrice());
+			this.statement.putInt(entry.getBidPrice());
+			this.statement.putInt(entry.getInitialBidPrice());
+			this.statement.putInt(entry.getLastBidderID());
+			this.statement.putInt(entry.getTimeLeft());
+			this.statement.putLong(entry.getDepositTimer());
 		}
 	};
 	
@@ -76,14 +69,16 @@ public class AuctionHouseDBMgr {
 	}
 	
 	public static void loadAllAuction() {
-		long timer = Server.getLoopTickTimer();
+		long timer = System.currentTimeMillis();
 		try {
 			if(loadAllAuction == null) {
 				loadAllAuction = Server.getJDO().prepare("SELECT entry_id, faction, item_id, seller_id, buyout_price, bid_price, initial_bid_price, last_bidder_id, time_left, deposit_timer FROM auction_entry");
 			}
 			loadAllAuction.clear();
 			loadAllAuction.execute();
-			while(loadAllAuction.fetch()) {
+			int maxID = 0;
+			int i = 0;
+			while(loadAllAuction.fetch() && ++i < 300) {
 				int entry_id = loadAllAuction.getInt();
 				Faction faction = Faction.values()[loadAllAuction.getByte()];
 				int item_id = loadAllAuction.getInt();
@@ -104,8 +99,12 @@ public class AuctionHouseDBMgr {
 					removeAuctionOnLoadAll(entry_id);
 					continue;
 				}
+				if(entry_id > maxID) {
+					maxID = entry_id;
+				}
 				AuctionHouseMgr.addAuction(faction, new AuctionEntry(entry_id, seller_id, sellerName, item, buyout_price, initial_bid_price, bid_price, last_bidder_id, time_left, deposit_timer));
 			}
+			AuctionHouseMgr.initEntryIDGeneration(maxID);
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

@@ -106,6 +106,7 @@ public class CommandSendMessage extends Command {
 		else if(type == MessageType.CHANNEL) {
 			String channelID = connection.readString();
 			ChannelMgr mgr = ChannelMgr.getChannelMgr(player.getFaction());
+			System.out.println(message+" "+channelID);
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
 				return;
 			}
@@ -133,8 +134,20 @@ public class CommandSendMessage extends Command {
 		connection.writeByte(MessageType.CHANNEL.getValue());
 		connection.writeString(message);
 		connection.writeString(channelID);
+		connection.writeBoolean(true);
 		connection.writeString(author);
 		connection.writeBoolean(isGM);
+		connection.endPacket();
+		connection.send();
+	}
+	
+	public static void writeChannel(Connection connection, String channelID, String message) {
+		connection.startPacket();
+		connection.writeShort(PacketID.SEND_MESSAGE);
+		connection.writeByte(MessageType.CHANNEL.getValue());
+		connection.writeString(message);
+		connection.writeString(channelID);
+		connection.writeBoolean(false);
 		connection.endPacket();
 		connection.send();
 	}

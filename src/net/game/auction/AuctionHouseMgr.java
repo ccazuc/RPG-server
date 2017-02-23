@@ -117,6 +117,10 @@ public class AuctionHouseMgr {
 		return (int)(item.getAmount()*item.getSellPrice()*duration.getCoefficient());
 	}
 	
+	public static void initEntryIDGeneration(int value) {
+		amountEntry = value;
+	}
+	
 	public static int generateEntryID() {
 		return ++amountEntry;
 	}

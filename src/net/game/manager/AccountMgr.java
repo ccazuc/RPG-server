@@ -17,17 +17,10 @@ public class AccountMgr {
 	private final static SQLRequest updateAccountRank = new SQLRequest("UPDATE account SET rank = ? WHERE id = ?", "Update account rank", SQLRequestPriority.HIGH) {
 		
 		@Override
-		public void gatherData() {
-			try {
-				this.statement.clear();
+		public void gatherData() throws SQLException {
 				SQLDatas datas = this.datasList.get(0);
 				this.statement.putInt(datas.getIValue1());
 				this.statement.putByte(datas.getBValue1());
-				this.statement.execute();
-			}
-			catch(SQLException e) {
-				e.printStackTrace();
-			}
 		}
 	};
 	

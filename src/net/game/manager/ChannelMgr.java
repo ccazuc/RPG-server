@@ -112,6 +112,10 @@ public class ChannelMgr {
 	public void mutePlayer(String channelID, Player player) {
 		this.channelMap.get(channelID).addMute(player.getUnitID());
 	}
+
+	public void unmutePlayer(String channelID, Player player) {
+		this.channelMap.get(channelID).removeMute(player.getUnitID());
+	}
 	
 	public boolean isModerator(String channelID, Player player) {
 		if(!this.channelMap.containsKey(channelID)) {
