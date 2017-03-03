@@ -9,6 +9,7 @@ import net.command.chat.CommandSendMessage;
 import net.command.chat.MessageType;
 import net.config.ConfigMgr;
 import net.game.item.Item;
+import net.game.log.Log;
 import net.game.unit.Faction;
 import net.game.unit.Player;
 import net.thread.auctionhouse.SearchRequest;
@@ -34,7 +35,9 @@ public class AuctionHouseMgr {
 	public static LinkedList<AuctionEntry> getEntryList(Player player, SearchRequest request) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.getEntryList");
+			String error = "**ERROR** AuctionHouse not found in AuctionHouseMgr.getEntryList, faction : "+player.getFaction();
+			System.out.println(error);
+			Log.writePlayerLog(player, error);
 			return null;
 		}
 		return ah.getEntryList(request);
@@ -43,7 +46,9 @@ public class AuctionHouseMgr {
 	public static void addAuction(Player player, Item item, int bidPrice, int buyoutPrice, AuctionHouseInitialDuration duration) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			String error = "**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction, faction : "+player.getFaction();
+			System.out.println(error);
+			Log.writePlayerLog(player, error);
 			return;
 		}
 		AuctionEntry entry = new AuctionEntry(generateEntryID(), player, item, buyoutPrice, bidPrice, duration);
@@ -54,7 +59,8 @@ public class AuctionHouseMgr {
 	public static void addAuction(Faction faction, AuctionEntry entry) {
 		AuctionHouse ah = auctionHouseMap.get(faction.getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction");
+			String error = "**ERROR** AuctionHouse not found in AuctionHouseMgr.addAuction, faction : "+faction;
+			System.out.println(error);
 			return;
 		}
 		ah.addItem(entry);
@@ -63,7 +69,9 @@ public class AuctionHouseMgr {
 	public static void cancelAuction(Player player, AuctionEntry entry) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.cancelAuction");
+			String error = "**ERROR** AuctionHouse not found in AuctionHouseMgr.cancelAuction, faction : "+player.getFaction();
+			System.out.println(error);
+			Log.writePlayerLog(player, error);
 			return;
 		}
 		ah.removeItem(entry);
@@ -76,14 +84,16 @@ public class AuctionHouseMgr {
 			//TODO: add a mail with the money in the db
 		}
 		else {
-			//TODO: send a mail with the money
+			//TODO: send a mail with the money and add it in db
 		}
 	}
 	
 	public static ArrayList<AuctionEntry> getItemSoldByPlayerList(Player player) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.getItemSoldByPlayerList");
+			String error = "**ERROR** AuctionHouse not found in AuctionHouseMgr.getItemSoldByPlayerList, faction : "+player.getFaction();
+			System.out.println(error);
+			Log.writePlayerLog(player, error);
 			return null;
 		}
 		return ah.getItemSoldByPlayerList(player);
@@ -92,7 +102,9 @@ public class AuctionHouseMgr {
 	public static AuctionEntry getEntry(Player player, int entryID) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.getEntry");
+			String error = "**ERROR** AuctionHouse not found in AuctionHouseMgr.getEntry, faction : "+player.getFaction();
+			System.out.println(error);
+			Log.writePlayerLog(player, error);
 			return null;
 		}
 		return ah.getEntry(entryID);
@@ -101,7 +113,9 @@ public class AuctionHouseMgr {
 	public static void buyoutAuction(Player player, AuctionEntry entry) {
 		AuctionHouse ah = auctionHouseMap.get(player.getFaction().getValue());
 		if(ah == null) {
-			System.out.println("**ERROR** AuctionHouse not found in AuctionHouseMgr.buyoutAuction");
+			String error = "**ERROR** AuctionHouse not found in AuctionHouseMgr.buyoutAuction, faction : "+player.getFaction();
+			System.out.println(error);
+			Log.writePlayerLog(player, error);
 			return;
 		}
 		ah.removeItem(entry);
