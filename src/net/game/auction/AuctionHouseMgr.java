@@ -122,7 +122,7 @@ public class AuctionHouseMgr {
 		AuctionHouseDBMgr.removeAuction(entry);
 		Player seller = Server.getInGameCharacter(entry.getSellerID());
 		if(seller != null) {
-			CommandSendMessage.selfWithoutAuthor(seller.getConnection(), "A buy has been found for your auction of ".concat(entry.getItem().getStuffName()), MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(seller.getConnection(), "A buyer has been found for your auction of ".concat(entry.getItem().getStuffName()), MessageType.SELF);
 		}
 		//TODO: send mail to the seller and buyer
 	}
