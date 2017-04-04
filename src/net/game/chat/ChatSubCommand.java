@@ -37,6 +37,29 @@ public class ChatSubCommand {
 		return this.helpMessage;
 	}
 	
+	public String printHelpMessage(Player player) {
+		if(this.helpMessage == null) {
+			StringBuilder result = new StringBuilder();
+			int i = 0;
+			boolean initHeader = false;
+			while(i < this.commandList.size()) {
+				if(player.getAccountRank().superiorOrEqualsTo(this.commandList.get(i).getRank())) {
+					if(!initHeader) {
+						result.append("Command "+this.parentName+' '+this.name+" have subcommands:");
+						initHeader = true;
+					}
+					result.append("\n"+this.commandList.get(i).getName());
+				}
+				i++;
+			}
+			if(!initHeader) {
+				result.append("No command available for "+this.parentName+' '+this.name);
+			}
+			return result.toString();
+		}
+		return this.helpMessage;
+	}
+	
 	public String printSubCommandError(Player player) {
 		StringBuilder result = new StringBuilder();
 		int i = 0;

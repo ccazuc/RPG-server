@@ -199,3 +199,31 @@ java.lang.NumberFormatException: For input string: ""
 --------------------------------------------------------------
 
 
+--------------------------------------------------------------
+Tue Apr 04 01:33:40 CEST 2017
+AccountID : 1, CharacterID : 1, CharacterName : Mideas
+java.lang.NullPointerException
+	at net.connection.Buffer.writeString(Buffer.java:252)
+	at net.connection.Connection.writeString(Connection.java:247)
+	at net.command.chat.CommandSendMessage.selfWithoutAuthor(CommandSendMessage.java:253)
+	at net.game.chat.StoreChatCommand$10.handle(StoreChatCommand.java:384)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:43)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Tue Apr 04 01:33:40 CEST 2017
+AccountID : 1, CharacterID : 1, CharacterName : Mideas
+java.lang.NullPointerException
+	at net.connection.Buffer.writeString(Buffer.java:252)
+	at net.connection.Connection.writeString(Connection.java:247)
+	at net.command.chat.CommandSendMessage.selfWithoutAuthor(CommandSendMessage.java:253)
+	at net.game.chat.StoreChatCommand$10.handle(StoreChatCommand.java:384)
+	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
+	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:43)
+	at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+

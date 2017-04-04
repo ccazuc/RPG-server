@@ -105,7 +105,7 @@ public class StoreChatCommand {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
 		}
 	};
-	private final static ChatSubCommand account_set_gmlevel = new ChatSubCommand("gmlevel", "account_set", "Invalid synthax : .account set gmlevel [account_name] [account_level]", AccountRank.ADMINISTRATOR) {
+	private final static ChatSubCommand account_set_gmlevel = new ChatSubCommand("gmlevel", "account_set", "Syntax : .account set gmlevel [account_name] [account_level]", AccountRank.ADMINISTRATOR) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -381,7 +381,7 @@ public class StoreChatCommand {
 									CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
 									return;
 								}
-								CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).subCommandList.get(i).printHelpMessage(), MessageType.SELF);
+								CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).subCommandList.get(i).printHelpMessage(player), MessageType.SELF);
 								return;
 							}
 							i++;
