@@ -6,6 +6,7 @@ public class DebugMgr {
 	private static boolean SQL_REQUEST_TIMER = true;
 	private static boolean WRITE_LOG_FILE_TIMER = true;
 	private static boolean EXECUTE_WHO_TIMER = true;
+	private static boolean PACKET_RECEIVED = false;
 	private static int LOOP_TOO_LONG_VALUE = 5;
 	
 	public static boolean getChatCommandTimer() {
@@ -46,5 +47,13 @@ public class DebugMgr {
 	
 	public static void setExecuteWhoTimer(boolean we) {
 		EXECUTE_WHO_TIMER = we;
+	}
+	
+	public static boolean getPacketReceived() {
+		return PACKET_RECEIVED;
+	}
+	
+	public static void setPacketReceived(boolean we) {
+		PACKET_RECEIVED = we;
 	}
 }

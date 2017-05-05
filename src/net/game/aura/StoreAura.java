@@ -34,7 +34,6 @@ public class StoreAura {
 				
 				@Override
 				public void onRemove(Unit unit, AuraRemoveList list) {
-					System.out.println("Removed");
 					if(unit.getUnitType() == UnitType.PLAYER) {
 						CommandAura.removeAura((Player)unit, unit.getUnitID(), this.getId());
 					}

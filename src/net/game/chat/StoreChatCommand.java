@@ -957,7 +957,9 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug looptoolongtimer [value]", MessageType.SELF);
 				return;
 			}
-			DebugMgr.setLoopTooLongValue(Integer.parseInt(value[2]));
+			int length = Integer.parseInt(value[2]);
+			DebugMgr.setLoopTooLongValue(length);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Loop too long timer set to "+length+".", MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand debug_printsqltimer = new ChatSubCommand("printsqltimer", "debug", ".debug printsqltimer [true || false]\n\nSet wether the time to execute the request should be printed.", AccountRank.ADMINISTRATOR) {
@@ -976,6 +978,7 @@ public class StoreChatCommand {
 				return;
 			}
 			DebugMgr.setSQLRequestTimer(value[2].equalsIgnoreCase("true") ? true : false);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Print SQL timer enabled.", MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand debug_printlogfiletimer = new ChatSubCommand("printlogfiletimer", "debug", ".debug printlogfiletimer [true || false]\n\nSet wether the time to write in the log file should be printed.", AccountRank.ADMINISTRATOR) {
@@ -994,6 +997,7 @@ public class StoreChatCommand {
 				return;
 			}
 			DebugMgr.setWriteLogFileTimer(value[2].equalsIgnoreCase("true") ? true : false);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Print log file timer enabled.", MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand debug_chatcommandtimer = new ChatSubCommand("chatcommandtimer", "debug", ".debug chatcommandtimer [true || false]\n\nSet wether the time to execute the chat command should be printed.", AccountRank.ADMINISTRATOR) {
@@ -1012,6 +1016,7 @@ public class StoreChatCommand {
 				return;
 			}
 			DebugMgr.setChatCommandTimer(value[2].equalsIgnoreCase("true") ? true : false);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Chatcommand timer enabled.", MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand debug_whotimer = new ChatSubCommand("whotimer", "debug", ".debug whotimer [true || false]\n\nSet wether the time to execute the who command should be printed.", AccountRank.ADMINISTRATOR) {
@@ -1030,6 +1035,26 @@ public class StoreChatCommand {
 				return;
 			}
 			DebugMgr.setExecuteWhoTimer(value[2].equalsIgnoreCase("true") ? true : false);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Debug timer enabled.", MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand debug_packetreceived = new ChatSubCommand("packetreceived", "debug", ".debug packetreceived [true || false]\n\nSet wether there should be a print when a packet is received.", AccountRank.ADMINISTRATOR) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if(!checkRank(player, this.rank)) {
+				return;
+			}
+			if(value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug packetreceived [true || false]", MessageType.SELF);
+				return;
+			}
+			if(!value[2].equalsIgnoreCase("true") && !value[2].equalsIgnoreCase("false")) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug packetreceived [true || false]", MessageType.SELF);
+				return;
+			}
+			DebugMgr.setPacketReceived(value[2].equalsIgnoreCase("true") ? true : false);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Packet record enabled.", MessageType.SELF);
 		}
 	};
 	private final static ChatCommand additem = new ChatCommand("additem", "List of possible syntax: \n.additem [item_id || \"item_name\"] to add the item to yourself.\n.additem [item_id || \"item_name\"] [character_name]\n.additem [item_id || \"item_name\"] [amount] [character_id || character_name]\nItem name should not contains space, for example : Potion_of_healing", AccountRank.GAMEMASTER) {
@@ -1381,6 +1406,7 @@ public class StoreChatCommand {
 		debug.addSubCommand(debug_printlogfiletimer);
 		debug.addSubCommand(debug_chatcommandtimer);
 		debug.addSubCommand(debug_whotimer);
+		debug.addSubCommand(debug_packetreceived);
 		commandMap.put(debug.getName(), debug);
 		commandMap.put(additem.getName(), additem);
 		gm.addSubCommand(gm_list);

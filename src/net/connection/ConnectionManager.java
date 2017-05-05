@@ -47,6 +47,7 @@ import net.command.player.spell.CommandAura;
 import net.command.player.spell.CommandCast;
 import net.config.ConfigMgr;
 import net.game.log.Log;
+import net.game.manager.DebugMgr;
 import net.game.unit.Player;
 
 public class ConnectionManager {
@@ -196,6 +197,9 @@ public class ConnectionManager {
 				return;
 			}
 			short packetId = this.connection.readShort();
+			if(DebugMgr.getPacketReceived()) {
+				System.out.println("Received packet, ID: "+packetId+", length: "+packetLength);
+			}
 			if(this.player.isOnline() && loggedCommandList.containsKey(packetId)) {
 				this.lastPacketReaded = packetId;
 				loggedCommandList.get(packetId).read(this.player);
