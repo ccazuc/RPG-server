@@ -1,4 +1,4 @@
-package net.command.chat;
+/*package net.command.chat;
 
 import net.Server;
 import net.command.Command;
@@ -19,7 +19,7 @@ public class CommandSet extends Command {
 		if(member == null) {
 			return;
 		}
-		/*if(player.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
+		if(player.getAccountRank().getValue() >= AccountRank.GAMEMASTER.getValue()) {
 			if(packetID == PacketID.CHAT_SET_STAMINA) {
 				if(value >= 0 && value <= player.getMaxStamina()) {
 					member.setStamina(value);
@@ -44,6 +44,6 @@ public class CommandSet extends Command {
 		else {
 			connection.writeShort(PacketID.CHAT_NOT_ALLOWED);
 			connection.send();
-		}*/
+		}
 	}
-}
+}*/

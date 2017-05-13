@@ -16,7 +16,6 @@ import net.command.chat.CommandGet;
 import net.command.chat.CommandListPlayer;
 import net.command.chat.CommandPlayerInfo;
 import net.command.chat.CommandSendMessage;
-import net.command.chat.CommandSet;
 import net.command.item.CommandAuction;
 import net.command.item.CommandContainer;
 import net.command.item.CommandDeleteItem;
@@ -85,7 +84,7 @@ public class ConnectionManager {
 		loggedCommandList.put(WEAPON, new CommandWeapon());
 		loggedCommandList.put(POTION, new CommandPotion());
 		loggedCommandList.put(LOGOUT, new CommandLogout());
-		loggedCommandList.put(CHAT_SET, new CommandSet());
+		//loggedCommandList.put(CHAT_SET, new CommandSet());
 		loggedCommandList.put(CHAT_GET, new CommandGet());
 		loggedCommandList.put(STUFF, new CommandStuff());
 		loggedCommandList.put(PING, new CommandPing());

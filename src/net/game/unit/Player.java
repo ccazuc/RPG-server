@@ -4,6 +4,7 @@ import java.nio.channels.SocketChannel;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import net.Server;
 import net.command.chat.CommandChannel;
@@ -49,7 +50,7 @@ public class Player extends Unit {
 
 	private final static HashMap<Integer, Integer> levelMap = new HashMap<Integer, Integer>(); //key = level, value = exp
 	//private ProfessionManager professionManager = new ProfessionManager();
-	private ArrayList<Integer> itemSentToClient = new ArrayList<Integer>();
+	private HashSet<Integer> itemSentToClient = new HashSet<Integer>();
 	private SpellBarManager spellBarManager = new SpellBarManager();
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20;
 	public final static int WHO_COMMAND_FREQUENCE = 1000;
@@ -203,23 +204,11 @@ public class Player extends Unit {
 	}
 	
 	public boolean itemHasBeenSendToClient(int id) {
-		int i = this.itemSentToClient.size();
-		while(--i >= 0) {
-			if(this.itemSentToClient.get(i) == id) {
-				return true;
-			}
-		}
-		return false;
+		return this.itemSentToClient.contains(id);
 	}
 	
 	public boolean itemHasBeenSendToClient(Item item) {
-		int i = this.itemSentToClient.size();
-		while(--i >= 0) {
-			if(this.itemSentToClient.get(i) == item.getId()) {
-				return true;
-			}
-		}
-		return false;
+		return this.itemSentToClient.contains(item.getId());
 	}
 	
 	public void setOffline() {
