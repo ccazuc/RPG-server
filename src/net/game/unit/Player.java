@@ -403,6 +403,7 @@ public class Player extends Unit {
 		setGuildRequest(0);
 		if(this.guild != null) {
 			CommandGuild.notifyOfflinePlayer(this);
+			GuildMgr.getGuild(this.guild.getId()).getMember(this.unitID).setOnlineStatus(false);
 		}
 		Server.addLoggedPlayer(this);
 		Server.removeInGamePlayer(this);
@@ -427,10 +428,10 @@ public class Player extends Unit {
 	public void close() {
 		//long timer = System.nanoTime();
 		if(this.isOnline) {
-			CommandLogout.loggout(this);
-			this.isOnline = false;
 			logoutCharacter();
+			this.isOnline = false;
 		}
+		CommandLogout.loggout(this);
 		this.connectionManager.getConnection().close();
 		Server.removeNonLoggedPlayer(this);
 		Server.removeLoggedPlayer(this);

@@ -69,6 +69,7 @@ public class ConnectionManager {
 	}
 	
 	public static void initPlayerCommand() {
+		nonLoggedCommandList.put(LOGOUT, new CommandLogout());
 		nonLoggedCommandList.put(LOGIN_REALM, new CommandLoginRealmPlayer());
 		nonLoggedCommandList.put(SELECT_SCREEN_LOAD_CHARACTERS, new CommandSelectScreenLoadCharacters());
 		nonLoggedCommandList.put(CREATE_CHARACTER, new CommandCreateCharacter());

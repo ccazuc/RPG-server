@@ -106,7 +106,6 @@ public class CommandSendMessage extends Command {
 		else if(type == MessageType.CHANNEL) {
 			String channelID = connection.readString();
 			ChannelMgr mgr = ChannelMgr.getChannelMgr(player.getFaction());
-			System.out.println(message+" "+channelID);
 			if(!mgr.playerHasJoinChannel(channelID, player)) {
 				return;
 			}

@@ -8,6 +8,7 @@ import java.nio.ByteOrder;
 import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SocketChannel;
 
+import net.Server;
 import net.game.item.Item;
 import net.game.item.ItemType;
 import net.game.item.bag.Container;
@@ -23,6 +24,8 @@ public class Buffer {
 	private boolean written;
 	private SocketChannel socket;
 	private Player player;
+	private long lastEmptySentTimer;
+	private static final long TIMEOUT_TIMER = 20000;
 	
 	public Buffer(SocketChannel socket, Player player) {
 		this.buffer = ByteBuffer.allocateDirect(16000);
@@ -61,8 +64,22 @@ public class Buffer {
 		buffer.flip();
 		//System.out.println("FLIPPED BUFFER");
 		try {
-			while(buffer.hasRemaining()) {
-				this.socket.write(buffer);
+			int sent = 0;
+			if(buffer.hasRemaining()) {
+				sent = this.socket.write(buffer);
+				if(sent == 0 && this.player != null) {
+					if(this.lastEmptySentTimer != 0) {
+						if(Server.getLoopTickTimer()-this.lastEmptySentTimer >= TIMEOUT_TIMER) {
+							this.player.close();
+						}
+					}
+					else {
+						this.lastEmptySentTimer = Server.getLoopTickTimer();
+					}
+				}
+				else if(sent != 0) {
+					this.lastEmptySentTimer = 0;
+				}
 				//System.out.println("WRITE IN BUFFER");
 			}
 		}

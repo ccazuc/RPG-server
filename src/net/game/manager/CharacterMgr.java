@@ -53,6 +53,7 @@ public class CharacterMgr {
 	private static JDOStatement saveAuras;
 	private static JDOStatement loadSpellsUnlocked;
 	private static JDOStatement saveSpellsUnlocked;
+	private static JDOStatement loadCharacterBannedIDAndNameFromNamePatternHighAsync;
 	private static SQLRequest asyncSetExperience = new SQLRequest("UPDATE `character` SET experience = ? WHERE character_id ?", "Set experience", SQLRequestPriority.HIGH) {
 		
 		@Override
@@ -442,7 +443,7 @@ public class CharacterMgr {
 	public static int loadCharacterIDFromName(String name) {
 		try {
 			if(loadCharacterIDFromName == null) {
-				loadCharacterIDFromName = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name= ?");
+				loadCharacterIDFromName = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
 			}
 			loadCharacterIDFromName.clear();
 			loadCharacterIDFromName.putString(name);
@@ -475,14 +476,14 @@ public class CharacterMgr {
 		return -1;
 	}
 	
-	public static ArrayList<SQLDatas> loadCharacterIDAndNameFromNamePattern(String pattern) { //TODO find why CONTAINS doesn't work
+	public static ArrayList<SQLDatas> loadCharacterIDAndNameFromNamePattern(String pattern) {
 		try {
 			if(loadCharacterIDAndNameFromNamePattern == null) {
-				loadCharacterIDAndNameFromNamePattern = Server.getJDO().prepare("SELECT character_id, name FROM `character` WHERE CONTAINS(name, ?)");
+				loadCharacterIDAndNameFromNamePattern = Server.getJDO().prepare("SELECT character_id, name FROM `character` WHERE name LIKE ?");
 			}
 			ArrayList<SQLDatas> list = null;
 			loadCharacterIDAndNameFromNamePattern.clear();
-			loadCharacterIDAndNameFromNamePattern.putString(pattern);
+			loadCharacterIDAndNameFromNamePattern.putString("%"+pattern+"%");
 			loadCharacterIDAndNameFromNamePattern.execute();
 			boolean init = false;
 			while(loadCharacterIDAndNameFromNamePattern.fetch()) {
@@ -491,6 +492,31 @@ public class CharacterMgr {
 					 init = true;
 				}
 				list.add(new SQLDatas(loadCharacterIDAndNameFromNamePattern.getInt(), loadCharacterIDAndNameFromNamePattern.getString()));
+			}
+			return list;
+		}
+		catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static ArrayList<SQLDatas> loadCharacterBannedIDAndNameFromNamePatternHighAsync(String pattern) {
+		try {
+			if(loadCharacterBannedIDAndNameFromNamePatternHighAsync == null) {
+				loadCharacterBannedIDAndNameFromNamePatternHighAsync = Server.getJDO().prepare("SELECT `char`.character_id, `char`.name FROM `character` `char` LEFT JOIN character_banned banned ON `char`.character_id = banned.character_id WHERE banned.character_id IS NOT NULL AND `char`.name LIKE ?");
+			}
+			ArrayList<SQLDatas> list = null;
+			loadCharacterBannedIDAndNameFromNamePatternHighAsync.clear();
+			loadCharacterBannedIDAndNameFromNamePatternHighAsync.putString("%"+pattern+"%");
+			loadCharacterBannedIDAndNameFromNamePatternHighAsync.execute();
+			boolean init = false;
+			while(loadCharacterBannedIDAndNameFromNamePatternHighAsync.fetch()) {
+				if(!init) {
+					list = new ArrayList<SQLDatas>();
+					init = true;
+				}
+				list.add(new SQLDatas(loadCharacterBannedIDAndNameFromNamePatternHighAsync.getInt(), loadCharacterBannedIDAndNameFromNamePatternHighAsync.getString()));
 			}
 			return list;
 		}

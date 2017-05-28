@@ -28,6 +28,10 @@ public class JDOStatement {
 		this.statement = connection.prepareStatement(request);
 	}
 	
+	public final String GetStatement() {
+		return this.statement.toString();
+	}
+	
 	/**
 	 * Sets the designated parameter to the given Java <code>boolean</code> value.
      * The driver converts this to an SQL <code>TINYINT</code> value when it sends it to the database.

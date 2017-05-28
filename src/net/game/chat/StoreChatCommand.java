@@ -781,7 +781,7 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [pattern] in .banlist character [pattern]", MessageType.SELF);
 				return;
 			}
-			try {
+			/*try {
 				if(getBanListCharacterPattern == null) {
 					getBanListCharacterPattern = Server.getAsyncLowPriorityJDO().prepare("SELECT COUNT(character_id) FROM character_banned WHERE character_id = ?");
 				}
@@ -791,24 +791,43 @@ public class StoreChatCommand {
 					return;
 				}
 				builder.setLength(0);
-				builder.append("List of banned character matching ").append(value[2]).append(':');
 				int i = 0;
+				boolean init = false;
 				while(i < characterIDList.size()) {
 					getBanListCharacterPattern.clear();
 					getBanListCharacterPattern.putInt(characterIDList.get(i).getIValue1());
 					getBanListCharacterPattern.execute();
 					if(getBanListCharacterPattern.fetch()) {
 						if(getBanListCharacterPattern.getInt() > 0) {
+							if(!init) {
+								builder.append("List of banned character matching ").append(value[2]).append(':');
+								init = true;
+							}
 							builder.append("\n").append(characterIDList.get(i).getStringValue1());
 						}
 					}
 					i++;
 				}
+				if(!init) {
+					builder.append("No character match ".concat(value[2]));
+				}
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
+			}*/
+			ArrayList<SQLDatas> list = CharacterMgr.loadCharacterBannedIDAndNameFromNamePatternHighAsync(value[2]);
+			if(list == null || list.size() == 0) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "No character match ".concat(value[2]), MessageType.SELF);
+				return;
 			}
+			int i = -1;
+			builder.setLength(0);
+			builder.append("List of banned character matching ").append(value[2]).append(':');
+			while(++i < list.size()) {
+					builder.append("\n").append(list.get(i).getStringValue1());
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}
 	};
 	private final static ChatCommand character = new ChatCommand("character", AccountRank.GAMEMASTER) {
