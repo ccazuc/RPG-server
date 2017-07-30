@@ -331,7 +331,7 @@ public class Buffer {
 		this.written = true;
 	}
 	
-	protected final byte readByte() {
+	public final byte readByte() {
 		try {
 			return this.buffer.get();
 		}

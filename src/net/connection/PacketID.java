@@ -182,4 +182,11 @@ public class PacketID {
 	public final static short AUCTION_CANCEL_SELL = 178;
 	public final static short AUCTION_INIT_BID = 179;
 	public final static short AUCTION_INIT_SELL_ITEM = 180;
+	public final static short MAIL = 181;
+	public final static short MAIL_INIT = 182;
+	public final static short MAIL_SEND = 183;
+	public final static short MAIL_OPENED = 184;
+	public final static short MAIL_PAY_CR = 185;
+	public final static short MAIL_DELETE = 186;
+	public final static short MAIL_TAKE_ITEM = 187;
 }
