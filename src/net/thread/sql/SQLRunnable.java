@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.Server;
 import net.game.manager.DebugMgr;
 
 public class SQLRunnable implements Runnable {

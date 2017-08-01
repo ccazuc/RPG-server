@@ -14,8 +14,9 @@ public class Mail {
 	private final int gold;
 	private final boolean isCR;
 	private final long GUID;
+	private boolean read;
 	
-	public Mail(long GUID, int autorID, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template) {
+	public Mail(long GUID, int autorID, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read) {
 		this.autorID = autorID;
 		this.autorName = CharacterMgr.loadCharacterNameFromID(this.autorID);
 		this.destID = destID;
@@ -26,6 +27,29 @@ public class Mail {
 		this.isCR = isCR;
 		this.GUID = GUID;
 		this.template = template;
+		this.read = read;
+	}
+	
+	public Mail(long GUID, int autorID, String destName, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read) {
+		this.autorID = autorID;
+		this.autorName = destName;
+		this.destID = destID;
+		this.title = title;
+		this.content = content;
+		this.deleteDate = deleteDate;
+		this.gold = gold;
+		this.isCR = isCR;
+		this.GUID = GUID;
+		this.template = template;
+		this.read = read;
+	}
+	
+	public void read() {
+		this.read = true;
+	}
+	
+	public boolean getRead() {
+		return this.read;
 	}
 	
 	public long getGUID() {

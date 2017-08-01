@@ -2,6 +2,7 @@ package net.thread.sql;
 
 import net.game.auction.AuctionEntry;
 import net.game.guild.Guild;
+import net.game.mail.Mail;
 import net.game.unit.Faction;
 import net.game.unit.Player;
 
@@ -23,8 +24,14 @@ public class SQLDatas {
 	private String stringValue3;
 	private Player player;
 	private Guild guild;
+	private Mail mail;
 	private Faction faction;
 	private AuctionEntry entry;
+	
+	
+	public SQLDatas(Mail mail) {
+		this.mail = mail;
+	}
 	
 	public SQLDatas(int iValue1) {
 		this.iValue1 = iValue1;
@@ -32,6 +39,10 @@ public class SQLDatas {
 	
 	public SQLDatas(Guild guild) {
 		this.guild = guild;
+	}
+	
+	public SQLDatas(long lValue1) {
+		this.lValue1 = lValue1;
 	}
 	
 	public SQLDatas(Player player) {
@@ -117,6 +128,10 @@ public class SQLDatas {
 		this.stringValue1 = stringValue1;
 		this.stringValue2 = stringValue2;
 		this.stringValue3 = stringValue3;
+	}
+	
+	public Mail getMail() {
+		return this.mail;
 	}
 	
 	public AuctionEntry getEntry() {
