@@ -25,6 +25,7 @@ import net.game.item.gem.GemManager;
 import net.game.item.potion.PotionManager;
 import net.game.item.stuff.StuffManager;
 import net.game.item.weapon.WeaponManager;
+import net.game.mail.MailMgr;
 import net.game.manager.BanMgr;
 import net.game.manager.ChannelMgr;
 import net.game.manager.CharacterMgr;
@@ -76,6 +77,7 @@ public class Server {
 		GuildMgr.removeOrphanedGuildRank();
 		GuildMgr.removeOrphanedMember();
 		StoreChatCommand.initChatCommandMap();
+		MailMgr.loadAllMail();
 		nonLoggedPlayerList = Collections.synchronizedList(nonLoggedPlayerList);
 		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(ConfigMgr.PORT);
 		serverSocketChannel = ServerSocketChannel.open();

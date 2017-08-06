@@ -6,6 +6,8 @@ import java.util.HashMap;
 import net.Server;
 import net.command.player.CommandUpdateStats;
 import net.command.player.spell.CommandAura;
+import net.game.ai.AI;
+import net.game.ai.AIMgr;
 import net.game.aura.AppliedAura;
 import net.game.aura.Aura;
 import net.game.aura.AuraEffect;
@@ -46,6 +48,8 @@ public class Unit {
 	private int goldGained;
 	protected long GCDStartTimer;
 	protected long GCDEndTimer;
+	protected ClassType classe;
+	private AI ai;
 	
 	public Unit(UnitType unitType, int id, int stamina, int maxStamina, int mana, int maxMana, int level, String name, int armor, int critical, int strength, int expGained, int goldGained) {
 		this.stamina = stamina;
@@ -67,6 +71,9 @@ public class Unit {
 		this.auraList = new ArrayList<AppliedAura>();
 		this.auraRemoveList = new ArrayList<AppliedAura>();
 		this.spellCDMap = new HashMap<Integer, Long>();
+		if (unitType == UnitType.NPC) {
+			this.ai = AIMgr.getAI(this);
+		}
 	}
 	
 	public Unit(UnitType unitType) {
@@ -74,7 +81,7 @@ public class Unit {
 	}
 	
 	public void tick() {
-		checkCast();
+		this.ai.onTick();
 	}
 	
 	public void auraTick() {
@@ -158,6 +165,15 @@ public class Unit {
 				if(this.unitType == UnitType.PLAYER) {
 					CommandAura.updateAura((Player)this, this.unitID, this.auraList.get(i));
 				}
+				if (this.ai != null && aura.hasEffect(AuraEffect.STUN)) {
+					this.ai.onStun();
+				}
+				else if (this.ai != null && aura.hasEffect(AuraEffect.FEAR)) {
+					this.ai.onFear();
+				}
+				else if (this.ai != null && aura.hasEffect(AuraEffect.SILENCE)) {
+					this.ai.onSilence();
+				}
 				return;
 			}
 		}
@@ -190,6 +206,8 @@ public class Unit {
 	
 	public void setStamina(int stamina) {
 		this.stamina = Math.max(0, Math.min(stamina, this.maxStaminaEffective));
+		if (this.stamina == 0 && this.ai != null)
+			this.ai.onDeath();
 	}
 	
 	public void calcEffectiveMaxStamina() {
@@ -295,6 +313,10 @@ public class Unit {
 		return this.name;
 	}
 	
+	public AI getAI() {
+		return this.ai;
+	}
+	
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -336,5 +358,9 @@ public class Unit {
 	
 	public void setTarget(Unit unit) {
 		this.target = unit;
+	}
+	
+	public ClassType getClassType() {
+		return this.classe;
 	}
 }

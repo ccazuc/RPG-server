@@ -8,6 +8,7 @@ import net.connection.PacketID;
 import net.game.log.Log;
 import net.game.mail.Mail;
 import net.game.mail.MailMgr;
+import net.game.mail.MailTemplate;
 import net.game.manager.CharacterMgr;
 import net.game.unit.Player;
 
@@ -27,24 +28,24 @@ public class CommandMail extends Command {
 			String content = connection.readString();
 			int gold = connection.readInt();
 			boolean isCr = connection.readBoolean();
-			byte template = connection.readByte();
 			if (player.getGold() < MailMgr.MAIL_COST) {
 				//TODO: send red alert not enough money
-				return ;
+				return;
 			}
 			int destID = CharacterMgr.loadCharacterIDFromName(destName);
 			if (destID == -1) {
 				//TODO: send red alert no player found
-				return ;
+				return;
 			}
 			player.setGold(player.getGold() - MailMgr.MAIL_COST);
-			MailMgr.sendMail(player, destID, title, content, gold, isCr, template);
+			MailMgr.sendMail(player, destID, title, content, gold, isCr, MailTemplate.CLASSIC.getValue());
 		}
 		else if (packetId == PacketID.MAIL_OPENED) {
 			long GUID = connection.readLong();
-			if (MailMgr.openMail(GUID) == -1) {
+			if (MailMgr.openMail(GUID) == -1)
 				Log.writePlayerLog(player, "Tried to open a non-existing mail");
-			}
+			else
+				mailOpened(player, GUID);
 		}
 	}
 	
