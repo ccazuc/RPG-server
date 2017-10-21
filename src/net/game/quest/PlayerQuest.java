@@ -19,6 +19,14 @@ public class PlayerQuest {
 		this.objectives.add(objective);
 	}
 	
+	public PlayerQuestObjective getObjective(int index) {
+		if (index < 0 || index >= this.objectives.size()) {
+			System.out.println("Error in PlayerQuest::getObjective, quest: "+this.quest.getId()+", objective: "+index);
+			return null;
+		}
+		return this.objectives.get(index);
+	}
+	
 	public ArrayList<PlayerQuestObjective> getObjectives() {
 		return this.objectives;
 	}

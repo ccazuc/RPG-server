@@ -41,6 +41,7 @@ import net.game.manager.CharacterMgr;
 import net.game.manager.FriendMgr;
 import net.game.manager.ItemMgr;
 import net.game.profession.Profession;
+import net.game.quest.PlayerQuestManager;
 import net.game.shortcut.Shortcut;
 import net.game.spell.Spell;
 import net.game.spell.SpellBarManager;
@@ -59,6 +60,7 @@ public class Player extends Unit {
 	private ArrayList<Integer> playerWhoAreFriend;
 	private ArrayList<String> chatChannelJoined;
 	private ConnectionManager connectionManager;
+	private PlayerQuestManager questManager;
 	private ArrayList<Integer> friendList;
 	private ArrayList<Integer> ignoreList;
 	private Profession secondProfession;
@@ -867,6 +869,10 @@ public class Player extends Unit {
 		this.numberRedGem = nb;
 	}
 	
+	public PlayerQuestManager getQuestManager() {
+		return this.questManager;
+	}
+
 	@Override
 	public void setMana(int mana) {
 		this.mana = Math.max(0, mana);

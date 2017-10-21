@@ -13,11 +13,11 @@ public class PlayerQuestManager {
 	@SuppressWarnings("unchecked")
 	private final ArrayList<PlayerQuestObjective>[] callback = (ArrayList<PlayerQuestObjective>[]) new ArrayList<?>[4];
 	private static JDOStatement loadQuestsStatement;
-	private final HashMap<Integer, PlayerQuest> questList;
+	private final HashMap<Integer, PlayerQuest> questMap;
 	private final Player player;
 	
 	public PlayerQuestManager(Player player) {
-		this.questList = new HashMap<Integer, PlayerQuest>();
+		this.questMap = new HashMap<Integer, PlayerQuest>();
 		this.player = player;
 		int i = -1;
 		while (++i < this.callback.length)
@@ -38,7 +38,7 @@ public class PlayerQuestManager {
 				short objective2Progress = loadQuestsStatement.getShort();
 				short objective3Progress = loadQuestsStatement.getShort();
 				short objective4Progress = loadQuestsStatement.getShort();
-				Quest quest = QuestManager.getQuest(questId);
+				Quest quest = QuestMgr.getQuest(questId);
 				if (quest == null)
 					continue;
 				PlayerQuest playerQuest = new PlayerQuest(quest, acceptedTimestamp);
@@ -78,10 +78,8 @@ public class PlayerQuestManager {
 	}
 	
 	public void completeQuest(Quest quest) {
-		PlayerQuest playerQuest = this.questList.get(quest.getId());
-		if (playerQuest == null)
-			return;
-		if (!playerQuest.isQuestCompleted())
+		PlayerQuest playerQuest = this.questMap.get(quest.getId());
+		if (playerQuest == null || !playerQuest.isQuestCompleted())
 			return;
 		removeQuest(playerQuest);
 		handleQuestReward(playerQuest.getQuest());
@@ -102,10 +100,10 @@ public class PlayerQuestManager {
 	}
 	
 	public void removeQuest(PlayerQuest playerQuest) {
-		this.questList.remove(playerQuest.getQuest().getId());
+		this.questMap.remove(playerQuest.getQuest().getId());
 		int i = -1;
 		while (++i < playerQuest.getObjectives().size())
-			removeObjectiveCallback(playerQuest.getObjectives().get(i));
+			removeObjectiveCallback(playerQuest.getObjective(i));
 	}
 	
 	public PlayerQuest getPlayerQuest(Quest quest) {
@@ -115,14 +113,25 @@ public class PlayerQuestManager {
 	public void onUnitKilled(int unitId) {
 		int i = -1;
 		ArrayList<PlayerQuestObjective> list = this.callback[QuestObjectiveType.QUEST_OBJECTIVE_NPC.getValue()];
-		while (++i < list.size()) {
+		while (++i < list.size())
 			if (list.get(i).getObjective().getObjectiveId() == unitId)
 				list.get(i).addProgress((short)1);
-		}
+	}
+	
+	public void onItemLoot(int itemId, short amount) {
+		int i = -1;
+		ArrayList<PlayerQuestObjective> list = this.callback[QuestObjectiveType.QUEST_OBJECTIVE_ITEM.getValue()];
+		while (++i < list.size())
+			if (list.get(i).getObjective().getObjectiveId() == itemId)
+				list.get(i).addProgress(amount);
 	}
 	
 	public PlayerQuest getPlayerQuest(int id) {
-		return this.questList.get(id);
+		return this.questMap.get(id);
+	}
+	
+	public HashMap<Integer, PlayerQuest> getQuestMap() {
+		return this.questMap;
 	}
 	
 	public Player getPlayer() {

@@ -4,13 +4,15 @@ public class QuestObjective {
 
 	private final int id;
 	private final int objectiveId;
-	private final int amount;
+	private final short amount;
+	private final String description;
 	private final QuestObjectiveType type;
 	private final byte index;
 	
-	public QuestObjective(int id, int objectiveId, int amount, QuestObjectiveType type, byte index) {
+	public QuestObjective(int id, int objectiveId, short amount, QuestObjectiveType type, byte index) {
 		this.id = id;
 		this.objectiveId = objectiveId;
+		this.description = null; //TODO: create description based on objective
 		this.amount = amount;
 		this.type = type;
 		this.index = index;
@@ -24,8 +26,12 @@ public class QuestObjective {
 		return this.objectiveId;
 	}
 	
-	public int getAmount() {
+	public short getAmount() {
 		return this.amount;
+	}
+	
+	public String getDescription() {
+		return this.description;
 	}
 	
 	public QuestObjectiveType getObjectiveType() {

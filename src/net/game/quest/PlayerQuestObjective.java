@@ -27,13 +27,16 @@ public class PlayerQuestObjective {
 	public QuestObjective getObjective() {
 		return this.objective;
 	}
+	
+	public short getProgress() {
+		return this.progress;
+	}
 
 	public void addProgress(short amount) {
-		if (!isCompleted())
-		{
-			this.progress+= amount;
-			if (isCompleted())
-				this.playerQuest.objectiveCompleted();
-		}
+		if (isCompleted())
+			return;
+		this.progress+= amount;
+		if (isCompleted())
+			this.playerQuest.objectiveCompleted();
 	}
 }

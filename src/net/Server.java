@@ -31,6 +31,7 @@ import net.game.manager.ChannelMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.DatabaseMgr;
 import net.game.manager.DebugMgr;
+import net.game.quest.QuestMgr;
 import net.game.spell.SpellMgr;
 import net.game.unit.Player;
 import net.thread.ThreadMgr;
@@ -94,6 +95,7 @@ public class Server {
 		AuraMgr.loadAuras();
 		SpellMgr.loadSpells();
 		ChannelMgr.initChannelMgr();
+		QuestMgr.loadQuest();
 		ThreadMgr.initThread();
 		System.out.println("Init took "+(System.currentTimeMillis()-time)+" ms.");
 		ConnectionManager.connectAuthServer();

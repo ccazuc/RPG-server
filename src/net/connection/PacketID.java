@@ -189,4 +189,7 @@ public class PacketID {
 	public final static short MAIL_PAY_CR = 185;
 	public final static short MAIL_DELETE = 186;
 	public final static short MAIL_TAKE_ITEM = 187;
+	public final static short QUEST = 188;
+	public final static short QUEST_INIT = 189;
+	public final static short QUEST_UPDATE_OBJECTIVE = 190;
 }

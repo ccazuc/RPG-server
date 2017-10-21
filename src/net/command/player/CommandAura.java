@@ -21,20 +21,19 @@ public class CommandAura extends Command {
 			int auraID = connection.readInt();
 			Aura aura = AuraMgr.getAura(auraID);
 			if(aura == null) {
-				Log.writePlayerLog(player, "Tried to remove a non-existing aura, auraID : "+auraID);
+				Log.writePlayerLog(player, "Tried to remove a non-existing aura, auraID: "+auraID);
 				return;
 			}
 			if(!aura.isVisible()) {
-				Log.writePlayerLog(player, "Tried to remove a non-visible, auraID : "+auraID);
+				Log.writePlayerLog(player, "Tried to remove a non-visible aura, auraID: "+auraID);
 				return;
 			}
 			if(!aura.isBuff()) {
-				Log.writePlayerLog(player, "Tried to remove a debuff aura, auraID : "+auraID);
+				Log.writePlayerLog(player, "Tried to remove a debuff aura, auraID: "+auraID);
 				return;
 			}
-			if(!player.removeAura(auraID, AuraRemoveList.CANCEL)) {
+			if(!player.removeAura(auraID, AuraRemoveList.CANCEL))
 				Log.writePlayerLog(player, "Tried to remove the aura "+auraID+" whereas he's not affected by it.");
-			}
 		}
 	}
 	
