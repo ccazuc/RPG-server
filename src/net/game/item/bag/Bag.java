@@ -3,6 +3,7 @@ package net.game.item.bag;
 import java.util.HashMap;
 
 import net.game.item.Item;
+import net.thread.log.LogRunnable;
 
 
 public class Bag extends Item implements Cloneable {
@@ -63,7 +64,8 @@ public class Bag extends Item implements Cloneable {
 	}
 	
 	public void setEquippedBag(int i, Container bag) {
-		if(i < 0 || i >=this.equippedBag.length) {
+		if(i < 0 || i >= this.equippedBag.length) {
+			LogRunnable.addErrorLog("Error in Bag.setEquippedBag(), incorrect index: "+i);
 			return;
 		}
 		int length = this.bag.length;
@@ -97,6 +99,11 @@ public class Bag extends Item implements Cloneable {
 	}
 	
 	public Container getEquippedBag(int i) {
+		if (i < 0 || i >= this.equippedBag.length)
+		{
+			LogRunnable.addErrorLog("Error in Bag.getEquippedBag(), incorrect index: "+i);
+			return (null);
+		}
 		return this.equippedBag[i];
 	}
 	

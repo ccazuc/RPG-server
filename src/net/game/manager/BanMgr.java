@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import jdo.JDOStatement;
 import net.Server;
-import net.thread.log.LogRunnable;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;

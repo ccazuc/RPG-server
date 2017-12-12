@@ -3,33 +3,59 @@ package net.game.quest;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import jdo.JDOStatement;
 import net.Server;
 import net.game.unit.Player;
+import net.thread.log.LogRunnable;
 
-public class PlayerQuestManager {
+public class PlayerQuestMgr {
 
 	@SuppressWarnings("unchecked")
 	private final ArrayList<PlayerQuestObjective>[] callback = (ArrayList<PlayerQuestObjective>[]) new ArrayList<?>[4];
 	private static JDOStatement loadQuestsStatement;
+	private static JDOStatement loadCompletedQuestStatement;
 	private final HashMap<Integer, PlayerQuest> questMap;
+	private final HashSet<Integer> completedQuestSet;
 	private final Player player;
 	
-	public PlayerQuestManager(Player player) {
+	public PlayerQuestMgr(Player player) {
 		this.questMap = new HashMap<Integer, PlayerQuest>();
+		this.completedQuestSet = new HashSet<Integer>();
 		this.player = player;
 		int i = -1;
 		while (++i < this.callback.length)
 			this.callback[i] = new ArrayList<PlayerQuestObjective>();
 	}
 	
-	public static void loadPlayerQuest(Player player) {
+	public void loadPlayerCompletedQuest()
+	{
+		try
+		{
+			if (loadCompletedQuestStatement == null)
+				loadCompletedQuestStatement = Server.getJDO().prepare("SELECT `quest_id` FROM `character_quest_completed` WHERE `player_id` = ?");
+			loadCompletedQuestStatement.clear();
+			loadCompletedQuestStatement.putInt(this.player.getUnitID());
+			loadCompletedQuestStatement.execute();
+			while (loadCompletedQuestStatement.fetch())
+			{
+				int questId = loadCompletedQuestStatement.getInt();
+				this.completedQuestSet.add(questId);
+			}
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadPlayerQuest() {
 		try  {
 			if (loadQuestsStatement == null)
 				loadQuestsStatement = Server.getJDO().prepare("SELECT `quest_id`, `accepted_timestamp`, `objective1_progress`, `objective2_progress`, `objective3_progress`, `objective4_progress` FROM `character_quests` WHERE `user_id` = ?");
 			loadQuestsStatement.clear();
-			loadQuestsStatement.putInt(player.getUnitID());
+			loadQuestsStatement.putInt(this.player.getUnitID());
 			loadQuestsStatement.execute();
 			while (loadQuestsStatement.fetch()) {
 				int questId = loadQuestsStatement.getInt();
@@ -40,7 +66,10 @@ public class PlayerQuestManager {
 				short objective4Progress = loadQuestsStatement.getShort();
 				Quest quest = QuestMgr.getQuest(questId);
 				if (quest == null)
+				{
+					LogRunnable.addErrorLog("Error in PlayerQuestManager.loadPlayerQuest(), quest not found: "+questId+", playerId: "+this.player.getUnitID());
 					continue;
+				}
 				PlayerQuest playerQuest = new PlayerQuest(quest, acceptedTimestamp);
 				if (!checkObjectiveOnLoad(quest, 0, playerQuest, objective1Progress)) continue;
 				if (!checkObjectiveOnLoad(quest, 1, playerQuest, objective2Progress)) continue;
@@ -55,10 +84,8 @@ public class PlayerQuestManager {
 	
 	public static boolean checkObjectiveOnLoad(Quest quest, int objectiveIndex, PlayerQuest playerQuest, short progress) {
 		QuestObjective objective = quest.getObjective(objectiveIndex);
-		if (objective == null) {
-			System.out.println("Error load quest objective for quest: "+quest.getId()+", objectiveIndex: "+objectiveIndex);
+		if (objective == null)
 			return false;
-		}
 		playerQuest.addObjective(new PlayerQuestObjective(objective, progress, playerQuest));
 		return true;
 	}
@@ -86,7 +113,8 @@ public class PlayerQuestManager {
 	}
 	
 	public void handleQuestReward(Quest quest) {
-		
+		this.player.setGold(this.player.getGold() + quest.getGoldReward());
+		this.player.setExperience(this.player.getExperience() + quest.getExperienceReward());
 	}
 	
 	public void acceptQuest(Quest quest) {

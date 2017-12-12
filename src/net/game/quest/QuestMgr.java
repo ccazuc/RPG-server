@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.thread.log.LogRunnable;
 
 public class QuestMgr {
 
@@ -15,15 +16,17 @@ public class QuestMgr {
 	public static void loadQuest() {
 		try {
 			if (loadQuestStatement == null)
-				loadQuestStatement = Server.getJDO().prepare("SELECT `id`, `required_level`, `title`, `description` FROM `quest`");
+				loadQuestStatement = Server.getJDO().prepare("SELECT `id`, `required_level`, `experience_reward`, `gold_reward`, `title`, `description` FROM `quest`");
 			loadQuestStatement.clear();
 			loadQuestStatement.execute();
 			while (loadQuestStatement.fetch()) {
 				int id = loadQuestStatement.getInt();
 				short requiredLevel = loadQuestStatement.getShort();
+				int experienceReward = loadQuestStatement.getInt();
+				int goldReward = loadQuestStatement.getInt();
 				String title = loadQuestStatement.getString();
 				String description = loadQuestStatement.getString();
-				addQuest(id, requiredLevel, title, description);
+				addQuest(id, requiredLevel, experienceReward, goldReward, title, description);
 			}
 			
 		}
@@ -35,21 +38,17 @@ public class QuestMgr {
 	public static void loadQuestObjective(Quest quest) {
 		try {
 			if (loadQuestObjectiveStatement == null)
-				loadQuestObjectiveStatement = Server.getJDO().prepare("SELECT `index`, `type`, `amount`, `object_id`FROM `quest_objective` WHERE `quest_id` = ? ORDER BY `index` ASC");
+				loadQuestObjectiveStatement = Server.getJDO().prepare("SELECT `index`, `type`, `amount`, `objective_id`, `id` FROM `quest_objective` WHERE `quest_id` = ? ORDER BY `index` ASC");
 			loadQuestObjectiveStatement.clear();
 			loadQuestObjectiveStatement.putInt(quest.getId());
 			loadQuestObjectiveStatement.execute();
 			while (loadQuestObjectiveStatement.fetch()) {
 				byte index = loadQuestObjectiveStatement.getByte();
-				byte tmpType = loadQuestObjectiveStatement.getByte();
+				byte type = loadQuestObjectiveStatement.getByte();
 				short amount = loadQuestObjectiveStatement.getShort();
-				int objectId = loadQuestObjectiveStatement.getInt();
-				if (tmpType < 0 || tmpType >= QuestObjectiveType.values().length) {
-					System.out.println("Invalid type for quest: "+quest.getId()+", objective: "+index+", type: "+tmpType);
-					continue;
-				}
-				QuestObjectiveType type = QuestObjectiveType.values()[tmpType];
-				quest.addObjective(new QuestObjective(index, objectId, amount, type, index));
+				int data = loadQuestObjectiveStatement.getInt();
+				int id = loadQuestObjectiveStatement.getInt();
+				addObjective(quest, index, type, amount, data, id);
 			}
 				
 		}
@@ -58,10 +57,20 @@ public class QuestMgr {
 		}
 	}
 	
-	private static void addQuest(int id, short requiredLevel, String title, String description) {
-		Quest quest = new Quest(id, requiredLevel, title, description);
-		questMap.put(id, quest);
-		loadQuestObjective(quest);
+	private static void addQuest(int id, short requiredLevel, int experienceReward, int goldReward, String title, String description) {
+		questMap.put(id, new Quest(id, requiredLevel, experienceReward, goldReward, title, description));
+		loadQuestObjective(questMap.get(id));
+	}
+	
+	private static void addObjective(Quest quest, byte index, byte type, short amount, int objectiveId, int id)
+	{
+		QuestObjectiveType objectiveType = QuestObjectiveType.getType(type);
+		if (objectiveType == null)
+		{
+			LogRunnable.addErrorLog("Error in QuestManager.addObjective(), invalid objective index for questId: "+quest.getId()+", index: "+type);
+			return;
+		}
+		quest.addObjective(new QuestObjective(id, objectiveId, amount, objectiveType, index));
 	}
 	
 	public static Quest getQuest(int id) {

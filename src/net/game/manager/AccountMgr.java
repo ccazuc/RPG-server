@@ -18,9 +18,9 @@ public class AccountMgr {
 		
 		@Override
 		public void gatherData() throws SQLException {
-				SQLDatas datas = this.datasList.get(0);
-				this.statement.putInt(datas.getIValue1());
-				this.statement.putByte(datas.getBValue1());
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+			this.statement.putByte(datas.getBValue1());
 		}
 	};
 	

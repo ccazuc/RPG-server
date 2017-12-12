@@ -9,8 +9,8 @@ public enum AccountRank {
 	GAMEMASTER((byte)3, "Gamemaster"),
 	ADMINISTRATOR((byte)4, "Administrator");
 	
-	private byte value;
-	private String name;
+	private final byte value;
+	private final String name;
 	
 	private AccountRank(byte value, String name) {
 		this.value = value;
@@ -37,6 +37,7 @@ public enum AccountRank {
 		if (index < 0 || index >= AccountRank.values().length)
 		{
 			LogRunnable.addErrorLog("Error in AccountRank.getRank(), invalid index: "+index);
+			return (null);
 		}
 		return values()[index-1];
 	}

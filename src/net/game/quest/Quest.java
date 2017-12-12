@@ -7,14 +7,18 @@ public class Quest {
 	private final ArrayList<QuestObjective> objectives;
 	private final int id;
 	private final short requiredLevel;
+	private final int experienceReward;
+	private final int goldReward;
 	private final String title;
 	private final String description;
 	private final ArrayList<Integer> previousQuest;
 	private final ArrayList<Integer> nextQuest;
 	
-	public Quest(int id, short requiredLevel, String title, String description) {
+	public Quest(int id, short requiredLevel, int experienceReward, int goldReward, String title, String description) {
 		this.id = id;
 		this.requiredLevel = requiredLevel;
+		this.experienceReward = experienceReward;
+		this.goldReward = goldReward;
 		this.title = title;
 		this.description = description;
 		this.objectives = new ArrayList<QuestObjective>();
@@ -55,6 +59,16 @@ public class Quest {
 		return this.requiredLevel;
 	}
 	
+	public int getExperienceReward()
+	{
+		return (this.experienceReward);
+	}
+	
+	public int getGoldReward()
+	{
+		return (this.goldReward);
+	}
+
 	public String getTitle() {
 		return this.title;
 	}

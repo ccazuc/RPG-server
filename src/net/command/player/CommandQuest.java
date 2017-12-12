@@ -4,7 +4,7 @@ import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.quest.PlayerQuest;
-import net.game.quest.PlayerQuestManager;
+import net.game.quest.PlayerQuestMgr;
 import net.game.quest.PlayerQuestObjective;
 import net.game.unit.Player;
 
@@ -16,7 +16,7 @@ public class CommandQuest extends Command {
 	}
 	
 	public static void InitQuests(Player player) {
-		PlayerQuestManager questManager = player.getQuestManager();
+		PlayerQuestMgr questManager = player.getQuestManager();
 		Connection connection = player.getConnection();
 		connection.startPacket();
 		connection.writeShort(PacketID.QUEST);
