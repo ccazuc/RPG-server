@@ -11,6 +11,7 @@ public class ConfigMgr {
 	public final static boolean ALLOW_INTERFACTION_CHANNEL = true;
 	public final static boolean ALLOW_INTERFACTION_AUCTION_HOUSE = true;
 	public final static boolean TCP_NO_DELAY_ENABLED = true;
+	public final static boolean ENABLE_FUNCTION_STACK_TRACE = true;
 	
 	public static String getServerMessageOfTheDay() {
 		return SERVER_MESSAGE_OF_THE_DAY;

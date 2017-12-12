@@ -1,5 +1,7 @@
 package net.game;
 
+import net.thread.log.LogRunnable;
+
 public enum AccountRank {
 
 	PLAYER((byte)1, "Player"),
@@ -31,7 +33,11 @@ public enum AccountRank {
 		return this.value >= rank.getValue();
 	}
 	
-	public static AccountRank get(int index) {
+	public static AccountRank getRank(int index) {
+		if (index < 0 || index >= AccountRank.values().length)
+		{
+			LogRunnable.addErrorLog("Error in AccountRank.getRank(), invalid index: "+index);
+		}
 		return values()[index-1];
 	}
 }

@@ -227,3 +227,14 @@ java.lang.NullPointerException
 --------------------------------------------------------------
 
 
+
+--------------------------------------------------------------
+Tue Dec 12 19:19:56 CET 2017
+Ceci est un test
+Function stacktrace:
+	 at: net.thread.log.LogRunnable.addErrorLog(LogRunnable.java:201)
+	 at: net.game.manager.BanMgr.removeExpiredBanAccount(BanMgr.java:62)
+	 at: net.Server.main(Server.java:74)
+--------------------------------------------------------------
+
+

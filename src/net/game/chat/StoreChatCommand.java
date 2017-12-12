@@ -119,7 +119,7 @@ public class StoreChatCommand {
 			if(StringUtils.isInteger(value[4])) {
 				String accountName = value[3];
 				int level = Integer.parseInt(value[4]);
-				if(!(level >= 1 && level <= AccountRank.values().length)) {
+				if(level < 1 || level > AccountRank.values().length) {
 					CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 					return;
 				}
@@ -135,7 +135,7 @@ public class StoreChatCommand {
 				if(tmp == null) {
 					return;
 				}
-				tmp.setAccountRank(AccountRank.get(level));
+				tmp.setAccountRank(AccountRank.getRank(level));
 			}
 			else {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);

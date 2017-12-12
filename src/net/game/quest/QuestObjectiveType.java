@@ -1,5 +1,7 @@
 package net.game.quest;
 
+import net.thread.log.LogRunnable;
+
 public enum QuestObjectiveType {
 
 
@@ -15,5 +17,15 @@ public enum QuestObjectiveType {
 	
 	public byte getValue() {
 		return this.value;
+	}
+	
+	public static QuestObjectiveType getType(byte index)
+	{
+		if (index < 0 || index >= QuestObjectiveType.values().length)
+		{
+			LogRunnable.addErrorLog("Error in QuestObjectiveType.getType(), invalid index: "+index);
+			return (null);
+		}
+		return (QuestObjectiveType.values()[index]);
 	}
 }
