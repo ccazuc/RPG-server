@@ -76,7 +76,7 @@ public class CommandAuction extends Command {
 				CommandSendRedAlert.write(player, DefaultRedAlert.NOT_ENOUGH_GOLD);
 				return;
 			}
-			player.setGold(player.getGold()-depositPrice);
+			player.setGold(player.getGold()-depositPrice, true);
 			player.getBag().setBag(bagSlot, null);
 			AuctionHouseRunnable.sellItem(player, item, buyoutPrice, bidPrice, duration);
 		}
@@ -99,7 +99,7 @@ public class CommandAuction extends Command {
 				return;
 			}
 			entry.lock();
-			player.setGold(player.getGold()-entry.getBuyoutPrice());
+			player.setGold(player.getGold()-entry.getBuyoutPrice(), true);
 			AuctionHouseRunnable.buyoutItem(player, entry);
 		}
 		else if(packetId == PacketID.AUCTION_MAKE_BID) {
@@ -123,7 +123,7 @@ public class CommandAuction extends Command {
 			}
 			entry.setBid(bidValue);
 			entry.setLastBidderID(player.getUnitID());
-			player.setGold(player.getGold()-bidValue);
+			player.setGold(player.getGold()-bidValue, true);
 			CommandSendMessage.selfWithoutAuthor(connection, "Offer accepted.", MessageType.SELF);
 		}
 		else if(packetId == PacketID.AUCTION_CANCEL_SELL) {
@@ -146,7 +146,7 @@ public class CommandAuction extends Command {
 				cost+= .05f*entry.getBidPrice();
 			}
 			//TODO: verify that the cost formula is correct
-			player.setGold(player.getGold()-cost);
+			player.setGold(player.getGold()-cost, true);
 			entry.lock();
 			cancelSell(player, entry);
 			AuctionHouseRunnable.cancelAuction(player, entry);

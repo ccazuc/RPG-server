@@ -3,16 +3,42 @@ package net.command.player;
 import net.command.Command;
 import net.connection.Connection;
 import net.connection.PacketID;
+import net.game.log.Log;
 import net.game.quest.PlayerQuest;
 import net.game.quest.PlayerQuestMgr;
 import net.game.quest.PlayerQuestObjective;
+import net.game.quest.Quest;
+import net.game.quest.QuestMgr;
 import net.game.unit.Player;
 
 public class CommandQuest extends Command {
 
 	@Override
 	public void read(Player player) {
-		
+		Connection connection = player.getConnection();
+		short packetId = connection.readShort();
+		if (packetId == PacketID.QUEST_COMPLETE_REQUEST)
+		{
+			int questId = connection.readInt();
+			Quest quest = QuestMgr.getQuest(questId);
+			if (quest == null)
+			{
+				Log.writePlayerLog(player, "Tried to complete a quest that doesn't exist, questId: "+questId);
+				return;
+			}
+			player.getQuestManager().completeQuest(quest);
+		}
+		else if (packetId == PacketID.QUEST_ACCEPT)
+		{
+			int questId = connection.readInt();
+			Quest quest = QuestMgr.getQuest(questId);
+			if (quest == null)
+			{
+				Log.writePlayerLog(player, "Tried to accept a quest that doesn't exist, questId: "+questId);
+				return;
+			}
+			player.getQuestManager().acceptQuest(quest);
+		}
 	}
 	
 	public static void InitQuests(Player player) {
@@ -34,6 +60,7 @@ public class CommandQuest extends Command {
 			connection.writeString(quest.getQuest().getDescription());
 		}
 		connection.endPacket();
+		connection.send();
 	}
 	
 	public static void ObjectiveUpdate(Player player, PlayerQuestObjective objective) {
@@ -45,5 +72,37 @@ public class CommandQuest extends Command {
 		connection.writeByte(objective.getObjective().getIndex());
 		connection.writeShort(objective.getProgress());
 		connection.endPacket();
+		connection.send();
+	}
+	
+	public static void questAccepted(Player player, PlayerQuest quest)
+	{
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.QUEST);
+		connection.writeShort(PacketID.QUEST_ACCEPT);
+		connection.writeInt(quest.getQuest().getId());
+		connection.writeByte((byte)quest.getObjectives().size());
+		int i = -1;
+		while (++i < quest.getObjectives().size())
+		{
+			connection.writeShort(quest.getObjective(i).getObjective().getAmount());
+			connection.writeString(quest.getObjective(i).getObjective().getDescription());
+		}
+		connection.writeString(quest.getQuest().getTitle());
+		connection.writeString(quest.getQuest().getDescription());
+		connection.endPacket();
+		connection.send();
+	}
+	
+	public static void questCanceled(Player player, PlayerQuest quest)
+	{
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.QUEST);
+		connection.writeShort(PacketID.QUEST_CANCEL);
+		connection.writeInt(quest.getQuest().getId());
+		connection.endPacket();
+		connection.send();
 	}
 }

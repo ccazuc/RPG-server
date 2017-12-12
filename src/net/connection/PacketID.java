@@ -59,8 +59,8 @@ public class PacketID {
 	public final static short UPDATE_STATS_STAMINA = 55;
 	public final static short UPDATE_STATS_MANA = 56;
 	public final static short CHARACTER_LOGOUT = 57;
-	public final static short UPDATE_STATS_EXPERIENCE = 58;
-	public final static short UPDATE_STATS_GOLD = 59;
+	public final static short CHANGE_EXPERIENCE = 58;
+	public final static short CHANGE_GOLD = 59;
 	public final static short TRADE = 60;
 	public final static short TRADE_NEW = 61;
 	public final static short TRADE_ADD_ITEM = 62;
@@ -192,4 +192,8 @@ public class PacketID {
 	public final static short QUEST = 188;
 	public final static short QUEST_INIT = 189;
 	public final static short QUEST_UPDATE_OBJECTIVE = 190;
+	public final static short QUEST_COMPLETED = 191;
+	public final static short QUEST_COMPLETE_REQUEST = 192;
+	public final static short QUEST_ACCEPT = 193;
+	public final static short QUEST_CANCEL = 194;
 }

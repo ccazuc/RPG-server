@@ -2,20 +2,26 @@ package net.game.quest;
 
 import java.util.ArrayList;
 
+import net.game.unit.Player;
+
 public class PlayerQuest {
 
 	private final Quest quest;
 	private final long acceptedTimestamp;
 	private final ArrayList<PlayerQuestObjective> objectives;
 	private boolean questCompleted;
+	private final Player player;
 	
-	public PlayerQuest(Quest quest, long acceptedTimestamp) {
+	public PlayerQuest(Player player, Quest quest, long acceptedTimestamp) {
+		this.player = player;
 		this.quest = quest;
 		this.acceptedTimestamp = acceptedTimestamp;
 		this.objectives = new ArrayList<PlayerQuestObjective>();
 	}
 	
 	public void addObjective(PlayerQuestObjective objective) {
+		if (this.quest.getState() == QuestStateType.AUTO_COMPLETE)
+			objective.addProgress(objective.getObjective().getAmount());
 		this.objectives.add(objective);
 	}
 	
@@ -30,7 +36,11 @@ public class PlayerQuest {
 	public ArrayList<PlayerQuestObjective> getObjectives() {
 		return this.objectives;
 	}
-
+	
+	public Player getPlayer()
+	{
+		return (this.player);
+	}
 	public void objectiveCompleted() {
 		if (this.questCompleted)
 			return;

@@ -37,7 +37,7 @@ public class CommandMail extends Command {
 				//TODO: send red alert no player found
 				return;
 			}
-			player.setGold(player.getGold() - MailMgr.MAIL_COST);
+			player.setGold(player.getGold() - MailMgr.MAIL_COST, true);
 			MailMgr.sendMail(player, destID, title, content, gold, isCr, MailTemplate.CLASSIC.getValue());
 		}
 		else if (packetId == PacketID.MAIL_OPENED) {

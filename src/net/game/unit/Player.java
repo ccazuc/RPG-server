@@ -9,6 +9,8 @@ import java.util.HashSet;
 import net.Server;
 import net.command.chat.CommandChannel;
 import net.command.item.CommandSetItem;
+import net.command.player.CommandChangeExperience;
+import net.command.player.CommandChangeGold;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandLogout;
@@ -94,8 +96,8 @@ public class Player extends Unit {
 	private Trade trade;
 	private Race race;
 	private Wear wear;
-	private int gold;
-	private int exp;
+	private long gold;
+	private long exp;
 	private Bag bag;
 	//private int tailorExp;
 
@@ -231,8 +233,8 @@ public class Player extends Unit {
 		this.connectionManager.getConnection().startPacket();
 		this.connectionManager.getConnection().writeShort(PacketID.LOAD_STATS);
 		this.connectionManager.getConnection().writeInt(this.unitID);
-		this.connectionManager.getConnection().writeInt(this.exp);
-		this.connectionManager.getConnection().writeInt(this.gold);
+		this.connectionManager.getConnection().writeLong(this.exp);
+		this.connectionManager.getConnection().writeLong(this.gold);
 		this.connectionManager.getConnection().writeInt(this.accountRank.getValue());
 		this.connectionManager.getConnection().endPacket();
 		this.connectionManager.getConnection().send();
@@ -885,21 +887,25 @@ public class Player extends Unit {
 		CommandUpdateStats.updateStamina(this, this.unitID, this.stamina);
 	}
 	
-	public void setExperience(int exp) {
+	public void setExperience(long exp, boolean sendToClient) {
 		this.exp = exp;
 		this.level = getLevel(this.exp);
+		if (sendToClient)
+			CommandChangeExperience.updateExperience(this);
 	}
 	
-	public int getExperience() {
+	public long getExperience() {
 		return this.exp;
 	}
 	
-	public int getGold() {
+	public long getGold() {
 		return this.gold;
 	}
 	
-	public void setGold(int gold) {
+	public void setGold(long gold, boolean sendToClient) {
 		this.gold = gold;
+		if (gold != 0 && sendToClient)
+			CommandChangeGold.updateGold(this);
 	}
 	
 	@Override
@@ -980,7 +986,7 @@ public class Player extends Unit {
 		return this.bag;
 	}
 	
-	public int getExp() {
+	public long getExp() {
 		return this.exp;
 	}
 	
@@ -1228,7 +1234,7 @@ public class Player extends Unit {
 		levelMap.put(70, 717000);
 	}
 	
-	public static int getLevel(int exp) {
+	public static int getLevel(long exp) {
 		if(exp <= 400) {
 			return 1;
 		}

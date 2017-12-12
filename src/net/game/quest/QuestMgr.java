@@ -9,6 +9,7 @@ import net.thread.log.LogRunnable;
 
 public class QuestMgr {
 
+	public final static int MAXIMUM_NUMBER_QUEST = 25;
 	private final static HashMap<Integer, Quest> questMap = new HashMap<Integer, Quest>();
 	private static JDOStatement loadQuestStatement;
 	private static JDOStatement loadQuestObjectiveStatement;
@@ -16,19 +17,19 @@ public class QuestMgr {
 	public static void loadQuest() {
 		try {
 			if (loadQuestStatement == null)
-				loadQuestStatement = Server.getJDO().prepare("SELECT `id`, `required_level`, `experience_reward`, `gold_reward`, `title`, `description` FROM `quest`");
+				loadQuestStatement = Server.getJDO().prepare("SELECT `id`, `required_level`, `state`, `experience_reward`, `gold_reward`, `title`, `description` FROM `quest`");
 			loadQuestStatement.clear();
 			loadQuestStatement.execute();
 			while (loadQuestStatement.fetch()) {
 				int id = loadQuestStatement.getInt();
 				short requiredLevel = loadQuestStatement.getShort();
+				byte state = loadQuestStatement.getByte();
 				int experienceReward = loadQuestStatement.getInt();
 				int goldReward = loadQuestStatement.getInt();
 				String title = loadQuestStatement.getString();
 				String description = loadQuestStatement.getString();
-				addQuest(id, requiredLevel, experienceReward, goldReward, title, description);
+				addQuest(id, requiredLevel, state, experienceReward, goldReward, title, description);
 			}
-			
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
@@ -57,8 +58,11 @@ public class QuestMgr {
 		}
 	}
 	
-	private static void addQuest(int id, short requiredLevel, int experienceReward, int goldReward, String title, String description) {
-		questMap.put(id, new Quest(id, requiredLevel, experienceReward, goldReward, title, description));
+	private static void addQuest(int id, short requiredLevel, byte state, int experienceReward, int goldReward, String title, String description) {
+		QuestStateType stateType = QuestStateType.getQuestStateType(state);
+		if (stateType == null)
+			stateType = QuestStateType.DISABLED;
+		questMap.put(id, new Quest(id, requiredLevel, stateType, experienceReward, goldReward, title, description));
 		loadQuestObjective(questMap.get(id));
 	}
 	

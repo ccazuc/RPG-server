@@ -33,17 +33,17 @@ public class CommandGet extends Command {
 		}
 		else if(packetID == PacketID.CHAT_GET_EXPERIENCE) {
 			int id = connection.readInt();
-			Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
+			/*Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
 			if(member != null) {
 				write(connection, member.getExp());
-			}
+			}*/
 		}
 		else if(packetID == PacketID.CHAT_GET_GOLD) {
 			int id = connection.readInt();
-			Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
+			/*Player member = id == player.getUnitID() ? player : Server.getInGameCharacter(id);
 			if(member != null) {
 				write(connection, member.getGold());
-			}
+			}*/
 		}
 		else if(packetID == PacketID.CHAT_GET_ID) {
 			String name = connection.readString();

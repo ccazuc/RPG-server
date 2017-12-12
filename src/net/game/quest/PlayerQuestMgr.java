@@ -7,8 +7,14 @@ import java.util.HashSet;
 
 import jdo.JDOStatement;
 import net.Server;
+import net.command.player.CommandQuest;
+import net.command.player.CommandSendRedAlert;
+import net.game.DefaultRedAlert;
 import net.game.unit.Player;
 import net.thread.log.LogRunnable;
+import net.thread.sql.SQLDatas;
+import net.thread.sql.SQLRequest;
+import net.thread.sql.SQLRequestPriority;
 
 public class PlayerQuestMgr {
 
@@ -19,6 +25,34 @@ public class PlayerQuestMgr {
 	private final HashMap<Integer, PlayerQuest> questMap;
 	private final HashSet<Integer> completedQuestSet;
 	private final Player player;
+	private final static SQLRequest addQuestToDB = new SQLRequest("INSERT INTO `character_quests` (`player_id`, `quest_id`, `accepted_timestamp`, `objective1_progress`, `objective2_progress`, `objective3_progress`, `objective4_progress` VALUES (?, ?, ?, 0, 0, 0, 0)", "Add player quest", SQLRequestPriority.HIGH) {
+		
+		@Override
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+			this.statement.putInt(datas.getIValue2());
+			this.statement.putLong(datas.getLValue1());
+		}
+	};
+	private final static SQLRequest removeQuestFromDB = new SQLRequest("DELETE FROM `character_quests` WHERE `player_id` = ? AND `quest_id` = ?", "Remove player quest", SQLRequestPriority.HIGH) {
+		
+		@Override
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+			this.statement.putInt(datas.getIValue2());
+		}
+	};
+	private final static SQLRequest addCompletedQuestToDB = new SQLRequest("INSERT INTO `character_quest_completed` (`player_id`, `quest_id`) VALUES (?, ?)", "Add completed player quest", SQLRequestPriority.HIGH) {
+		
+		@Override
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+			this.statement.putInt(datas.getIValue2());
+		}
+	};
 	
 	public PlayerQuestMgr(Player player) {
 		this.questMap = new HashMap<Integer, PlayerQuest>();
@@ -70,7 +104,7 @@ public class PlayerQuestMgr {
 					LogRunnable.addErrorLog("Error in PlayerQuestManager.loadPlayerQuest(), quest not found: "+questId+", playerId: "+this.player.getUnitID());
 					continue;
 				}
-				PlayerQuest playerQuest = new PlayerQuest(quest, acceptedTimestamp);
+				PlayerQuest playerQuest = new PlayerQuest(this.player, quest, acceptedTimestamp);
 				if (!checkObjectiveOnLoad(quest, 0, playerQuest, objective1Progress)) continue;
 				if (!checkObjectiveOnLoad(quest, 1, playerQuest, objective2Progress)) continue;
 				if (!checkObjectiveOnLoad(quest, 2, playerQuest, objective3Progress)) continue;
@@ -80,6 +114,27 @@ public class PlayerQuestMgr {
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void addQuestDBAsyncHigh(Player player, PlayerQuest quest)
+	{
+		SQLDatas datas = new SQLDatas(player.getUnitID(), quest.getQuest().getId(), quest.getAcceptedTimestamp());
+		addQuestToDB.addDatas(datas);
+		Server.executeSQLRequest(addQuestToDB);
+	}
+	
+	public static void removeQuestDBAsyncHigh(Player player, PlayerQuest quest)
+	{
+		SQLDatas datas = new SQLDatas(player.getUnitID(), quest.getQuest().getId());
+		removeQuestFromDB.addDatas(datas);
+		Server.executeSQLRequest(removeQuestFromDB);
+	}
+	
+	public static void addCompletedQuestDBAsyncHigh(Player player, PlayerQuest quest)
+	{
+		SQLDatas datas = new SQLDatas(player.getUnitID(), quest.getQuest().getId());
+		addCompletedQuestToDB.addDatas(datas);
+		Server.executeSQLRequest(addCompletedQuestToDB);
 	}
 	
 	public static boolean checkObjectiveOnLoad(Quest quest, int objectiveIndex, PlayerQuest playerQuest, short progress) {
@@ -106,36 +161,84 @@ public class PlayerQuestMgr {
 	
 	public void completeQuest(Quest quest) {
 		PlayerQuest playerQuest = this.questMap.get(quest.getId());
-		if (playerQuest == null || !playerQuest.isQuestCompleted())
+		if (playerQuest == null)
 			return;
+		if (!playerQuest.isQuestCompleted())
+		{
+			CommandSendRedAlert.write(this.player, DefaultRedAlert.QUEST_NOT_COMPLETED);
+			return;
+		}
+		if (playerQuest.getQuest().getState() == QuestStateType.DISABLED)
+		{
+			CommandSendRedAlert.write(this.player, DefaultRedAlert.QUEST_DISABLED);
+			return;
+		}
+		this.completedQuestSet.add(playerQuest.getQuest().getId());
+		addCompletedQuestDBAsyncHigh(this.player, playerQuest);
 		removeQuest(playerQuest);
 		handleQuestReward(playerQuest.getQuest());
 	}
 	
+	public void cancelQuest(Quest quest)
+	{
+		if (quest == null)
+			return;
+		PlayerQuest playerQuest = this.questMap.get(quest.getId());
+		if (playerQuest == null)
+			return;
+		removeQuest(playerQuest);
+		CommandQuest.questCanceled(this.player, playerQuest);
+	}
+	
 	public void handleQuestReward(Quest quest) {
-		this.player.setGold(this.player.getGold() + quest.getGoldReward());
-		this.player.setExperience(this.player.getExperience() + quest.getExperienceReward());
+		this.player.setGold(this.player.getGold() + quest.getGoldReward(), true);
+		this.player.setExperience(this.player.getExperience() + quest.getExperienceReward(), true);
+	}
+	
+	public boolean hasUnlockedQuest(Quest quest)
+	{
+		int i = -1;
+		while (++i < quest.getPreviousQuestList().size())
+			if (!this.completedQuestSet.contains(quest.getPreviousQuestList().get(i)))
+				return (false);
+		return (true);
 	}
 	
 	public void acceptQuest(Quest quest) {
+		if (quest == null)
+			return;
+		if (this.player.getLevel() < quest.getRequiredLevel())
+			return;
+		if (this.questMap.size() >= QuestMgr.MAXIMUM_NUMBER_QUEST)
+		{
+			CommandSendRedAlert.write(this.player, DefaultRedAlert.TOO_MUCH_QUESTS);
+			return;
+		}
+		if (!hasUnlockedQuest(quest))
+		{
+			CommandSendRedAlert.write(this.player, DefaultRedAlert.QUEST_NOT_UNLOCKED);
+			return;
+		}
 		int i = -1;
-		PlayerQuest playerQuest = new PlayerQuest(quest, Server.getLoopTickTimer());
+		PlayerQuest playerQuest = new PlayerQuest(this.player, quest, Server.getLoopTickTimer());
 		while (++i < quest.getObjectives().size()) {
 			PlayerQuestObjective playerQuestObjective = new PlayerQuestObjective(quest.getObjective(i), (short)0, playerQuest);
 			playerQuest.addObjective(playerQuestObjective);
 			addObjectiveCallback(playerQuestObjective);
 		}
+		this.questMap.put(quest.getId(), playerQuest);
+		CommandQuest.questAccepted(this.player, playerQuest);
+		addQuestDBAsyncHigh(this.player, playerQuest);
 	}
 	
 	public void removeQuest(PlayerQuest playerQuest) {
+		if (!this.questMap.containsKey(playerQuest.getQuest().getId()))
+			return;
 		this.questMap.remove(playerQuest.getQuest().getId());
 		int i = -1;
 		while (++i < playerQuest.getObjectives().size())
 			removeObjectiveCallback(playerQuest.getObjective(i));
-	}
-	
-	public PlayerQuest getPlayerQuest(Quest quest) {
-		return getPlayerQuest(quest.getId());
+		removeQuestDBAsyncHigh(this.player, playerQuest);
 	}
 	
 	public void onUnitKilled(int unitId) {
@@ -156,6 +259,10 @@ public class PlayerQuestMgr {
 	
 	public PlayerQuest getPlayerQuest(int id) {
 		return this.questMap.get(id);
+	}
+	
+	public PlayerQuest getPlayerQuest(Quest quest) {
+		return (this.questMap.get(quest.getId()));
 	}
 	
 	public HashMap<Integer, PlayerQuest> getQuestMap() {

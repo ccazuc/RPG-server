@@ -204,8 +204,8 @@ public class CharacterMgr {
 				player.setName(loadCharacterInfo.getString());
 				player.setClasse(convStringToClasse(loadCharacterInfo.getString()));
 				player.setRace(convStringToRace(loadCharacterInfo.getString()));
-				player.setExperience(loadCharacterInfo.getInt());
-				player.setGold(loadCharacterInfo.getInt());
+				player.setExperience(loadCharacterInfo.getInt(), false);
+				player.setGold(loadCharacterInfo.getInt(), false);
 			}
 			loadRank.clear();
 			loadRank.putInt(player.getAccountId());

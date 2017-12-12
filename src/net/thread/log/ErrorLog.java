@@ -36,9 +36,9 @@ public class ErrorLog {
 		builder.append("Function stacktrace:" + System.lineSeparator());
 		while (++i < this.trace.length)
 			if (i < this.trace.length - 1)
-				builder.append("\t at: ").append(this.trace[i]).append(System.lineSeparator());
+				builder.append("\t at ").append(this.trace[i]).append(System.lineSeparator());
 			else
-				builder.append("\t at: ").append(this.trace[i]);
+				builder.append("\t at ").append(this.trace[i]);
 		return (builder.toString());
 	}
 }

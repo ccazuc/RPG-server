@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.Server;
 import net.game.manager.DebugMgr;
 
 public class SQLRunnable implements Runnable {
@@ -45,18 +44,16 @@ public class SQLRunnable implements Runnable {
 					this.SQLRequestQueue.remove(0);
 				}
 			}
-			synchronized(this.SQLTaskList) {
-				while(this.SQLTaskList.size() > 0) {
-					if(DebugMgr.getSQLRequestTimer()) {
-						long timer = System.nanoTime();
-						this.SQLTaskList.get(0).execute();
-						System.out.println("[SQL TASK] "+this.SQLTaskList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");
-					}
-					else {
-						this.SQLTaskList.get(0).execute();
-					}
-					this.SQLTaskList.remove(0);
+			while(this.SQLTaskList.size() > 0) {
+				if(DebugMgr.getSQLRequestTimer()) {
+					long timer = System.nanoTime();
+					this.SQLTaskList.get(0).execute();
+					System.out.println("[SQL TASK] "+this.SQLTaskList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");
 				}
+				else {
+					this.SQLTaskList.get(0).execute();
+				}
+				this.SQLTaskList.remove(0);
 			}
 			while(this.SQLRequestList.size() > 0) {
 				if(this.SQLRequestList.get(0).debugActive || DebugMgr.getSQLRequestTimer()) {

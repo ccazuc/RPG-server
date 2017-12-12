@@ -1,5 +1,7 @@
 package net.game.quest;
 
+import net.command.player.CommandQuest;
+
 public class PlayerQuestObjective {
 
 	private final QuestObjective objective;
@@ -36,6 +38,7 @@ public class PlayerQuestObjective {
 		if (isCompleted())
 			return;
 		this.progress+= amount;
+		CommandQuest.ObjectiveUpdate(this.playerQuest.getPlayer(), this);
 		if (isCompleted())
 			this.playerQuest.objectiveCompleted();
 	}
