@@ -2,6 +2,8 @@ package net.game.quest;
 
 import java.util.ArrayList;
 
+import net.thread.log.LogRunnable;
+
 public class Quest {
 
 	private final ArrayList<QuestObjective> objectives;
@@ -26,7 +28,6 @@ public class Quest {
 		this.objectives = new ArrayList<QuestObjective>();
 		this.previousQuest = new ArrayList<Integer>();
 		this.nextQuest = new ArrayList<Integer>();
-		QuestMgr.loadQuestObjective(this);
 	}
 	
 	public void addObjective(QuestObjective objective) {
@@ -35,7 +36,7 @@ public class Quest {
 	
 	public QuestObjective getObjective(int index) {
 		if (index < 0 || index >= this.objectives.size()) {
-			System.out.println("Error, invalid index for quest: "+this.id+", index: "+index);
+			LogRunnable.addErrorLog("Error, invalid index for quest: "+this.id+", index: "+index);
 			return null;
 		}
 		return this.objectives.get(index);

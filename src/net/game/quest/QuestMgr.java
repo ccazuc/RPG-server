@@ -51,7 +51,6 @@ public class QuestMgr {
 				int id = loadQuestObjectiveStatement.getInt();
 				addObjective(quest, index, type, amount, data, id);
 			}
-				
 		}
 		catch(SQLException e) {
 			e.printStackTrace();

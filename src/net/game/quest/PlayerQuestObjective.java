@@ -40,6 +40,6 @@ public class PlayerQuestObjective {
 		this.progress+= amount;
 		CommandQuest.ObjectiveUpdate(this.playerQuest.getPlayer(), this);
 		if (isCompleted())
-			this.playerQuest.objectiveCompleted();
+			this.playerQuest.onObjectiveCompleted();
 	}
 }
