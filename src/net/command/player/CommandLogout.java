@@ -3,12 +3,13 @@ package net.command.player;
 import net.command.Command;
 import net.connection.PacketID;
 import net.game.unit.Player;
+import net.utils.DebugUtils;
 
 public class CommandLogout extends Command {
 
 	@Override
 	public final void read(Player player) {
-		player.close();
+		player.close(false);
 	}
 	
 	public static void loggout(Player player) {

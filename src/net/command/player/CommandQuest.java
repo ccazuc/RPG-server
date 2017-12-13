@@ -39,6 +39,12 @@ public class CommandQuest extends Command {
 			}
 			player.getQuestManager().acceptQuest(quest);
 		}
+		else if (packetId == PacketID.QUEST_CANCEL)
+		{
+			int questId = connection.readInt();
+			Quest quest = QuestMgr.getQuest(questId);
+			player.getQuestManager().cancelQuest(quest);
+		}
 	}
 	
 	public static void InitQuests(Player player) {
@@ -104,5 +110,14 @@ public class CommandQuest extends Command {
 		connection.writeInt(quest.getQuest().getId());
 		connection.endPacket();
 		connection.send();
+	}
+	
+	public static void sendAvailableQuest(Player player)
+	{
+		for (Quest quest : QuestMgr.getQuestMap().values())
+		{
+			if (quest.getRequiredLevel() > player.getLevel() || player.getQuestManager().hasCompletedQuest(quest) || !player.getQuestManager().hasUnlockedQuest(quest))
+				continue;
+		}
 	}
 }

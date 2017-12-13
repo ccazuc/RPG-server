@@ -238,3 +238,87 @@ Function stacktrace:
 --------------------------------------------------------------
 
 
+--------------------------------------------------------------
+Wed Dec 13 16:25:49 CET 2017
+Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
+Function stacktrace:
+	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
+	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
+	 at net.game.unit.Player.initQuestMgr(Player.java:235)
+	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
+	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
+	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
+	 at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Wed Dec 13 16:26:35 CET 2017
+Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
+Function stacktrace:
+	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
+	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
+	 at net.game.unit.Player.initQuestMgr(Player.java:235)
+	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
+	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
+	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
+	 at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Wed Dec 13 16:26:35 CET 2017
+Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
+Function stacktrace:
+	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
+	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
+	 at net.game.unit.Player.initQuestMgr(Player.java:235)
+	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
+	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
+	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
+	 at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Wed Dec 13 17:15:44 CET 2017
+Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
+Function stacktrace:
+	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
+	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
+	 at net.game.unit.Player.initQuestMgr(Player.java:235)
+	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
+	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
+	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
+	 at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Wed Dec 13 17:17:36 CET 2017
+Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
+Function stacktrace:
+	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
+	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
+	 at net.game.unit.Player.initQuestMgr(Player.java:235)
+	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
+	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
+	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
+	 at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Wed Dec 13 17:26:12 CET 2017
+Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
+Function stacktrace:
+	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
+	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
+	 at net.game.unit.Player.initQuestMgr(Player.java:235)
+	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
+	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
+	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
+	 at java.lang.Thread.run(Unknown Source)
+--------------------------------------------------------------
+
+

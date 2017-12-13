@@ -180,7 +180,7 @@ public class BanMgr {
 		try {
 			long timer = System.currentTimeMillis();
 			if(removeExpiredBanCharacter == null) {
-				removeExpiredBanCharacter = Server.getJDO().prepare("DELETE FROM character_banned WHERE unban_date >= 0 AND unban_date <= ?");
+				removeExpiredBanCharacter = Server.getJDO().prepare("DELETE FROM character_banned WHERE unban_date > 0 AND unban_date <= ?");
 			}
 			removeExpiredBanCharacter.clear();
 			removeExpiredBanCharacter.putLong(timer);
@@ -191,22 +191,22 @@ public class BanMgr {
 		}
 	}
 	
-	public static boolean isCharacterBannedHighAsync(int characterID) {
+	public static long isCharacterBannedHighAsync(int characterID) {
 		try {
 			if(isCharacterBannedIDHighAsync == null) {
-				isCharacterBannedIDHighAsync = Server.getAsyncHighPriorityJDO().prepare("SELECT COUNT(character_id) FROM character_banned WHERE character_id = ?");
+				isCharacterBannedIDHighAsync = Server.getAsyncHighPriorityJDO().prepare("SELECT `unban_date` FROM character_banned WHERE character_id = ?");
 			}
 			isCharacterBannedIDHighAsync.clear();
 			isCharacterBannedIDHighAsync.putInt(characterID);
 			isCharacterBannedIDHighAsync.execute();
 			if(isCharacterBannedIDHighAsync.fetch()) {
-				return isCharacterBannedIDHighAsync.getInt() > 0;
+				return (isCharacterBannedIDHighAsync.getLong());
 			}
 		}
 		catch(SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+		return (-1);
 	}
 	
 	public static void banAccount(int account_id, long ban_date, long unban_date, String banned_by, String ban_reason) {

@@ -235,7 +235,7 @@ public class StoreChatCommand {
 			banned.close();
 		}
 	};
-	private final static ChatSubCommand ban_character = new ChatSubCommand("character", "ban", "Synthax : .ban character [character_name] [duration] [reason]", AccountRank.GAMEMASTER) {
+	private final static ChatSubCommand ban_character = new ChatSubCommand("character", "ban", "Synthax : .ban character [character_name] [duration] [reason] (duration <= 0 = permanent)", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
@@ -268,13 +268,13 @@ public class StoreChatCommand {
 			builder.setLength(0);
 			int i = 4;
 			while(i < value.length) {
-				builder.append(value[i]);
+				builder.append(value[i]).append(' ');
 				i++;
 			}
 			reason = builder.toString();
 			long timer = System.currentTimeMillis();
-			if(banTimer < 0) {
-				banTimer = -1-timer;
+			if(banTimer <= 0) {
+				banTimer = -timer; //that way banTimer + timer == 0
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Character ").append(characterName).append(" banned permanently for : ").append(reason).toString(), MessageType.SELF);
 			}
 			else {
@@ -282,10 +282,8 @@ public class StoreChatCommand {
 			}
 			BanMgr.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacter(characterId);
-			if(banned == null) {
-				return;
-			}
-			banned.close();
+			if(banned != null)
+				banned.close();
 		}
 	};
 	private final static ChatSubCommand ban_ip = new ChatSubCommand("ip", "ban", "Synthax : .ban ip [ip_adress] [duration] [reason]",  AccountRank.GAMEMASTER) {
@@ -595,7 +593,7 @@ public class StoreChatCommand {
 			String ban_reason = datas.getStringValue2();
 			builder.setLength(0);
 			Date banDate = new Date(ban_date);
-			if(unban_date == -1) {
+			if(unban_date <= 0) {
 				builder.append("Account ").append(value[2]).append(" has been permanently banned the ").append(banDate.toString()).append(" by ").append(banned_by).append(" for :\n").append(ban_reason);
 			}
 			else {
@@ -638,7 +636,7 @@ public class StoreChatCommand {
 			String ban_reason = datas.getStringValue2();
 			builder.setLength(0);
 			Date banDate = new Date(ban_date);
-			if(unban_date == -1) {
+			if(unban_date <= 0) {
 				builder.append("Character ").append(value[2]).append(" has been permanently banned the ").append(banDate.toString()).append(" by ").append(banned_by).append(" for :\n").append(ban_reason);
 			}
 			else {
@@ -674,7 +672,7 @@ public class StoreChatCommand {
 			String ban_reason = datas.getStringValue2();
 			builder.setLength(0);
 			Date banDate = new Date(ban_date);
-			if(unban_date == -1) {
+			if(unban_date <= 0) {
 				builder.append("Ip adress ").append(value[2]).append(" has been permanently banned the ").append(banDate.toString()).append(" by ").append(banned_by).append(" for :\n").append(ban_reason);
 			}
 			else {

@@ -10,6 +10,10 @@ import net.Server;
 import net.command.player.CommandQuest;
 import net.command.player.CommandSendRedAlert;
 import net.game.DefaultRedAlert;
+import net.game.callback.CallbackMgr;
+import net.game.callback.CallbackType;
+import net.game.callback.UpdateAvailableQuestOnLevelupCallback;
+import net.game.callback.UpdateAvailableQuestOnQuestCompletedCallback;
 import net.game.unit.Player;
 import net.thread.log.LogRunnable;
 import net.thread.sql.SQLDatas;
@@ -24,7 +28,10 @@ public class PlayerQuestMgr {
 	private static JDOStatement loadCompletedQuestStatement;
 	private final HashMap<Integer, PlayerQuest> questMap;
 	private final HashSet<Integer> completedQuestSet;
+	private final HashSet<Integer> availableQuest;
 	private final Player player;
+	private final static UpdateAvailableQuestOnQuestCompletedCallback updateAvailableQuestOnQuestCompletedCallback = new UpdateAvailableQuestOnQuestCompletedCallback();
+	private final static UpdateAvailableQuestOnLevelupCallback updateAvailableQuestOnLevelupCallback = new UpdateAvailableQuestOnLevelupCallback();
 	private final static SQLRequest addQuestToDB = new SQLRequest("INSERT INTO `character_quests` (`player_id`, `quest_id`, `accepted_timestamp`, `objective1_progress`, `objective2_progress`, `objective3_progress`, `objective4_progress` VALUES (?, ?, ?, 0, 0, 0, 0)", "Add player quest", SQLRequestPriority.HIGH) {
 		
 		@Override
@@ -57,10 +64,19 @@ public class PlayerQuestMgr {
 	public PlayerQuestMgr(Player player) {
 		this.questMap = new HashMap<Integer, PlayerQuest>();
 		this.completedQuestSet = new HashSet<Integer>();
+		this.availableQuest = new HashSet<Integer>();
 		this.player = player;
 		int i = -1;
 		while (++i < this.callback.length)
 			this.callback[i] = new ArrayList<PlayerQuestObjective>();
+		loadPlayerQuest();
+		loadPlayerCompletedQuest();
+	}
+	
+	public static void initCallback()
+	{
+		CallbackMgr.registerCallback(CallbackType.QUEST_COMPLETED, updateAvailableQuestOnQuestCompletedCallback);
+		CallbackMgr.registerCallback(CallbackType.LEVEL_CHANGED, updateAvailableQuestOnLevelupCallback);
 	}
 	
 	public void loadPlayerCompletedQuest()
@@ -68,15 +84,12 @@ public class PlayerQuestMgr {
 		try
 		{
 			if (loadCompletedQuestStatement == null)
-				loadCompletedQuestStatement = Server.getJDO().prepare("SELECT `quest_id` FROM `character_quest_completed` WHERE `player_id` = ?");
+				loadCompletedQuestStatement = Server.getJDO().prepare("SELECT `quest_id` FROM `character_quests_completed` WHERE `character_id` = ?");
 			loadCompletedQuestStatement.clear();
 			loadCompletedQuestStatement.putInt(this.player.getUnitID());
 			loadCompletedQuestStatement.execute();
 			while (loadCompletedQuestStatement.fetch())
-			{
-				int questId = loadCompletedQuestStatement.getInt();
-				this.completedQuestSet.add(questId);
-			}
+				this.completedQuestSet.add(loadCompletedQuestStatement.getInt());
 		}
 		catch (SQLException e)
 		{
@@ -87,7 +100,7 @@ public class PlayerQuestMgr {
 	public void loadPlayerQuest() {
 		try  {
 			if (loadQuestsStatement == null)
-				loadQuestsStatement = Server.getJDO().prepare("SELECT `quest_id`, `accepted_timestamp`, `objective1_progress`, `objective2_progress`, `objective3_progress`, `objective4_progress` FROM `character_quests` WHERE `user_id` = ?");
+				loadQuestsStatement = Server.getJDO().prepare("SELECT `quest_id`, `accepted_timestamp`, `objective1_progress`, `objective2_progress`, `objective3_progress`, `objective4_progress` FROM `character_quests` WHERE `character_id` = ?");
 			loadQuestsStatement.clear();
 			loadQuestsStatement.putInt(this.player.getUnitID());
 			loadQuestsStatement.execute();
@@ -160,6 +173,8 @@ public class PlayerQuestMgr {
 	}
 	
 	public void completeQuest(Quest quest) {
+		if (quest == null)
+			return;
 		PlayerQuest playerQuest = this.questMap.get(quest.getId());
 		if (playerQuest == null)
 			return;
@@ -177,6 +192,7 @@ public class PlayerQuestMgr {
 		addCompletedQuestDBAsyncHigh(this.player, playerQuest);
 		removeQuest(playerQuest);
 		handleQuestReward(playerQuest.getQuest());
+		CallbackMgr.executeCallback(CallbackType.QUEST_COMPLETED, this.player, quest.getId());
 	}
 	
 	public void cancelQuest(Quest quest)
@@ -204,19 +220,33 @@ public class PlayerQuestMgr {
 		return (true);
 	}
 	
+	public boolean hasCompletedQuest(Quest quest)
+	{
+		return (this.completedQuestSet.contains(quest.getId()));
+	}
+	
+	public void updateAvailableQuest()
+	{
+		this.availableQuest.clear();
+		for (Quest quest : QuestMgr.getQuestMap().values())
+		{
+			if (quest.getRequiredLevel() > this.player.getLevel() || this.completedQuestSet.contains(quest.getId()) || hasUnlockedQuest(quest))
+				continue;
+			this.availableQuest.add(quest.getId());
+		}
+	}
+	
 	public void acceptQuest(Quest quest) {
 		if (quest == null)
 			return;
-		if (this.player.getLevel() < quest.getRequiredLevel())
-			return;
-		if (this.questMap.size() >= QuestMgr.MAXIMUM_NUMBER_QUEST)
-		{
-			CommandSendRedAlert.write(this.player, DefaultRedAlert.TOO_MUCH_QUESTS);
-			return;
-		}
-		if (!hasUnlockedQuest(quest))
+		if (!this.availableQuest.contains(quest.getId()))
 		{
 			CommandSendRedAlert.write(this.player, DefaultRedAlert.QUEST_NOT_UNLOCKED);
+			return;
+		}
+		if (this.questMap.containsKey(quest.getId()))
+		{
+			CommandSendRedAlert.write(this.player, DefaultRedAlert.QUEST_ALREADY_ACCEPTED);
 			return;
 		}
 		int i = -1;

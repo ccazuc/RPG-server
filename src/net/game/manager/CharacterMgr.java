@@ -114,9 +114,6 @@ public class CharacterMgr {
 			Player player = this.datasList.get(0).getPlayer();
 			int id = this.datasList.get(0).getIValue1();
 			player.setUnitID(id);
-			if(BanMgr.isCharacterBannedHighAsync(id)) {
-				return;
-			}
 			player.setOnline();
 			player.initTable();
 			player.loadCharacterInfoSQL();
@@ -143,6 +140,7 @@ public class CharacterMgr {
 				player.getGuild().getMember(player.getUnitID()).setOnlineStatus(true);
 				CommandGuild.notifyOnlinePlayer(player);
 			}
+			player.initQuestMgr();
 			Server.addInGamePlayer(player);
 			Server.removeLoggedPlayer(player);
 		}

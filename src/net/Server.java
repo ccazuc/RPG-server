@@ -18,6 +18,7 @@ import net.connection.Key;
 import net.game.auction.AuctionHouseDBMgr;
 import net.game.auction.AuctionHouseMgr;
 import net.game.aura.AuraMgr;
+import net.game.callback.CallbackMgr;
 import net.game.chat.StoreChatCommand;
 import net.game.guild.GuildMgr;
 import net.game.item.bag.ContainerManager;
@@ -79,6 +80,8 @@ public class Server {
 		GuildMgr.removeOrphanedMember();
 		StoreChatCommand.initChatCommandMap();
 		MailMgr.loadAllMail();
+		CallbackMgr.initCallbackList();
+		CallbackMgr.registerAllCallback();
 		nonLoggedPlayerList = Collections.synchronizedList(nonLoggedPlayerList);
 		final InetSocketAddress iNetSocketAdress = new InetSocketAddress(ConfigMgr.PORT);
 		serverSocketChannel = ServerSocketChannel.open();

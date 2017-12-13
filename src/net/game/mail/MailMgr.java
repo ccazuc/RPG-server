@@ -55,7 +55,7 @@ public class MailMgr {
 	public static void loadAllMail() {
 		try {
 			if (loadAllMail == null)
-				loadAllMail = Server.getJDO().prepare("SELECT GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, read template FROM mail");
+				loadAllMail = Server.getJDO().prepare("SELECT `id`, `author_id`, `dest_id`, `title`, `content`, `delete_date`, `gold`, `is_cr`, `read_template` FROM mail");
 			loadAllMail.clear();
 			loadAllMail.execute();
 			while (loadAllMail.fetch()) {

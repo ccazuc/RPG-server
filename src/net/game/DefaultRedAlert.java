@@ -16,6 +16,7 @@ public enum DefaultRedAlert {
 	QUEST_NOT_COMPLETED((byte)11, "You did not complete the objectives."),
 	TOO_MUCH_QUESTS((byte)12, "Your quest log is full."),
 	QUEST_NOT_UNLOCKED((byte)13, "You did not unlock that quest yet."),
+	QUEST_ALREADY_ACCEPTED((byte)14, "You have already accepted this quest."),
 	;
 	
 	private final byte value;

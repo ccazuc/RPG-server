@@ -24,8 +24,8 @@ public class QuestMgr {
 				int id = loadQuestStatement.getInt();
 				short requiredLevel = loadQuestStatement.getShort();
 				byte state = loadQuestStatement.getByte();
-				int experienceReward = loadQuestStatement.getInt();
-				int goldReward = loadQuestStatement.getInt();
+				long experienceReward = loadQuestStatement.getLong();
+				long goldReward = loadQuestStatement.getLong();
 				String title = loadQuestStatement.getString();
 				String description = loadQuestStatement.getString();
 				addQuest(id, requiredLevel, state, experienceReward, goldReward, title, description);
@@ -57,7 +57,7 @@ public class QuestMgr {
 		}
 	}
 	
-	private static void addQuest(int id, short requiredLevel, byte state, int experienceReward, int goldReward, String title, String description) {
+	private static void addQuest(int id, short requiredLevel, byte state, long experienceReward, long goldReward, String title, String description) {
 		QuestStateType stateType = QuestStateType.getQuestStateType(state);
 		if (stateType == null)
 			stateType = QuestStateType.DISABLED;
@@ -78,5 +78,10 @@ public class QuestMgr {
 	
 	public static Quest getQuest(int id) {
 		return questMap.get(id);
+	}
+	
+	public static HashMap<Integer, Quest> getQuestMap()
+	{
+		return (questMap);
 	}
 }

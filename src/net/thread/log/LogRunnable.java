@@ -49,19 +49,16 @@ public class LogRunnable implements Runnable {
 	@Override
 	public void run() {
 		File folder = new File(FILE_PATH);
-		if(!folder.exists()) {
+		if (!folder.exists())
 			folder.mkdirs();
-		}
 		try {
 			folder = new File(FILE_NAME_PLAYER_LOG);
-			if(!folder.exists()) {
+			if (!folder.exists())
 				folder.createNewFile();
-			}
 			fileWriterPlayerLog = new FileWriter(folder.getAbsolutePath(), true);
 			folder = new File(FILE_NAME_SERVER_LOG);
-			if(!folder.exists()) {
+			if (!folder.exists())
 				folder.createNewFile();
-			}
 			fileWriterServerLog = new FileWriter(folder.getAbsolutePath(), true);
 		}
 		catch(IOException e) {
@@ -74,7 +71,7 @@ public class LogRunnable implements Runnable {
 		outServerLog = new PrintWriter(bwServerLog);
 		long time;
 		long delta;
-		while(running) {
+		while (running) {
 			time = System.currentTimeMillis();
 			synchronized (playerPrintQueue)
 			{
@@ -100,45 +97,37 @@ public class LogRunnable implements Runnable {
 					exceptionQueue.remove(0);
 				}
 			}
-			while(playerPrintList.size() > 0) {
-				if(DebugMgr.getWriteLogFileTimer()) {
+			while (playerPrintList.size() > 0) {
+				if (DebugMgr.getWriteLogFileTimer())
 					debugTimer = System.currentTimeMillis();
-				}
 				outPlayerLog.println(playerPrintList.get(0));
 				outPlayerLog.flush();
-				if(DebugMgr.getWriteLogFileTimer()) {
+				if (DebugMgr.getWriteLogFileTimer())
 					System.out.println("Write \""+playerPrintList.get(0)+"\" in "+FILE_NAME_PLAYER_LOG+" took "+(System.currentTimeMillis()-debugTimer)/1000+" µs");
-				}
 				playerPrintList.remove(0);
 			}
-			while(exceptionList.size() > 0) {
-				if(DebugMgr.getWriteLogFileTimer()) {
+			while (exceptionList.size() > 0) {
+				if (DebugMgr.getWriteLogFileTimer())
 					debugTimer = System.currentTimeMillis();
-				}
 				outServerLog.println("--------------------------------------------------------------");
 				outServerLog.println(calendar.getTime());
-				if(exceptionList.get(0).getPlayer() != null) {
-					if(exceptionList.get(0).getPlayer().isOnline()) {
+				if (exceptionList.get(0).getPlayer() != null)
+					if (exceptionList.get(0).getPlayer().isOnline())
 						outServerLog.println("AccountID : "+exceptionList.get(0).getPlayer().getAccountId()+", CharacterID : "+exceptionList.get(0).getPlayer().getUnitID()+", CharacterName : "+exceptionList.get(0).getPlayer().getName());
-					}
-					else {
+					else
 						outServerLog.println("AccountID : "+exceptionList.get(0).getPlayer().getAccountId());
-					}
-				}
 				exceptionList.get(0).getException().printStackTrace(outServerLog);
 				outServerLog.println("--------------------------------------------------------------");
 				outServerLog.println(System.lineSeparator());
 				outServerLog.flush();
-				if(DebugMgr.getWriteLogFileTimer()) {
+				if (DebugMgr.getWriteLogFileTimer())
 					System.out.println("Write \""+exceptionList.get(0).getException().getClass()+"\" in "+FILE_NAME_SERVER_LOG+" took "+(System.currentTimeMillis()-debugTimer)/1000+" µs");
-				}
 				exceptionList.remove(0);
 			}
 			while (errorList.size() > 0)
 			{
-				if(DebugMgr.getWriteLogFileTimer()) {
+				if (DebugMgr.getWriteLogFileTimer())
 					debugTimer = System.currentTimeMillis();
-				}
 				outServerLog.println("--------------------------------------------------------------");
 				outServerLog.println(calendar.getTime());
 				outServerLog.println(errorList.get(0));
@@ -146,13 +135,12 @@ public class LogRunnable implements Runnable {
 				outServerLog.println("--------------------------------------------------------------");
 				outServerLog.println(System.lineSeparator());
 				outServerLog.flush();
-				if(DebugMgr.getWriteLogFileTimer()) {
+				if (DebugMgr.getWriteLogFileTimer())
 					System.out.println("Write error log in "+FILE_NAME_SERVER_LOG+" took "+(System.currentTimeMillis()-debugTimer)/1000+" µs");
-				}
 				errorList.remove(0);
 			}
 			delta = System.currentTimeMillis()-time;
-			if(shouldClose && playerPrintList.size() == 0 && exceptionList.size() == 0 && errorList.size() == 0) {
+			if (shouldClose && playerPrintList.size() == 0 && exceptionList.size() == 0 && errorList.size() == 0) {
 				outPlayerLog.close();
 				outServerLog.close();
 				running = false;
@@ -167,33 +155,29 @@ public class LogRunnable implements Runnable {
 				}
 				return;
 			}
-			if(delta < LOOP_TIMER) {
+			if (delta < LOOP_TIMER)
 				try {
 					Thread.sleep((LOOP_TIMER-delta));
 				} 
 				catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
 		}
 	}
 	
 	public static void writePlayerLog(Player player, String text) {
 		synchronized(playerPrintList) {
-			if(player.isOnline()) {
+			if (player.isOnline())
 				playerPrintList.add("[ERROR "+calendar.getTime()+"] AccountID : "+player.getAccountId()+" PlayerName: "+player.getName()+" PlayerID: "+player.getUnitID()+", "+text);
-			}
-			else {
+			else
 				playerPrintList.add("[ERROR "+calendar.getTime()+"] AccountID: "+player.getAccountId()+", "+text);
-			}
 		}
 	}
 	
 	public static void addErrorLog(String log)
 	{
-		synchronized(errorQueue)
+		synchronized (errorQueue)
 		{
-			System.out.println("Add error");
 			if (ConfigMgr.ENABLE_FUNCTION_STACK_TRACE)
 				errorQueue.add(new ErrorLog(log, new Throwable().getStackTrace()));
 			else
@@ -202,13 +186,13 @@ public class LogRunnable implements Runnable {
 	}
 	
 	public static void writeServerLog(Exception e) {
-		synchronized(exceptionQueue) {
+		synchronized (exceptionQueue) {
 			exceptionQueue.add(new ServerException(e));
 		}
 	}
 	
 	public static void writeServerLog(Exception e, Player player) {
-		synchronized(exceptionQueue) {
+		synchronized (exceptionQueue) {
 			exceptionQueue.add(new ServerException(e, player));
 		}
 	}

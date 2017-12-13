@@ -3,7 +3,9 @@ package net.command.player;
 import net.Server;
 import net.command.Command;
 import net.connection.Connection;
+import net.connection.PacketID;
 import net.game.log.Log;
+import net.game.manager.BanMgr;
 import net.game.manager.CharacterMgr;
 import net.game.unit.Player;
 
@@ -13,6 +15,7 @@ public class CommandLoadCharacter extends Command {
 	public void read(Player player) {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
+		long duration;
 		if(!Server.getLoggedPlayerList().containsKey(player.getAccountId())) {
 			Log.writePlayerLog(player, new StringBuilder().append("Tried to load character ").append(id).append(" whereas he's not connected").toString());
 			player.close();
@@ -21,6 +24,11 @@ public class CommandLoadCharacter extends Command {
 		if(!CharacterMgr.checkPlayerAccount(player.getAccountId(), id)) {
 			player.close();
 			Log.writePlayerLog(player, new StringBuilder().append("tried to connect on someone else's character (id = ").append(id).append(')').toString());
+			return;
+		}
+		if ((duration = BanMgr.isCharacterBannedHighAsync(id)) != -1)
+		{
+			characterBanned(player, duration);
 			return;
 		}
 		//System.out.println("CHARACTER LOAD ID : "+id);
@@ -51,6 +59,20 @@ public class CommandLoadCharacter extends Command {
 		Server.removeLoggedPlayer(player);*/
 	}
 	
-	@Override
-	public void write() {}
+	public static void characterBanned(Player player, long duration)
+	{
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.LOAD_CHARACTER);
+		connection.writeShort(PacketID.CHARACTER_LOGIN_BANNED);
+		if (duration == 0)
+			connection.writeBoolean(true);
+		else
+		{
+			connection.writeBoolean(false);
+			connection.writeLong(duration);
+		}
+		connection.endPacket();
+		connection.send();
+	}
 }

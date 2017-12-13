@@ -196,4 +196,8 @@ public class PacketID {
 	public final static short QUEST_COMPLETE_REQUEST = 192;
 	public final static short QUEST_ACCEPT = 193;
 	public final static short QUEST_CANCEL = 194;
+	public final static short CHARACTER_LOGIN_BANNED = 195;
+	public final static short CHARACTER_LOGIN_SUCCESS = 196;
+	public final static short CHARACTER_LOGIN_FAILED = 197;
+	public final static short CHARACTER_LOAD_FINISHED = 198;
 }

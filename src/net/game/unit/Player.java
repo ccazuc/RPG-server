@@ -193,6 +193,7 @@ public class Player extends Unit {
 	public void setAccountName(String name) {
 		this.accountName = name;
 	}
+
 	public void addItemSentToClient(int id) {
 		this.itemSentToClient.add(id);
 	}
@@ -229,6 +230,11 @@ public class Player extends Unit {
 		this.lastWhoTimer = timer;
 	}
 	
+	public void initQuestMgr()
+	{
+		this.questManager = new PlayerQuestMgr(this);
+	}
+
 	public void sendStats() {
 		this.connectionManager.getConnection().startPacket();
 		this.connectionManager.getConnection().writeShort(PacketID.LOAD_STATS);
@@ -423,18 +429,24 @@ public class Player extends Unit {
 		}
 	}
 	
-	public void close() {
+	public void close(boolean shouldNotifyClient) {
 		//long timer = System.nanoTime();
 		if(this.isOnline) {
 			logoutCharacter();
 			this.isOnline = false;
 		}
-		CommandLogout.loggout(this);
+		if (shouldNotifyClient)
+			CommandLogout.loggout(this);
 		this.connectionManager.getConnection().close();
 		Server.removeNonLoggedPlayer(this);
 		Server.removeLoggedPlayer(this);
 		Server.removeInGamePlayer(this);
 		//System.out.println("Player close took "+(System.nanoTime()-timer)/1000+" µs.");
+	}
+	
+	public void close()
+	{
+		close(true);
 	}
 	
 	public void updateBagItem() {
