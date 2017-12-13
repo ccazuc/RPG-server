@@ -47,6 +47,11 @@ public class AccountMgr {
 		return -1;
 	}
 	
+	public static boolean accountExists(int accountId)
+	{
+		return (loadAccountNameFromID(accountId) == null);
+	}
+	
 	public static String loadAccountNameFromID(int accountID) {
 		try {
 			if(loadAccountIDFromName == null) {

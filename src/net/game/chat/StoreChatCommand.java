@@ -77,9 +77,8 @@ public class StoreChatCommand {
 				return;
 			}
 			builder.setLength(0);
-			for(Player players : Server.getInGamePlayerList().values()) {
-				builder.append(players.getAccountName()).append(" : ").append(player.getAccountId());
-			}
+			for(Player players : Server.getInGamePlayerList().values())
+				builder.append("Name: ").append(players.getAccountName()).append(", ID: ").append(player.getAccountId()).append(", Rank: ").append(players.getAccountRank().getValue());
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}
 	};
@@ -157,6 +156,50 @@ public class StoreChatCommand {
 			}
 		}
 	};
+	private final static ChatCommand unban = new ChatCommand("unban", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String command, Player player) {
+			command = command.trim();
+			String[] value = command.split(" ");
+			if (value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+				return;
+			}
+			int i = -1;
+			while (++i < this.subCommandList.size()) {
+				if (this.subCommandList.get(i).getName().equalsIgnoreCase(value[1])) {
+					this.subCommandList.get(i).handle(value, player);
+					return;
+				}
+			}
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.printSubCommandError(player), MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand unban_account = new ChatSubCommand("account", "unban", "Syntax : .unban account [account_name || account_id]", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if (!checkRank(player, this.rank))
+				return;
+			if (value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
+				return;
+			}
+			String accountInfo = value[2];
+			int accountId;
+			if (StringUtils.isInteger(accountInfo))
+				accountId = Integer.parseInt(accountInfo);
+			else
+				accountId = AccountMgr.loadAccountIDFromName(accountInfo);
+			if (accountId == -1 && !AccountMgr.accountExists(accountId)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(),"Account " + accountInfo + " not found.", MessageType.SELF);
+				return;
+			}
+			BanMgr.unbanAccount(accountId);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+ accountId + " unbanned.", MessageType.SELF);
+		}
+	};
 	private final static ChatCommand ban = new ChatCommand("ban", AccountRank.GAMEMASTER) {
 		
 		@Override
@@ -186,9 +229,8 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(!checkRank(player, this.rank)) {
+			if(!checkRank(player, this.rank))
 				return;
-			}
 			if(value.length < 5) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
@@ -197,9 +239,8 @@ public class StoreChatCommand {
 			String banTime = value[3];
 			String reason = value[4];
 			long banTimer = 0;
-			if(StringUtils.isInteger(banTime)) {
+			if(StringUtils.isInteger(banTime))
 				banTimer = Integer.parseInt(banTime);
-			}
 			else {
 				banTimer = convStringTimerToMS(banTime);
 				if(banTimer == -666) {
@@ -216,32 +257,28 @@ public class StoreChatCommand {
 			builder.setLength(0);
 			int i = 4;
 			while(i < value.length) {
-				builder.append(value[i]);
+				builder.append(value[i]).append(' ');
 				i++;
 			}
 			reason = builder.toString();
-			if(banTimer < 0) {
-				banTimer = -1-timer;
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Account ").append(accountId).append(" banned permanently for : ").append(reason).toString(), MessageType.SELF);
+			if(banTimer <= 0) {
+				banTimer = -timer;
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Account ").append(accountId).append(" banned permanently for: ").append(reason).toString(), MessageType.SELF);
 			}
-			else {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Account ").append(accountId).append(" banned ").append(banTime).append(" for : ").append(reason).toString(), MessageType.SELF);
-			}
+			else
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Account ").append(accountId).append(" banned ").append(banTime).append(" for: ").append(reason).toString(), MessageType.SELF);
 			BanMgr.banAccount(accountId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacterByAccount(accountId);
-			if(banned == null) {
-				return;
-			}
-			banned.close();
+			if(banned != null)
+				banned.close();
 		}
 	};
 	private final static ChatSubCommand ban_character = new ChatSubCommand("character", "ban", "Synthax : .ban character [character_name] [duration] [reason] (duration <= 0 = permanent)", AccountRank.GAMEMASTER) {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(!checkRank(player, this.rank)) {
+			if(!checkRank(player, this.rank))
 				return;
-			}
 			if(value.length < 5) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
@@ -250,9 +287,8 @@ public class StoreChatCommand {
 			String banTime = value[3];
 			String reason = value[4];
 			long banTimer = 0;
-			if(StringUtils.isInteger(banTime)) {
+			if(StringUtils.isInteger(banTime))
 				banTimer = Integer.parseInt(banTime);
-			}
 			else {
 				banTimer = convStringTimerToMS(banTime);
 				if(banTimer == -666) {
@@ -275,11 +311,10 @@ public class StoreChatCommand {
 			long timer = System.currentTimeMillis();
 			if(banTimer <= 0) {
 				banTimer = -timer; //that way banTimer + timer == 0
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Character ").append(characterName).append(" banned permanently for : ").append(reason).toString(), MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Character ").append(characterName).append(" banned permanently for: ").append(reason).toString(), MessageType.SELF);
 			}
-			else {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Character ").append(characterName).append(" banned ").append(banTime).append(" for : ").append(reason).toString(), MessageType.SELF);
-			}
+			else
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("Character ").append(characterName).append(" banned ").append(banTime).append(" for: ").append(reason).toString(), MessageType.SELF);
 			BanMgr.banCharacter(characterId, timer, banTimer+timer, player.getName(), reason);
 			Player banned = Server.getInGameCharacter(characterId);
 			if(banned != null)
@@ -290,9 +325,8 @@ public class StoreChatCommand {
 		
 		@Override
 		public void handle(String[] value, Player player) {
-			if(!checkRank(player, this.rank)) {
+			if(!checkRank(player, this.rank))
 				return;
-			}
 			if(value.length < 5) {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
@@ -305,9 +339,8 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
 				return;
 			}
-			if(StringUtils.isInteger(banTime)) {
+			if(StringUtils.isInteger(banTime))
 				banTimer = Integer.parseInt(banTime);
-			}
 			else {
 				banTimer = convStringTimerToMS(banTime);
 				if(banTimer == -666) {
@@ -319,27 +352,24 @@ public class StoreChatCommand {
 			builder.setLength(0);
 			int i = 4;
 			while(i < value.length) {
-				builder.append(value[i]);
+				builder.append(value[i]).append(' ');
 				i++;
 			}
 			reason = builder.toString();
-			if(banTimer < 0) {
-				banTimer = -1-timer;
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("IPAdress ").append(ipAdress).append(" banned permanently for : ").append(reason).toString(), MessageType.SELF);
+			if(banTimer <= 0) {
+				banTimer = -timer;
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("IPAdress ").append(ipAdress).append(" banned permanently for: ").append(reason).toString(), MessageType.SELF);
 			}
 			else {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("IPAdress ").append(ipAdress).append(" banned ").append(banTime).append(" for : ").append(reason).toString(), MessageType.SELF);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), new StringBuilder().append("IPAdress ").append(ipAdress).append(" banned ").append(banTime).append(" for: ").append(reason).toString(), MessageType.SELF);
 			}
 			BanMgr.banIPAdress(ipAdress, timer, banTimer+timer, player.getName(), reason);
 			ArrayList<Player> bannedList = Server.getAllInGameCharacterByIP('/'+ipAdress);
-			if(bannedList == null) {
+			if(bannedList == null)
 				return;
-			}
-			i = 0;
-			while(i < bannedList.size()) {
+			i = -1;
+			while(++i < bannedList.size())
 				bannedList.get(i).close();
-				i++;
-			}
 		}
 	};
 	private final static ChatCommand help = new ChatCommand("help", "Syntax: .help [command] \n\nDisplay usage instructions for the given command. If no command provided show list of available commands.", AccountRank.PLAYER) {
@@ -1434,6 +1464,8 @@ public class StoreChatCommand {
 		reload.addSubCommand(reload_spell);
 		commandMap.put(reload.getName(), reload);
 		commandMap.put(cooldown.getName(), cooldown);
+		unban.addSubCommand(unban_account);
+		commandMap.put(unban.getName(), unban);
 	}
 	
 	static long convStringTimerToMS(String timer) {

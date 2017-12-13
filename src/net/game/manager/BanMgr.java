@@ -19,7 +19,7 @@ public class BanMgr {
 	private static JDOStatement removeExpiredBanAccount;
 	private static JDOStatement removeExpiredBanCharacter;
 	private static JDOStatement removeExpiredBanIP;
-	private final static SQLRequest banAccount = new SQLRequest("INSERT INTO ban_account (id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban account", SQLRequestPriority.HIGH) {
+	private final static SQLRequest banAccount = new SQLRequest("INSERT INTO account_banned (account_id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban account", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
@@ -31,7 +31,15 @@ public class BanMgr {
 			this.statement.putString(datas.getStringValue2());
 		}
 	};
-	private final static SQLRequest banCharacter = new SQLRequest("INSERT INTO character_banned (character_id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban character", SQLRequestPriority.HIGH) {
+	private final static SQLRequest unbanAccount = new SQLRequest("DELETE FROM `account_banned` WHERE `account_id` = ?", "Unban account", SQLRequestPriority.LOW) {
+		
+		@Override
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+		}
+	};
+	private final static SQLRequest banCharacter = new SQLRequest("INSERT INTO character_banned (character_id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban character", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
@@ -43,7 +51,7 @@ public class BanMgr {
 			this.statement.putString(datas.getStringValue2());
 		}
 	};
-	private final static SQLRequest banIPAdress = new SQLRequest("INSERT INTO ip_banned (ip_adress, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban IP adress", SQLRequestPriority.HIGH) {
+	private final static SQLRequest banIPAdress = new SQLRequest("INSERT INTO ip_banned (ip_adress, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban IP adress", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
@@ -212,6 +220,11 @@ public class BanMgr {
 	public static void banAccount(int account_id, long ban_date, long unban_date, String banned_by, String ban_reason) {
 		banAccount.addDatas(new SQLDatas(account_id, ban_date, unban_date, banned_by, ban_reason));
 		Server.executeSQLRequest(banAccount);
+	}
+	
+	public static void unbanAccount(int accountId) {
+		unbanAccount.addDatas(new SQLDatas(accountId));
+		Server.executeSQLRequest(unbanAccount);
 	}
 	
 	public static void banCharacter(int character_id, long ban_date, long unban_date, String banned_by, String ban_reason) {
