@@ -11,7 +11,6 @@ public class AI {
 	
 	public AI(Unit unit) {
 		this.unit = unit;
-		int i = 0;
 		this.hasCsSpell = false;
 	}
 	

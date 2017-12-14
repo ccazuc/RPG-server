@@ -142,20 +142,14 @@ public class Server {
 	}
 	
 	private static void checkKeyTimer() {
-		if(keyMap.size() == 0) {
-			return;
-		}
-		for(Key key : keyMap.values()) {
-			if(LOOP_TICK_TIMER-key.getTimer() >= ConfigMgr.KEY_TIMEOUT_TIMER) {
+		for(Key key : keyMap.values())
+			if(LOOP_TICK_TIMER-key.getTimer() >= ConfigMgr.KEY_TIMEOUT_TIMER)
 				removeKeyList.add(key.getValue());
-			}
-		}
 	}
 	
 	private static void readOnlinePlayers() {
-		for(Player player : inGamePlayerList.values()) {
+		for(Player player : inGamePlayerList.values())
 			player.tick();
-		}
 	}
 	
 	private static void kickPlayers() {
@@ -182,21 +176,17 @@ public class Server {
 			}
 		}
 		synchronized(loggedPlayerList) {
-			for(Player player : loggedPlayerList.values()) {
+			for(Player player : loggedPlayerList.values())
 				player.getConnectionManager().read();
-			}
 		}
 	}
 	
 	public static Player getNonLoggedPlayer(int id) {
 		synchronized(nonLoggedPlayerList) {
-			int i = 0;
-			while(i < nonLoggedPlayerList.size()) {
-				if(nonLoggedPlayerList.get(i).getAccountId() == id) {
+			int i = -1;
+			while(++i < nonLoggedPlayerList.size())
+				if(nonLoggedPlayerList.get(i).getAccountId() == id)
 					return nonLoggedPlayerList.get(i);
-				}
-				i++;
-			}
 		}
 		return null;
 	}
@@ -208,9 +198,8 @@ public class Server {
 	}
 	
 	public static void removeNonLoggedPlayer(Player player) {
-		if(player != null) {
+		if(player != null)
 			nonLoggedPlayerKickList.add(player);
-		}
 	}
 	
 	public static Map<Integer, Player> getLoggedPlayerList() {
@@ -220,11 +209,10 @@ public class Server {
 	}
 	
 	public static void addLoggedPlayer(Player player) {
-		if(player != null) {
+		if(player != null)
 			synchronized(loggedPlayerList) {
 				loggedPlayerList.put(player.getAccountId(), player);
 			}
-		}
 	}
 	
 	public static void addInGamePlayer(Player player) {
@@ -238,11 +226,10 @@ public class Server {
 	}
 	
 	public static void removeLoggedPlayer(Player player) {
-		if(player != null) {
+		if(player != null)
 			synchronized(loggedPlayerKickList) {
 				loggedPlayerKickList.add(player.getAccountId());
 			}
-		}
 	}
 	
 	public static Player getInGameCharacter(int id) {
@@ -251,11 +238,9 @@ public class Server {
 	
 	public static Player getInGameCharacterByName(String name) {
 		synchronized(inGamePlayerList) {
-			for(Player player : inGamePlayerList.values()) {
-				if(player.getName().equals(name)) {
+			for(Player player : inGamePlayerList.values())
+				if(player.getName().equals(name))
 					return player;
-				}
-			}
 		}
 		return null;
 	}
@@ -279,34 +264,26 @@ public class Server {
 	
 	public static Player getInGameCharacterByAccount(int accountId) {
 		synchronized(inGamePlayerList) {
-			for(Player player : inGamePlayerList.values()) {
-				if(player.getAccountId() == accountId) {
+			for(Player player : inGamePlayerList.values())
+				if(player.getAccountId() == accountId)
 					return player;
-				}
-			}
 		}
 		return null;
 	}
 	
 	public static Player getCharacter(String name) {
 		synchronized(loggedPlayerList) {
-			for(Player player : loggedPlayerList.values()) {
-				if(player.getName().equals(name)) {
+			for(Player player : loggedPlayerList.values())
+				if(player.getName().equals(name))
 					return player;
-				}
-			}
 		}
 		return null;
 	}
 	
 	public static boolean hasKey(double key, int account_id) {
-		if(!keyMap.containsKey(key)) {
+		if(!keyMap.containsKey(key))
 			return false;
-		}
-		if(keyMap.get(key).getAccountId() == account_id) {
-			return true;
-		}
-		return false;
+		return (keyMap.get(key).getAccountId() == account_id);
 	}
 	
 	public static boolean isAcceptingConnection() {

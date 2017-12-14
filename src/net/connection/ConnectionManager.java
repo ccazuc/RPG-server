@@ -197,9 +197,8 @@ public class ConnectionManager {
 				return;
 			}
 			short packetId = this.connection.readShort();
-			if(DebugMgr.getPacketReceived()) {
+			if(DebugMgr.getPacketReceived())
 				System.out.println("Received packet, ID: "+packetId+", length: "+packetLength);
-			}
 			if(this.player.isOnline() && loggedCommandList.containsKey(packetId)) {
 				this.lastPacketReaded = packetId;
 				loggedCommandList.get(packetId).read(this.player);

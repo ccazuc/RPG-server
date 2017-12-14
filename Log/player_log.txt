@@ -26,3 +26,7 @@
 [ERROR Wed May 17 21:42:39 CEST 2017] AccountID: 1, Unknown packet: 2, last packet readed: 57
 [ERROR Wed May 17 21:47:41 CEST 2017] AccountID: 1, Unknown packet: 2, last packet readed: 57
 [ERROR Wed May 17 21:47:41 CEST 2017] AccountID: 1, Unknown packet: 2, last packet readed: 57
+[ERROR Thu Dec 14 16:50:09 CET 2017] AccountID : 1 PlayerName: Midelol PlayerID: 2, Unknown packet: 15, last packet readed: 15
+[ERROR Thu Dec 14 16:59:36 CET 2017] AccountID : 1 PlayerName: Midelol PlayerID: 2, Tried to cast a spell that doesn't exist id: -1
+[ERROR Thu Dec 14 16:59:36 CET 2017] AccountID : 1 PlayerName: Midelol PlayerID: 2, Tried to cast a spell that doesn't exist id: -1
+[ERROR Thu Dec 14 16:59:36 CET 2017] AccountID : 1 PlayerName: Midelol PlayerID: 2, Tried to cast a spell that doesn't exist id: -1

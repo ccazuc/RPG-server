@@ -36,9 +36,8 @@ public class ChatCommandRunnable implements Runnable {
 			timer = System.currentTimeMillis();
 			synchronized(this.commandList) {
 				while(this.commandList.size() > 0) {
-					if(DebugMgr.getChatCommandTimer())   {
+					if(DebugMgr.getChatCommandTimer())
 						time = System.nanoTime();
-					}
 					try {
 						this.commandList.get(0).execute();
 					}
@@ -46,26 +45,23 @@ public class ChatCommandRunnable implements Runnable {
 						LogRunnable.writeServerLog(e, this.commandList.get(0).getPlayer());
 					}
 					this.commandList.remove(0);
-					if(DebugMgr.getChatCommandTimer()) {
+					if(DebugMgr.getChatCommandTimer())
 						System.out.println("ChatCommand took "+(System.nanoTime()-time)/1000+" µs to execute.");
-					}
 				}
 			}
 			synchronized(this.whoList) {
 				while(this.whoList.size() > 0) {
 					Who who = this.whoList.get(0);
-					if(DebugMgr.getExecuteWhoTimer()) {
+					if(DebugMgr.getExecuteWhoTimer())
 						time = System.nanoTime();
-					}
 					try {
 						executeWhoRequest(who);
 					}
 					catch(RuntimeException e) {
 						LogRunnable.writeServerLog(e, who.getPlayer());
 					}
-					if((DebugMgr.getExecuteWhoTimer())) {
+					if((DebugMgr.getExecuteWhoTimer()))
 						System.out.println("[WHO] took "+(System.nanoTime()-time)/1000+" µs to execute.");
-					}
 					this.whoList.remove(0);
 				}
 			}
@@ -88,21 +84,16 @@ public class ChatCommandRunnable implements Runnable {
 	
 	private static void endListMethod(Who who) {
 		long timer = 0;
-		if(DebugMgr.getExecuteWhoTimer()) {
+		if(DebugMgr.getExecuteWhoTimer())
 			timer = System.nanoTime();
-		}
 		String word = parseWho(who.getWord().toLowerCase().trim());
 		int wordValue = 0;
-		if(word.length() == 1) {
-			if(StringUtils.isInteger(word.charAt(0))) {
+		if(word.length() == 1)
+			if(StringUtils.isInteger(word.charAt(0)))
 				wordValue = Integer.parseInt(word);
-			}
-		}
-		else {
-			if(StringUtils.isInteger(word)) {
+		else
+			if(StringUtils.isInteger(word))
 				wordValue = Integer.parseInt(word);
-			}
-		}
 		Connection connection = who.getPlayer().getConnection();
 		connection.startPacket();
 		connection.writeShort(PacketID.WHO);
@@ -123,9 +114,8 @@ public class ChatCommandRunnable implements Runnable {
 			}
 		}
 		connection.writeInt(-1);
-		if(DebugMgr.getExecuteWhoTimer()) {
+		if(DebugMgr.getExecuteWhoTimer())
 			System.out.println("[WHO ENDLIST REGEXP] took "+(System.nanoTime()-timer)/1000+" µs to execute.");
-		}
 		connection.endPacket();
 		connection.send();
 	}

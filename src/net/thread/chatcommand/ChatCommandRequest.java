@@ -16,23 +16,19 @@ public class ChatCommandRequest {
 	}
 	
 	public void execute() {
-		if(this.player == null) {
+		if(this.player == null)
 			return;
-		}
 		String command = checkCommand(this.command);
-		if(StoreChatCommand.contains(command)) {
+		if(StoreChatCommand.contains(command))
 			StoreChatCommand.get(command).handle(this.command, this.player);
-		}
-		else {
+		else
 			CommandSendMessage.selfWithoutAuthor(this.player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
-		}
 	}
 	
 	private static String checkCommand(String message) {
 		int i = 1;
-		while(i < message.length() && message.charAt(i) != ' ') {
+		while(i < message.length() && message.charAt(i) != ' ')
 			i++;
-		}
 		return message.substring(1, i);
 	}
 	

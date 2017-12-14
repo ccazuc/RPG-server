@@ -192,12 +192,36 @@ public class StoreChatCommand {
 				accountId = Integer.parseInt(accountInfo);
 			else
 				accountId = AccountMgr.loadAccountIDFromName(accountInfo);
-			if (accountId == -1 && !AccountMgr.accountExists(accountId)) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(),"Account " + accountInfo + " not found.", MessageType.SELF);
+			if (accountId == -1 && !BanMgr.isAccountBanned(accountId)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(),"Account " + accountInfo + " not found or not banned.", MessageType.SELF);
 				return;
 			}
 			BanMgr.unbanAccount(accountId);
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account "+ accountId + " unbanned.", MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Account " + accountId + " unbanned.", MessageType.SELF);
+		}
+	};
+	private final static ChatSubCommand unban_character = new ChatSubCommand("character", "unban", "Syntax : .unban character [character_name || character_id]", AccountRank.GAMEMASTER) {
+		
+		@Override
+		public void handle(String[] value, Player player) {
+			if (!checkRank(player, this.rank))
+				return;
+			if (value.length < 3) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), this.helpMessage, MessageType.SELF);
+				return;
+			}
+			String characterInfo = value[2];
+			int characterId;
+			if (StringUtils.isInteger(characterInfo))
+				characterId = Integer.parseInt(characterInfo);
+			else
+				characterId = CharacterMgr.loadCharacterIDFromName(characterInfo);
+			if (characterId == -1 && !BanMgr.isCharacterBanned(characterId)) {
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(),"Character " + characterInfo + " not found or not banned.", MessageType.SELF);
+				return;
+			}
+			BanMgr.unbanCharacter(characterId);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Character " + characterId + " unbanned.", MessageType.SELF);
 		}
 	};
 	private final static ChatCommand ban = new ChatCommand("ban", AccountRank.GAMEMASTER) {
@@ -1465,6 +1489,7 @@ public class StoreChatCommand {
 		commandMap.put(reload.getName(), reload);
 		commandMap.put(cooldown.getName(), cooldown);
 		unban.addSubCommand(unban_account);
+		unban.addSubCommand(unban_character);
 		commandMap.put(unban.getName(), unban);
 	}
 	

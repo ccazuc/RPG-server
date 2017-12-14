@@ -6,6 +6,7 @@ import net.command.player.CommandSendRedAlert;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.DefaultRedAlert;
+import net.game.log.Log;
 import net.game.spell.Spell;
 import net.game.spell.SpellMgr;
 import net.game.unit.Player;
@@ -26,6 +27,7 @@ public class CommandCast extends Command {
 			}
 			Spell spell = SpellMgr.getSpell(id);
 			if(spell == null) {
+				Log.writePlayerLog(player, "Tried to cast a spell that doesn't exist id: "+id);
 				player.close();
 				return;
 			}

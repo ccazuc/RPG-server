@@ -12,7 +12,7 @@ public class CommandWho extends Command {
 	@Override
 	public void read(Player player) {
 		String word = player.getConnection().readString();
-		if(player.getLastWhoTimer()+Player.WHO_COMMAND_FREQUENCE < Server.getLoopTickTimer()) {
+		if(player.getLastWhoTimer() + Player.WHO_COMMAND_FREQUENCE > Server.getLoopTickTimer()) {
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Please wait before doing a new request.", MessageType.SELF);
 			return;
 		}

@@ -19,6 +19,8 @@ public class BanMgr {
 	private static JDOStatement removeExpiredBanAccount;
 	private static JDOStatement removeExpiredBanCharacter;
 	private static JDOStatement removeExpiredBanIP;
+	private static JDOStatement isAccountBannedStatement;
+	private static JDOStatement isCharacterBannedStatement;
 	private final static SQLRequest banAccount = new SQLRequest("INSERT INTO account_banned (account_id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban account", SQLRequestPriority.LOW) {
 		
 		@Override
@@ -32,6 +34,14 @@ public class BanMgr {
 		}
 	};
 	private final static SQLRequest unbanAccount = new SQLRequest("DELETE FROM `account_banned` WHERE `account_id` = ?", "Unban account", SQLRequestPriority.LOW) {
+		
+		@Override
+		public void gatherData() throws SQLException {
+			SQLDatas datas = this.datasList.get(0);
+			this.statement.putInt(datas.getIValue1());
+		}
+	};
+	private final static SQLRequest unbanCharacter = new SQLRequest("DELETE FROM `character_banned` WHERE `character_id` = ?", "Unban character", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
@@ -92,6 +102,44 @@ public class BanMgr {
 		catch(SQLException e) {
 			e.printStackTrace();;
 		}
+	}
+	
+	public static boolean isAccountBanned(int accountId)
+	{
+		try
+		{
+			if (isAccountBannedStatement == null)
+				isAccountBannedStatement = Server.getJDO().prepare("SELECT COUNT(*) FROM `account_banned` WHERE `account_id` = ?");
+			isAccountBannedStatement.clear();
+			isAccountBannedStatement.putInt(accountId);
+			isAccountBannedStatement.execute();
+			if (isAccountBannedStatement.fetch())
+				return (isAccountBannedStatement.getInt() > 0);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return (false);
+	}
+	
+	public static boolean isCharacterBanned(int characterId)
+	{
+		try
+		{
+			if (isCharacterBannedStatement == null)
+				isCharacterBannedStatement = Server.getJDO().prepare("SELECT COUNT(*) FROM `character_banned` WHERE `character_id` = ?");
+			isCharacterBannedStatement.clear();
+			isCharacterBannedStatement.putInt(characterId);
+			isCharacterBannedStatement.execute();
+			if (isCharacterBannedStatement.fetch())
+				return (isCharacterBannedStatement.getInt() > 0);
+		}
+		catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return (false);
 	}
 	
 	public static SQLDatas getBanInfoAccountIDLowAsync(int accountID) {
@@ -225,6 +273,11 @@ public class BanMgr {
 	public static void unbanAccount(int accountId) {
 		unbanAccount.addDatas(new SQLDatas(accountId));
 		Server.executeSQLRequest(unbanAccount);
+	}
+	
+	public static void unbanCharacter(int characterId) {
+		unbanCharacter.addDatas(new SQLDatas(characterId));
+		Server.executeSQLRequest(unbanCharacter);
 	}
 	
 	public static void banCharacter(int character_id, long ban_date, long unban_date, String banned_by, String ban_reason) {

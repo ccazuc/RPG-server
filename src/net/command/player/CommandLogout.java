@@ -3,7 +3,6 @@ package net.command.player;
 import net.command.Command;
 import net.connection.PacketID;
 import net.game.unit.Player;
-import net.utils.DebugUtils;
 
 public class CommandLogout extends Command {
 

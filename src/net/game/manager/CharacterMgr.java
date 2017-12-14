@@ -456,6 +456,11 @@ public class CharacterMgr {
 		return -1;
 	}
 	
+	public static boolean characterExists(int characterId)
+	{
+		return (loadCharacterNameFromID(characterId) != null);
+	}
+	
 	public static int playerExistsInDB(String name) {
 		try {
 			if(searchPlayer == null) {
