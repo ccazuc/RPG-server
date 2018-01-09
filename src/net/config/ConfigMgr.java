@@ -3,7 +3,7 @@ package net.config;
 public class ConfigMgr {
 
 	private static String SERVER_MESSAGE_OF_THE_DAY = "Welcome on blabla";
-	private static int SERVER_MAX_CAPACITY = 100;
+	private static int SERVER_MAX_CAPACITY = 1000;
 	public final static String REALM_NAME = "World Server";
 	public final static int REALM_ID = 15;
 	public final static int PORT = 5721;

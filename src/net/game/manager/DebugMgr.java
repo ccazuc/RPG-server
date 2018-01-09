@@ -7,6 +7,7 @@ public class DebugMgr {
 	private static boolean WRITE_LOG_FILE_TIMER = true;
 	private static boolean EXECUTE_WHO_TIMER = true;
 	private static boolean PACKET_RECEIVED = true;
+	private static boolean PACKET_EXECUTE_TIMER = true;
 	private static int LOOP_TOO_LONG_VALUE = 5;
 	
 	public static boolean getChatCommandTimer() {
@@ -55,5 +56,15 @@ public class DebugMgr {
 	
 	public static void setPacketReceived(boolean we) {
 		PACKET_RECEIVED = we;
+	}
+	
+	public static boolean getPacketExecuteTimer()
+	{
+		return (PACKET_EXECUTE_TIMER);
+	}
+	
+	public static void setPacketExecuteTimer(boolean we)
+	{
+		PACKET_EXECUTE_TIMER = we;
 	}
 }

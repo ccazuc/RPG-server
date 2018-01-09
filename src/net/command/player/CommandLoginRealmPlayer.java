@@ -17,10 +17,11 @@ public class CommandLoginRealmPlayer extends Command {
 	public void read(Player player) {
 		Connection connection = player.getConnection();
 		short packetId = connection.readShort();
+		System.out.println("Player " + player.getAccountId() + " requested a login realm");
 		if(packetId == PacketID.LOGIN_REALM_REQUEST) {
 			double key = connection.readDouble();
 			int account_id = connection.readInt();
-			System.out.println("Loggin requestyed");
+			System.out.println("Loggin realm requested");
 			if(!Server.hasKey(key, account_id)) {
 				Log.writePlayerLog(player, "Unknown loggin key");
 				player.close();
@@ -43,7 +44,7 @@ public class CommandLoginRealmPlayer extends Command {
 				connectionAccepted(connection);
 				Server.addLoggedPlayer(player);
 				Server.removeNonLoggedPlayer(player);
-				System.out.println("Connection accepted");
+				System.out.println("Connection realm accepted");
 			}
 			CommandPlayerIsLoggedOnWorldServer.write(player, true);
 			Server.removeKey(key);

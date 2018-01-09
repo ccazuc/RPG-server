@@ -30,3 +30,9 @@
 [ERROR Thu Dec 14 16:59:36 CET 2017] AccountID : 1 PlayerName: Midelol PlayerID: 2, Tried to cast a spell that doesn't exist id: -1
 [ERROR Thu Dec 14 16:59:36 CET 2017] AccountID : 1 PlayerName: Midelol PlayerID: 2, Tried to cast a spell that doesn't exist id: -1
 [ERROR Thu Dec 14 16:59:36 CET 2017] AccountID : 1 PlayerName: Midelol PlayerID: 2, Tried to cast a spell that doesn't exist id: -1
+[ERROR Tue Jan 09 12:50:38 CET 2018] AccountID: 164, Unknown packet: 85, last packet readed: 15
+[ERROR Tue Jan 09 12:50:38 CET 2018] AccountID: 101, Unknown packet: 85, last packet readed: 15
+[ERROR Tue Jan 09 12:50:38 CET 2018] AccountID: 102, Unknown packet: 85, last packet readed: 15
+[ERROR Tue Jan 09 12:50:38 CET 2018] AccountID: 103, Unknown packet: 85, last packet readed: 15
+[ERROR Tue Jan 09 12:50:38 CET 2018] AccountID: 104, Unknown packet: 85, last packet readed: 15
+[ERROR Tue Jan 09 12:58:38 CET 2018] AccountID: 32, Unknown packet: 85, last packet readed: 15

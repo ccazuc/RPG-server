@@ -16,7 +16,7 @@ public class PacketID {
 	public final static short ERROR_NAME_LENGTH = 12;
 	public final static short CHARACTER_CREATED = 13;
 	public final static short DELETE_CHARACTER = 14;
-	public final static short LOAD_CHARACTER = 15;
+	public final static short CHARACTER_LOGIN = 15;
 	public final static short LOAD_EQUIPPED_ITEMS = 16;
 	public final static short LOAD_BAG_ITEMS = 17;
 	public final static short LOAD_SPELLBAR = 18;

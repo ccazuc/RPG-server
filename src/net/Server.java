@@ -150,8 +150,11 @@ public class Server {
 	}
 	
 	private static void readOnlinePlayers() {
-		for(Player player : inGamePlayerList.values())
-			player.tick();
+		synchronized (inGamePlayerList)
+		{
+			for(Player player : inGamePlayerList.values())
+				player.tick();
+		}
 	}
 	
 	private static void kickPlayers() {
