@@ -20,21 +20,17 @@ public class CommandFriend extends Command {
 		short packetId = connection.readShort();
 		if(packetId == PacketID.FRIEND_ADD) {
 			String name = connection.readString();
-			if(!(name.length() > 2)) {
-				CommandPlayerNotFound.write(connection, name);
-				return;
-			}
-			name = StringUtils.formatPlayerName(name);
 			if(!StringUtils.checkPlayerNameLength(name)) {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
+			name = StringUtils.formatPlayerName(name);
 			Player member = Server.getInGameCharacterByName(name);
 			int character_id = 0;
 			if(member == null) { //player is offline or doesn't exist
-				character_id = CharacterMgr.playerExistsInDB(name);
+				character_id = CharacterMgr.loadCharacterIDFromName(name);
 			}
-			if(!(member != null || character_id != -1)) {
+			if(member == null && character_id == -1) {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
@@ -42,7 +38,7 @@ public class CommandFriend extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, "You can't add yourself as friend.", MessageType.SELF);
 				return;
 			}
-			if(!((member != null && !player.isFriendWith(member)) || (character_id != -1 && !player.isFriendWith(character_id)))) {
+			if(((member != null && player.isFriendWith(member)) || (character_id != -1 && player.isFriendWith(character_id)))) {
 				CommandSendMessage.selfWithoutAuthor(connection, name.concat(" is already in your friendlist."), MessageType.SELF);
 				return;
 			}

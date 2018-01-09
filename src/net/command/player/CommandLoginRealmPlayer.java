@@ -3,10 +3,12 @@ package net.command.player;
 import net.Server;
 import net.command.Command;
 import net.command.auth.CommandPlayerIsLoggedOnWorldServer;
+import net.config.ConfigMgr;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.AccountRank;
 import net.game.log.Log;
+import net.game.manager.LoginQueueMgr;
 import net.game.unit.Player;
 
 public class CommandLoginRealmPlayer extends Command {
@@ -18,6 +20,7 @@ public class CommandLoginRealmPlayer extends Command {
 		if(packetId == PacketID.LOGIN_REALM_REQUEST) {
 			double key = connection.readDouble();
 			int account_id = connection.readInt();
+			System.out.println("Loggin requestyed");
 			if(!Server.hasKey(key, account_id)) {
 				Log.writePlayerLog(player, "Unknown loggin key");
 				player.close();
@@ -27,14 +30,23 @@ public class CommandLoginRealmPlayer extends Command {
 				connectionRefused(connection);
 				return;
 			}
-			connectionAccepted(connection);
 			player.setAccountRank(AccountRank.values()[Server.getKey(key).getAccountRank()-1]);
 			player.setAccountId(account_id);
 			player.setAccountName(Server.getKey(key).getAccountName());
-			Server.addLoggedPlayer(player);
-			Server.removeNonLoggedPlayer(player);
-			Server.removeKey(key);
+			if (Server.getInGamePlayerList().size() + Server.getLoggedPlayerList().size() >= ConfigMgr.GetServerMaxCapacity())
+			{
+				LoginQueueMgr.addPlayerInQueue(player);
+				CommandLoginQueue.playerAddedInQueue(player);
+			}
+			else
+			{
+				connectionAccepted(connection);
+				Server.addLoggedPlayer(player);
+				Server.removeNonLoggedPlayer(player);
+				System.out.println("Connection accepted");
+			}
 			CommandPlayerIsLoggedOnWorldServer.write(player, true);
+			Server.removeKey(key);
 		}
 	}
 	

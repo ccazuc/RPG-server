@@ -22,21 +22,17 @@ public class CommandIgnore extends Command {
 		short packetId = connection.readShort();
 		if(packetId == PacketID.IGNORE_ADD) {
 			String name = connection.readString();
-			if(!(name.length() > 2)) {
-				CommandPlayerNotFound.write(connection, name);
-				return;
-			}
-			name = StringUtils.formatPlayerName(name);
 			if(!StringUtils.checkPlayerNameLength(name)) {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
+			name = StringUtils.formatPlayerName(name);
 			Player ignore = Server.getInGameCharacterByName(name);
 			int character_id = 0;
 			if(ignore == null) {
 				character_id = CharacterMgr.playerExistsInDB(name);
 			}
-			if(!(ignore != null || character_id != -1)) {
+			if(ignore == null && character_id == -1) {
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
@@ -77,12 +73,10 @@ public class CommandIgnore extends Command {
 			int value = ignoreList.get(i);
 			connection.writeInt(value);
 			Player temp = Server.getInGameCharacter(value);
-			if(temp != null) {
+			if(temp != null)
 				connection.writeString(temp.getName());
-			}
-			else {
+			else
 				connection.writeString(CharacterMgr.loadCharacterNameFromID(value));
-			}
 			i++;
 		}
 		connection.endPacket();

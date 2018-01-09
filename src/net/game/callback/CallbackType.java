@@ -11,16 +11,18 @@ public enum CallbackType {
 	EXPERIENCE_CHANGED((byte)6),
 	BAG_CHANGED((byte)7),
 	QUEST_COMPLETED((byte)8),	//0: Player, 1: QuestId
+	PLAYER_LOGGED_OUT((byte)9),	//0: Player
 	;
 	
 	private final byte value;
 	
-	private CallbackType(byte value) {
+	private CallbackType(byte value)
+	{
 		this.value = value;
 	}
 	
-	public byte getValue() {
-		return this.value;
+	public byte getValue()
+	{
+		return (this.value);
 	}
-	
 }

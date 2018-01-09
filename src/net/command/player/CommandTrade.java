@@ -25,15 +25,11 @@ public class CommandTrade extends Command {
 		short packetID = connection.readShort();
 		if(packetID == PacketID.TRADE_NEW) { //declare a new trade
 			String traded = connection.readString();
-			if(traded.length() <= 2) {
-				CommandPlayerNotFound.write(connection, traded);
-				return;
-			}
-			traded = StringUtils.formatPlayerName(traded);
 			if(!StringUtils.checkPlayerNameLength(traded)) {
 				CommandPlayerNotFound.write(connection, traded);
 				return;
 			}
+			traded = StringUtils.formatPlayerName(traded);
 			Player trade = Server.getInGameCharacterByName(traded);
 			if(trade == null) {
 				CommandPlayerNotFound.write(connection, traded);
@@ -47,12 +43,9 @@ public class CommandTrade extends Command {
 				CommandSendMessage.selfWithoutAuthor(connection, trade.getName()+IgnoreMgr.ignoreMessage, MessageType.SELF);
 				return;
 			}
-			if(player.getPlayerTrade() == null && trade.getPlayerTrade() == null) { //players are not trading
-				
-			}
-			else { //cancel current trade
-				tradeCancel(trade.getPlayerTrade());
-				trade.getPlayerTrade().setPlayerTrade(null);
+			if(player.getPlayerTrade() != null || trade.getPlayerTrade() != null) {
+				CommandSendMessage.selfWithoutAuthor(connection, traded + " is busy trading with someone.", MessageType.SELF);
+				return;
 			}
 			trade.setPlayerTrade(player);
 			player.setPlayerTrade(trade);
@@ -74,6 +67,8 @@ public class CommandTrade extends Command {
 			DragItem slotType = DragItem.values()[connection.readByte()];
 			int itemSlot = connection.readInt();
 			int tradeSlot = connection.readInt();
+			if (player.getTrade().isLocked())
+				return;
 			if(tradeSlot < 0 || tradeSlot >= player.getTrade().getTradeInitTable().length) {
 				Log.writePlayerLog(player, "Invalid tradeSlot value in CommandTrade : "+tradeSlot);
 				return;
@@ -160,6 +155,8 @@ public class CommandTrade extends Command {
 				player.close();
 				return;
 			}
+			if (player.getTrade().isLocked())
+				return;
 			if(slot < 0 || slot > 6) {
 				Log.writePlayerLog(player, "Tried to remove remove an item from trade slot : "+slot+'.');
 				player.close();
@@ -178,6 +175,7 @@ public class CommandTrade extends Command {
 			tradeAccept(player.getPlayerTrade());
 			player.getTrade().setTradeState(player, true);
 			if(player.getTrade().getTradeInitState() && player.getTrade().getTradeTargetState()) {
+				player.getTrade().lock();
 				if(player.getTrade().exchangeItem() == -1) {
 					return;
 				}

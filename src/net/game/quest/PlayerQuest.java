@@ -3,7 +3,6 @@ package net.game.quest;
 import java.util.ArrayList;
 
 import net.game.unit.Player;
-import net.thread.log.LogRunnable;
 
 public class PlayerQuest {
 
@@ -27,15 +26,13 @@ public class PlayerQuest {
 	}
 	
 	public PlayerQuestObjective getObjective(int index) {
-		if (index < 0 || index >= this.objectives.size()) {
-			LogRunnable.addErrorLog("Error in PlayerQuest::getObjective, quest: "+this.quest.getId()+", objective: "+index);
+		if (index < 0 || index >= this.objectives.size())
 			return null;
-		}
-		return this.objectives.get(index);
+		return (this.objectives.get(index));
 	}
 	
 	public ArrayList<PlayerQuestObjective> getObjectives() {
-		return this.objectives;
+		return (this.objectives);
 	}
 	
 	public Player getPlayer()
@@ -54,14 +51,14 @@ public class PlayerQuest {
 	}
 	
 	public boolean isQuestCompleted() {
-		return this.questCompleted;
+		return (this.questCompleted);
 	}
 	
 	public Quest getQuest() {
-		return this.quest;
+		return (this.quest);
 	}
 	
 	public long getAcceptedTimestamp() {
-		return this.acceptedTimestamp;
+		return (this.acceptedTimestamp);
 	}
 }

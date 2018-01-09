@@ -230,7 +230,7 @@ public class PlayerQuestMgr {
 		this.availableQuest.clear();
 		for (Quest quest : QuestMgr.getQuestMap().values())
 		{
-			if (quest.getRequiredLevel() > this.player.getLevel() || this.completedQuestSet.contains(quest.getId()) || hasUnlockedQuest(quest))
+			if (quest.getRequiredLevel() > this.player.getLevel() || this.completedQuestSet.contains(quest.getId()) || !hasUnlockedQuest(quest))
 				continue;
 			this.availableQuest.add(quest.getId());
 		}

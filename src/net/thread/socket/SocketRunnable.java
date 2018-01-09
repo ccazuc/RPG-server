@@ -35,19 +35,20 @@ public class SocketRunnable implements Runnable {
 				this.clientSocket.socket().setTcpNoDelay(ConfigMgr.TCP_NO_DELAY_ENABLED);
 				this.clientSocket.configureBlocking(false);
 				Server.addNonLoggedPlayer(new Player(this.clientSocket));
+				System.out.println("Add player in socket thread");
 			} 
 			catch (IOException e) {
 				e.printStackTrace();
 			}
 			delta = System.currentTimeMillis()-timer;
-			if(delta < LOOP_TIMER) {
+			/*if(delta < LOOP_TIMER) {
 				try {
 					Thread.sleep((LOOP_TIMER-delta));
 				} 
 				catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-			}
+			}*/
 		}
 		System.out.println("SocketRunnable stopped");
 	}

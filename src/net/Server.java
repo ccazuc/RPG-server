@@ -41,6 +41,7 @@ import net.thread.chatcommand.Who;
 import net.thread.log.LogRunnable;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLTask;
+import net.utils.Hash;
 
 public class Server {
 	
@@ -76,6 +77,7 @@ public class Server {
 		BanMgr.removeExpiredBanCharacter();
 		BanMgr.removeExpiredBanIP();
 		CharacterMgr.checkOnlinePlayers();
+		Hash.generateDBPassword("test");
 		GuildMgr.removeOrphanedGuildRank();
 		GuildMgr.removeOrphanedMember();
 		StoreChatCommand.initChatCommandMap();

@@ -11,6 +11,7 @@ public class Trade {
 	private Player tradeTarget;
 	private boolean tradeInitAccepted;
 	private boolean tradeTargetAccepted;
+	private boolean isLocked;
 	private Item[] tradeInitTable;
 	private Item[] tradeTargetTable;
 	
@@ -118,5 +119,20 @@ public class Trade {
 	
 	public boolean getTradeTargetState() {
 		return this.tradeTargetAccepted;
+	}
+	
+	public void lock()
+	{
+		this.isLocked = true;
+	}
+	
+	public void unlock()
+	{
+		this.isLocked = false;
+	}
+	
+	public boolean isLocked()
+	{
+		return (this.isLocked);
 	}
  }
