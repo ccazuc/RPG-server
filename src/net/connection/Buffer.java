@@ -46,7 +46,7 @@ public class Buffer {
 		this.buffer = ByteBuffer.allocateDirect(capacity);
 	}
 	
-	protected final void send() throws IOException {
+	protected final void send() {
 		synchronized(this) {
 			if(this.socket.isOpen()) {
 				if(this.written) {
@@ -55,7 +55,7 @@ public class Buffer {
 				}
 			}
 			else {
-				throw new ClosedChannelException();
+				//throw new ClosedChannelException();
 			}
 		}
 	}

@@ -28,14 +28,6 @@ public class CommandSendMessage extends Command {
 		String message = connection.readString();
 		MessageType type = MessageType.values()[connection.readByte()];
 		if(message.length() >= 2 && message.charAt(0) == '.' && message.charAt(1) != '.') {
-			if(message.equals(".auction")) {
-				int i = 0;
-				while(i < 15000) {
-					AuctionHouseDBMgr.addAuctionInDB(player, new AuctionEntry(AuctionHouseMgr.generateEntryID(), player, Item.getItem(1001), 1500, 1800, AuctionHouseInitialDuration.LONG));
-					i++;
-				}
-				return;
-			}
 			ChatCommandHandler.parse(message, player);
 			if(type == MessageType.WHISPER || type == MessageType.CHANNEL) { //TODO: find a better way to clear the buffer
 				connection.readString();

@@ -43,7 +43,7 @@ public class LoginQueueMgr {
 		//playerList.get(0).setLoginQueueRequestSent();
 		//CommandLoginQueue.logPlayer(playerList.get(0));
 		while (++i < playerList.size())
-			CommandLoginQueue.updatePosition(playerList.get(0), i + 1);
+			CommandLoginQueue.updatePosition(playerList.get(0), i + 1, playerList.size());
 	}
 	
 	public static ArrayList<Player> getLoginQueueList()

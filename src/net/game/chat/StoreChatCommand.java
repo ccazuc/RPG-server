@@ -416,37 +416,38 @@ public class StoreChatCommand {
 				if(value.length < 2) {
 					return;
 				}
-				if(commandMap.containsKey(value[1])) {
-					if(value.length > 2 && commandMap.get(value[1]).subCommandList != null) {
-						int i = 0;
-						while(i < commandMap.get(value[1]).subCommandList.size()) {
-							if(commandMap.get(value[1]).subCommandList.get(i).getName().equalsIgnoreCase(value[2])) {
-								if(value.length > 3 && commandMap.get(value[1]).subCommandList.get(i).commandList != null) {
-									int j = 0;
-									while(j < commandMap.get(value[1]).subCommandList.get(i).commandList.size()) {
-										if(commandMap.get(value[1]).subCommandList.get(i).commandList.get(j).getName().equalsIgnoreCase(value[3])) {
-											CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).subCommandList.get(i).commandList.get(j).helpMessage, MessageType.SELF);
-											return;
-										}
-										j++;
+				if (!commandMap.containsKey(value[1]))
+				{
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
+					return;
+				}
+				if(value.length > 2 && commandMap.get(value[1]).subCommandList != null) {
+					int i = -1;
+					while(++i < commandMap.get(value[1]).subCommandList.size())
+						if(commandMap.get(value[1]).subCommandList.get(i).getName().equalsIgnoreCase(value[2])) {
+							if(value.length > 3 && commandMap.get(value[1]).subCommandList.get(i).commandList != null) {
+								int j = 0;
+								while(j < commandMap.get(value[1]).subCommandList.get(i).commandList.size()) {
+									if(commandMap.get(value[1]).subCommandList.get(i).commandList.get(j).getName().equalsIgnoreCase(value[3])) {
+										CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).subCommandList.get(i).commandList.get(j).helpMessage, MessageType.SELF);
+										return;
 									}
-									CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
-									return;
+									j++;
 								}
-								CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).subCommandList.get(i).printHelpMessage(player), MessageType.SELF);
+								CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
 								return;
 							}
-							i++;
+							CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).subCommandList.get(i).printHelpMessage(player), MessageType.SELF);
+							return;
 						}
-						CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
-						return;
-					}
-					if(commandMap.get(value[1]).subCommandList != null) {
-						CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).printSubCommandError(player), MessageType.SELF);
-					}
-					else {
-						CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).printHelpMessage(), MessageType.SELF);
-					}
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), "This command doesn't exist, type .help for help.", MessageType.SELF);
+					return;
+				}
+				if(commandMap.get(value[1]).subCommandList != null) {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).printSubCommandError(player), MessageType.SELF);
+				}
+				else {
+					CommandSendMessage.selfWithoutAuthor(player.getConnection(), commandMap.get(value[1]).printHelpMessage(), MessageType.SELF);
 				}
 			}
 		}
@@ -576,10 +577,12 @@ public class StoreChatCommand {
 				return;
 			}
 			if(value[3].equalsIgnoreCase("on")) {
-				Server.setIsAcceptingConnection(true);
+				Server.setIsAcceptingConnection(false);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "The server is now blocking connection.", MessageType.SELF);
 			}
 			else if(value[3].equalsIgnoreCase("off")) {
-				Server.setIsAcceptingConnection(false);
+				Server.setIsAcceptingConnection(true);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "The server is now accepting connection.", MessageType.SELF);
 			}
 			else {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [closed] in .server set closed [on/off]", MessageType.SELF);
@@ -641,10 +644,10 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "There is no account banned with this id.", MessageType.SELF);
 				return;
 			}
-			long ban_date = datas.getLValue1();
-			long unban_date = datas.getLValue2();
-			String banned_by = datas.getStringValue1();
-			String ban_reason = datas.getStringValue2();
+			long ban_date = (long)datas.getNextObject();
+			long unban_date = (long)datas.getNextObject();
+			String banned_by = (String)datas.getNextObject();
+			String ban_reason = (String)datas.getNextObject();
 			builder.setLength(0);
 			Date banDate = new Date(ban_date);
 			if(unban_date <= 0) {
@@ -684,10 +687,10 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "There is no character banned with this id.", MessageType.SELF);
 				return;
 			}
-			long ban_date = datas.getLValue1();
-			long unban_date = datas.getLValue2();
-			String banned_by = datas.getStringValue1();
-			String ban_reason = datas.getStringValue2();
+			long ban_date = (long)datas.getNextObject();
+			long unban_date = (long)datas.getNextObject();
+			String banned_by = (String)datas.getNextObject();
+			String ban_reason = (String)datas.getNextObject();
 			builder.setLength(0);
 			Date banDate = new Date(ban_date);
 			if(unban_date <= 0) {
@@ -720,10 +723,10 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "There is no character banned with this id.", MessageType.SELF);
 				return;
 			}
-			long ban_date = datas.getLValue1();
-			long unban_date = datas.getLValue2();
-			String banned_by = datas.getStringValue1();
-			String ban_reason = datas.getStringValue2();
+			long ban_date = (long)datas.getNextObject();
+			long unban_date = (long)datas.getNextObject();
+			String banned_by = (String)datas.getNextObject();
+			String ban_reason = (String)datas.getNextObject();
 			builder.setLength(0);
 			Date banDate = new Date(ban_date);
 			if(unban_date <= 0) {
@@ -804,12 +807,12 @@ public class StoreChatCommand {
 					int i = 0;
 					while(i < accountIDList.size()) {
 						getBanListAccountPattern.clear();
-						getBanListAccountPattern.putInt(accountIDList.get(i).getIValue1());
+						getBanListAccountPattern.putInt((int)accountIDList.get(i).getNextObject());
 						getBanListAccountPattern.execute();
 						if(getBanListAccountPattern.fetch()) {
 							int number = getBanListAccountPattern.getInt();
 							if(number > 0) {
-								builder.append("\n").append(accountIDList.get(i).getStringValue1());
+								builder.append("\n").append((String)accountIDList.get(i).getNextObject());
 							}
 						}
 						i++;
@@ -877,7 +880,7 @@ public class StoreChatCommand {
 			builder.setLength(0);
 			builder.append("List of banned character matching ").append(value[2]).append(':');
 			while(++i < list.size()) {
-					builder.append("\n").append(list.get(i).getStringValue1());
+					builder.append("\n").append((String)list.get(i).getNextObject());
 			}
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}

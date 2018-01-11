@@ -26,11 +26,11 @@ public class BanMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
-			this.statement.putLong(datas.getLValue1());
-			this.statement.putLong(datas.getLValue2());
-			this.statement.putString(datas.getStringValue1());
-			this.statement.putString(datas.getStringValue2());
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putLong((long)datas.getNextObject());
+			this.statement.putLong((long)datas.getNextObject());
+			this.statement.putString((String)datas.getNextObject());
+			this.statement.putString((String)datas.getNextObject());
 		}
 	};
 	private final static SQLRequest unbanAccount = new SQLRequest("DELETE FROM `account_banned` WHERE `account_id` = ?", "Unban account", SQLRequestPriority.LOW) {
@@ -38,7 +38,7 @@ public class BanMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
+			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
 	private final static SQLRequest unbanCharacter = new SQLRequest("DELETE FROM `character_banned` WHERE `character_id` = ?", "Unban character", SQLRequestPriority.LOW) {
@@ -46,7 +46,7 @@ public class BanMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
+			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
 	private final static SQLRequest banCharacter = new SQLRequest("INSERT INTO character_banned (character_id, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban character", SQLRequestPriority.LOW) {
@@ -54,11 +54,11 @@ public class BanMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
-			this.statement.putLong(datas.getLValue1());
-			this.statement.putLong(datas.getLValue2());
-			this.statement.putString(datas.getStringValue1());
-			this.statement.putString(datas.getStringValue2());
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putLong((long)datas.getNextObject());
+			this.statement.putLong((long)datas.getNextObject());
+			this.statement.putString((String)datas.getNextObject());
+			this.statement.putString((String)datas.getNextObject());
 		}
 	};
 	private final static SQLRequest banIPAdress = new SQLRequest("INSERT INTO ip_banned (ip_adress, ban_date, unban_date, banned_by, ban_reason) VALUES (?, ?, ?, ?, ?)", "Ban IP adress", SQLRequestPriority.LOW) {
@@ -66,11 +66,11 @@ public class BanMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putString(datas.getStringValue1());
-			this.statement.putLong(datas.getLValue1());
-			this.statement.putLong(datas.getLValue2());
-			this.statement.putString(datas.getStringValue2());
-			this.statement.putString(datas.getStringValue3());
+			this.statement.putString((String)datas.getNextObject());
+			this.statement.putLong((long)datas.getNextObject());
+			this.statement.putLong((long)datas.getNextObject());
+			this.statement.putString((String)datas.getNextObject());
+			this.statement.putString((String)datas.getNextObject());
 		}
 	};
 	

@@ -16,7 +16,7 @@ public class CommandLogoutCharacter extends Command {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putInt(this.datasList.get(0).getIValue1());	
+			this.statement.putInt((int)this.datasList.get(0).getNextObject());
 		}
 	};
 

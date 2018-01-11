@@ -1,8 +1,8 @@
 package net.game.manager;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import jdo.JDOStatement;
 import net.Server;
@@ -14,14 +14,14 @@ public class IgnoreMgr {
 
 	public final static String ignoreMessage = " ignores your messages.";
 	private static JDOStatement loadIgnoreList;
-	private final static HashMap<Integer, ArrayList<Integer>> ignoreMap = new HashMap<Integer, ArrayList<Integer>>();
+	private final static HashMap<Integer, HashSet<Integer>> ignoreMap = new HashMap<Integer, HashSet<Integer>>();
 	private final static SQLRequest addIgnoreInDB = new SQLRequest("INSERT INTO social_ignore (character_id, ignore_id) VALUES (?, ?)", "Add ignore", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
-			this.statement.putInt(datas.getIValue2());
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
 	private final static SQLRequest removeIgnoreFromDB = new SQLRequest("DELETE FROM social_ignore WHERE character_id = ? AND ignore_id = ?", "Remove ignore", SQLRequestPriority.LOW) {
@@ -29,8 +29,8 @@ public class IgnoreMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
-			this.statement.putInt(datas.getIValue2());
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
 	
@@ -42,10 +42,10 @@ public class IgnoreMgr {
 			loadIgnoreList.clear();
 			loadIgnoreList.putInt(id);
 			loadIgnoreList.execute();
-			ArrayList<Integer> list = null;
+			HashSet<Integer> list = null;
 			boolean hasData = false;
 			while(loadIgnoreList.fetch()) {
-				list = new ArrayList<Integer>();
+				list = new HashSet<Integer>();
 				list.add(loadIgnoreList.getInt());
 				hasData = true;
 			}
@@ -59,16 +59,10 @@ public class IgnoreMgr {
 	}
 
 	public static boolean isIgnored(int player_id, int ignore_id) {
-		if(ignoreMap.containsKey(player_id)) {
-			int i = ignoreMap.get(player_id).size();
-			ArrayList<Integer> list = ignoreMap.get(player_id);
-			while(--i >= 0) {
-				if(list.get(i) == ignore_id) {
-					return true;
-				}
-			}
-		}
-		return false;
+		HashSet<Integer> list = ignoreMap.get(player_id);
+		if (list == null)
+			return (false);
+		return (list.contains(ignore_id));
 	}
 	
 	public static void addIgnore(int player_id, int ignore_id) {
@@ -76,7 +70,7 @@ public class IgnoreMgr {
 			ignoreMap.get(player_id).add(ignore_id);
 		}
 		else {
-			ignoreMap.put(player_id, new ArrayList<Integer>());
+			ignoreMap.put(player_id, new HashSet<Integer>());
 			ignoreMap.get(player_id).add(ignore_id);
 		}
 		addIgnoreInDB.addDatas(new SQLDatas(player_id, ignore_id));
@@ -84,21 +78,17 @@ public class IgnoreMgr {
 	}
 	
 	public static void removeIgnore(int player_id, int ignore_id) {
-		if(containsKey(player_id)) {
-			ArrayList<Integer> ignoreList = ignoreMap.get(player_id);
-			int i = ignoreList.size();
-			while(--i >= 0) {
-				if(ignoreList.get(i) == ignore_id) {
-					ignoreList.remove(i);
-					removeIgnoreFromDB.addDatas(new SQLDatas(player_id, ignore_id));
-					Server.executeSQLRequest(removeIgnoreFromDB);
-					return;
-				}
-			}
+		HashSet<Integer> ignoreList = ignoreMap.get(player_id);
+		if (ignoreList == null)
+			return;
+		if (ignoreList.remove(ignore_id))
+		{
+			removeIgnoreFromDB.addDatas(new SQLDatas(player_id, ignore_id));
+			Server.executeSQLRequest(removeIgnoreFromDB);
 		}
 	}
 	
-	public static ArrayList<Integer> getIgnoreList(int id) {
+	public static HashSet<Integer> getIgnoreList(int id) {
 		return ignoreMap.get(id);
 	}
 	

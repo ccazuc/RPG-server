@@ -200,4 +200,7 @@ public class PacketID {
 	public final static short CHARACTER_LOGIN_SUCCESS = 196;
 	public final static short CHARACTER_LOGIN_FAILED = 197;
 	public final static short CHARACTER_LOAD_FINISHED = 198;
+	public final static short LOGIN_QUEUE = 199;
+	public final static short LOGIN_QUEUE_JOINED = 200;
+	public final static short LOGIN_QUEUE_UPDATE_POSITION = 201;
 }

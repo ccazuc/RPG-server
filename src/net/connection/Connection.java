@@ -91,13 +91,7 @@ public class Connection {
 	
 	public final void send() {
 		synchronized(this.wBuffer) {
-			try {
-				this.wBuffer.send();
-			} 
-			catch (IOException e) {
-				e.printStackTrace();
-				System.out.println("IOException on send");
-			}
+			this.wBuffer.send();
 		}
 	}
 	

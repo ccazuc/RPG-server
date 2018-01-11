@@ -37,9 +37,9 @@ public class PlayerQuestMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
-			this.statement.putInt(datas.getIValue2());
-			this.statement.putLong(datas.getLValue1());
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putLong((long)datas.getNextObject());
 		}
 	};
 	private final static SQLRequest removeQuestFromDB = new SQLRequest("DELETE FROM `character_quests` WHERE `player_id` = ? AND `quest_id` = ?", "Remove player quest", SQLRequestPriority.HIGH) {
@@ -47,8 +47,8 @@ public class PlayerQuestMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
-			this.statement.putInt(datas.getIValue2());
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
 	private final static SQLRequest addCompletedQuestToDB = new SQLRequest("INSERT INTO `character_quest_completed` (`player_id`, `quest_id`) VALUES (?, ?)", "Add completed player quest", SQLRequestPriority.HIGH) {
@@ -56,8 +56,8 @@ public class PlayerQuestMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
-			this.statement.putInt(datas.getIValue2());
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
 	

@@ -21,9 +21,9 @@ public class AuctionHouseDBMgr {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			AuctionEntry entry = this.datasList.get(0).getEntry();
+			AuctionEntry entry = (AuctionEntry)this.datasList.get(0).getNextObject();
 			this.statement.putInt(entry.getEntryID());
-			this.statement.putByte(this.datasList.get(0).getFaction().getValue());
+			this.statement.putByte(((Faction)this.datasList.get(0).getNextObject()).getValue());
 			this.statement.putInt(entry.getItemID());
 			this.statement.putInt(entry.getSellerID());
 			this.statement.putInt(entry.getBuyoutPrice());
@@ -72,7 +72,7 @@ public class AuctionHouseDBMgr {
 		long timer = System.currentTimeMillis();
 		try {
 			if(loadAllAuction == null) {
-				loadAllAuction = Server.getJDO().prepare("SELECT entry_id, faction, item_id, seller_id, buyout_price, bid_price, initial_bid_price, last_bidder_id, time_left, deposit_timer FROM auction_entry");
+				loadAllAuction = Server.getJDO().prepare("SELECT entry_id, faction, item_id, seller_id, buyout_price, bid_price, initial_bid_price, last_bidder_id, time_left, deposit_timer FROM auction_entry LIMIT 150");
 			}
 			loadAllAuction.clear();
 			loadAllAuction.execute();

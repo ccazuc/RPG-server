@@ -18,8 +18,10 @@ public class FriendMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
-			this.statement.putInt(datas.getIValue2());
+			/*this.statement.putInt(datas.getIValue1());
+			this.statement.putInt(datas.getIValue2());*/
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
 	private final static SQLRequest removeFriendFromDB = new SQLRequest("DELETE FROM social_friend WHERE character_id = ? AND friend_id = ?", "Remove friend", SQLRequestPriority.LOW) {
@@ -27,8 +29,8 @@ public class FriendMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt(datas.getIValue1());
-			this.statement.putInt(datas.getIValue2());
+			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
 	
@@ -63,7 +65,7 @@ public class FriendMgr {
 	}
 	
 	public static void addFriendInDB(int character_id, int friend_id) {
-		addFriendInDB.addDatas(new SQLDatas(character_id, friend_id));
+		addFriendInDB.addDatas(new SQLDatas(character_id, friend_id, friend_id, friend_id, friend_id, friend_id));
 		Server.executeSQLRequest(addFriendInDB);
 	}
 	

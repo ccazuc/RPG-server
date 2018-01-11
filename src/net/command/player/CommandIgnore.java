@@ -1,6 +1,7 @@
 package net.command.player;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import net.Server;
 import net.command.Command;
@@ -60,8 +61,7 @@ public class CommandIgnore extends Command {
 	}
 	
 	public static void ignoreInit(Connection connection, Player player) {
-		int i = 0;
-		ArrayList<Integer> ignoreList = IgnoreMgr.getIgnoreList(player.getUnitID());
+		HashSet<Integer> ignoreList = IgnoreMgr.getIgnoreList(player.getUnitID());
 		if(ignoreList == null) {
 			return;
 		}
@@ -69,15 +69,15 @@ public class CommandIgnore extends Command {
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_INIT);
 		connection.writeInt(ignoreList.size());
-		while(i < ignoreList.size()) {
-			int value = ignoreList.get(i);
-			connection.writeInt(value);
-			Player temp = Server.getInGameCharacter(value);
-			if(temp != null)
-				connection.writeString(temp.getName());
+		Player tmp;
+		for (int id : ignoreList)
+		{
+			connection.writeInt(id);
+			if ((tmp = Server.getInGameCharacter(id)) != null)
+				connection.writeString(tmp.getName());
 			else
-				connection.writeString(CharacterMgr.loadCharacterNameFromID(value));
-			i++;
+				connection.writeString(CharacterMgr.loadCharacterNameFromID(id));
+				
 		}
 		connection.endPacket();
 		connection.send();

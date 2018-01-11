@@ -24,14 +24,14 @@ public class MailMgr {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putLong(this.datasList.get(0).getLValue1());
+			this.statement.putLong((long)this.datasList.get(0).getNextObject());
 		}
 	};
 	private final static SQLRequest addMail = new SQLRequest("INSERT INTO `mail` (GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, read) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", "Add mail", SQLRequestPriority.LOW) {
 	
 		@Override
 		public void gatherData() throws SQLException {
-			Mail mail = this.datasList.get(0).getMail();
+			Mail mail = (Mail)this.datasList.get(0).getNextObject();
 			this.statement.putLong(mail.getGUID());
 			this.statement.putInt(mail.getAutorID());
 			this.statement.putInt(mail.getDestID());
@@ -48,7 +48,7 @@ public class MailMgr {
 	
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putLong(this.datasList.get(0).getLValue1());
+			this.statement.putLong((long)this.datasList.get(0).getNextObject());
 		}
 	};
 	
