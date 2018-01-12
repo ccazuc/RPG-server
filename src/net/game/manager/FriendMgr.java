@@ -18,8 +18,6 @@ public class FriendMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			/*this.statement.putInt(datas.getIValue1());
-			this.statement.putInt(datas.getIValue2());*/
 			this.statement.putInt((int)datas.getNextObject());
 			this.statement.putInt((int)datas.getNextObject());
 		}

@@ -11,7 +11,7 @@ public class Task {
 		this.frequence = frequence;
 	}
 	
-	public void event() {
+	public final void event() {
 		if(Server.getLoopTickTimer()-this.lastTick >= this.frequence) {
 			action();
 			this.lastTick = Server.getLoopTickTimer();

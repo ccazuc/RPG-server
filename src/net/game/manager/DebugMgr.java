@@ -6,8 +6,8 @@ public class DebugMgr {
 	private static boolean SQL_REQUEST_TIMER = true;
 	private static boolean WRITE_LOG_FILE_TIMER = true;
 	private static boolean EXECUTE_WHO_TIMER = true;
-	private static boolean PACKET_RECEIVED = true;
-	private static boolean PACKET_EXECUTE_TIMER = true;
+	private static boolean PACKET_RECEIVED = false;
+	private static boolean PACKET_EXECUTE_TIMER = false;
 	private static int LOOP_TOO_LONG_VALUE = 5;
 	
 	public static boolean getChatCommandTimer() {

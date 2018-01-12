@@ -11,14 +11,6 @@ public class CommandLoginQueue extends Command {
 	@Override
 	public void read(Player player)
 	{
-		Connection connection = player.getConnection();
-		short packetId = connection.readShort();
-		//if (packetId == PacketID.LOGIN_QUEUE_ACCEPTED)
-		//{
-			//if (!player.getLoginQueueRequestSent())
-				return;
-			//LoginQueueMgr.loginAccepted(player);
-		//}
 		
 	}
 	
@@ -41,6 +33,16 @@ public class CommandLoginQueue extends Command {
 		connection.writeShort(PacketID.LOGIN_QUEUE_UPDATE_POSITION);
 		connection.writeInt(position);
 		connection.writeInt(queueLength);
+		connection.endPacket();
+		connection.send();
+	}
+	
+	public static void logPlayer(Player player)
+	{
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.LOGIN_QUEUE);
+		connection.writeShort(PacketID.LOGIN_QUEUE_ACCEPTED);
 		connection.endPacket();
 		connection.send();
 	}

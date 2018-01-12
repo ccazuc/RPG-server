@@ -35,7 +35,6 @@ public class SocketRunnable implements Runnable {
 				this.clientSocket.socket().setTcpNoDelay(ConfigMgr.TCP_NO_DELAY_ENABLED);
 				this.clientSocket.configureBlocking(false);
 				Server.addNonLoggedPlayer(new Player(this.clientSocket));
-				System.out.println("Add player in socket thread");
 			} 
 			catch (IOException e) {
 				e.printStackTrace();

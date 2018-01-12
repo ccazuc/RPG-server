@@ -22,6 +22,7 @@ import net.game.manager.AccountMgr;
 import net.game.manager.BanMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.DebugMgr;
+import net.game.manager.LoginQueueMgr;
 import net.game.spell.SpellMgr;
 import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
@@ -493,10 +494,11 @@ public class StoreChatCommand {
 		@Override
 		public void handle(String[] value, Player player) {
 			builder.setLength(0);
-			builder.append("Server informations :\n");
-			builder.append("Server message of the day :\n").append(ConfigMgr.getServerMessageOfTheDay()).append('\n');
+			builder.append("Server informations:\n");
+			builder.append("Server message of the day:\n").append(ConfigMgr.getServerMessageOfTheDay()).append('\n');
 			builder.append("Online since ").append(convMillisToDate(Server.getLoopTickTimer()-Server.getServerStartTimer())).append('\n');
-			builder.append("Online player(s) : ").append(Server.getInGamePlayerList().size());
+			builder.append("Online player(s): ").append(Server.getInGamePlayerList().size()).append('\n');
+			builder.append("Player(s) in queue: ").append(LoginQueueMgr.getLoginQueueList().size()); 
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}
 	};
@@ -587,6 +589,20 @@ public class StoreChatCommand {
 			else {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for [closed] in .server set closed [on/off]", MessageType.SELF);
 			}
+		}
+	};
+	private final static ChatCommand online = new ChatCommand("online", AccountRank.GAMEMASTER)
+	{
+	
+		@Override
+		public void handle(String command, Player player)
+		{
+			if (!checkRank(player, this.rank))
+				return;
+			builder.setLength(0);
+			builder.append("Collections informations: -InGamePlayerList: ").append(Server.getInGamePlayerList().size()).append("\n-LoggedPlayerList: ").append(Server.getLoggedPlayerList().size()).append("\n-NonLoggedPlayerList: ");
+			builder.append(Server.getNonLoggedPlayerList().size()).append("\n-LoginQueueList: ").append(LoginQueueMgr.getLoginQueueList().size());
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}
 	};
 	private final static ChatCommand baninfo = new ChatCommand("baninfo", AccountRank.GAMEMASTER) {
@@ -1494,6 +1510,7 @@ public class StoreChatCommand {
 		unban.addSubCommand(unban_account);
 		unban.addSubCommand(unban_character);
 		commandMap.put(unban.getName(), unban);
+		commandMap.put(online.getName(), online);
 	}
 	
 	static long convStringTimerToMS(String timer) {

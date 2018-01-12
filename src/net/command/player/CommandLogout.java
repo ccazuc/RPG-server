@@ -16,6 +16,6 @@ public class CommandLogout extends Command {
 		player.getConnection().writeShort(PacketID.LOGOUT);
 		player.getConnection().endPacket();
 		player.getConnection().send();
-		System.out.println("Logout sent");
+		//System.out.println("Logout sent");
 	}
 }

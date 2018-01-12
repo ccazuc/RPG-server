@@ -15,7 +15,7 @@ public class ChatCommandRequest {
 		this.player = player;
 	}
 	
-	public void execute() {
+	public final void execute() {
 		if(this.player == null)
 			return;
 		String command = checkCommand(this.command);

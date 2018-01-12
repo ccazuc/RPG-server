@@ -32,6 +32,7 @@ import net.command.player.CommandGuild;
 import net.command.player.CommandIgnore;
 import net.command.player.CommandLoadCharacter;
 import net.command.player.CommandLogin;
+import net.command.player.CommandLoginQueue;
 import net.command.player.CommandLoginRealmPlayer;
 import net.command.player.CommandLogout;
 import net.command.player.CommandLogoutCharacter;
@@ -57,6 +58,7 @@ public class ConnectionManager {
 	private static Connection authConnection;
 	private final static HashMap<Short, Command> loggedCommandList = new HashMap<Short, Command>();
 	private final static HashMap<Short, Command> nonLoggedCommandList = new HashMap<Short, Command>();
+	private final static HashMap<Short, Command> loginQueueCommandList = new HashMap<Short, Command>();
 	private final static HashMap<Short, Command> authCommand = new HashMap<Short, Command>();
 	private final static int TIMEOUT_TIMER = 10000;
 	private short lastPacketReaded;
@@ -78,6 +80,12 @@ public class ConnectionManager {
 		nonLoggedCommandList.put(LOGIN, new CommandLogin());
 		nonLoggedCommandList.put(PING, new CommandPing());
 		nonLoggedCommandList.put(PING_CONFIRMED, new CommandPingConfirmed());
+		nonLoggedCommandList.put(LOGIN_QUEUE, new CommandLoginQueue());
+		
+		loginQueueCommandList.put(LOGIN_QUEUE, new CommandLogout());
+		loginQueueCommandList.put(PING, new CommandPing());
+		loginQueueCommandList.put(PING_CONFIRMED, new CommandPingConfirmed());
+		
 		loggedCommandList.put(PING_CONFIRMED, new CommandPingConfirmed());
 		loggedCommandList.put(CHAT_LIST_PLAYER, new CommandListPlayer());
 		loggedCommandList.put(CHAT_PLAYER_INFO, new CommandPlayerInfo());
@@ -148,7 +156,7 @@ public class ConnectionManager {
 		} 
 		catch (IOException e) {
 			//e.printStackTrace();
-			System.out.println("IOException on read.");
+			//System.out.println("IOException on read.");
 			this.player.close();
 			//System.out.println("Read took "+(System.nanoTime()-timer)/1000+" µs");
 		}
@@ -211,11 +219,23 @@ public class ConnectionManager {
 					System.out.println("Packet: " + packetId + " took: " + (result - timer) + "ns, " + (result - timer) / 1000 + "µs to execute.");
 				}
 			}
-			else if(!this.player.isOnline() && nonLoggedCommandList.containsKey(packetId)) {
+			else if((!this.player.isOnline() || this.player.isInLoginQueue()) && nonLoggedCommandList.containsKey(packetId)) {
 				this.lastPacketReaded = packetId;
 				if (DebugMgr.getPacketExecuteTimer())
 					timer = System.nanoTime();
 				nonLoggedCommandList.get(packetId).read(this.player);
+				if (DebugMgr.getPacketExecuteTimer())
+				{
+					long result = System.nanoTime();
+					System.out.println("Packet: " + packetId + " took: " + (result - timer) + "ns, " + (result - timer) / 1000 + "µs to execute.");
+				}
+			}
+			else if (this.player.isInLoginQueue() && loginQueueCommandList.containsKey(packetId))
+			{
+				this.lastPacketReaded = packetId;
+				if (DebugMgr.getPacketExecuteTimer())
+					timer = System.nanoTime();
+				loginQueueCommandList.get(packetId).read(this.player);
 				if (DebugMgr.getPacketExecuteTimer())
 				{
 					long result = System.nanoTime();

@@ -42,6 +42,7 @@ import net.game.manager.ChannelMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.FriendMgr;
 import net.game.manager.ItemMgr;
+import net.game.manager.LoginQueueMgr;
 import net.game.profession.Profession;
 import net.game.quest.PlayerQuestMgr;
 import net.game.shortcut.Shortcut;
@@ -62,13 +63,14 @@ public class Player extends Unit {
 	private ArrayList<Integer> playerWhoAreFriend;
 	private ArrayList<String> chatChannelJoined;
 	private ConnectionManager connectionManager;
-	private PlayerQuestMgr questManager;
 	private ArrayList<Integer> friendList;
 	private ArrayList<Integer> ignoreList;
+	private PlayerQuestMgr questManager;
 	private Profession secondProfession;
 	private Profession firstProfession;
 	private AccountRank accountRank;
 	private WeaponType[] weaponType;
+	private boolean isInLoginQueue;
 	private boolean hasInitParty;
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
@@ -441,7 +443,7 @@ public class Player extends Unit {
 		Server.removeNonLoggedPlayer(this);
 		Server.removeLoggedPlayer(this);
 		Server.removeInGamePlayer(this);
-		//System.out.println("Player close took "+(System.nanoTime()-timer)/1000+" µs.");
+		LoginQueueMgr.playerLoggedOut(this);
 	}
 	
 	public void close()
@@ -1111,6 +1113,16 @@ public class Player extends Unit {
 		this.faction = faction;
 	}
 	
+	public boolean isInLoginQueue()
+	{
+		return (this.isInLoginQueue);
+	}
+	
+	public void setIsInLoginQueue(boolean we)
+	{
+		this.isInLoginQueue = we;
+	}
+
 	public static String convClassTypeToString(ClassType type) {
 		if(type == ClassType.DRUID) {
 			return druid;

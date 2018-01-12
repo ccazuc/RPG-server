@@ -103,7 +103,7 @@ public class CharacterMgr {
 		@Override
 		public void gatherData() throws SQLException {
 			SQLDatas datas = this.datasList.get(0);
-			this.statement.putString((String)datas.getNextObject());
+			this.statement.putLong((Long)datas.getNextObject());
 			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
@@ -141,8 +141,8 @@ public class CharacterMgr {
 				CommandGuild.notifyOnlinePlayer(player);
 			}
 			player.initQuestMgr();
-			Server.addInGamePlayer(player);
 			Server.removeLoggedPlayer(player);
+			Server.addInGamePlayer(player);
 		}
 	};
 	private final static SQLTask fullySaveCharacter = new SQLTask("Fully save character") {
@@ -390,7 +390,7 @@ public class CharacterMgr {
 	}
 	
 	public static void updateLastLoginTimer(Player player) {
-		updateLastOnlineTimer.addDatas(new SQLDatas(player.getUnitID(), Server.getLoopTickTimer()));
+		updateLastOnlineTimer.addDatas(new SQLDatas(Server.getLoopTickTimer(), player.getUnitID()));
 		Server.executeSQLRequest(updateLastOnlineTimer);
 	}
 	

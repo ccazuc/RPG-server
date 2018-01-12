@@ -1,1065 +1,1040 @@
 --------------------------------------------------------------
-Tue Dec 27 20:14:45 CET 2016
-java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
-	at java.lang.NumberFormatException.forInputString(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Dec 27 20:14:45 CET 2016
-java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
-	at java.lang.NumberFormatException.forInputString(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Dec 27 20:14:45 CET 2016
-java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
-	at java.lang.NumberFormatException.forInputString(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Dec 27 20:14:45 CET 2016
-java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
-	at java.lang.NumberFormatException.forInputString(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Dec 27 20:14:45 CET 2016
-java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
-	at java.lang.NumberFormatException.forInputString(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Dec 27 20:14:45 CET 2016
-java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
-	at java.lang.NumberFormatException.forInputString(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Dec 27 20:14:45 CET 2016
-java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999999999999999999999"
-	at java.lang.NumberFormatException.forInputString(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Dec 27 20:20:43 CET 2016
-AccountID : 1java.lang.NumberFormatException: For input string: "9999999999999999999999999999999999999999999999"
-	at java.lang.NumberFormatException.forInputString(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at net.game.chat.StoreChatCommand$35.handle(StoreChatCommand.java:1060)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:35)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Fri Jan 06 20:59:56 CET 2017
-java.lang.NullPointerException
-	at net.game.unit.Unit.auraTick(Unit.java:78)
-	at net.game.unit.Player.tick(Player.java:117)
-	at net.Server.readOnlinePlayers(Server.java:181)
-	at net.Server.main(Server.java:134)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Fri Jan 06 21:04:40 CET 2017
-java.lang.NullPointerException
-	at net.game.aura.AppliedAura.<init>(AppliedAura.java:15)
-	at net.game.unit.Unit.applyAura(Unit.java:121)
-	at net.game.spell.StoreSpell$2.action(StoreSpell.java:38)
-	at net.game.spell.Spell.use(Spell.java:52)
-	at net.game.unit.Unit.checkCast(Unit.java:87)
-	at net.game.unit.Player.tick(Player.java:119)
-	at net.Server.readOnlinePlayers(Server.java:181)
-	at net.Server.main(Server.java:134)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Jan 10 20:34:07 CET 2017
-java.lang.NullPointerException
-	at net.game.unit.Unit.applyAura(Unit.java:148)
-	at net.game.spell.StoreSpell$3.action(StoreSpell.java:107)
-	at net.game.spell.Spell.use(Spell.java:52)
-	at net.game.spell.Spell.cast(Spell.java:82)
-	at net.command.player.CommandCast.read(CommandCast.java:47)
-	at net.connection.ConnectionManager.readPacket(ConnectionManager.java:199)
-	at net.connection.ConnectionManager.read(ConnectionManager.java:143)
-	at net.game.unit.Player.tick(Player.java:120)
-	at net.Server.readOnlinePlayers(Server.java:181)
-	at net.Server.main(Server.java:134)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Jan 17 06:06:47 CET 2017
-java.lang.NullPointerException
-	at net.command.chat.CommandChannel.read(CommandChannel.java:26)
-	at net.connection.ConnectionManager.readPacket(ConnectionManager.java:201)
-	at net.connection.ConnectionManager.read(ConnectionManager.java:145)
-	at net.game.unit.Player.tick(Player.java:122)
-	at net.Server.readOnlinePlayers(Server.java:177)
-	at net.Server.main(Server.java:130)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Jan 17 06:08:40 CET 2017
-java.lang.NullPointerException
-	at net.game.manager.ChannelMgr.getPlayerList(ChannelMgr.java:38)
-	at net.command.chat.CommandChannel.notifyPlayerJoinedChannel(CommandChannel.java:198)
-	at net.command.chat.CommandChannel.read(CommandChannel.java:33)
-	at net.connection.ConnectionManager.readPacket(ConnectionManager.java:201)
-	at net.connection.ConnectionManager.read(ConnectionManager.java:145)
-	at net.game.unit.Player.tick(Player.java:122)
-	at net.Server.readOnlinePlayers(Server.java:179)
-	at net.Server.main(Server.java:132)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Fri Jan 20 06:33:54 CET 2017
-java.lang.NullPointerException
-	at net.game.manager.ChannelMgr.getPlayerList(ChannelMgr.java:46)
-	at net.command.chat.CommandChannel.notifyPlayerLeader(CommandChannel.java:182)
-	at net.game.chat.ChatChannel.setLeader(ChatChannel.java:41)
-	at net.game.chat.ChatChannel.addPlayer(ChatChannel.java:54)
-	at net.game.manager.ChannelMgr.addPlayer(ChannelMgr.java:62)
-	at net.command.chat.CommandChannel.read(CommandChannel.java:39)
-	at net.connection.ConnectionManager.readPacket(ConnectionManager.java:201)
-	at net.connection.ConnectionManager.read(ConnectionManager.java:145)
-	at net.game.unit.Player.tick(Player.java:123)
-	at net.Server.readOnlinePlayers(Server.java:179)
-	at net.Server.main(Server.java:132)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Fri Jan 20 20:29:38 CET 2017
-AccountID : 1, CharacterID : 1, CharacterName : Mideas
-java.lang.NumberFormatException: For input string: ""
-	at java.lang.NumberFormatException.forInputString(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at java.lang.Integer.parseInt(Unknown Source)
-	at net.thread.chatcommand.ChatCommandRunnable.endListMethod(ChatCommandRunnable.java:100)
-	at net.thread.chatcommand.ChatCommandRunnable.executeWhoRequest(ChatCommandRunnable.java:86)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:61)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Apr 04 01:33:40 CEST 2017
-AccountID : 1, CharacterID : 1, CharacterName : Mideas
-java.lang.NullPointerException
-	at net.connection.Buffer.writeString(Buffer.java:252)
-	at net.connection.Connection.writeString(Connection.java:247)
-	at net.command.chat.CommandSendMessage.selfWithoutAuthor(CommandSendMessage.java:253)
-	at net.game.chat.StoreChatCommand$10.handle(StoreChatCommand.java:384)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:43)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Apr 04 01:33:40 CEST 2017
-AccountID : 1, CharacterID : 1, CharacterName : Mideas
-java.lang.NullPointerException
-	at net.connection.Buffer.writeString(Buffer.java:252)
-	at net.connection.Connection.writeString(Connection.java:247)
-	at net.command.chat.CommandSendMessage.selfWithoutAuthor(CommandSendMessage.java:253)
-	at net.game.chat.StoreChatCommand$10.handle(StoreChatCommand.java:384)
-	at net.thread.chatcommand.ChatCommandRequest.execute(ChatCommandRequest.java:24)
-	at net.thread.chatcommand.ChatCommandRunnable.run(ChatCommandRunnable.java:43)
-	at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
-
---------------------------------------------------------------
-Tue Dec 12 19:19:56 CET 2017
-Ceci est un test
-Function stacktrace:
-	 at: net.thread.log.LogRunnable.addErrorLog(LogRunnable.java:201)
-	 at: net.game.manager.BanMgr.removeExpiredBanAccount(BanMgr.java:62)
-	 at: net.Server.main(Server.java:74)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Wed Dec 13 16:25:49 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Wed Dec 13 16:26:35 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Wed Dec 13 16:26:35 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Wed Dec 13 17:15:44 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Wed Dec 13 17:17:36 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Wed Dec 13 17:26:12 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 16:50:09 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 16:59:36 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 16:59:36 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 16:59:36 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 16:59:36 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 16:59:36 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 16:59:36 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 17:15:22 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 19:14:03 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 19:14:03 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 19:14:03 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 19:14:03 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 19:14:03 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 19:14:03 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 19:14:03 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Thu Dec 14 19:14:03 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Sat Dec 16 11:44:32 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Sat Dec 16 11:44:32 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Sat Dec 16 11:44:32 CET 2017
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:21:57 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:21:57 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:21:57 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:21:57 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:21:57 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:42:34 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:42:34 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:48:35 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:49:35 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 18:59:42 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 19:03:45 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 19:05:14 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 19:16:55 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 21:33:07 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Mon Jan 08 23:22:21 CET 2018
-Error in PlayerQuestManager.loadPlayerQuest(), quest not found: 1, playerId: 1
-Function stacktrace:
-	 at net.game.quest.PlayerQuestMgr.loadPlayerQuest(PlayerQuestMgr.java:117)
-	 at net.game.quest.PlayerQuestMgr.<init>(PlayerQuestMgr.java:72)
-	 at net.game.unit.Player.initQuestMgr(Player.java:235)
-	 at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:143)
-	 at net.thread.sql.SQLTask.execute(SQLTask.java:16)
-	 at net.thread.sql.SQLRunnable.run(SQLRunnable.java:50)
-	 at java.lang.Thread.run(Unknown Source)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Tue Jan 09 12:50:38 CET 2018
+Fri Jan 12 21:18:21 CET 2018
 java.util.ConcurrentModificationException
 	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
 	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.readOnlinePlayers(Server.java:153)
-	at net.Server.main(Server.java:117)
+	at net.Server.read(Server.java:189)
+	at net.Server.main(Server.java:119)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Tue Jan 09 12:50:38 CET 2018
+Fri Jan 12 21:18:21 CET 2018
 java.util.ConcurrentModificationException
 	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
 	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.command.chat.CommandSendMessage.sendMessageToUsers(CommandSendMessage.java:166)
-	at net.command.chat.CommandSendMessage.read(CommandSendMessage.java:125)
-	at net.connection.ConnectionManager.readPacket(ConnectionManager.java:207)
-	at net.connection.ConnectionManager.read(ConnectionManager.java:146)
-	at net.game.unit.Player.tick(Player.java:132)
-	at net.Server.readOnlinePlayers(Server.java:154)
-	at net.Server.main(Server.java:117)
+	at net.Server.read(Server.java:189)
+	at net.Server.main(Server.java:119)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Tue Jan 09 12:50:38 CET 2018
+Fri Jan 12 21:18:21 CET 2018
 java.util.ConcurrentModificationException
 	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
 	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.readOnlinePlayers(Server.java:153)
-	at net.Server.main(Server.java:117)
+	at net.Server.read(Server.java:189)
+	at net.Server.main(Server.java:119)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Tue Jan 09 12:54:31 CET 2018
+Fri Jan 12 21:18:21 CET 2018
 java.util.ConcurrentModificationException
 	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
 	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.readOnlinePlayers(Server.java:153)
-	at net.Server.main(Server.java:117)
+	at net.Server.read(Server.java:189)
+	at net.Server.main(Server.java:119)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Tue Jan 09 12:54:31 CET 2018
+Fri Jan 12 21:18:21 CET 2018
 java.util.ConcurrentModificationException
 	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
 	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.readOnlinePlayers(Server.java:153)
-	at net.Server.main(Server.java:117)
+	at net.Server.read(Server.java:189)
+	at net.Server.main(Server.java:119)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:18:21 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:189)
+	at net.Server.main(Server.java:119)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:18:21 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:189)
+	at net.Server.main(Server.java:119)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:18:21 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:189)
+	at net.Server.main(Server.java:119)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:20:58 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:23:35 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+
+--------------------------------------------------------------
+Fri Jan 12 21:27:40 CET 2018
+java.util.ConcurrentModificationException
+	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
+	at java.util.HashMap$ValueIterator.next(Unknown Source)
+	at net.Server.read(Server.java:190)
+	at net.Server.main(Server.java:120)
 --------------------------------------------------------------
 
 

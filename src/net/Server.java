@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import jdo.JDO;
 import jdo.wrapper.MariaDB;
@@ -32,6 +33,7 @@ import net.game.manager.ChannelMgr;
 import net.game.manager.CharacterMgr;
 import net.game.manager.DatabaseMgr;
 import net.game.manager.DebugMgr;
+import net.game.manager.LoginQueueMgr;
 import net.game.quest.QuestMgr;
 import net.game.spell.SpellMgr;
 import net.game.unit.Player;
@@ -50,11 +52,11 @@ public class Server {
 	private static JDO asyncHighPriorityJdo;
 	private static ServerSocketChannel serverSocketChannel;
 	//private static SocketChannel clientSocket;
-	private static HashMap<Integer, Player> loggedPlayerList = new HashMap<Integer, Player>();
+	private static Map<Integer, Player> loggedPlayerList = new ConcurrentHashMap<Integer, Player>();
 	private static ArrayList<Integer> loggedPlayerKickList = new ArrayList<Integer>();
 	private static List<Player> nonLoggedPlayerList = Collections.synchronizedList(new ArrayList<Player>());
 	private static ArrayList<Player> nonLoggedPlayerKickList = new ArrayList<Player>();
-	private static HashMap<Integer, Player> inGamePlayerList = new HashMap<Integer, Player>();
+	private static Map<Integer, Player> inGamePlayerList = new ConcurrentHashMap<Integer, Player>();
 	private static ArrayList<Integer> inGamePlayerKickList = new ArrayList<Integer>();
 	private static HashMap<Double, Key> keyMap = new HashMap<Double, Key>();
 	private static ArrayList<Double> removeKeyList = new ArrayList<Double>();
@@ -117,6 +119,7 @@ public class Server {
 				readOnlinePlayers();
 				read();
 				checkKeyTimer();
+				LoginQueueMgr.tick();
 				delta = System.currentTimeMillis()-LOOP_TICK_TIMER;
 				if(delta < LOOP_TIMER) {
 					Thread.sleep((LOOP_TIMER-(long)delta));
@@ -162,9 +165,12 @@ public class Server {
 			nonLoggedPlayerList.remove(nonLoggedPlayerKickList.get(0)); 
 			nonLoggedPlayerKickList.remove(0);
 		}
-		while(loggedPlayerKickList.size() > 0) {
-			loggedPlayerList.remove(loggedPlayerKickList.get(0));
-			loggedPlayerKickList.remove(0);
+		synchronized (loggedPlayerList)
+		{
+			while(loggedPlayerKickList.size() > 0) {
+				loggedPlayerList.remove(loggedPlayerKickList.get(0));
+				loggedPlayerKickList.remove(0);
+			}
 		}
 		while(inGamePlayerKickList.size() > 0) {
 			inGamePlayerList.remove(inGamePlayerKickList.get(0));
@@ -214,10 +220,9 @@ public class Server {
 	}
 	
 	public static void addLoggedPlayer(Player player) {
-		if(player != null)
-			synchronized(loggedPlayerList) {
-				loggedPlayerList.put(player.getAccountId(), player);
-			}
+		synchronized(loggedPlayerList) {
+			loggedPlayerList.put(player.getAccountId(), player);
+		}
 	}
 	
 	public static void addInGamePlayer(Player player) {
@@ -331,7 +336,7 @@ public class Server {
 		ThreadMgr.executeChatCommandRequest(request);
 	}
 	
-	public static HashMap<Integer, Player> getInGamePlayerList() {
+	public static Map<Integer, Player> getInGamePlayerList() {
 		return inGamePlayerList;
 	}
 	
@@ -365,6 +370,11 @@ public class Server {
 	
 	public static ServerSocketChannel getServerSocketChannel() {
 		return serverSocketChannel;
+	}
+	
+	public static List<Player> getNonLoggedPlayerList()
+	{
+		return (nonLoggedPlayerList);
 	}
 	
 	public static void mTime(long time, String text) {

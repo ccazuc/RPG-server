@@ -5,14 +5,14 @@ import java.util.ArrayList;
 public class SQLTask {
 
 	protected final ArrayList<SQLDatas> datasList;
-	private String name;
+	private final String name;
 	
 	public SQLTask(String name) {
 		this.datasList = new ArrayList<SQLDatas>();
 		this.name = name;
 	}
 	
-	public void execute() {
+	public final void execute() {
 		gatherData();
 		this.datasList.remove(0);
 	}
