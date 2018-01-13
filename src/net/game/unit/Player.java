@@ -411,18 +411,16 @@ public class Player extends Unit {
 			CommandGuild.notifyOfflinePlayer(this);
 			GuildMgr.getGuild(this.guild.getId()).getMember(this.unitID).setOnlineStatus(false);
 		}
-		Server.addLoggedPlayer(this);
 		Server.removeInGamePlayer(this);
+		Server.addLoggedPlayer(this);
 		FriendMgr.removeList(this.unitID);
 		CharacterMgr.fullySaveCharacter(this);
 		resetDatas();
-		int i = 0;
 		CommandChannel.notifyPlayerLeftChannelOnLogout(this);
 		ChannelMgr mgr = ChannelMgr.getChannelMgr(this.faction);
-		while(i < this.chatChannelJoined.size()) {
+		int i = -1;
+		while(++i < this.chatChannelJoined.size())
 			mgr.removePlayer(this.chatChannelJoined.get(i), this);
-			i++;
-		}
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);
 		}
@@ -432,7 +430,6 @@ public class Player extends Unit {
 	}
 	
 	public void close(boolean shouldNotifyClient) {
-		//long timer = System.nanoTime();
 		if(this.isOnline) {
 			logoutCharacter();
 			this.isOnline = false;

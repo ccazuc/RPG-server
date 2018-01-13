@@ -32,16 +32,36 @@ public class SQLRequest {
 		this.debugActive = true;
 	}
 	
-	public final void execute() {
-		this.statement.clear();
+	public SQLRequest(String request, String name, SQLRequestPriority priority, boolean debug) {
 		try {
-			gatherData();
-			this.statement.execute();
-		}
-		catch(SQLException e) {
+			if(priority == SQLRequestPriority.LOW) {
+				this.statement = Server.getAsyncLowPriorityJDO().prepare(request);
+			}
+			else {
+				this.statement = Server.getAsyncHighPriorityJDO().prepare(request);
+			}
+		} 
+		catch (SQLException e) {
 			e.printStackTrace();
 		}
-		this.datasList.remove(0);
+		this.priority = priority;
+		this.datasList = new ArrayList<SQLDatas>();
+		this.name = name;
+		this.debugActive = debug;
+	}
+	public final void execute() {
+		synchronized (this.datasList)
+		{
+			this.statement.clear();
+			try {
+				gatherData();
+				this.statement.execute();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+			}
+			this.datasList.remove(0);
+		}
 	}
 	
 	public String getName() {
@@ -53,7 +73,10 @@ public class SQLRequest {
 	}
 	
 	public void addDatas(SQLDatas datas) {
-		this.datasList.add(datas);
+		synchronized (this.datasList)
+		{
+			this.datasList.add(datas);
+		}
 	}
 	
 	public SQLRequestPriority getPriority() {

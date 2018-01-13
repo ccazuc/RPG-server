@@ -1063,12 +1063,17 @@ public class StoreChatCommand {
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect synthax for .debug printsqltimer [true || false]", MessageType.SELF);
 				return;
 			}
-			if(!value[2].equalsIgnoreCase("true") && !value[2].equalsIgnoreCase("false")) {
-				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug printsqltimer [true || false]", MessageType.SELF);
-				return;
+			if(value[2].equalsIgnoreCase("true")) {
+				DebugMgr.setSQLRequestTimer(true);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Print SQL timer enabled.", MessageType.SELF);
 			}
-			DebugMgr.setSQLRequestTimer(value[2].equalsIgnoreCase("true") ? true : false);
-			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Print SQL timer enabled.", MessageType.SELF);
+			else if (value[2].equalsIgnoreCase("false"))
+			{
+				DebugMgr.setSQLRequestTimer(false);
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Print SQL timer disabled.", MessageType.SELF);
+			}
+			else
+				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "Incorrect value for .debug printsqltimer [true || false]", MessageType.SELF);
 		}
 	};
 	private final static ChatSubCommand debug_printlogfiletimer = new ChatSubCommand("printlogfiletimer", "debug", ".debug printlogfiletimer [true || false]\n\nSet wether the time to write in the log file should be printed.", AccountRank.ADMINISTRATOR) {

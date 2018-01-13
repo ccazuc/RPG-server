@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.game.manager.DebugMgr;
+import net.thread.log.LogRunnable;
 
 public class SQLRunnable implements Runnable {
 
@@ -45,9 +46,16 @@ public class SQLRunnable implements Runnable {
 				}
 			}
 			while(this.SQLTaskList.size() > 0) {
-				if(DebugMgr.getSQLRequestTimer()) {
+				if(this.SQLTaskList.get(0).getDebug() && DebugMgr.getSQLRequestTimer()) {
 					long timer = System.nanoTime();
-					this.SQLTaskList.get(0).execute();
+					try {
+						this.SQLTaskList.get(0).execute();
+					}
+					catch (RuntimeException e)
+					{
+						LogRunnable.writeServerLog(e);
+						e.printStackTrace();
+					}
 					System.out.println("[SQL TASK] "+this.SQLTaskList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");
 				}
 				else {
@@ -56,7 +64,7 @@ public class SQLRunnable implements Runnable {
 				this.SQLTaskList.remove(0);
 			}
 			while(this.SQLRequestList.size() > 0) {
-				if(this.SQLRequestList.get(0).debugActive || DebugMgr.getSQLRequestTimer()) {
+				if(this.SQLRequestList.get(0).debugActive && DebugMgr.getSQLRequestTimer()) {
 					long timer = System.nanoTime();
 					this.SQLRequestList.get(0).execute();
 					System.out.println("[SQL REQUEST] "+this.SQLRequestList.get(0).getName()+" took: "+(System.nanoTime()-timer)/1000+" µs to execute.");

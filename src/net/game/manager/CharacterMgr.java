@@ -98,7 +98,7 @@ public class CharacterMgr {
 			this.statement.putInt((int)this.datasList.get(0).getNextObject());
 		}
 	};
-	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?", "Update last online timer", SQLRequestPriority.LOW) {
+	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?", "Update last online timer", SQLRequestPriority.LOW, false) {
 		
 		@Override
 		public void gatherData() throws SQLException {
@@ -145,7 +145,7 @@ public class CharacterMgr {
 			Server.addInGamePlayer(player);
 		}
 	};
-	private final static SQLTask fullySaveCharacter = new SQLTask("Fully save character") {
+	private final static SQLTask fullySaveCharacter = new SQLTask("Fully save character", false) {
 	
 		@Override
 		public void gatherData() {
@@ -177,8 +177,11 @@ public class CharacterMgr {
 	private static String tauren = "TAUREN";
 	
 	public static void fullyLoadCharacter(Player player, int id) {
-		fullyLoadCharacter.addDatas(new SQLDatas(player, id));
-		Server.executeHighPrioritySQLTask(fullyLoadCharacter);
+		synchronized (fullyLoadCharacter)
+		{
+			fullyLoadCharacter.addDatas(new SQLDatas(player, id));
+			Server.executeHighPrioritySQLTask(fullyLoadCharacter);
+		}
 	}
 	
 	public static void fullySaveCharacter(Player player) {

@@ -6,15 +6,26 @@ public class SQLTask {
 
 	protected final ArrayList<SQLDatas> datasList;
 	private final String name;
+	private final boolean debug;
 	
 	public SQLTask(String name) {
 		this.datasList = new ArrayList<SQLDatas>();
 		this.name = name;
+		this.debug = true;
+	}
+	
+	public SQLTask(String name, boolean debug) {
+		this.datasList = new ArrayList<SQLDatas>();
+		this.name = name;
+		this.debug = debug;
 	}
 	
 	public final void execute() {
-		gatherData();
-		this.datasList.remove(0);
+		synchronized (this.datasList)
+		{
+			gatherData();
+			this.datasList.remove(0);
+		}
 	}
 	
 	public void gatherData() {}
@@ -27,5 +38,10 @@ public class SQLTask {
 	
 	public String getName() {
 		return this.name;
+	}
+	
+	public boolean getDebug()
+	{
+		return (this.debug);
 	}
 }

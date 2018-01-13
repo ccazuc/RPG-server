@@ -1,1040 +1,742 @@
 --------------------------------------------------------------
-Fri Jan 12 21:18:21 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:189)
-	at net.Server.main(Server.java:119)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.NullPointerException
+	at net.command.player.CommandSendPlayer.write(CommandSendPlayer.java:13)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:121)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:18:21 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:189)
-	at net.Server.main(Server.java:119)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 2
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:18:21 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:189)
-	at net.Server.main(Server.java:119)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 3
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:18:21 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:189)
-	at net.Server.main(Server.java:119)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 4
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:18:21 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:189)
-	at net.Server.main(Server.java:119)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 5
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:18:21 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:189)
-	at net.Server.main(Server.java:119)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 6
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:18:21 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:189)
-	at net.Server.main(Server.java:119)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 7
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:18:21 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:189)
-	at net.Server.main(Server.java:119)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 8
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 9
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 10
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 11
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 12
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 13
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 14
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 15
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 16
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 17
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 18
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 19
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 20
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 21
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 22
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 23
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 24
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 25
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException: 26
+	at net.thread.sql.SQLDatas.getNextObject(SQLDatas.java:16)
+	at net.game.manager.CharacterMgr$8.gatherData(CharacterMgr.java:115)
+	at net.thread.sql.SQLTask.execute(SQLTask.java:24)
+	at net.thread.sql.SQLRunnable.run(SQLRunnable.java:52)
+	at java.lang.Thread.run(Unknown Source)
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:20:58 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:23:35 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
 --------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
---------------------------------------------------------------
-
-
---------------------------------------------------------------
-Fri Jan 12 21:27:40 CET 2018
-java.util.ConcurrentModificationException
-	at java.util.HashMap$HashIterator.nextNode(Unknown Source)
-	at java.util.HashMap$ValueIterator.next(Unknown Source)
-	at net.Server.read(Server.java:190)
-	at net.Server.main(Server.java:120)
+Sat Jan 13 12:31:25 CET 2018
+java.lang.ArrayIndexOutOfBoundsException
 --------------------------------------------------------------
 
 
