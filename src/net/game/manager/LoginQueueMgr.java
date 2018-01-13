@@ -38,14 +38,13 @@ public class LoginQueueMgr {
 		if (!player.isInLoginQueue())
 			return;
 		int i = -1;
-		Server.addLoggedPlayer(player);
 		while (++i < playerList.size())
 			if (playerList.get(i) == player)
 			{
 				playerList.remove(i);
 				break;
 			}
-		
+		Server.addLoggedPlayer(player);		
 		player.setIsInLoginQueue(false);
 		updatePosition();
 		CommandLoginQueue.logPlayer(player);
@@ -68,7 +67,7 @@ public class LoginQueueMgr {
 		}
 		if (playerList.size() == 0)
 			return;
-		if (Server.getInGamePlayerList().size() + Server.getLoggedPlayerList().size() < ConfigMgr.GetServerMaxCapacity())
+		if (Server.getNumberInGameCharacter() + Server.getNumberLoggedAccount() < ConfigMgr.GetServerMaxCapacity())
 		{
 			loginAccepted(playerList.get(0));
 			updatePosition();

@@ -234,6 +234,16 @@ public class Server {
 		inGamePlayerKickList.add(player.getUnitID());
 	}
 	
+	public static int getNumberInGameCharacter()
+	{
+		return (inGamePlayerList.size() - inGamePlayerKickList.size());
+	}
+	
+	public static int getNumberLoggedAccount()
+	{
+		return (loggedPlayerList.size() - loggedPlayerKickList.size());
+	}
+	
 	public static void removeLoggedPlayer(Player player) {
 		if(player != null)
 			synchronized(loggedPlayerKickList) {
