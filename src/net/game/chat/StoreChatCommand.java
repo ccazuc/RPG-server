@@ -600,7 +600,7 @@ public class StoreChatCommand {
 			if (!checkRank(player, this.rank))
 				return;
 			builder.setLength(0);
-			builder.append("Collections informations: -InGamePlayerList: ").append(Server.getInGamePlayerList().size()).append("\n-LoggedPlayerList: ").append(Server.getLoggedPlayerList().size()).append("\n-NonLoggedPlayerList: ");
+			builder.append("Collections informations:\n-InGamePlayerList: ").append(Server.getInGamePlayerList().size()).append("\n-LoggedPlayerList: ").append(Server.getLoggedPlayerList().size()).append("\n-NonLoggedPlayerList: ");
 			builder.append(Server.getNonLoggedPlayerList().size()).append("\n-LoginQueueList: ").append(LoginQueueMgr.getLoginQueueList().size());
 			CommandSendMessage.selfWithoutAuthor(player.getConnection(), builder.toString(), MessageType.SELF);
 		}

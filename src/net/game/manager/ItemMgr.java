@@ -647,7 +647,7 @@ public class ItemMgr {
 				connection.send();
 			}
 			else {
-				System.out.println("statement error (stuff load)");
+				//System.out.println("statement error (stuff load)");
 			}
 		}
 		catch(SQLException e) {

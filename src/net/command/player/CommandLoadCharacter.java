@@ -15,7 +15,7 @@ public class CommandLoadCharacter extends Command {
 	public void read(Player player) {
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
-		System.out.println("Character " + id + " tried to connect");
+		//System.out.println("Character " + id + " tried to connect");
 		long duration;
 		if(!Server.getLoggedPlayerList().containsKey(player.getAccountId())) {
 			Log.writePlayerLog(player, new StringBuilder().append("Tried to load character ").append(id).append(" whereas he's not connected").toString());
@@ -33,7 +33,10 @@ public class CommandLoadCharacter extends Command {
 			return;
 		}
 		//System.out.println("CHARACTER LOAD ID : "+id);
+		player.setUnitID(id);
 		player.resetTarget();
+		Server.removeLoggedPlayer(player);
+		Server.addInGamePlayer(player);
 		CharacterMgr.fullyLoadCharacter(player, id);
 		/*player.setOnline();
 		player.setCharacterId(id);

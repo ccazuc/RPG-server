@@ -79,7 +79,6 @@ public class Server {
 		BanMgr.removeExpiredBanCharacter();
 		BanMgr.removeExpiredBanIP();
 		CharacterMgr.checkOnlinePlayers();
-		Hash.generateDBPassword("test");
 		GuildMgr.removeOrphanedGuildRank();
 		GuildMgr.removeOrphanedMember();
 		StoreChatCommand.initChatCommandMap();

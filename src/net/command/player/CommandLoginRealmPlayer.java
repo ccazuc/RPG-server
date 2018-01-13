@@ -20,7 +20,7 @@ public class CommandLoginRealmPlayer extends Command {
 		if(packetId == PacketID.LOGIN_REALM_REQUEST) {
 			double key = connection.readDouble();
 			int account_id = connection.readInt();
-			System.out.println("Key: " + key);
+			//System.out.println("Key: " + key);
 			if(!Server.hasKey(key, account_id)) {
 				Log.writePlayerLog(player, "Unknown loggin key");
 				player.close();
@@ -33,7 +33,7 @@ public class CommandLoginRealmPlayer extends Command {
 			player.setAccountRank(AccountRank.values()[Server.getKey(key).getAccountRank()-1]);
 			player.setAccountId(account_id);
 			player.setAccountName(Server.getKey(key).getAccountName());
-			System.out.println("Online player : " + (Server.getInGamePlayerList().size() + Server.getLoggedPlayerList().size()));
+			//System.out.println("Online player : " + (Server.getInGamePlayerList().size() + Server.getLoggedPlayerList().size()) + ", InGame: " + Server.getInGamePlayerList().size() + ", Logged: " + Server.getLoggedPlayerList().size());
 			if (Server.getInGamePlayerList().size() + Server.getLoggedPlayerList().size() >= ConfigMgr.GetServerMaxCapacity())
 			{
 				Server.removeNonLoggedPlayer(player);

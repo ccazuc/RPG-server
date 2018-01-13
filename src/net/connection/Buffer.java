@@ -311,8 +311,16 @@ public class Buffer {
 	}
 	
 	public final void writeBoolean(final boolean b) {
-		this.buffer.put((byte)(b?1:0));
-		this.written = true;
+		try
+		{
+			this.buffer.put((byte)(b?1:0));
+			this.written = true;
+		}
+		catch (BufferOverflowException e)
+		{
+			e.printStackTrace();
+			this.player.close();
+		}
 	}
 	
 	protected final boolean readBoolean() {
@@ -327,8 +335,16 @@ public class Buffer {
 	}
 	
 	public final void writeByte(final byte b) {
-		this.buffer.put(b);
-		this.written = true;
+		try
+		{
+			this.buffer.put(b);
+			this.written = true;
+		}
+		catch (BufferOverflowException e)
+		{
+			e.printStackTrace();
+			this.player.close();
+		}
 	}
 	
 	public final byte readByte() {
@@ -348,7 +364,7 @@ public class Buffer {
 		}
 		catch(BufferOverflowException e) {
 			e.printStackTrace();
-			System.out.println("Short that caused overflow: "+s+" remaining: "+this.buffer.remaining()+" position: "+this.buffer.position());
+			this.player.close();
 		}
 		this.written = true;
 	}
@@ -365,8 +381,16 @@ public class Buffer {
 	}
 	
 	public final void writeInt(final int i) {
-		this.buffer.putInt(i);
-		this.written = true;
+		try
+		{
+			this.buffer.putInt(i);
+			this.written = true;
+		}
+		catch (BufferOverflowException e)
+		{
+			e.printStackTrace();
+			this.player.close();
+		}
 	}
 	
 	public final int readInt() {
@@ -381,8 +405,16 @@ public class Buffer {
 	}
 	
 	protected final void writeLong(final long l) {
-		this.buffer.putLong(l);
-		this.written = true;
+		try
+		{
+			this.buffer.putLong(l);
+			this.written = true;
+		}
+		catch (BufferOverflowException e)
+		{
+			e.printStackTrace();
+			this.player.close();
+		}
 	}
 	
 	protected final long readLong() {
@@ -397,8 +429,16 @@ public class Buffer {
 	}
 	
 	public final void writeFloat(final float f) {
-		this.buffer.putFloat(f);
-		this.written = true;
+		try
+		{
+			this.buffer.putFloat(f);
+			this.written = true;
+		}
+		catch (BufferOverflowException e)
+		{
+			e.printStackTrace();
+			this.player.close();
+		}
 	}
 	
 	protected final float readFloat() {
@@ -413,8 +453,16 @@ public class Buffer {
 	}
 	
 	protected final void writeDouble(final double d) {
-		this.buffer.putDouble(d);
-		this.written = true;
+		try
+		{
+			this.buffer.putDouble(d);
+			this.written = true;
+		}
+		catch (BufferOverflowException e)
+		{
+			e.printStackTrace();
+			this.player.close();
+		}
 	}
 	
 	protected final double readDouble() {
@@ -431,12 +479,11 @@ public class Buffer {
 	public final void writeChar(final char c) {
 		try {
 			this.buffer.putChar((char)(Character.MAX_VALUE-c));
+			this.written = true;
 		}
 		catch(BufferOverflowException e) {
 			e.printStackTrace();
-			System.out.println("Char that caused the overflow exception; "+c+" "+(int)c+" remaining: "+this.buffer.remaining()+" position: "+this.buffer.position());
 		}
-		this.written = true;
 	}
 	
 	public final char readChar() {

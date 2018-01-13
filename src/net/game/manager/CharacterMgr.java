@@ -107,14 +107,13 @@ public class CharacterMgr {
 			this.statement.putInt((int)datas.getNextObject());
 		}
 	};
-	private final static SQLTask fullyLoadCharacter = new SQLTask("Fully load character") {
+	private final static SQLTask fullyLoadCharacter = new SQLTask("Fully load character", false) {
 	
 		@Override
 		public void gatherData() {
 			Player player = (Player)this.datasList.get(0).getNextObject();
 			int id = (int)this.datasList.get(0).getNextObject();
 			player.setUnitID(id);
-			player.setOnline();
 			player.initTable();
 			player.loadCharacterInfoSQL();
 			CommandSendPlayer.write(player);
@@ -141,8 +140,7 @@ public class CharacterMgr {
 				CommandGuild.notifyOnlinePlayer(player);
 			}
 			player.initQuestMgr();
-			Server.removeLoggedPlayer(player);
-			Server.addInGamePlayer(player);
+			player.setOnline();
 		}
 	};
 	private final static SQLTask fullySaveCharacter = new SQLTask("Fully save character", false) {
@@ -177,11 +175,8 @@ public class CharacterMgr {
 	private static String tauren = "TAUREN";
 	
 	public static void fullyLoadCharacter(Player player, int id) {
-		synchronized (fullyLoadCharacter)
-		{
-			fullyLoadCharacter.addDatas(new SQLDatas(player, id));
-			Server.executeHighPrioritySQLTask(fullyLoadCharacter);
-		}
+		fullyLoadCharacter.addDatas(new SQLDatas(player, id));
+		Server.executeHighPrioritySQLTask(fullyLoadCharacter);
 	}
 	
 	public static void fullySaveCharacter(Player player) {

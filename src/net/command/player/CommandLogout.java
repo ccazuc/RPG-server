@@ -9,6 +9,7 @@ public class CommandLogout extends Command {
 	@Override
 	public final void read(Player player) {
 		player.close(false);
+		System.out.println("Logout received from account: " + player.getAccountName());
 	}
 	
 	public static void loggout(Player player) {
