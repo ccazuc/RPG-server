@@ -71,54 +71,54 @@ public class ConnectionManager {
 	}
 	
 	public static void initPlayerCommand() {
-		nonLoggedCommandList.put(LOGOUT, new CommandLogout());
-		nonLoggedCommandList.put(LOGIN_REALM, new CommandLoginRealmPlayer());
-		nonLoggedCommandList.put(SELECT_SCREEN_LOAD_CHARACTERS, new CommandSelectScreenLoadCharacters());
-		nonLoggedCommandList.put(CREATE_CHARACTER, new CommandCreateCharacter());
-		nonLoggedCommandList.put(DELETE_CHARACTER, new CommandDeleteCharacter());
-		nonLoggedCommandList.put(CHARACTER_LOGIN, new CommandLoadCharacter());
-		nonLoggedCommandList.put(LOGIN, new CommandLogin());
-		nonLoggedCommandList.put(PING, new CommandPing());
-		nonLoggedCommandList.put(PING_CONFIRMED, new CommandPingConfirmed());
-		nonLoggedCommandList.put(LOGIN_QUEUE, new CommandLoginQueue());
+		nonLoggedCommandList.put(LOGOUT, new CommandLogout("LOGOUT", true));
+		nonLoggedCommandList.put(LOGIN_REALM, new CommandLoginRealmPlayer("LOGIN_REALM", true));
+		nonLoggedCommandList.put(SELECT_SCREEN_LOAD_CHARACTERS, new CommandSelectScreenLoadCharacters("SELECT_SCREEN_LOAD_CHARACTERS", true));
+		nonLoggedCommandList.put(CREATE_CHARACTER, new CommandCreateCharacter("CREATE_CHARACTER", true));
+		nonLoggedCommandList.put(DELETE_CHARACTER, new CommandDeleteCharacter("DELETE_CHARACTER", true));
+		nonLoggedCommandList.put(CHARACTER_LOGIN, new CommandLoadCharacter("CHARACTER_LOGIN", true));
+		nonLoggedCommandList.put(LOGIN, new CommandLogin("LOGIN", true));
+		nonLoggedCommandList.put(PING, new CommandPing("PING", false));
+		nonLoggedCommandList.put(PING_CONFIRMED, new CommandPingConfirmed("PING_CONFIRMED", false));
+		nonLoggedCommandList.put(LOGIN_QUEUE, new CommandLoginQueue("LOGIN_QUEUE", true));
 		
-		loginQueueCommandList.put(LOGIN_QUEUE, new CommandLogout());
-		loginQueueCommandList.put(PING, new CommandPing());
-		loginQueueCommandList.put(PING_CONFIRMED, new CommandPingConfirmed());
+		loginQueueCommandList.put(LOGIN_QUEUE, new CommandLoginQueue("LOGIN_QUEUE", true));
+		loginQueueCommandList.put(PING, new CommandPing("PING", false));
+		loginQueueCommandList.put(PING_CONFIRMED, new CommandPingConfirmed("PING_CONFIRMED", false));
 		
-		loggedCommandList.put(PING_CONFIRMED, new CommandPingConfirmed());
-		loggedCommandList.put(CHAT_LIST_PLAYER, new CommandListPlayer());
-		loggedCommandList.put(CHAT_PLAYER_INFO, new CommandPlayerInfo());
-		loggedCommandList.put(REQUEST_ITEM, new CommandRequestItem());
-		loggedCommandList.put(WEAPON, new CommandWeapon());
-		loggedCommandList.put(POTION, new CommandPotion());
-		loggedCommandList.put(LOGOUT, new CommandLogout());
+		loggedCommandList.put(PING_CONFIRMED, new CommandPingConfirmed("PING_CONFIRMED", false));
+		loggedCommandList.put(CHAT_LIST_PLAYER, new CommandListPlayer("CHAT_LIST_PLAYER", true));
+		loggedCommandList.put(CHAT_PLAYER_INFO, new CommandPlayerInfo("CHAT_PLAYER_INFO", true));
+		loggedCommandList.put(REQUEST_ITEM, new CommandRequestItem("REQUEST_ITEM", true));
+		loggedCommandList.put(WEAPON, new CommandWeapon("WEAPON", true));
+		loggedCommandList.put(POTION, new CommandPotion("POTION", true));
+		loggedCommandList.put(LOGOUT, new CommandLogout("LOGOUT", true));
 		//loggedCommandList.put(CHAT_SET, new CommandSet());
-		loggedCommandList.put(CHAT_GET, new CommandGet());
-		loggedCommandList.put(STUFF, new CommandStuff());
-		loggedCommandList.put(PING, new CommandPing());
-		loggedCommandList.put(GEM, new CommandGem());
-		loggedCommandList.put(CONTAINER, new CommandContainer());
+		loggedCommandList.put(CHAT_GET, new CommandGet("CHAT_GET", true));
+		loggedCommandList.put(STUFF, new CommandStuff("STUFF", true));
+		loggedCommandList.put(PING, new CommandPing("PING", false));
+		loggedCommandList.put(GEM, new CommandGem("GEM", true));
+		loggedCommandList.put(CONTAINER, new CommandContainer("CONTAINER", true));
 		//loggedCommandList.put((int)SPELL_CAST, new CommandSpellCast());
-		loggedCommandList.put(UPDATE_STATS, new CommandUpdateStats());
-		loggedCommandList.put(CHARACTER_LOGOUT, new CommandLogoutCharacter());
-		loggedCommandList.put(TRADE, new CommandTrade());
-		loggedCommandList.put(FRIEND, new CommandFriend());
-		loggedCommandList.put(SEND_MESSAGE, new CommandSendMessage());
-		loggedCommandList.put(PARTY, new CommandParty());
-		loggedCommandList.put(GUILD, new CommandGuild());
-		loggedCommandList.put(IGNORE, new CommandIgnore());
-		loggedCommandList.put(WHO, new CommandWho());
-		loggedCommandList.put(DRAG_ITEM, new CommandDragItems());
-		loggedCommandList.put(DELETE_ITEM, new CommandDeleteItem());
-		loggedCommandList.put(SPELL_CAST, new CommandCast());
-		loggedCommandList.put(AURA, new CommandAura());
-		loggedCommandList.put(CHANNEL, new CommandChannel());
-		loggedCommandList.put(AUCTION, new CommandAuction());
+		loggedCommandList.put(UPDATE_STATS, new CommandUpdateStats("UPDATE_STATS", true));
+		loggedCommandList.put(CHARACTER_LOGOUT, new CommandLogoutCharacter("CHARACTER_LOGOUT", true));
+		loggedCommandList.put(TRADE, new CommandTrade("TRADE", true));
+		loggedCommandList.put(FRIEND, new CommandFriend("FRIEND", true));
+		loggedCommandList.put(SEND_MESSAGE, new CommandSendMessage("SEND_MESSAGE", true));
+		loggedCommandList.put(PARTY, new CommandParty("PARY", true));
+		loggedCommandList.put(GUILD, new CommandGuild("GUILD", true));
+		loggedCommandList.put(IGNORE, new CommandIgnore("IGNORE", true));
+		loggedCommandList.put(WHO, new CommandWho("WHO", true));
+		loggedCommandList.put(DRAG_ITEM, new CommandDragItems("DRAG_ITEM", true));
+		loggedCommandList.put(DELETE_ITEM, new CommandDeleteItem("DELETE_ITEM", true));
+		loggedCommandList.put(SPELL_CAST, new CommandCast("SPELL_CAST", true));
+		loggedCommandList.put(AURA, new CommandAura("AURA", true));
+		loggedCommandList.put(CHANNEL, new CommandChannel("CHANNEL", true));
+		loggedCommandList.put(AUCTION, new CommandAuction("AUCTION", true));
 	}
 	
 	public static void initAuthCommand() {
-		authCommand.put(LOGIN_REALM, new CommandLoginRealmAuth());
+		authCommand.put(LOGIN_REALM, new CommandLoginRealmAuth("LOGIN_REALM_AUTH", true));
 	}
 	public static final boolean connectAuthServer() {
 		try {

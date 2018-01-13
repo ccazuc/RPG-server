@@ -8,6 +8,11 @@ import net.game.unit.UnitType;
 
 public class CommandSendTarget extends Command {
 
+	public CommandSendTarget(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Unit unit = new Unit(UnitType.NPC, 5, 10000, 10000, 5000, 5000, 5, "TestTarget", 1000, 20, 50, 500, 1000);

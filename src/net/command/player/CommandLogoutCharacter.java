@@ -12,14 +12,19 @@ import net.thread.sql.SQLRequestPriority;
 
 public class CommandLogoutCharacter extends Command {
 	
-	private static SQLRequest setOffline = new SQLRequest("UPDATE `character` SET online = 0 WHERE character_id = ?", "Set offline", SQLRequestPriority.LOW) {
+	private static SQLRequest setOffline = new SQLRequest("UPDATE `character` SET online = 0 WHERE character_id = ?", "Set offline", SQLRequestPriority.LOW) { //TODO: move this out of Command
 		
 		@Override
 		public void gatherData() throws SQLException {
 			this.statement.putInt((int)this.datasList.get(0).getNextObject());
 		}
 	};
-
+	
+	public CommandLogoutCharacter(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		if(!player.isOnline()) {

@@ -14,6 +14,11 @@ import net.game.unit.TargetType;
 
 public class CommandCast extends Command {
 
+	public CommandCast(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

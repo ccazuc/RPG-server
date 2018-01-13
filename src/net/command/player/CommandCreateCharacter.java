@@ -16,7 +16,7 @@ import net.utils.StringUtils;
 
 public class CommandCreateCharacter extends Command {
 	
-	private static JDOStatement create_character;
+	private static JDOStatement create_character; //TODO: move all these statement out of Command
 	private static JDOStatement check_character;
 	private static JDOStatement character_id;
 	private static SQLRequest insert_bag = new SQLRequest("INSERT INTO `bag` (character_id) VALUES (?)", "Create character insert_bag", SQLRequestPriority.HIGH) {
@@ -43,6 +43,11 @@ public class CommandCreateCharacter extends Command {
 			this.statement.putInt((int)this.datasList.get(0).getNextObject());
 		}
 	};
+	
+	public CommandCreateCharacter(String name, boolean debug)
+	{
+		super(name, debug);
+	}	
 	
 	@Override
 	public void read(Player player) {

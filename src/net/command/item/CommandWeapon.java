@@ -8,6 +8,11 @@ import net.game.unit.Player;
 
 public class CommandWeapon extends Command {
 
+	public CommandWeapon(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

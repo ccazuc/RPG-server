@@ -8,6 +8,11 @@ import net.game.unit.Player;
 
 public class CommandLoginQueue extends Command {
 
+	public CommandLoginQueue(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player)
 	{

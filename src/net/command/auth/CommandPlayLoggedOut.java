@@ -7,6 +7,11 @@ import net.game.unit.Player;
 
 public class CommandPlayLoggedOut extends Command {
 
+	public CommandPlayLoggedOut(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	public static void write(Player player) {
 		ConnectionManager.getAuthConnection().startPacket();
 		ConnectionManager.getAuthConnection().writeShort(PacketID.PLAYER_LOGGED_OUT);

@@ -6,6 +6,10 @@ import net.game.unit.Player;
 
 public class CommandSendPlayer extends Command {
 
+	public CommandSendPlayer(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	public static void write(Player player) {
 		player.getConnection().startPacket();

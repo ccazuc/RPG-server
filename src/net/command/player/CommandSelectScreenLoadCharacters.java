@@ -13,8 +13,13 @@ import net.game.unit.Player;
 
 public class CommandSelectScreenLoadCharacters extends Command {
 	
-	private static JDOStatement write_statement;
+	private static JDOStatement write_statement; //TODO: move this out of Command
 
+	public CommandSelectScreenLoadCharacters(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		if(!player.isOnline()) {

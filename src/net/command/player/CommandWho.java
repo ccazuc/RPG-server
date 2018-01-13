@@ -9,6 +9,11 @@ import net.thread.chatcommand.Who;
 
 public class CommandWho extends Command {
 	
+	public CommandWho(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		String word = player.getConnection().readString();

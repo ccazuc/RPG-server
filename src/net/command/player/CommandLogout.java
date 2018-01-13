@@ -6,6 +6,11 @@ import net.game.unit.Player;
 
 public class CommandLogout extends Command {
 
+	public CommandLogout(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public final void read(Player player) {
 		player.close(false);

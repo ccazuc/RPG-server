@@ -11,7 +11,12 @@ import net.game.unit.Player;
 
 public class CommandGet extends Command {
 
-	private static JDOStatement statement;
+	private static JDOStatement statement; //TODO: Dafuq ?
+
+	public CommandGet(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	@Override
 	public void read(Player player) {

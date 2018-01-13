@@ -22,6 +22,11 @@ public class CommandSendMessage extends Command {
 
 	private final static int MAXIMUM_LENGTH = 255;
 	
+	public CommandSendMessage(String name, boolean debug)
+	{
+		super(name, debug);
+	}	
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

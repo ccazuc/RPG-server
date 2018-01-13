@@ -13,6 +13,11 @@ import net.game.unit.Player;
 
 public class CommandQuest extends Command {
 
+	public CommandQuest(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

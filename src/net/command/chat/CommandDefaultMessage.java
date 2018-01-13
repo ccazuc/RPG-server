@@ -6,6 +6,11 @@ import net.game.unit.Player;
 import net.utils.Color;
 
 public class CommandDefaultMessage extends Command {
+
+	public CommandDefaultMessage(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	public static void write(Player player, DefaultMessage message) {
 		player.getConnection().startPacket();

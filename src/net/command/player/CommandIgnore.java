@@ -1,6 +1,5 @@
 package net.command.player;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 import net.Server;
@@ -17,6 +16,11 @@ import net.utils.StringUtils;
 
 public class CommandIgnore extends Command {
 
+	public CommandIgnore(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

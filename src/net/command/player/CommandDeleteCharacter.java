@@ -8,6 +8,11 @@ import net.game.manager.CharacterMgr;
 import net.game.unit.Player;
 
 public class CommandDeleteCharacter extends Command {
+
+	public CommandDeleteCharacter(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	@Override
 	public void read(Player player) {

@@ -13,6 +13,11 @@ import net.game.unit.Player;
 import net.utils.StringUtils;
 
 public class CommandFriend extends Command {
+
+	public CommandFriend(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	@Override
 	public void read(Player player) {

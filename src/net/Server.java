@@ -43,7 +43,6 @@ import net.thread.chatcommand.Who;
 import net.thread.log.LogRunnable;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLTask;
-import net.utils.Hash;
 
 public class Server {
 	
@@ -218,6 +217,10 @@ public class Server {
 		}
 	}
 	
+	public static ArrayList<Integer> getLoggedPlayerKickList() {
+		return (loggedPlayerKickList);
+	}
+	
 	public static void addLoggedPlayer(Player player) {
 		synchronized(loggedPlayerList) {
 			loggedPlayerList.put(player.getAccountId(), player);
@@ -347,6 +350,10 @@ public class Server {
 	
 	public static Map<Integer, Player> getInGamePlayerList() {
 		return inGamePlayerList;
+	}
+	
+	public static ArrayList<Integer> getInGamePlayerKickList() {
+		return (inGamePlayerKickList);
 	}
 	
 	public static long getLoopTickTimer() {

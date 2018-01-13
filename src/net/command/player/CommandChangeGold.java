@@ -7,6 +7,11 @@ import net.game.unit.Player;
 
 public class CommandChangeGold extends Command {
 
+	public CommandChangeGold(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player)
 	{

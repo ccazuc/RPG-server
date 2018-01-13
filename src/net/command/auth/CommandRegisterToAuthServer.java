@@ -7,6 +7,11 @@ import net.connection.Connection;
 import net.connection.PacketID;
 
 public class CommandRegisterToAuthServer extends Command {
+
+	public CommandRegisterToAuthServer(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	public static void write(Connection connection) {
 		connection.startPacket();

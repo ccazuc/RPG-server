@@ -19,6 +19,11 @@ import net.utils.StringUtils;
 
 public class CommandTrade extends Command {
 
+	public CommandTrade(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

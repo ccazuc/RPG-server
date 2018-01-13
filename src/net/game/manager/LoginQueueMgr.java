@@ -67,7 +67,7 @@ public class LoginQueueMgr {
 		}
 		if (playerList.size() == 0)
 			return;
-		if (Server.getNumberInGameCharacter() + Server.getNumberLoggedAccount() < ConfigMgr.GetServerMaxCapacity())
+		if (!isServerFull())
 		{
 			loginAccepted(playerList.get(0));
 			updatePosition();
@@ -100,5 +100,10 @@ public class LoginQueueMgr {
 	public static ArrayList<Player> getLoginQueueList()
 	{
 		return (playerList);
+	}
+	
+	public static boolean isServerFull()
+	{
+		return (Server.getInGamePlayerList().size() - Server.getInGamePlayerKickList().size() + Server.getLoggedPlayerList().size() - Server.getLoggedPlayerKickList().size() >= ConfigMgr.GetServerMaxCapacity());
 	}
 }

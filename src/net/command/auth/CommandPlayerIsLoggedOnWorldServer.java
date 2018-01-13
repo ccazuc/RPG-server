@@ -6,6 +6,11 @@ import net.connection.PacketID;
 import net.game.unit.Player;
 
 public class CommandPlayerIsLoggedOnWorldServer extends Command {
+
+	public CommandPlayerIsLoggedOnWorldServer(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	public static void write(Player player, boolean we) {
 		ConnectionManager.getAuthConnection().startPacket();

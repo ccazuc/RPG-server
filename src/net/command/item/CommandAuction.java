@@ -24,6 +24,11 @@ import net.thread.auctionhouse.AuctionHouseRunnable;
 
 public class CommandAuction extends Command {
 
+	public CommandAuction(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

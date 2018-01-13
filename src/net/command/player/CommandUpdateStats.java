@@ -6,6 +6,11 @@ import net.game.unit.Player;
 
 public class CommandUpdateStats extends Command {
 	
+	public CommandUpdateStats(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	public static void updateStamina(Player player, int unitID, int value) {
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.UPDATE_STATS);

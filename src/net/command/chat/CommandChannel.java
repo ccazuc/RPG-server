@@ -11,6 +11,11 @@ import net.game.unit.Player;
 
 public class CommandChannel extends Command {
 
+	public CommandChannel(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

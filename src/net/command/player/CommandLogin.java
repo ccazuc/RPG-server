@@ -3,6 +3,11 @@ package net.command.player;
 import net.command.Command;
 
 public class CommandLogin extends Command { //UNUSED
+
+	public CommandLogin(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	/*static JDOStatement read_statement;
 	private static JDOStatement write_statement;

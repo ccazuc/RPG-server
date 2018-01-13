@@ -15,6 +15,11 @@ import net.utils.StringUtils;
 
 public class CommandParty extends Command {
 
+	public CommandParty(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

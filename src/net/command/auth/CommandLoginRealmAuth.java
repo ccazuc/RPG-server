@@ -7,6 +7,11 @@ import net.connection.Key;
 import net.connection.PacketID;
 
 public class CommandLoginRealmAuth extends Command {
+
+	public CommandLoginRealmAuth(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	@Override
 	public void read(Connection connection) {

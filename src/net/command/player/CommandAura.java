@@ -13,6 +13,11 @@ import net.game.unit.Unit;
 
 public class CommandAura extends Command {
 
+	public CommandAura(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

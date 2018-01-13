@@ -23,6 +23,11 @@ import net.game.unit.Player;
 import net.utils.StringUtils;
 
 public class CommandGuild extends Command {
+
+	public CommandGuild(String name, boolean debug)
+	{
+		super(name, debug);
+	}
 	
 	@Override
 	public void read(Player player) {

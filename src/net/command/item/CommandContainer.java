@@ -8,6 +8,11 @@ import net.game.unit.Player;
 
 public class CommandContainer extends Command {
 
+	public CommandContainer(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();

@@ -1,10 +1,16 @@
 package net.command.player;
 
+import net.command.Command;
 import net.connection.PacketID;
 import net.game.DefaultRedAlert;
 import net.game.unit.Player;
 
-public class CommandSendRedAlert {
+public class CommandSendRedAlert extends Command {
+
+	public CommandSendRedAlert(String name, boolean debug)
+	{
+		super(name, debug);
+	}	
 
 	public static void write(Player player, DefaultRedAlert alert) {
 		player.getConnection().startPacket();

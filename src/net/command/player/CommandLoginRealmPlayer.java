@@ -3,7 +3,6 @@ package net.command.player;
 import net.Server;
 import net.command.Command;
 import net.command.auth.CommandPlayerIsLoggedOnWorldServer;
-import net.config.ConfigMgr;
 import net.connection.Connection;
 import net.connection.PacketID;
 import net.game.AccountRank;
@@ -13,6 +12,11 @@ import net.game.unit.Player;
 
 public class CommandLoginRealmPlayer extends Command {
 
+	public CommandLoginRealmPlayer(String name, boolean debug)
+	{
+		super(name, debug);
+	}
+	
 	@Override
 	public void read(Player player) {
 		Connection connection = player.getConnection();
@@ -34,7 +38,7 @@ public class CommandLoginRealmPlayer extends Command {
 			player.setAccountId(account_id);
 			player.setAccountName(Server.getKey(key).getAccountName());
 			//System.out.println("Online player : " + (Server.getInGamePlayerList().size() + Server.getLoggedPlayerList().size()) + ", InGame: " + Server.getInGamePlayerList().size() + ", Logged: " + Server.getLoggedPlayerList().size());
-			if (Server.getInGamePlayerList().size() + Server.getLoggedPlayerList().size() >= ConfigMgr.GetServerMaxCapacity())
+			if (LoginQueueMgr.isServerFull())
 			{
 				Server.removeNonLoggedPlayer(player);
 				LoginQueueMgr.addPlayerInQueue(player);
