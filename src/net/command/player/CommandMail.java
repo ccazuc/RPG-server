@@ -1,6 +1,6 @@
 package net.command.player;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import net.command.Command;
 import net.connection.Connection;
@@ -25,7 +25,7 @@ public class CommandMail extends Command {
 		short packetId = connection.readShort();
 		if (packetId == PacketID.MAIL_DELETE) {
 			long GUID = connection.readLong();
-			MailMgr.deleteMail(GUID);
+			MailMgr.deleteMail(player.getUnitID(), GUID);
 		}
 		else if (packetId == PacketID.MAIL_SEND) {
 			String destName = connection.readString();
@@ -47,7 +47,7 @@ public class CommandMail extends Command {
 		}
 		else if (packetId == PacketID.MAIL_OPENED) {
 			long GUID = connection.readLong();
-			if (MailMgr.openMail(GUID) == -1)
+			if (MailMgr.openMail(player.getUnitID(), GUID) == -1)
 				Log.writePlayerLog(player, "Tried to open a non-existing mail");
 			else
 				mailOpened(player, GUID);
@@ -63,7 +63,7 @@ public class CommandMail extends Command {
 		if (sendHeader)
 		{
 			connection.writeShort(PacketID.MAIL);
-			connection.writeShort(PacketID.MAIL_SEND);
+			connection.writeShort(PacketID.MAIL_RECEIVED);
 		}
 		connection.writeLong(mail.getGUID());
 		connection.writeLong(mail.getDeleteDate());
@@ -89,11 +89,20 @@ public class CommandMail extends Command {
 	}
 	
 	public static void initMail(Player player) {
-		HashMap<Long, Mail> mailMap = MailMgr.getMailMap();
-		for (Mail mail : mailMap.values()) {
-			if (mail.getDestID() == player.getUnitID()) {
-				sendMail(player, mail, false);
-			}
-		}
+		ArrayList<Mail> mailList = MailMgr.getMailList(player.getUnitID());
+		int i = -1;
+		while (++i < mailList.size())
+			sendMail(player, mailList.get(i), false);
+	}
+	
+	public static void deleteMail(Player player, Mail mail)
+	{
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.MAIL);
+		connection.writeShort(PacketID.MAIL_DELETE);
+		connection.writeLong(mail.getGUID());
+		connection.endPacket();
+		connection.send();
 	}
 }

@@ -15,8 +15,10 @@ public class Mail {
 	private final boolean isCR;
 	private final long GUID;
 	private boolean read;
+	private boolean crPaid;
 	
-	public Mail(long GUID, int autorID, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read) {
+	public Mail(long GUID, int autorID, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read, boolean crPaid)
+	{
 		this.autorID = autorID;
 		this.autorName = CharacterMgr.loadCharacterNameFromID(this.autorID);
 		this.destID = destID;
@@ -28,9 +30,11 @@ public class Mail {
 		this.GUID = GUID;
 		this.template = template;
 		this.read = read;
+		this.crPaid = crPaid;
 	}
 	
-	public Mail(long GUID, int autorID, String destName, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read) {
+	public Mail(long GUID, int autorID, String destName, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read)
+	{
 		this.autorID = autorID;
 		this.autorName = destName;
 		this.destID = destID;
@@ -44,51 +48,73 @@ public class Mail {
 		this.read = read;
 	}
 	
-	public void read() {
+	public void read()
+	{
 		this.read = true;
 	}
 	
-	public boolean getRead() {
-		return this.read;
+	public boolean getRead()
+	{
+		return (this.read);
 	}
 	
-	public long getGUID() {
-		return this.GUID;
+	public long getGUID()
+	{
+		return (this.GUID);
 	}
 
-	public int getAutorID() {
-		return this.autorID;
+	public int getAutorID()
+	{
+		return (this.autorID);
 	}
 	
-	public byte getTemplate() {
-		return this.template;
+	public byte getTemplate()
+	{
+		return (this.template);
 	}
 	
-	public String getAutorName() {
-		return this.autorName;
+	public String getAutorName()
+	{
+		return (this.autorName);
 	}
 	
-	public int getDestID() {
-		return this.destID;
+	public int getDestID()
+	{
+		return (this.destID);
 	}
 	
-	public String getTitle() {
-		return this.title;
+	public String getTitle()
+	{
+		return (this.title);
 	}
 	
-	public String getContent() {
-		return this.content;
+	public String getContent()
+	{
+		return (this.content);
 	}
 	
-	public long getDeleteDate() {
-		return this.deleteDate;
+	public long getDeleteDate()
+	{
+		return (this.deleteDate);
 	}
 	
-	public int getGold() {
-		return this.gold;
+	public int getGold()
+	{
+		return (this.gold);
 	}
 	
-	public boolean getIsCR() {
-		return this.isCR;
+	public boolean getIsCR()
+	{
+		return (this.isCR);
+	}
+	
+	public boolean getCRPaid()
+	{
+		return (this.crPaid);
+	}
+	
+	public void payCR()
+	{
+		this.crPaid = true;
 	}
 }

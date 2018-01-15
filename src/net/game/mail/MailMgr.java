@@ -11,14 +11,14 @@ import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;
+import net.utils.Timer;
 
 public class MailMgr {
 
 	private final static HashMap<Integer, ArrayList<Mail>> mailMap = new HashMap<Integer, ArrayList<Mail>>();
 	private static JDOStatement loadAllMail;
-	private final static long MAIL_DURATION = 1500000;
-	private final static long CR_DURATION = 150000;
-	public final static int MAIL_TIMER_INTER = 30000;
+	private final static long MAIL_DURATION = 31 * 24 * Timer.MS_IN_HOUR;
+	private final static long CR_DURATION = 2 * 24 * Timer.MS_IN_HOUR;
 	public final static int MAIL_COST = 30;
 	private static long currentGUID;
 	private final static SQLRequest deleteMail = new SQLRequest("DELETE FROM `mail` WHERE `GUID` = ?", "Delete mail", SQLRequestPriority.LOW) {
@@ -28,7 +28,7 @@ public class MailMgr {
 			this.statement.putLong((long)getNextObject());
 		}
 	};
-	private final static SQLRequest addMail = new SQLRequest("INSERT INTO `mail` (GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, read) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", "Add mail", SQLRequestPriority.LOW) {
+	private final static SQLRequest addMail = new SQLRequest("INSERT INTO `mail` (`GUID`, `author_id` , `dest_id`, `title`, `content`, `delete_date`, `gold`, `is_cr`, `read_template`, `read`, `cr_paid`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", "Add mail", SQLRequestPriority.LOW) {
 	
 		@Override
 		public void gatherData() throws SQLException {
@@ -43,9 +43,10 @@ public class MailMgr {
 			this.statement.putBoolean(mail.getIsCR());
 			this.statement.putByte(mail.getTemplate());
 			this.statement.putBoolean(mail.getRead());
+			this.statement.putBoolean(mail.getCRPaid());
 		}
 	};
-	private final static SQLRequest readMail = new SQLRequest("UPDATE `mail` SET read = 1 WHERE GUID = ?", "Read mail", SQLRequestPriority.LOW) {
+	private final static SQLRequest readMail = new SQLRequest("UPDATE `mail` SET `read` = 1 WHERE `GUID` = ?", "Read mail", SQLRequestPriority.LOW) {
 	
 		@Override
 		public void gatherData() throws SQLException {
@@ -56,7 +57,7 @@ public class MailMgr {
 	public static void loadAllMail() {
 		try {
 			if (loadAllMail == null)
-				loadAllMail = Server.getJDO().prepare("SELECT `id`, `author_id`, `dest_id`, `title`, `content`, `delete_date`, `gold`, `is_cr`, `read_template` FROM mail");
+				loadAllMail = Server.getJDO().prepare("SELECT `id`, `author_id`, `dest_id`, `title`, `content`, `delete_date`, `gold`, `is_cr`, `read_template`, `cr_paid` FROM mail");
 			loadAllMail.clear();
 			loadAllMail.execute();
 			while (loadAllMail.fetch()) {
@@ -70,9 +71,19 @@ public class MailMgr {
 				boolean is_cr = loadAllMail.getBoolean();
 				byte template = loadAllMail.getByte();
 				boolean read = loadAllMail.getBoolean();
+				boolean crPaid = loadAllMail.getBoolean();
+				Mail mail = new Mail(GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, read, crPaid);
+				if (delete_date <= Server.getLoopTickTimer())
+				{
+					deleteMail.addDatas(new SQLDatas(GUID));
+					Server.executeSQLRequest(deleteMail);
+					if (is_cr)
+						sendBackCR(mail);
+					continue;
+				}
 				if (!mailMap.containsKey(dest_id))
 					mailMap.put(dest_id, new ArrayList<Mail>());
-				mailMap.get(dest_id).add(new Mail(GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, read));
+				mailMap.get(dest_id).add(mail);
 				if (GUID > currentGUID)
 					currentGUID = GUID;
 			}
@@ -92,6 +103,8 @@ public class MailMgr {
 		while (++i < list.size())
 			if (list.get(i).getGUID() == GUID)
 			{
+				if (list.get(i).getIsCR())
+					sendBackCR(list.get(i));
 				list.remove(i);
 				found = true;
 				break;
@@ -100,6 +113,16 @@ public class MailMgr {
 			return;
 		deleteMail.addDatas(new SQLDatas(GUID));
 		Server.executeSQLRequest(deleteMail);
+	}
+	
+	public static void sendBackCR(Mail mail)
+	{
+		Player player = Server.getInGameCharacter(mail.getAutorID());
+		//TODO: create new mail with items
+		if (player != null)
+		{
+			
+		}
 	}
 	
 	public static int openMail(int targetId, long GUID)
@@ -147,5 +170,32 @@ public class MailMgr {
 	public static HashMap<Integer, ArrayList<Mail>> getMailMap()
 	{
 		return (mailMap);
+	}
+	
+	public static ArrayList<Mail> getMailList(int targetId)
+	{
+		return (mailMap.get(targetId));
+	}
+	
+	public static void checkExpiredMail()
+	{
+		Player player = null;
+		for (ArrayList<Mail> list : mailMap.values())
+		{
+			int i = -1;
+			while (++i < list.size())
+			{
+				if (list.get(i).getDeleteDate() <= Server.getLoopTickTimer())
+				{
+					deleteMail.addDatas(new SQLDatas(list.get(i).getGUID()));
+					Server.executeSQLRequest(deleteMail);
+					if ((player = Server.getInGameCharacter(list.get(i).getDestID())) != null)
+						CommandMail.deleteMail(player, list.get(i));
+					if (list.get(i).getIsCR())
+						sendBackCR(list.get(i));
+					list.remove(i);
+				}
+			}
+		}
 	}
 }
