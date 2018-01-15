@@ -204,4 +204,5 @@ public class PacketID {
 	public final static short LOGIN_QUEUE_JOINED = 200;
 	public final static short LOGIN_QUEUE_UPDATE_POSITION = 201;
 	public final static short LOGIN_QUEUE_ACCEPTED = 202;
+	public final static short MAIL_RECEIVED = 203;
 }

@@ -19,18 +19,16 @@ public class IgnoreMgr {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest removeIgnoreFromDB = new SQLRequest("DELETE FROM social_ignore WHERE character_id = ? AND ignore_id = ?", "Remove ignore", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	

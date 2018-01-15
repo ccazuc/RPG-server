@@ -194,10 +194,27 @@ public class ConnectionManager {
 		return this.player;
 	}
 	
+	private void handlePacket(Command command, short packetId, int packetLength)
+	{
+		long timer = 0;
+		this.lastPacketReaded = packetId;
+		if(DebugMgr.getPacketReceived() && command.debug())
+			System.out.println("Received packet, ID: "+packetId+", name: " + command.getName() + ", length: "+packetLength);
+		if (DebugMgr.getPacketExecuteTimer() && command.debug())
+			timer = System.nanoTime();
+		command.read(this.player);
+		if (DebugMgr.getPacketExecuteTimer() && command.debug())
+		{
+			long result = System.nanoTime();
+			System.out.println("Packet: " + packetId + " took: " + (result - timer) + "ns, " + (result - timer) / 1000 + "탎 to execute.");
+		}
+	}
+	
 	private void readPacket() {
 		if(this.connection == null) {
 			return;
 		}
+		Command command = null;
 		long timer = 0;
 		while(this.connection.hasRemaining() && this.connection.rBufferRemaining() > 4) {
 			int packetLength = this.connection.readInt();
@@ -206,41 +223,55 @@ public class ConnectionManager {
 				return;
 			}
 			short packetId = this.connection.readShort();
-			if(DebugMgr.getPacketReceived())
-				System.out.println("Received packet, ID: "+packetId+", length: "+packetLength);
-			if(this.player.isOnline() && loggedCommandList.containsKey(packetId)) {
+			/*if(this.player.isOnline() && (command = loggedCommandList.get(packetId)) != null) {
 				this.lastPacketReaded = packetId;
-				if (DebugMgr.getPacketExecuteTimer())
+				if(DebugMgr.getPacketReceived() && command.debug())
+					System.out.println("Received packet, ID: "+packetId+", name: " + command.getName() + ", length: "+packetLength);
+				if (DebugMgr.getPacketExecuteTimer() && command.debug())
 					timer = System.nanoTime();
-				loggedCommandList.get(packetId).read(this.player);
-				if (DebugMgr.getPacketExecuteTimer())
+				command.read(this.player);
+				if (DebugMgr.getPacketExecuteTimer() && command.debug())
 				{
 					long result = System.nanoTime();
 					System.out.println("Packet: " + packetId + " took: " + (result - timer) + "ns, " + (result - timer) / 1000 + "탎 to execute.");
 				}
 			}
-			else if((!this.player.isOnline() || this.player.isInLoginQueue()) && nonLoggedCommandList.containsKey(packetId)) {
+			else if((!this.player.isOnline() || this.player.isInLoginQueue()) && (command = nonLoggedCommandList.get(packetId)) != null) {
 				this.lastPacketReaded = packetId;
-				if (DebugMgr.getPacketExecuteTimer())
+				if(DebugMgr.getPacketReceived() && command.debug())
+					System.out.println("Received packet, ID: "+packetId+", name: " + command.getName() + ", length: "+packetLength);
+				if (DebugMgr.getPacketExecuteTimer() && command.debug())
 					timer = System.nanoTime();
-				nonLoggedCommandList.get(packetId).read(this.player);
-				if (DebugMgr.getPacketExecuteTimer())
+				command.read(this.player);
+				if (DebugMgr.getPacketExecuteTimer() && command.debug())
 				{
 					long result = System.nanoTime();
 					System.out.println("Packet: " + packetId + " took: " + (result - timer) + "ns, " + (result - timer) / 1000 + "탎 to execute.");
 				}
 			}
-			else if (this.player.isInLoginQueue() && loginQueueCommandList.containsKey(packetId))
+			else if (this.player.isInLoginQueue() && (command = loginQueueCommandList.get(packetId)) != null)
 			{
 				this.lastPacketReaded = packetId;
-				if (DebugMgr.getPacketExecuteTimer())
+				if(DebugMgr.getPacketReceived() && command.debug())
+					System.out.println("Received packet, ID: "+packetId+", name: " + command.getName() + ", length: "+packetLength);
+				if (DebugMgr.getPacketExecuteTimer() && command.debug())
 					timer = System.nanoTime();
-				loginQueueCommandList.get(packetId).read(this.player);
-				if (DebugMgr.getPacketExecuteTimer())
+				command.read(this.player);
+				if (DebugMgr.getPacketExecuteTimer() && command.debug())
 				{
 					long result = System.nanoTime();
 					System.out.println("Packet: " + packetId + " took: " + (result - timer) + "ns, " + (result - timer) / 1000 + "탎 to execute.");
 				}
+			}*/
+			if(this.player.isOnline() && (command = loggedCommandList.get(packetId)) != null) {
+				handlePacket(command, packetId, packetLength);				
+			}
+			else if((!this.player.isOnline() || this.player.isInLoginQueue()) && (command = nonLoggedCommandList.get(packetId)) != null) {
+				handlePacket(command, packetId, packetLength);
+			}
+			else if (this.player.isInLoginQueue() && (command = loginQueueCommandList.get(packetId)) != null)
+			{
+				handlePacket(command, packetId, packetLength);
 			}
 			else {
 				System.out.println("Unknown packet: "+packetId+", last packet readed: "+this.lastPacketReaded+" for player "+this.player.getAccountId());

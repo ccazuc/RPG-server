@@ -58,53 +58,51 @@ public class CharacterMgr {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private static SQLRequest asyncRemoveCharacter = new SQLRequest("DELETE FROM `character` WHERE character_id = ?", "Remove character", SQLRequestPriority.HIGH) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putInt((int)this.datasList.get(0).getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private static SQLRequest asyncRemoveBag = new SQLRequest("DELETE FROM bag WHERE character_id = ?", "Remove bag", SQLRequestPriority.HIGH) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putInt((int)this.datasList.get(0).getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private static SQLRequest asyncRemoveContainer = new SQLRequest("DELETE FROM character_containers WHERE character_id = ?", "Remove container", SQLRequestPriority.HIGH) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putInt((int)this.datasList.get(0).getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private static SQLRequest asyncRemoveStuff = new SQLRequest("DELETE FROM character_stuff WHERE character_id = ?", "Remove stuff", SQLRequestPriority.HIGH) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putInt((int)this.datasList.get(0).getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private static SQLRequest asyncRemoveSpellbar = new SQLRequest("DELETE FROM spellbar WHERE character_id = ?", "Remove spellbar", SQLRequestPriority.HIGH) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putInt((int)this.datasList.get(0).getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest updateLastOnlineTimer = new SQLRequest("UPDATE `character` SET last_login_timer = ? WHERE character_id = ?", "Update last online timer", SQLRequestPriority.LOW, false) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putLong((Long)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putLong((Long)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLTask fullyLoadCharacter = new SQLTask("Fully load character", false) {

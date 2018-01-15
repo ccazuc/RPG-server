@@ -9,7 +9,7 @@ import net.Server;
 public class SQLRequest {
 	
 	protected JDOStatement statement;
-	protected final ArrayList<SQLDatas> datasList;
+	private final ArrayList<SQLDatas> datasList;
 	protected final String name;
 	protected final SQLRequestPriority priority;
 	protected final boolean debugActive;
@@ -76,6 +76,14 @@ public class SQLRequest {
 		synchronized (this.datasList)
 		{
 			this.datasList.add(datas);
+		}
+	}
+	
+	public Object getNextObject()
+	{
+		synchronized (this.datasList)
+		{
+			return (this.datasList.get(0).getNextObject());
 		}
 	}
 	

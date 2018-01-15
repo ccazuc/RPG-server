@@ -21,9 +21,9 @@ public class AuctionHouseDBMgr {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			AuctionEntry entry = (AuctionEntry)this.datasList.get(0).getNextObject();
+			AuctionEntry entry = (AuctionEntry)getNextObject();
 			this.statement.putInt(entry.getEntryID());
-			this.statement.putByte(((Faction)this.datasList.get(0).getNextObject()).getValue());
+			this.statement.putByte(((Faction)getNextObject()).getValue());
 			this.statement.putInt(entry.getItemID());
 			this.statement.putInt(entry.getSellerID());
 			this.statement.putInt(entry.getBuyoutPrice());

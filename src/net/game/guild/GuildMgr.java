@@ -41,98 +41,88 @@ public class GuildMgr {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putString((String)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putString((String)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest updateMotd = new SQLRequest("UPDATE guild SET motd = ? WHERE id = ?", "Update guild Motd", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putString((String)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putString((String)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest removeMember = new SQLRequest("REMOVE FROM guild_member WHERE member_id = ? AND guild_id = ?", "Remove guild member", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest updatePermission = new SQLRequest("UPDATE guild_rank SET permission = ?, name = ? WHERE guild_id = ? AND rank_order = ?", "Update guild permission", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putString((String)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putString((String)getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest addMemberInDB = new SQLRequest("INSERT INTO guild_member (member_id, guild_id, rank) VALUES (?, ?, ?)", "Add guild member", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest updateMemberRank = new SQLRequest("UPDATE guild_member SET rank = ? WHERE guild_id = ? AND member_id = ?", "Update guild member rank", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest setLeaderInDB = new SQLRequest("UPDATE guild SET leader_id = ? WHERE id = ?", "Set guild leader", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest setMemberNoteInDB = new SQLRequest("UPDATE guild_member SET note = ? WHERE member_id = ?", "Set guild member note", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putString((String)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putString((String)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest setMemberOfficerNoteInDB = new SQLRequest("UPDATE guild_member SET officer_note = ? WHERE member_id = ?", "Set guild member officerNote", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putString((String)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putString((String)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest updateGuildJournal = new SQLRequest("INSERT INTO guild_event(guild_id, event_type, player1_id, player2_id, date, rank) VALUES(?, ?, ?, ?, ?, ?)", "Update guild journal", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putByte((byte)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putByte((byte)getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 			this.statement.putLong(Server.getLoopTickTimer());
-			this.statement.putByte((byte)datas.getNextObject());
+			this.statement.putByte((byte)getNextObject());
 		}
 	};
 	private final static SQLTask fullyDeleteGuild = new SQLTask("Delete guild") {

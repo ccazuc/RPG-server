@@ -17,18 +17,16 @@ public class FriendMgr {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	private final static SQLRequest removeFriendFromDB = new SQLRequest("DELETE FROM social_friend WHERE character_id = ? AND friend_id = ?", "Remove friend", SQLRequestPriority.LOW) {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			SQLDatas datas = this.datasList.get(0);
-			this.statement.putInt((int)datas.getNextObject());
-			this.statement.putInt((int)datas.getNextObject());
+			this.statement.putInt((int)getNextObject());
+			this.statement.putInt((int)getNextObject());
 		}
 	};
 	

@@ -1,6 +1,7 @@
 package net.game.mail;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import jdo.JDOStatement;
@@ -13,7 +14,7 @@ import net.thread.sql.SQLRequestPriority;
 
 public class MailMgr {
 
-	private final static HashMap<Long, Mail> mailMap = new HashMap<Long, Mail>();
+	private final static HashMap<Integer, ArrayList<Mail>> mailMap = new HashMap<Integer, ArrayList<Mail>>();
 	private static JDOStatement loadAllMail;
 	private final static long MAIL_DURATION = 1500000;
 	private final static long CR_DURATION = 150000;
@@ -24,14 +25,14 @@ public class MailMgr {
 		
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putLong((long)this.datasList.get(0).getNextObject());
+			this.statement.putLong((long)getNextObject());
 		}
 	};
 	private final static SQLRequest addMail = new SQLRequest("INSERT INTO `mail` (GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, read) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", "Add mail", SQLRequestPriority.LOW) {
 	
 		@Override
 		public void gatherData() throws SQLException {
-			Mail mail = (Mail)this.datasList.get(0).getNextObject();
+			Mail mail = (Mail)getNextObject();
 			this.statement.putLong(mail.getGUID());
 			this.statement.putInt(mail.getAutorID());
 			this.statement.putInt(mail.getDestID());
@@ -48,7 +49,7 @@ public class MailMgr {
 	
 		@Override
 		public void gatherData() throws SQLException {
-			this.statement.putLong((long)this.datasList.get(0).getNextObject());
+			this.statement.putLong((long)getNextObject());
 		}
 	};
 	
@@ -69,7 +70,9 @@ public class MailMgr {
 				boolean is_cr = loadAllMail.getBoolean();
 				byte template = loadAllMail.getByte();
 				boolean read = loadAllMail.getBoolean();
-				mailMap.put(GUID, new Mail(GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, read));
+				if (!mailMap.containsKey(dest_id))
+					mailMap.put(dest_id, new ArrayList<Mail>());
+				mailMap.get(dest_id).add(new Mail(GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, read));
 				if (GUID > currentGUID)
 					currentGUID = GUID;
 			}
@@ -79,17 +82,39 @@ public class MailMgr {
 		}
 	}
 	
-	public static void deleteMail(long GUID) {
-		if (!mailMap.containsKey(GUID)) {
+	public static void deleteMail(int targetId, long GUID)
+	{
+		ArrayList<Mail> list;
+		if ((list = mailMap.get(targetId)) == null)
 			return;
-		}
+		boolean found = false;
+		int i = -1;
+		while (++i < list.size())
+			if (list.get(i).getGUID() == GUID)
+			{
+				list.remove(i);
+				found = true;
+				break;
+			}
+		if (!found)
+			return;
 		deleteMail.addDatas(new SQLDatas(GUID));
 		Server.executeSQLRequest(deleteMail);
-		mailMap.remove(GUID);
 	}
 	
-	public static int openMail(long GUID) {
-		Mail mail = mailMap.get(GUID);
+	public static int openMail(int targetId, long GUID)
+	{
+		ArrayList<Mail> list;
+		if ((list = mailMap.get(targetId)) == null)
+			return (-1);
+		int i = -1;
+		Mail mail = null;
+		while (++i < list.size())
+			if (list.get(i).getGUID() == GUID)
+			{
+				mail = list.get(i);
+				break;
+			}
 		if (mail == null) {
 			return (-1);
 		}
@@ -99,23 +124,28 @@ public class MailMgr {
 		return (0);
 	}
 	
-	public static void sendMail(Player sender, int destID, String title, String content, int gold, boolean isCR, byte template) {
+	public static void sendMail(Player sender, int destID, String title, String content, int gold, boolean isCR, byte template)
+	{
 		long GUID = generateGUID();
 		long deleteDate = isCR ? Server.getLoopTickTimer() + CR_DURATION : Server.getLoopTickTimer() + MAIL_DURATION;
 		Mail mail = new Mail(GUID, sender.getUnitID(), sender.getName(), destID, title, content, deleteDate, gold, isCR, template, false);
-		mailMap.put(GUID, mail);
+		if (!mailMap.containsKey(destID))
+			mailMap.put(destID, new ArrayList<Mail>());
+		mailMap.get(destID).add(mail);
 		Player dest = Server.getInGameCharacter(destID);
 		if (dest != null)
-			CommandMail.sendMail(dest, mail);
+			CommandMail.sendMail(dest, mail, true);
 		addMail.addDatas(new SQLDatas(mail));
 		Server.executeSQLRequest(addMail);
 	}
 	
-	public static long generateGUID() {
-		return ++currentGUID;
+	public static long generateGUID()
+	{
+		return (++currentGUID);
 	}
 	
-	public static HashMap<Long, Mail> getMailMap() {
-		return mailMap;
+	public static HashMap<Integer, ArrayList<Mail>> getMailMap()
+	{
+		return (mailMap);
 	}
 }
