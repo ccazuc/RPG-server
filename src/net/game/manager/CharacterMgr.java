@@ -54,6 +54,7 @@ public class CharacterMgr {
 	private static JDOStatement loadSpellsUnlocked;
 	private static JDOStatement saveSpellsUnlocked;
 	private static JDOStatement loadCharacterBannedIDAndNameFromNamePatternHighAsync;
+	private static JDOStatement saveCharacterInfo;
 	private static SQLRequest asyncSetExperience = new SQLRequest("UPDATE `character` SET experience = ? WHERE character_id ?", "Set experience", SQLRequestPriority.HIGH) {
 		
 		@Override
@@ -148,6 +149,7 @@ public class CharacterMgr {
 			Player player = (Player)this.datasList.get(0).getNextObject();
 			saveAuras(player);
 			saveSpellsUnlocked(player);
+			saveCharacterInfo(player);
 			
 		}
 	};
@@ -185,10 +187,10 @@ public class CharacterMgr {
 	public static void loadCharacterInfo(Player player) {
 		try {
 			if(loadCharacterInfo == null) {
-				loadCharacterInfo = Server.getAsyncHighPriorityJDO().prepare("SELECT name, class, race, experience, gold FROM `character` WHERE character_id = ?");
-				loadRank = Server.getAsyncHighPriorityJDO().prepare("SELECT rank FROM account WHERE id = ?");
-				loadWeaponType = Server.getAsyncHighPriorityJDO().prepare("SELECT weapon_type FROM player WHERE id = ?");
-				setOnline = Server.getAsyncHighPriorityJDO().prepare("UPDATE `character` SET online = 1 WHERE character_id = ?");
+				loadCharacterInfo = Server.getAsyncHighPriorityJDO().prepare("SELECT `name`, `class`, `race`, `experience`, `gold`, `played_timer`, `played_level_timer` FROM `character` WHERE character_id = ?");
+				loadRank = Server.getAsyncHighPriorityJDO().prepare("SELECT `rank` FROM `account` WHERE `id` = ?");
+				loadWeaponType = Server.getAsyncHighPriorityJDO().prepare("SELECT `weapon_type` FROM `player` WHERE `id` = ?");
+				setOnline = Server.getAsyncHighPriorityJDO().prepare("UPDATE `character` SET `online` = 1 WHERE `character_id` = ?");
 			}
 			loadCharacterInfo.clear();
 			int id = player.getUnitID();
@@ -200,6 +202,8 @@ public class CharacterMgr {
 				player.setRace(convStringToRace(loadCharacterInfo.getString()));
 				player.setExperience(loadCharacterInfo.getInt(), false);
 				player.setGold(loadCharacterInfo.getInt(), false);
+				player.setPlayedTimer(loadCharacterInfo.getLong());
+				player.setPlayedLevelTimer(loadCharacterInfo.getLong());
 			}
 			loadRank.clear();
 			loadRank.putInt(player.getAccountId());
@@ -237,13 +241,14 @@ public class CharacterMgr {
 	static void loadAuras(Player player) {
 		try {
 			if(loadAuras == null) {
-				loadAuras = Server.getJDO().prepare("SELECT aura_id, caster_id, time_left, number_stack FROM character_aura WHERE character_id = ?");
+				loadAuras = Server.getJDO().prepare("SELECT `aura_id`, `caster_id`, `time_left`, `number_stack` FROM `character_aura` WHERE `character_id` = ?");
 			}
 			loadAuras.clear();
 			loadAuras.putInt(player.getUnitID());
 			loadAuras.execute();
 			boolean hasAura = false;
-			while(loadAuras.fetch()) {
+			while(loadAuras.fetch())
+			{
 				int auraID = loadAuras.getInt();
 				int casterID = loadAuras.getInt();
 				long time_left = loadAuras.getLong();
@@ -251,7 +256,8 @@ public class CharacterMgr {
 				player.setAura(new AppliedAura(AuraMgr.getAura(auraID), time_left, number_stack, casterID));
 				hasAura = true;
 			}
-			if(hasAura) {
+			if(hasAura)
+			{
 				player.calcAllStats();
 				CommandAura.initAura(player, player);
 				removeAuras(player);
@@ -269,22 +275,42 @@ public class CharacterMgr {
 	}
 	
 	public static void saveAuras(Player player) {
-		try {
-			if(saveAuras == null) {
+		try
+		{
+			if (saveAuras == null)
 				saveAuras = Server.getAsyncHighPriorityJDO().prepare("INSERT INTO character_aura (character_id, aura_id, caster_id, time_left, number_stack) VALUES(?, ?, ?, ?, ?)");
-			}
 			int i = player.getAuraList().size();
-			while(--i >= 0) {
+			while (--i >= 0)
+			{
 				saveAuras.clear();
 				saveAuras.putInt(player.getUnitID());
 				saveAuras.putInt(player.getAuraList().get(i).getAura().getId());
 				saveAuras.putInt(player.getAuraList().get(i).getCasterID());
-				saveAuras.putLong(player.getAuraList().get(i).getEndTimer()-Server.getLoopTickTimer());
+				saveAuras.putLong(player.getAuraList().get(i).getEndTimer() - Server.getLoopTickTimer());
 				saveAuras.putByte(player.getAuraList().get(i).getNumberStack());
 				saveAuras.execute();
 			}
 		}
-		catch(SQLException e) {
+		catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public  static void saveCharacterInfo(Player player)
+	{
+		try
+		{
+			if (saveCharacterInfo == null)
+				saveCharacterInfo = Server.getAsyncHighPriorityJDO().prepare("UPDATE `character` SET `played_timer` = ?, `played_level_timer` = ? WHERE `character_id` = ?");
+			saveCharacterInfo.clear();
+			saveCharacterInfo.putLong(player.getPlayedTimer());
+			saveCharacterInfo.putLong(player.getPlayedLevelTimer());
+			saveCharacterInfo.putInt(player.getUnitID());
+			saveCharacterInfo.execute();
+		}
+		catch (SQLException e)
+		{
 			e.printStackTrace();
 		}
 	}

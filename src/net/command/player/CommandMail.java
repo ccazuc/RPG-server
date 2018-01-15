@@ -67,7 +67,7 @@ public class CommandMail extends Command {
 		}
 		connection.writeLong(mail.getGUID());
 		connection.writeLong(mail.getDeleteDate());
-		connection.writeString(mail.getAutorName());
+		connection.writeString(mail.getAuthorName());
 		connection.writeString(mail.getTitle());
 		connection.writeString(mail.getContent());
 		connection.writeInt(mail.getGold());

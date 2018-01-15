@@ -4,8 +4,8 @@ import net.game.manager.CharacterMgr;
 
 public class Mail {
 
-	private final int autorID;
-	private final String autorName;
+	private final int authorID;
+	private final String authorName;
 	private final int destID;
 	private final String title;
 	private final String content;
@@ -17,10 +17,13 @@ public class Mail {
 	private boolean read;
 	private boolean crPaid;
 	
-	public Mail(long GUID, int autorID, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read, boolean crPaid)
+	public Mail(long GUID, int authorID, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read, boolean crPaid)
 	{
-		this.autorID = autorID;
-		this.autorName = CharacterMgr.loadCharacterNameFromID(this.autorID);
+		this.authorID = authorID;
+		if (authorID == -1)
+			this.authorName = "Unknown";
+		else
+			this.authorName = CharacterMgr.loadCharacterNameFromID(this.authorID);
 		this.destID = destID;
 		this.title = title;
 		this.content = content;
@@ -33,10 +36,10 @@ public class Mail {
 		this.crPaid = crPaid;
 	}
 	
-	public Mail(long GUID, int autorID, String destName, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read)
+	public Mail(long GUID, int authorID, String destName, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read)
 	{
-		this.autorID = autorID;
-		this.autorName = destName;
+		this.authorID = authorID;
+		this.authorName = destName;
 		this.destID = destID;
 		this.title = title;
 		this.content = content;
@@ -63,9 +66,9 @@ public class Mail {
 		return (this.GUID);
 	}
 
-	public int getAutorID()
+	public int getAuthorID()
 	{
-		return (this.autorID);
+		return (this.authorID);
 	}
 	
 	public byte getTemplate()
@@ -73,9 +76,9 @@ public class Mail {
 		return (this.template);
 	}
 	
-	public String getAutorName()
+	public String getAuthorName()
 	{
-		return (this.autorName);
+		return (this.authorName);
 	}
 	
 	public int getDestID()

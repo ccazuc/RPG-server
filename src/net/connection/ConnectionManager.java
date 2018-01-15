@@ -14,6 +14,7 @@ import net.command.auth.CommandRegisterToAuthServer;
 import net.command.chat.CommandChannel;
 import net.command.chat.CommandGet;
 import net.command.chat.CommandListPlayer;
+import net.command.chat.CommandPlayed;
 import net.command.chat.CommandPlayerInfo;
 import net.command.chat.CommandSendMessage;
 import net.command.item.CommandAuction;
@@ -36,6 +37,7 @@ import net.command.player.CommandLoginQueue;
 import net.command.player.CommandLoginRealmPlayer;
 import net.command.player.CommandLogout;
 import net.command.player.CommandLogoutCharacter;
+import net.command.player.CommandMail;
 import net.command.player.CommandParty;
 import net.command.player.CommandPing;
 import net.command.player.CommandPingConfirmed;
@@ -115,6 +117,8 @@ public class ConnectionManager {
 		loggedCommandList.put(AURA, new CommandAura("AURA", true));
 		loggedCommandList.put(CHANNEL, new CommandChannel("CHANNEL", true));
 		loggedCommandList.put(AUCTION, new CommandAuction("AUCTION", true));
+		loggedCommandList.put(MAIL, new CommandMail("MAIL", true));
+		loggedCommandList.put(PLAYED, new CommandPlayed("PLAYED", true));
 	}
 	
 	public static void initAuthCommand() {
@@ -215,7 +219,6 @@ public class ConnectionManager {
 			return;
 		}
 		Command command = null;
-		long timer = 0;
 		while(this.connection.hasRemaining() && this.connection.rBufferRemaining() > 4) {
 			int packetLength = this.connection.readInt();
 			if(this.connection.rBufferRemaining()+4 < packetLength) {

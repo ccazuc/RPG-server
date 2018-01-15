@@ -34,7 +34,7 @@ public class MailMgr {
 		public void gatherData() throws SQLException {
 			Mail mail = (Mail)getNextObject();
 			this.statement.putLong(mail.getGUID());
-			this.statement.putInt(mail.getAutorID());
+			this.statement.putInt(mail.getAuthorID());
 			this.statement.putInt(mail.getDestID());
 			this.statement.putString(mail.getTitle());
 			this.statement.putString(mail.getContent());
@@ -117,12 +117,12 @@ public class MailMgr {
 	
 	public static void sendBackCR(Mail mail)
 	{
-		Player player = Server.getInGameCharacter(mail.getAutorID());
-		//TODO: create new mail with items
+		Player player = Server.getInGameCharacter(mail.getAuthorID());
+		Mail result = new Mail(generateGUID(), -1, mail.getAuthorID(), "Mail", "", Server.getLoopTickTimer() + MAIL_DURATION, 0, false, MailTemplate.CLASSIC.getValue(), false, true);
 		if (player != null)
-		{
-			
-		}
+			CommandMail.sendMail(player, result, true);
+		addMail.addDatas(new SQLDatas(result));
+		Server.executeSQLRequest(addMail);
 	}
 	
 	public static int openMail(int targetId, long GUID)

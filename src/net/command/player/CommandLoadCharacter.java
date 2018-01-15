@@ -40,6 +40,7 @@ public class CommandLoadCharacter extends Command {
 		//System.out.println("CHARACTER LOAD ID : "+id);
 		player.setUnitID(id);
 		player.resetTarget();
+		player.setLoginTimer();
 		Server.removeLoggedPlayer(player);
 		Server.addInGamePlayer(player);
 		CharacterMgr.fullyLoadCharacter(player, id);

@@ -71,7 +71,10 @@ public class Player extends Unit {
 	private AccountRank accountRank;
 	private WeaponType[] weaponType;
 	private boolean isInLoginQueue;
+	private long playedLevelTimer;
+	private long lastLeveledUpTimer;
 	private boolean hasInitParty;
+	private long loginTimer;
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
 	private String accountName;
@@ -82,6 +85,7 @@ public class Player extends Unit {
 	private int numberBlueGem;
 	private long lastWhoTimer;
 	private Shortcut[] spells;
+	private long playedTimer;
 	private boolean isOnline;
 	private int guildRequest;
 	private int defaultArmor;
@@ -922,6 +926,7 @@ public class Player extends Unit {
 	@Override
 	public void setLevel(int level) {
 		this.level = level;
+		this.lastLeveledUpTimer = 0;
 	}
 	
 	public int getNumberRedGem() {
@@ -1118,6 +1123,37 @@ public class Player extends Unit {
 	public void setIsInLoginQueue(boolean we)
 	{
 		this.isInLoginQueue = we;
+	}
+	
+	public long getPlayedTimer()
+	{
+		return (this.playedTimer + Server.getLoopTickTimer() - this.loginTimer);
+	}
+	
+	public long getPlayedLevelTimer()
+	{
+		return (this.playedLevelTimer + Server.getLoopTickTimer() - this.lastLeveledUpTimer);
+	}
+	
+	public void setPlayedTimer(long timer)
+	{
+		this.playedTimer = timer;
+	}
+	
+	public void setPlayedLevelTimer(long timer)
+	{
+		this.playedLevelTimer = timer;
+	}
+	
+	public void setLoginTimer()
+	{
+		this.loginTimer = Server.getLoopTickTimer();
+		this.lastLeveledUpTimer = Server.getLoopTickTimer();
+	}
+	
+	public long getLoginTimer()
+	{
+		return (this.loginTimer);
 	}
 
 	public static String convClassTypeToString(ClassType type) {
