@@ -20,6 +20,7 @@ public class MailMgr {
 	private final static long MAIL_DURATION = 31 * 24 * Timer.MS_IN_HOUR;
 	private final static long CR_DURATION = 2 * 24 * Timer.MS_IN_HOUR;
 	public final static int MAIL_COST = 30;
+	public final static int SUBJECT_MAX_LENGTH = 50;
 	private static long currentGUID;
 	private final static SQLRequest deleteMail = new SQLRequest("DELETE FROM `mail` WHERE `GUID` = ?", "Delete mail", SQLRequestPriority.LOW) {
 		
@@ -28,7 +29,7 @@ public class MailMgr {
 			this.statement.putLong((long)getNextObject());
 		}
 	};
-	private final static SQLRequest addMail = new SQLRequest("INSERT INTO `mail` (`GUID`, `author_id` , `dest_id`, `title`, `content`, `delete_date`, `gold`, `is_cr`, `read_template`, `read`, `cr_paid`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", "Add mail", SQLRequestPriority.LOW) {
+	private final static SQLRequest addMail = new SQLRequest("INSERT INTO `mail` (`GUID`, `author_id` , `dest_id`, `title`, `content`, `delete_date`, `gold`, `is_cr`, `read_template`, `flag`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", "Add mail", SQLRequestPriority.LOW) {
 	
 		@Override
 		public void gatherData() throws SQLException {
@@ -42,8 +43,7 @@ public class MailMgr {
 			this.statement.putInt(mail.getGold());
 			this.statement.putBoolean(mail.getIsCR());
 			this.statement.putByte(mail.getTemplate());
-			this.statement.putBoolean(mail.getRead());
-			this.statement.putBoolean(mail.getCRPaid());
+			this.statement.putShort(mail.getFlag());
 		}
 	};
 	private final static SQLRequest readMail = new SQLRequest("UPDATE `mail` SET `read` = 1 WHERE `GUID` = ?", "Read mail", SQLRequestPriority.LOW) {
@@ -57,7 +57,7 @@ public class MailMgr {
 	public static void loadAllMail() {
 		try {
 			if (loadAllMail == null)
-				loadAllMail = Server.getJDO().prepare("SELECT `id`, `author_id`, `dest_id`, `title`, `content`, `delete_date`, `gold`, `is_cr`, `read_template`, `cr_paid` FROM mail");
+				loadAllMail = Server.getJDO().prepare("SELECT `guid`, `author_id`, `dest_id`, `title`, `content`, `delete_date`, `gold`, `is_cr`, `read_template`, `flag` FROM mail");
 			loadAllMail.clear();
 			loadAllMail.execute();
 			while (loadAllMail.fetch()) {
@@ -70,14 +70,13 @@ public class MailMgr {
 				int gold = loadAllMail.getInt();
 				boolean is_cr = loadAllMail.getBoolean();
 				byte template = loadAllMail.getByte();
-				boolean read = loadAllMail.getBoolean();
-				boolean crPaid = loadAllMail.getBoolean();
-				Mail mail = new Mail(GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, read, crPaid);
+				short flag = loadAllMail.getShort();
+				Mail mail = new Mail(GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, flag);
 				if (delete_date <= Server.getLoopTickTimer())
 				{
 					deleteMail.addDatas(new SQLDatas(GUID));
 					Server.executeSQLRequest(deleteMail);
-					if (is_cr)
+					if (is_cr && !mail.wasAlreadyReturned())
 						sendBackCR(mail);
 					continue;
 				}
@@ -103,7 +102,7 @@ public class MailMgr {
 		while (++i < list.size())
 			if (list.get(i).getGUID() == GUID)
 			{
-				if (list.get(i).getIsCR())
+				if (list.get(i).getIsCR() && !list.get(i).wasAlreadyReturned())
 					sendBackCR(list.get(i));
 				list.remove(i);
 				found = true;
@@ -118,9 +117,10 @@ public class MailMgr {
 	public static void sendBackCR(Mail mail)
 	{
 		Player player = Server.getInGameCharacter(mail.getAuthorID());
-		Mail result = new Mail(generateGUID(), -1, mail.getAuthorID(), "Mail", "", Server.getLoopTickTimer() + MAIL_DURATION, 0, false, MailTemplate.CLASSIC.getValue(), false, true);
+		short flag = MailFlag.MAIL_RETURNED.getValue();
+		Mail result = new Mail(generateGUID(), -1, mail.getAuthorID(), "Mail", "", Server.getLoopTickTimer() + MAIL_DURATION, 0, false, MailTemplate.CLASSIC.getValue(), flag);
 		if (player != null)
-			CommandMail.sendMail(player, result, true);
+			CommandMail.sendMail(player, result, true, true);
 		addMail.addDatas(new SQLDatas(result));
 		Server.executeSQLRequest(addMail);
 	}
@@ -141,7 +141,7 @@ public class MailMgr {
 		if (mail == null) {
 			return (-1);
 		}
-		mail.read();
+		mail.setRead();
 		readMail.addDatas(new SQLDatas(GUID));
 		Server.executeSQLRequest(readMail);
 		return (0);
@@ -151,13 +151,13 @@ public class MailMgr {
 	{
 		long GUID = generateGUID();
 		long deleteDate = isCR ? Server.getLoopTickTimer() + CR_DURATION : Server.getLoopTickTimer() + MAIL_DURATION;
-		Mail mail = new Mail(GUID, sender.getUnitID(), sender.getName(), destID, title, content, deleteDate, gold, isCR, template, false);
+		Mail mail = new Mail(GUID, sender.getUnitID(), sender.getName(), destID, title, content, deleteDate, gold, isCR, template);
 		if (!mailMap.containsKey(destID))
 			mailMap.put(destID, new ArrayList<Mail>());
 		mailMap.get(destID).add(mail);
 		Player dest = Server.getInGameCharacter(destID);
 		if (dest != null)
-			CommandMail.sendMail(dest, mail, true);
+			CommandMail.sendMail(dest, mail, true, true);
 		addMail.addDatas(new SQLDatas(mail));
 		Server.executeSQLRequest(addMail);
 	}
@@ -191,7 +191,7 @@ public class MailMgr {
 					Server.executeSQLRequest(deleteMail);
 					if ((player = Server.getInGameCharacter(list.get(i).getDestID())) != null)
 						CommandMail.deleteMail(player, list.get(i));
-					if (list.get(i).getIsCR())
+					if (list.get(i).getIsCR() && !list.get(i).wasAlreadyReturned())
 						sendBackCR(list.get(i));
 					list.remove(i);
 				}

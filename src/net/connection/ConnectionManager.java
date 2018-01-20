@@ -12,7 +12,6 @@ import net.command.Command;
 import net.command.auth.CommandLoginRealmAuth;
 import net.command.auth.CommandRegisterToAuthServer;
 import net.command.chat.CommandChannel;
-import net.command.chat.CommandGet;
 import net.command.chat.CommandListPlayer;
 import net.command.chat.CommandPlayed;
 import net.command.chat.CommandPlayerInfo;
@@ -96,7 +95,7 @@ public class ConnectionManager {
 		loggedCommandList.put(POTION, new CommandPotion("POTION", true));
 		loggedCommandList.put(LOGOUT, new CommandLogout("LOGOUT", true));
 		//loggedCommandList.put(CHAT_SET, new CommandSet());
-		loggedCommandList.put(CHAT_GET, new CommandGet("CHAT_GET", true));
+		//loggedCommandList.put(CHAT_GET, new CommandGet("CHAT_GET", true));
 		loggedCommandList.put(STUFF, new CommandStuff("STUFF", true));
 		loggedCommandList.put(PING, new CommandPing("PING", false));
 		loggedCommandList.put(GEM, new CommandGem("GEM", true));
@@ -107,7 +106,7 @@ public class ConnectionManager {
 		loggedCommandList.put(TRADE, new CommandTrade("TRADE", true));
 		loggedCommandList.put(FRIEND, new CommandFriend("FRIEND", true));
 		loggedCommandList.put(SEND_MESSAGE, new CommandSendMessage("SEND_MESSAGE", true));
-		loggedCommandList.put(PARTY, new CommandParty("PARY", true));
+		loggedCommandList.put(PARTY, new CommandParty("PARTY", true));
 		loggedCommandList.put(GUILD, new CommandGuild("GUILD", true));
 		loggedCommandList.put(IGNORE, new CommandIgnore("IGNORE", true));
 		loggedCommandList.put(WHO, new CommandWho("WHO", true));

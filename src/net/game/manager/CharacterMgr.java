@@ -9,6 +9,7 @@ import net.command.item.CommandSendContainer;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandIgnore;
+import net.command.player.CommandMail;
 import net.command.player.CommandSendPlayer;
 import net.command.player.CommandSendTarget;
 import net.command.player.spell.CommandAura;
@@ -37,7 +38,6 @@ public class CharacterMgr {
 	private static JDOStatement checkOnlinePlayers;
 	private static JDOStatement loadCharacterNameFromID;
 	private static JDOStatement loadCharacterNameFromIDHighAsync;
-	private static JDOStatement searchPlayer;
 	private static JDOStatement checkPlayerAccount;
 	private static JDOStatement loadCharacterIDFromName;
 	private static JDOStatement loadCharacterIDAndNameFromNamePattern;
@@ -138,6 +138,7 @@ public class CharacterMgr {
 				player.getGuild().getMember(player.getUnitID()).setOnlineStatus(true);
 				CommandGuild.notifyOnlinePlayer(player);
 			}
+			CommandMail.initMail(player);
 			player.initQuestMgr();
 			player.setOnline();
 		}
@@ -481,24 +482,6 @@ public class CharacterMgr {
 	public static boolean characterExists(int characterId)
 	{
 		return (loadCharacterNameFromID(characterId) != null);
-	}
-	
-	public static int playerExistsInDB(String name) {
-		try {
-			if(searchPlayer == null) {
-				searchPlayer = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
-			}
-			searchPlayer.clear();
-			searchPlayer.putString(name);
-			searchPlayer.execute();
-			if(searchPlayer.fetch()) {
-				return searchPlayer.getInt();
-			}
-		}
-		catch(SQLException e) {
-			e.printStackTrace();
-		}
-		return -1;
 	}
 	
 	public static ArrayList<SQLDatas> loadCharacterIDAndNameFromNamePattern(String pattern) {

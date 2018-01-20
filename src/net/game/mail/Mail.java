@@ -14,10 +14,9 @@ public class Mail {
 	private final int gold;
 	private final boolean isCR;
 	private final long GUID;
-	private boolean read;
-	private boolean crPaid;
+	private short flag;
 	
-	public Mail(long GUID, int authorID, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read, boolean crPaid)
+	public Mail(long GUID, int authorID, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, short flag)
 	{
 		this.authorID = authorID;
 		if (authorID == -1)
@@ -32,11 +31,10 @@ public class Mail {
 		this.isCR = isCR;
 		this.GUID = GUID;
 		this.template = template;
-		this.read = read;
-		this.crPaid = crPaid;
+		this.flag = flag;
 	}
 	
-	public Mail(long GUID, int authorID, String destName, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, boolean read)
+	public Mail(long GUID, int authorID, String destName, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template)
 	{
 		this.authorID = authorID;
 		this.authorName = destName;
@@ -48,17 +46,6 @@ public class Mail {
 		this.isCR = isCR;
 		this.GUID = GUID;
 		this.template = template;
-		this.read = read;
-	}
-	
-	public void read()
-	{
-		this.read = true;
-	}
-	
-	public boolean getRead()
-	{
-		return (this.read);
 	}
 	
 	public long getGUID()
@@ -113,11 +100,36 @@ public class Mail {
 	
 	public boolean getCRPaid()
 	{
-		return (this.crPaid);
+		return ((this.flag & MailFlag.CR_PAID.getValue()) != 0);
 	}
 	
 	public void payCR()
 	{
-		this.crPaid = true;
+		this.flag |= MailFlag.CR_PAID.getValue();
+	}
+	
+	public short getFlag()
+	{
+		return (this.flag);
+	}
+	
+	public void setMailReturnedFlag()
+	{
+		this.flag |= MailFlag.MAIL_RETURNED.getValue();
+	}
+	
+	public boolean wasAlreadyReturned()
+	{
+		return ((this.flag & MailFlag.MAIL_RETURNED.getValue()) != 0);
+	}
+	
+	public boolean getRead()
+	{
+		return ((this.flag & MailFlag.MAIL_READ.getValue()) != 0);
+	}
+	
+	public void setRead()
+	{
+		this.flag |= MailFlag.MAIL_READ.getValue();
 	}
 }

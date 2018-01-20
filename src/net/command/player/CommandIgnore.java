@@ -32,10 +32,15 @@ public class CommandIgnore extends Command {
 				return;
 			}
 			name = StringUtils.formatPlayerName(name);
+			if (name.equalsIgnoreCase(player.getName()))
+			{
+				CommandSendMessage.selfWithoutAuthor(connection, "You can't ignore yourself.", MessageType.SELF);
+				return;
+			}
 			Player ignore = Server.getInGameCharacterByName(name);
 			int character_id = 0;
 			if(ignore == null) {
-				character_id = CharacterMgr.playerExistsInDB(name);
+				character_id = CharacterMgr.loadCharacterIDFromName(name);
 			}
 			if(ignore == null && character_id == -1) {
 				CommandPlayerNotFound.write(connection, name);
@@ -66,9 +71,8 @@ public class CommandIgnore extends Command {
 	
 	public static void ignoreInit(Connection connection, Player player) {
 		HashSet<Integer> ignoreList = IgnoreMgr.getIgnoreList(player.getUnitID());
-		if(ignoreList == null) {
+		if(ignoreList == null)
 			return;
-		}
 		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_INIT);

@@ -926,7 +926,8 @@ public class Player extends Unit {
 	@Override
 	public void setLevel(int level) {
 		this.level = level;
-		this.lastLeveledUpTimer = 0;
+		this.lastLeveledUpTimer = Server.getLoopTickTimer();
+		this.playedLevelTimer = 0;
 	}
 	
 	public int getNumberRedGem() {

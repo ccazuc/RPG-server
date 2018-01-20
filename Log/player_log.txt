@@ -84,3 +84,4 @@
 [ERROR Thu Jan 11 15:41:46 CET 2018] AccountID: 1004, Unknown packet: 85, last packet readed: 15
 [ERROR Thu Jan 11 15:41:46 CET 2018] AccountID: 1005, Unknown packet: 85, last packet readed: 15
 [ERROR Fri Jan 12 21:23:35 CET 2018] AccountID: 0, Unknown loggin key
+[ERROR Mon Jan 15 20:17:09 CET 2018] AccountID : 1 PlayerName: Mideas PlayerID: 1, Unknown packet: 157, last packet readed: 15
