@@ -59,6 +59,16 @@ public class CommandMail extends Command {
 			else
 				mailOpened(player, GUID);
 		}
+		else if (packetId == PacketID.MAIL_RETURN_CR)
+		{
+			long GUID = connection.readLong();
+			Mail mail = MailMgr.getMail(player.getUnitID(), GUID);
+			if (mail != null && mail.getIsCR())
+			{
+				deleteMail(player, mail);
+				MailMgr.sendBackCR(mail);
+			}			
+		}
 	}
 	
 	public static void sendMail(Player player, Mail mail, boolean sendHeader, boolean startPacket)

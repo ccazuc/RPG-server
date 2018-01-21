@@ -34,7 +34,7 @@ public class Mail {
 		this.flag = flag;
 	}
 	
-	public Mail(long GUID, int authorID, String destName, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template)
+	public Mail(long GUID, int authorID, String destName, int destID, String title, String content, long deleteDate, int gold, boolean isCR, byte template, short flag)
 	{
 		this.authorID = authorID;
 		this.authorName = destName;
@@ -46,6 +46,7 @@ public class Mail {
 		this.isCR = isCR;
 		this.GUID = GUID;
 		this.template = template;
+		this.flag = flag;
 	}
 	
 	public long getGUID()

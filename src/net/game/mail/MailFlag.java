@@ -4,7 +4,8 @@ public enum MailFlag
 {
 	MAIL_RETURNED((short)0x01),
 	MAIL_READ((short)0x02),
-	CR_PAID((short)0x03),	
+	CR_PAID((short)0x03),
+	CAN_REPLY((short)0x04),
 	;
 	
 	private final short value;

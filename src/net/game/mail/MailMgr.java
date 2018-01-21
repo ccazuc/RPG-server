@@ -11,14 +11,13 @@ import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;
-import net.utils.Timer;
 
 public class MailMgr {
 
 	private final static HashMap<Integer, ArrayList<Mail>> mailMap = new HashMap<Integer, ArrayList<Mail>>();
 	private static JDOStatement loadAllMail;
-	private final static long MAIL_DURATION = 31 * 24 * Timer.MS_IN_HOUR;
-	private final static long CR_DURATION = 2 * 24 * Timer.MS_IN_HOUR;
+	public final static long MAIL_DURATION = 31l * 24 * 60 * 60 * 1000;
+	public final static long CR_DURATION = 2 * 24 * 60 * 60 * 1000;
 	public final static int MAIL_COST = 30;
 	public final static int SUBJECT_MAX_LENGTH = 50;
 	private static long currentGUID;
@@ -46,10 +45,11 @@ public class MailMgr {
 			this.statement.putShort(mail.getFlag());
 		}
 	};
-	private final static SQLRequest readMail = new SQLRequest("UPDATE `mail` SET `read` = 1 WHERE `GUID` = ?", "Read mail", SQLRequestPriority.LOW) {
+	private final static SQLRequest readMail = new SQLRequest("UPDATE `mail` SET `flag` = ? WHERE `GUID` = ?", "Read mail", SQLRequestPriority.LOW) {
 	
 		@Override
 		public void gatherData() throws SQLException {
+			this.statement.putShort((short)getNextObject());
 			this.statement.putLong((long)getNextObject());
 		}
 	};
@@ -110,15 +110,19 @@ public class MailMgr {
 			}
 		if (!found)
 			return;
+		deleteMail(GUID);
+	}
+	
+	public static void deleteMail(long GUID)
+	{
 		deleteMail.addDatas(new SQLDatas(GUID));
-		Server.executeSQLRequest(deleteMail);
+		Server.executeSQLRequest(deleteMail);		
 	}
 	
 	public static void sendBackCR(Mail mail)
 	{
 		Player player = Server.getInGameCharacter(mail.getAuthorID());
-		short flag = MailFlag.MAIL_RETURNED.getValue();
-		Mail result = new Mail(generateGUID(), -1, mail.getAuthorID(), "Mail", "", Server.getLoopTickTimer() + MAIL_DURATION, 0, false, MailTemplate.CLASSIC.getValue(), flag);
+		Mail result = new Mail(generateGUID(), -1, mail.getAuthorID(), "Mail", "", Server.getLoopTickTimer() + MAIL_DURATION, 0, false, MailTemplate.CLASSIC.getValue(), MailFlag.MAIL_RETURNED.getValue());
 		if (player != null)
 			CommandMail.sendMail(player, result, true, true);
 		addMail.addDatas(new SQLDatas(result));
@@ -138,11 +142,10 @@ public class MailMgr {
 				mail = list.get(i);
 				break;
 			}
-		if (mail == null) {
+		if (mail == null)
 			return (-1);
-		}
 		mail.setRead();
-		readMail.addDatas(new SQLDatas(GUID));
+		readMail.addDatas(new SQLDatas(mail.getFlag(), GUID));
 		Server.executeSQLRequest(readMail);
 		return (0);
 	}
@@ -151,7 +154,7 @@ public class MailMgr {
 	{
 		long GUID = generateGUID();
 		long deleteDate = isCR ? Server.getLoopTickTimer() + CR_DURATION : Server.getLoopTickTimer() + MAIL_DURATION;
-		Mail mail = new Mail(GUID, sender.getUnitID(), sender.getName(), destID, title, content, deleteDate, gold, isCR, template);
+		Mail mail = new Mail(GUID, sender.getUnitID(), sender.getName(), destID, title, content, deleteDate, gold, isCR, template, MailFlag.CAN_REPLY.getValue());
 		if (!mailMap.containsKey(destID))
 			mailMap.put(destID, new ArrayList<Mail>());
 		mailMap.get(destID).add(mail);
@@ -175,6 +178,18 @@ public class MailMgr {
 	public static ArrayList<Mail> getMailList(int targetId)
 	{
 		return (mailMap.get(targetId));
+	}
+	
+	public static Mail getMail(int playerId, long GUID)
+	{
+		ArrayList<Mail> list;
+		if ((list = mailMap.get(playerId)) == null)
+			return (null);
+		int i = -1;
+		while (++i < list.size())
+			if (list.get(i).getGUID() == GUID)
+				return (list.get(i));
+		return (null);
 	}
 	
 	public static void checkExpiredMail()

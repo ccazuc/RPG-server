@@ -206,4 +206,5 @@ public class PacketID {
 	public final static short LOGIN_QUEUE_ACCEPTED = 202;
 	public final static short MAIL_RECEIVED = 203;
 	public final static short PLAYED = 204;
+	public final static short MAIL_RETURN_CR = 205;
 }

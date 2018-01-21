@@ -43,6 +43,7 @@ import net.thread.chatcommand.Who;
 import net.thread.log.LogRunnable;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLTask;
+import net.utils.StringUtils;
 
 public class Server {
 	
@@ -71,6 +72,7 @@ public class Server {
 		System.out.println(ConfigMgr.REALM_NAME);
 		long time = System.currentTimeMillis();
 		float delta;
+		System.out.println(StringUtils.convertTimeToString(MailMgr.MAIL_DURATION - 1000));
 		jdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);
 		asyncLowPriorityJdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);
 		asyncHighPriorityJdo = new MariaDB("127.0.0.1", DatabaseMgr.PORT, DatabaseMgr.TABLE_NAME, DatabaseMgr.USER_NAME, DatabaseMgr.PASSWORD);

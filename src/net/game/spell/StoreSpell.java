@@ -149,7 +149,7 @@ public class StoreSpell {
 			SpellMgr.store(new Spell(id, sprite_id, name, rank, effectValue, manaCost, stunRate, stunDuration, cd, castTime, triggerGCD, magicalSchool, isMagical));
 		}
 		else {
-			System.out.println("SPELL LOAD ERROR : spell not found [id : "+id+" name :"+name+']');
+			System.out.println("SPELL LOAD ERROR : spell not found [id: "+id+" name: "+name+']');
 		}
 	}
 }
