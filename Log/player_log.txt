@@ -85,3 +85,8 @@
 [ERROR Thu Jan 11 15:41:46 CET 2018] AccountID: 1005, Unknown packet: 85, last packet readed: 15
 [ERROR Fri Jan 12 21:23:35 CET 2018] AccountID: 0, Unknown loggin key
 [ERROR Mon Jan 15 20:17:09 CET 2018] AccountID : 1 PlayerName: Mideas PlayerID: 1, Unknown packet: 157, last packet readed: 15
+[ERROR Sun Jan 21 21:19:38 CET 2018] AccountID : 1 PlayerName: Mideas PlayerID: 1, Tried to open a non-existing mail
+[ERROR Sun Jan 21 21:19:38 CET 2018] AccountID : 1 PlayerName: Mideas PlayerID: 1, Tried to open a non-existing mail
+[ERROR Sun Jan 21 21:19:38 CET 2018] AccountID : 1 PlayerName: Mideas PlayerID: 1, Tried to open a non-existing mail
+[ERROR Sun Jan 21 21:19:38 CET 2018] AccountID : 1 PlayerName: Mideas PlayerID: 1, Tried to open a non-existing mail
+[ERROR Mon Jan 22 14:48:20 CET 2018] AccountID: 1, Unknown packet: 181, last packet readed: 15

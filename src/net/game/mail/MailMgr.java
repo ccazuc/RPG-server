@@ -11,6 +11,7 @@ import net.game.unit.Player;
 import net.thread.sql.SQLDatas;
 import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;
+import net.utils.StringUtils;
 
 public class MailMgr {
 
@@ -92,10 +93,10 @@ public class MailMgr {
 		}
 	}
 	
-	public static void deleteMail(int targetId, long GUID)
+	public static void deleteMail(Player player, long GUID)
 	{
 		ArrayList<Mail> list;
-		if ((list = mailMap.get(targetId)) == null)
+		if ((list = mailMap.get(player.getUnitID())) == null)
 			return;
 		boolean found = false;
 		int i = -1;
@@ -104,6 +105,8 @@ public class MailMgr {
 			{
 				if (list.get(i).getIsCR() && !list.get(i).wasAlreadyReturned())
 					sendBackCR(list.get(i));
+				System.out.println("Mail deleted: " + GUID);
+				CommandMail.deleteMail(player, list.get(i));
 				list.remove(i);
 				found = true;
 				break;
@@ -154,6 +157,7 @@ public class MailMgr {
 	{
 		long GUID = generateGUID();
 		long deleteDate = isCR ? Server.getLoopTickTimer() + CR_DURATION : Server.getLoopTickTimer() + MAIL_DURATION;
+		title = StringUtils.generateRandomString(10);
 		Mail mail = new Mail(GUID, sender.getUnitID(), sender.getName(), destID, title, content, deleteDate, gold, isCR, template, MailFlag.CAN_REPLY.getValue());
 		if (!mailMap.containsKey(destID))
 			mailMap.put(destID, new ArrayList<Mail>());

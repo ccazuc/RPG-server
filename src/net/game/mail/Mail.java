@@ -133,4 +133,9 @@ public class Mail {
 	{
 		this.flag |= MailFlag.MAIL_READ.getValue();
 	}
+	
+	public boolean canReply()
+	{
+		return ((this.flag & MailFlag.CAN_REPLY.getValue()) != 0);
+	}
 }

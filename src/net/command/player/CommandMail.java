@@ -28,7 +28,7 @@ public class CommandMail extends Command {
 		if (packetId == PacketID.MAIL_DELETE)
 		{
 			long GUID = connection.readLong();
-			MailMgr.deleteMail(player.getUnitID(), GUID);
+			MailMgr.deleteMail(player, GUID);
 		}
 		else if (packetId == PacketID.MAIL_SEND)
 		{
@@ -90,6 +90,7 @@ public class CommandMail extends Command {
 		connection.writeBoolean(mail.getIsCR());
 		connection.writeByte(mail.getTemplate());
 		connection.writeBoolean(mail.getRead());
+		connection.writeBoolean(mail.canReply());
 		if (startPacket)
 		{
 			connection.endPacket();
@@ -111,7 +112,7 @@ public class CommandMail extends Command {
 	public static void initMail(Player player)
 	{
 		ArrayList<Mail> mailList = MailMgr.getMailList(player.getUnitID());
-		if (mailList.size() == 0)
+		if (mailList == null || mailList.size() == 0)
 			return;
 		Connection connection = player.getConnection();
 		connection.startPacket();

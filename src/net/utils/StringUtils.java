@@ -125,6 +125,15 @@ public class StringUtils {
 		return (builder.toString());
 	}
 	
+	public static String generateRandomString(int length)
+	{
+		char[] result = new char[length];
+		int i = -1;
+		while (++i < length)
+			result[i] = (char)(33 + Math.random() * 94);
+		return (new String(result));
+	}
+	
 	public static String convertTimeToStringSimple(long delta)
 	{
 		String result = null;
