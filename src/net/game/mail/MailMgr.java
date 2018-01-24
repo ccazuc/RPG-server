@@ -61,6 +61,8 @@ public class MailMgr {
 				loadAllMail = Server.getJDO().prepare("SELECT `guid`, `author_id`, `dest_id`, `title`, `content`, `delete_date`, `gold`, `is_cr`, `read_template`, `flag` FROM mail");
 			loadAllMail.clear();
 			loadAllMail.execute();
+			int i = 0;
+			long timer = System.currentTimeMillis();
 			while (loadAllMail.fetch()) {
 				long GUID = loadAllMail.getLong();
 				int author_id = loadAllMail.getInt();
@@ -73,6 +75,7 @@ public class MailMgr {
 				byte template = loadAllMail.getByte();
 				short flag = loadAllMail.getShort();
 				Mail mail = new Mail(GUID, author_id, dest_id, title, content, delete_date, gold, is_cr, template, flag);
+				++i;
 				if (delete_date <= Server.getLoopTickTimer())
 				{
 					deleteMail.addDatas(new SQLDatas(GUID));
@@ -87,6 +90,7 @@ public class MailMgr {
 				if (GUID > currentGUID)
 					currentGUID = GUID;
 			}
+			System.out.println("Loaded " + i + " mails in " + (System.currentTimeMillis() - timer) +"ms.");
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -165,6 +169,7 @@ public class MailMgr {
 		Player dest = Server.getInGameCharacter(destID);
 		if (dest != null)
 			CommandMail.sendMail(dest, mail, true, true);
+		CommandMail.mailSent(sender);
 		addMail.addDatas(new SQLDatas(mail));
 		Server.executeSQLRequest(addMail);
 	}

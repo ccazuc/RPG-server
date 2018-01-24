@@ -136,4 +136,14 @@ public class CommandMail extends Command {
 		connection.endPacket();
 		connection.send();
 	}
+	
+	public static void mailSent(Player player)
+	{
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.MAIL);
+		connection.writeShort(PacketID.MAIL_SEND);
+		connection.endPacket();
+		connection.send();
+	}
 }
