@@ -69,6 +69,13 @@ public class CommandMail extends Command {
 				MailMgr.sendBackCR(mail);
 			}			
 		}
+		else if (packetId == PacketID.MAIL_LOAD_MAIL)
+		{
+			long GUID = connection.readLong();
+			Mail mail = MailMgr.getMail(player.getUnitID(), GUID);
+			if (mail != null)
+				sendMailContent(player, mail);
+		}
 	}
 	
 	public static void sendMail(Player player, Mail mail, boolean sendHeader, boolean startPacket)
@@ -85,7 +92,6 @@ public class CommandMail extends Command {
 		connection.writeLong(mail.getDeleteDate());
 		connection.writeString(mail.getAuthorName());
 		connection.writeString(mail.getTitle());
-		connection.writeString(mail.getContent());
 		connection.writeInt(mail.getGold());
 		connection.writeBoolean(mail.getIsCR());
 		connection.writeByte(mail.getTemplate());
@@ -96,6 +102,18 @@ public class CommandMail extends Command {
 			connection.endPacket();
 			connection.send();
 		}
+	}
+	
+	public static void sendMailContent(Player player, Mail mail)
+	{
+		Connection connection = player.getConnection();
+		connection.startPacket();
+		connection.writeShort(PacketID.MAIL);
+		connection.writeShort(PacketID.MAIL_LOAD_MAIL);
+		connection.writeLong(mail.getGUID());
+		connection.writeString(mail.getContent());
+		connection.endPacket();
+		connection.send();
 	}
 	
 	public static void mailOpened(Player player, long GUID)

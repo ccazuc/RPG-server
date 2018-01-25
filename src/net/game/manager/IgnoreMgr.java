@@ -47,9 +47,8 @@ public class IgnoreMgr {
 				list.add(loadIgnoreList.getInt());
 				hasData = true;
 			}
-			if(hasData) {
+			if(hasData)
 				ignoreMap.put(id, list);
-			}
 		}
 		catch(SQLException e) {
 			e.printStackTrace();;
