@@ -303,10 +303,10 @@ public class Server {
 		return null;
 	}
 	
-	public static boolean hasKey(double key, int account_id) {
+	public static boolean hasKey(Player player, double key, int account_id) {
 		if(!keyMap.containsKey(key))
 			return false;
-		return (keyMap.get(key).getAccountId() == account_id);
+		return (keyMap.get(key).getAccountId() == account_id && keyMap.get(key).getIpAdress().equals(player.getIpAdress()));
 	}
 	
 	public static boolean isAcceptingConnection() {

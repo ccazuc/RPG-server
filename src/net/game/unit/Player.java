@@ -64,6 +64,7 @@ public class Player extends Unit {
 	private ArrayList<String> chatChannelJoined;
 	private ConnectionManager connectionManager;
 	private ArrayList<Integer> friendList;
+	private HashSet<Long> loadedMailSet;
 	private ArrayList<Integer> ignoreList;
 	private PlayerQuestMgr questManager;
 	private Profession secondProfession;
@@ -263,6 +264,17 @@ public class Player extends Unit {
 		this.spellCDMap = new HashMap<Integer, Long>();
 		this.auraList = new ArrayList<AppliedAura>();
 		this.chatChannelJoined = new ArrayList<String>();
+		this.loadedMailSet = new HashSet<Long>();
+	}
+	
+	public void addLoadedMail(long GUID)
+	{
+		this.loadedMailSet.add(GUID);
+	}
+	
+	public boolean hasLoadedMail(long GUID)
+	{
+		return this.loadedMailSet.contains(GUID);
 	}
 	
 	public byte getNumberChatChannelJoined() {

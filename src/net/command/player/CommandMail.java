@@ -73,8 +73,15 @@ public class CommandMail extends Command {
 		{
 			long GUID = connection.readLong();
 			Mail mail = MailMgr.getMail(player.getUnitID(), GUID);
-			if (mail != null)
-				sendMailContent(player, mail);
+			if (mail == null)
+				return;
+			if (player.hasLoadedMail(GUID))
+			{
+				Log.writePlayerLog(player, "Tried to load a mail twice.");
+				player.close();
+			}
+			sendMailContent(player, mail);
+			player.addLoadedMail(GUID);
 		}
 	}
 	
