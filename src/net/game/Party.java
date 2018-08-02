@@ -2,21 +2,28 @@ package net.game;
 
 import net.game.unit.Player;
 
-public class Party {
+public class Party { //TODO: replace Player[] by int[] with playerId
 
 	public final static int MAXIMUM_PARTY_SIZE = 5;
 	private Player[] playerTable;
 	private Player partyLeader;
+	private int partyLeaderId;
 	
 	public Party(Player leader, Player member) {
 		this.playerTable = new Player[MAXIMUM_PARTY_SIZE];
 		this.playerTable[0] = leader;
 		this.playerTable[1] = member;
 		this.partyLeader = leader;
+		this.partyLeaderId = leader.getUnitID();
 	}
 	
 	public boolean isPartyLeader(Player player) {
-		return player.getUnitID() == this.partyLeader.getUnitID();
+		return player.getUnitID() == this.partyLeaderId;
+	}
+	
+	public int getLeaderId()
+	{
+		return (this.partyLeaderId);
 	}
 	
 	public boolean addMember(Player player) {
@@ -73,6 +80,7 @@ public class Party {
 	
 	public void setLeader(Player player) {
 		this.partyLeader = player;
+		this.partyLeaderId = player.getUnitID();
 	}
 	
 	public Player[] getPlayerList() {

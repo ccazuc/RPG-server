@@ -51,6 +51,11 @@ public class AccountMgr {
 		return (loadAccountNameFromID(accountId) == null);
 	}
 	
+	public static boolean checkAccountName(String name)
+	{
+		return (true);
+	}
+	
 	public static String loadAccountNameFromID(int accountID) {
 		try {
 			if(loadAccountIDFromName == null) {

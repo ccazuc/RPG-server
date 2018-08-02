@@ -43,6 +43,7 @@ import net.game.manager.CharacterMgr;
 import net.game.manager.FriendMgr;
 import net.game.manager.ItemMgr;
 import net.game.manager.LoginQueueMgr;
+import net.game.premade_group.PremadeGroup;
 import net.game.profession.Profession;
 import net.game.quest.PlayerQuestMgr;
 import net.game.shortcut.Shortcut;
@@ -69,6 +70,7 @@ public class Player extends Unit {
 	private PlayerQuestMgr questManager;
 	private Profession secondProfession;
 	private Profession firstProfession;
+	private PremadeGroup premadeGroup;
 	private AccountRank accountRank;
 	private WeaponType[] weaponType;
 	private boolean isInLoginQueue;
@@ -933,6 +935,16 @@ public class Player extends Unit {
 		this.gold = gold;
 		if (gold != 0 && sendToClient)
 			CommandChangeGold.updateGold(this);
+	}
+	
+	public void setPremadeGroup(PremadeGroup group)
+	{
+		this.premadeGroup = group;
+	}
+	
+	public PremadeGroup getPremadeGroup()
+	{
+		return (this.premadeGroup);
 	}
 	
 	@Override
