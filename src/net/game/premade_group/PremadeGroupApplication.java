@@ -31,7 +31,7 @@ public class PremadeGroupApplication {
 		return (this.id);
 	}
 	
-	public final Player[] getPlayerList()
+	public final int[] getPlayerList()
 	{
 		return (this.party != null ? this.party.getPlayerList() : null);
 	}

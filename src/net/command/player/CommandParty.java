@@ -119,15 +119,16 @@ public class CommandParty extends Command {
 				return;
 			}
 			int i = 0;
+			Player tmp = null;
 			while(i < player.getParty().getPlayerList().length) {
-				if(player.getParty().getPlayerList()[i] != null) {
-					if(player.getParty().getPlayerList()[i] == member) {
+				if((tmp = player.getParty().getPlayer(i)) != null) {
+					if(tmp == member) {
 						setLeader(member.getConnection(), member.getUnitID());
 						CommandSendMessage.selfWithoutAuthor(member.getConnection(), "You are now the party leader.", MessageType.SELF);
 					}
 					else {
-						setLeader(player.getParty().getPlayerList()[i].getConnection(), member.getUnitID());
-						CommandSendMessage.selfWithoutAuthor(player.getParty().getPlayerList()[i].getConnection(), member.getName().concat(" is now the group leader."), MessageType.SELF);
+						setLeader(tmp.getConnection(), member.getUnitID());
+						CommandSendMessage.selfWithoutAuthor(tmp.getConnection(), member.getName().concat(" is now the group leader."), MessageType.SELF);
 					}
 				}
 				i++;
@@ -140,7 +141,7 @@ public class CommandParty extends Command {
 				CommandSendMessage.selfWithoutAuthor(player.getPlayerParty().getConnection(), "Nobody invited you to join their party.", MessageType.SELF);
 				return;
 			}
-			if(player.getPlayerParty().getParty() == null) { //if player who sent request is already in a party
+			if(player.getPlayerParty().getParty() == null) { //if player who sent request not already in a party
 				if(!player.getPlayerParty().hasInitParty()) {
 					System.out.println("CommandParty:PARTY_ACCEPT_REQUEST ERROR.");
 					return;
@@ -160,24 +161,45 @@ public class CommandParty extends Command {
 				}
 				player.getPlayerParty().getParty().addMember(player);
 				player.setParty(player.getPlayerParty().getParty());
-				int i = 0;
-				boolean partyInit = false;
-				while(i < player.getParty().getPlayerList().length) {
-					if(player.getParty().getPlayerList()[i] != null && player.getParty().getPlayerList()[i].getUnitID() != player.getUnitID()) {
-						memberJoinedParty(player.getParty().getPlayerList()[i].getConnection(), player); //send datas to everyone about this.player
-						if(!partyInit) {
-							newParty(player, player.getParty().getPlayerList()[i]);
-							partyInit = true;
-						}
-						else {
-							memberJoinedParty(connection, player.getParty().getPlayerList()[i]); //send datas about everyone to this.player
-						}
-						CommandSendMessage.selfWithoutAuthor(player.getParty().getPlayerList()[i].getConnection(), player.getName().concat(" joined your party."), MessageType.SELF);
+				int i = -1;
+				Player tmp = null;
+				while(++i < player.getParty().getPlayerList().length) {
+					if((tmp = player.getParty().getPlayer(i)) != null && tmp.getUnitID() != player.getUnitID()) {
+						memberJoinedParty(tmp.getConnection(), player); //send datas to everyone about this.player
+						CommandSendMessage.selfWithoutAuthor(tmp.getConnection(), player.getName().concat(" joined your party."), MessageType.SELF);
 					}
-					i++;
 				}
+				initPartyNewMember(player);
 			}
 		}
+	}
+	
+	private static void initPartyNewMember(Player player)
+	{
+		Connection connection = player.getConnection();
+		int length = player.getParty().getNumberMembers();
+		int i = -1;
+		connection.startPacket();
+		connection.writeShort(PacketID.PARTY);
+		connection.writeShort(PacketID.PARTY_INIT);
+		connection.writeInt(length - 1);
+		connection.writeInt(player.getParty().getLeaderId());
+		while (++i < length)
+		{
+			Player tmp = player.getParty().getPlayer(i);
+			if (tmp.getUnitID() == player.getUnitID())
+				continue;
+			connection.writeString(tmp.getName());
+			connection.writeInt(tmp.getStamina());
+			connection.writeInt(tmp.getMaxStaminaEffective());
+			connection.writeInt(tmp.getMana());
+			connection.writeInt(tmp.getMaxManaEffective());
+			connection.writeInt(tmp.getLevel());
+			connection.writeInt(tmp.getUnitID());
+			connection.writeByte(tmp.getClasse().getValue());
+		}
+		connection.endPacket();
+		connection.send();
 	}
 	
 	private static void inviteRequest(Connection connection, String name) {
@@ -215,11 +237,12 @@ public class CommandParty extends Command {
 	
 	private static void kickPlayer(Player player) {
 		boolean wasLeader = false;
+		Player tmp = null;
 		if(player.getParty().isPartyLeader(player)) {
 			int i = 0;
 			while(i < player.getParty().getPlayerList().length) {
-				if(player.getParty().getPlayerList()[i] != null && player.getParty().getPlayerList()[i].getUnitID() != player.getUnitID()) {
-					player.getParty().setLeader(player.getParty().getPlayerList()[i]);
+				if((tmp = player.getParty().getPlayer(i)) != null && tmp.getUnitID() != player.getUnitID()) {
+					player.getParty().setLeader(tmp);
 					break;
 				}
 				i++;
@@ -227,7 +250,8 @@ public class CommandParty extends Command {
 		}
 		int i = 0;
 		while(i < player.getParty().getPlayerList().length) {
-			if(player.getParty().getPlayerList()[i] == player) {
+			tmp = player.getParty().getPlayer(i);
+			if(tmp == player) {
 				player.getConnection().startPacket();
 				player.getConnection().writeShort(PacketID.PARTY);
 				player.getConnection().writeShort(PacketID.PARTY_LEFT);
@@ -235,16 +259,16 @@ public class CommandParty extends Command {
 				player.getConnection().send();
 				CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You left the party.", MessageType.SELF);
 			}
-			else if(player.getParty().getPlayerList()[i] != null) {
-				player.getParty().getPlayerList()[i].getConnection().startPacket();
-				player.getParty().getPlayerList()[i].getConnection().writeShort(PacketID.PARTY);
-				player.getParty().getPlayerList()[i].getConnection().writeShort(PacketID.PARTY_MEMBER_LEFT);
-				player.getParty().getPlayerList()[i].getConnection().writeInt(player.getUnitID());
-				player.getParty().getPlayerList()[i].getConnection().endPacket();
-				player.getParty().getPlayerList()[i].getConnection().send();
-				CommandSendMessage.selfWithoutAuthor(player.getParty().getPlayerList()[i].getConnection(), player.getName().concat(" left the party."), MessageType.SELF);
+			else if(tmp != null) {
+				tmp.getConnection().startPacket();
+				tmp.getConnection().writeShort(PacketID.PARTY);
+				tmp.getConnection().writeShort(PacketID.PARTY_MEMBER_LEFT);
+				tmp.getConnection().writeInt(player.getUnitID());
+				tmp.getConnection().endPacket();
+				tmp.getConnection().send();
+				CommandSendMessage.selfWithoutAuthor(tmp.getConnection(), player.getName().concat(" left the party."), MessageType.SELF);
 				if(wasLeader) {
-					setLeader(player.getParty().getPlayerList()[i].getConnection(), player.getUnitID());
+					setLeader(tmp.getConnection(), player.getUnitID());
 				}
 			}
 			i++;
@@ -258,23 +282,24 @@ public class CommandParty extends Command {
 	private static void disbandParty(Player player) {
 		int i = 0;
 		while(i < player.getParty().getPlayerList().length) {
-			if(player.getParty().getPlayerList()[i] != null) {
-				player.getParty().getPlayerList()[i].getConnection().startPacket();
-				player.getParty().getPlayerList()[i].getConnection().writeShort(PacketID.PARTY);
-				player.getParty().getPlayerList()[i].getConnection().writeShort(PacketID.PARTY_DISBAND);
-				player.getParty().getPlayerList()[i].getConnection().endPacket();
-				player.getParty().getPlayerList()[i].getConnection().send();
-				System.out.println(player.getConnection().wBufferRemaining()+" remaining, capacity: "+player.getConnection().wBufferCapacity()+" "+player.getConnection());
-				CommandSendMessage.selfWithoutAuthor(player.getParty().getPlayerList()[i].getConnection(), "You left the party.", MessageType.SELF);
+			Player tmp = player.getParty().getPlayer(i);
+			if(tmp != null) {
+				tmp.getConnection().startPacket();
+				tmp.getConnection().writeShort(PacketID.PARTY);
+				tmp.getConnection().writeShort(PacketID.PARTY_DISBAND);
+				tmp.getConnection().endPacket();
+				tmp.getConnection().send();
+				CommandSendMessage.selfWithoutAuthor(tmp.getConnection(), "You left the party.", MessageType.SELF);
 			}
 			i++;
 		}
 		i = 0;
 		Party part = player.getParty();
 		while(i < part.getPlayerList().length) {
-			if(part.getPlayerList()[i] != null) {
-				part.getPlayerList()[i].setParty(null);
-				part.getPlayerList()[i].setHasInitParty(false);
+			Player tmp = part.getPlayer(i);
+			if(tmp != null) {
+				tmp.setParty(null);
+				tmp.setHasInitParty(false);
 			}
 			i++;
 		}
@@ -327,7 +352,7 @@ public class CommandParty extends Command {
 			return true;
 		}
 		else {
-			CommandSendMessage.selfWithoutAuthor(player.getPlayerParty().getConnection(), "You are not the party leader.", MessageType.SELF);
+			CommandSendMessage.selfWithoutAuthor(player.getConnection(), "You are not the party leader.", MessageType.SELF);
 			return false;
 		}
 	}

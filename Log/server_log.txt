@@ -1,0 +1,14 @@
+--------------------------------------------------------------
+Thu Aug 02 22:06:02 CEST 2018
+java.lang.NullPointerException
+	at net.command.player.CommandParty.isPartyLeader(CommandParty.java:336)
+	at net.command.player.CommandParty.read(CommandParty.java:51)
+	at net.connection.ConnectionManager.handlePacket(ConnectionManager.java:208)
+	at net.connection.ConnectionManager.readPacket(ConnectionManager.java:269)
+	at net.connection.ConnectionManager.read(ConnectionManager.java:157)
+	at net.game.unit.Player.tick(Player.java:141)
+	at net.Server.readOnlinePlayers(Server.java:160)
+	at net.Server.main(Server.java:120)
+--------------------------------------------------------------
+
+

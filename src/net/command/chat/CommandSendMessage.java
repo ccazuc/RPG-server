@@ -68,12 +68,13 @@ public class CommandSendMessage extends Command {
 			}
 			int i = player.getParty().getPlayerList().length;
 			while(--i >= 0) {
-				if(player.getParty().getPlayerList()[i] != null && !IgnoreMgr.isIgnored(player.getUnitID(), player.getParty().getPlayerList()[i].getUnitID())) {
+				Player tmp = player.getParty().getPlayer(i);
+				if(tmp != null && !IgnoreMgr.isIgnored(player.getUnitID(), tmp.getUnitID())) {
 					if(player.getParty().isPartyLeader(player)) {
-						write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY_LEADER, player.isGMOn());
+						write(tmp.getConnection(), message, player.getName(), MessageType.PARTY_LEADER, player.isGMOn());
 					}
 					else {
-						write(player.getParty().getPlayerList()[i].getConnection(), message, player.getName(), MessageType.PARTY, player.isGMOn());
+						write(tmp.getConnection(), message, player.getName(), MessageType.PARTY, player.isGMOn());
 					}
 				}
 			}

@@ -49,7 +49,7 @@ public class PremadeGroupMgr {
 		{
 			i = -1;
 			while (++i < group.getParty().getPlayerList().length)
-				if (group.getParty().getPlayerList()[i] != null)
+				if (group.getParty().getPlayer(i) != null)
 					//TODO: CommandPremadeGroup.sendGroupDisbanded(i)
 					;
 		}
@@ -65,7 +65,7 @@ public class PremadeGroupMgr {
 		{
 			int i = -1;
 			while (++i < player.getParty().getPlayerList().length)
-				if (player.getParty().getPlayerList()[i] != null && player.getParty().getPlayerList()[i].getLevel() < group.getRequiredLevel())
+				if (player.getParty().getPlayer(i) != null && player.getParty().getPlayer(i).getLevel() < group.getRequiredLevel())
 				{
 					//TODO: Send red alert level condition not met
 					return (false);
@@ -109,7 +109,7 @@ public class PremadeGroupMgr {
 		{
 			int i = -1;
 			while (++i < group.getParty().getPlayerList().length)
-				if (group.getParty().getPlayerList()[i] != null)
+				if (group.getParty().getPlayer(i) != null)
 					;
 					//TODO: CommandPremadeGroup.sendAddApplication
 		}
@@ -140,7 +140,7 @@ public class PremadeGroupMgr {
 		{
 			int i = -1;
 			while (++i < group.getParty().getPlayerList().length)
-				if (group.getParty().getPlayerList()[i] != null)
+				if (group.getParty().getPlayer(i) != null)
 					//TODO: CommandPremadeGroup.sendCanceledApplication
 					;
 		}

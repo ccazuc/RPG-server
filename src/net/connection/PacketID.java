@@ -208,4 +208,5 @@ public class PacketID {
 	public final static short PLAYED = 204;
 	public final static short MAIL_RETURN_CR = 205;
 	public final static short MAIL_LOAD_MAIL = 206;
+	public final static short PARTY_INIT = 207;
 }
