@@ -209,4 +209,14 @@ public class PacketID {
 	public final static short MAIL_RETURN_CR = 205;
 	public final static short MAIL_LOAD_MAIL = 206;
 	public final static short PARTY_INIT = 207;
+	public final static short PREMADE_GROUP = 208;
+	public final static short PREMADE_GROUP_CREATE = 209;
+	public final static short PREMADE_GROUP_DELIST = 210;
+	public final static short PREMADE_GROUP_ACCEPT_APPLICATION = 211;
+	public final static short PREMADE_GROUP_REFUSE_APPLICATION = 212;
+	public final static short PREMADE_GROUP_CANCEL_APPLICATION = 213;
+	public final static short PREMADE_GROUP_EDIT = 214;
+	public final static short PREMADE_GROUP_REQUEST_UPDATE = 215;
+	public final static short PREMADE_GROUP_APPLICATION_CANCELED_FROM_GROUP = 216;
+	public final static short PREMADE_GROUP_DELISTED = 217;
 }

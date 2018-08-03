@@ -14,18 +14,19 @@ public enum PremadeGroupType {
 	ASHRAN((byte)9),
 	CUSTOM((byte)10),
 	;
+
 	private final byte value;
 	
 	private PremadeGroupType(byte value)
 	{
 		this.value = value;
 	}
-	
+
 	public byte getValue()
 	{
 		return (this.value);
 	}
-	
+
 	public static PremadeGroupType getValue(byte value)
 	{
 		if (value >= 0 && value < PremadeGroupType.values().length)

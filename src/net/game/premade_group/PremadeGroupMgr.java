@@ -3,11 +3,16 @@ package net.game.premade_group;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import net.Server;
+import net.command.player.CommandPremadeGroup;
+import net.game.Party;
 import net.game.unit.Player;
 
 public class PremadeGroupMgr {
 
-	private static HashMap<PremadeGroupType, ArrayList<PremadeGroup>> groupMap = new HashMap<PremadeGroupType, ArrayList<PremadeGroup>>();
+	private final static HashMap<PremadeGroupType, ArrayList<PremadeGroup>> groupMap = new HashMap<PremadeGroupType, ArrayList<PremadeGroup>>();
+	private final static HashMap<Long, PremadeGroupApplication> applicationMap = new HashMap<Long, PremadeGroupApplication>();
+	public final static long APPLICATION_DURATION = 1000 * 60 * 5;
 	private static long currentGroupId;
 	private static long currentApplicationId;
 	
@@ -22,11 +27,25 @@ public class PremadeGroupMgr {
 	{
 		PremadeGroup group = new PremadeGroup(player, generatePremadeGroupId(), name, description, type, requiredLevel);
 		groupMap.get(type).add(group);
-		player.setPremadeGroup(group);
-		//CommandPremadeGroup.sendGroupCreated
+		if (player.getParty() != null)
+		{
+			int i = -1;
+			player.getParty().setPremadeGroup(group);
+			while (++i < player.getParty().getPlayerList().length)
+			{
+				Player tmp = player.getParty().getPlayer(i);
+				tmp.setPremadeGroup(group);
+				CommandPremadeGroup.sendGroupCreated(tmp);
+			}
+		}
+		else
+		{
+			player.setPremadeGroup(group);
+			CommandPremadeGroup.sendGroupCreated(player);
+		}
 	}
 	
-	public static void removePremadeGroup(Player player)
+	public static void delistPremadeGroup(Player player)
 	{
 		int i = -1;
 		ArrayList<PremadeGroup> groupList = groupMap.get(player.getPremadeGroup().getType());
@@ -43,20 +62,66 @@ public class PremadeGroupMgr {
 		ArrayList<PremadeGroupApplication> applicationList = group.getApplicationList();
 		i = -1;
 		while (++i < applicationList.size())
-			//TODO: CommandPremadeGroup.sendGroupDisbanded(i)
-			;
+			CommandPremadeGroup.sendGroupDelisted(group, applicationList.get(i));
 		if (group.getParty() != null)
 		{
 			i = -1;
+			Player tmp = null;
+			group.getParty().setPremadeGroup(null);
 			while (++i < group.getParty().getPlayerList().length)
-				if (group.getParty().getPlayer(i) != null)
-					//TODO: CommandPremadeGroup.sendGroupDisbanded(i)
-					;
+			{
+				if ((tmp = group.getParty().getPlayer(i)) != null)
+				{
+					CommandPremadeGroup.sendGroupDelisted(tmp);
+					tmp.setPremadeGroup(null);
+				}
+			}
 		}
 		else
-			//TODO: CommandPremadeGroup.sendGroupDisbanded
-			;
-		player.setPremadeGroup(null);
+		{
+			CommandPremadeGroup.sendGroupDelisted(player);
+			player.setPremadeGroup(null);
+		}
+	}
+	
+	public static void acceptApplication(Player player, long applicationId)
+	{
+		PremadeGroup group = player.getPremadeGroup();
+		PremadeGroupApplication application = group.getApplication(applicationId);
+		if (application == null)
+			return;
+		if (group.getParty() == null)
+		{
+			
+		}
+		else
+		{
+			if (application.getParty() != null)
+			{
+				
+			}
+			else
+			{
+				
+			}
+		}
+	}
+	
+	public static void refuseApplication(Player player, long applicationId)
+	{
+		PremadeGroup group = player.getPremadeGroup();
+		PremadeGroupApplication application = group.getApplication(applicationId);
+		if (application == null)
+			return;
+		if (group.getParty() == null)
+		{
+			
+		}
+		else
+		{
+			
+		}
+		applicationMap.remove(application.getId());
 	}
 	
 	public static boolean checkPremadeGroupConditionsMet(PremadeGroup group, Player player)
@@ -91,10 +156,11 @@ public class PremadeGroupMgr {
 			return;
 		PremadeGroupApplication application = null;
 		if (player.getParty() != null)
-			application = new PremadeGroupApplication(generatePremadeGroupApplicationId(), player.getParty(), description);
+			application = new PremadeGroupApplication(group, generatePremadeGroupApplicationId(), player.getParty(), description);
 		else
-			application = new PremadeGroupApplication(generatePremadeGroupApplicationId(), player.getUnitID(), description);
+			application = new PremadeGroupApplication(group, generatePremadeGroupApplicationId(), player.getUnitID(), description);
 		group.addApplication(application);
+		applicationMap.put(application.getId(), application);
 		if (application.getPlayerList() != null)
 		{
 			int i = -1;
@@ -118,35 +184,53 @@ public class PremadeGroupMgr {
 			;
 	}
 	
-	public static void cancelApplication(Player player, PremadeGroupType type, long groupId, long applicationId)
+	public static void cancelApplication(Player player, long applicationId, boolean shouldSendDataToApplicationClient)
 	{
-		PremadeGroup group = getPremadeGroup(type, groupId);
-		if (group == null)
+		PremadeGroupApplication application = applicationMap.get(applicationId);
+		if (application == null)
 			return;
-		PremadeGroupApplication application = null;
-		if ((application = group.removeApplication(applicationId)) == null)
+		applicationMap.remove(application.getId());
+		PremadeGroup group = application.getPremadeGroup();
+		Player tmp = null;
+		if (group.removeApplication(applicationId) == null)
 			return;
-		if (application.getPlayerList() != null)
+		if (shouldSendDataToApplicationClient)
 		{
-			int i = -1;
-			while (++i < application.getPlayerList().length)
-				//TODO: CommandPremadeGroup.sendCanceledApplicationToAGroup(group, application.getPlayerList()[i]);
-				;
+			if (application.getParty() != null)
+			{
+				int i = -1;
+				while (++i < application.getPlayerList().length)
+				{
+					tmp = Server.getInGameCharacter(application.getPlayerList()[i]);
+					if (tmp == null)
+						continue;
+					CommandPremadeGroup.sendApplicationCanceled(group, tmp);
+				}
+			}
+			else
+				CommandPremadeGroup.sendApplicationCanceled(group, player);
 		}
-		else
-			;
-			//TODO: CommandPremadeGroup.sendCanceledApplicationToAGroup(group, player);
 		if (group.getParty() != null)
 		{
 			int i = -1;
 			while (++i < group.getParty().getPlayerList().length)
-				if (group.getParty().getPlayer(i) != null)
-					//TODO: CommandPremadeGroup.sendCanceledApplication
-					;
+				if ((tmp = group.getParty().getPlayer(i)) != null)
+					CommandPremadeGroup.sendApplicationCanceledFromGroup(application, tmp);
 		}
 		else
-			//TODO: CommandPremadeGroup.sendCanceledApplication
-			;
+		{
+			tmp = Server.getInGameCharacter(group.getLeaderId());
+			if (tmp != null)
+				CommandPremadeGroup.sendApplicationCanceledFromGroup(application, tmp);
+		}
+	}
+	
+	public static void removeAllApplicationOnPartyDisband(Party party)
+	{
+		int i = -1;
+		ArrayList<PremadeGroupApplication> applicationList = party.getPremadeGroupApplicationList();
+		while (++i < applicationList.size())
+			cancelApplication(null, applicationList.get(i).getId(), false);
 	}
 	
 	public static PremadeGroup getPremadeGroup(PremadeGroupType type, long groupId)

@@ -14,7 +14,6 @@ import net.command.player.CommandChangeGold;
 import net.command.player.CommandFriend;
 import net.command.player.CommandGuild;
 import net.command.player.CommandLogout;
-import net.command.player.CommandParty;
 import net.command.player.CommandTrade;
 import net.command.player.CommandUpdateStats;
 import net.command.player.spell.CommandCast;
@@ -441,9 +440,6 @@ public class Player extends Unit {
 			mgr.removePlayer(this.chatChannelJoined.get(i), this);
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);
-		}
-		if(this.party != null || this.playerParty != null) {
-			CommandParty.leaveParty(this);
 		}
 	}
 	
