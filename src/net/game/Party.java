@@ -6,6 +6,7 @@ import net.command.player.CommandParty;
 import net.game.callback.StaticCallbackMgr;
 import net.game.premade_group.PremadeGroup;
 import net.game.premade_group.PremadeGroupApplication;
+import net.game.unit.Faction;
 import net.game.unit.Player;
 
 public class Party {
@@ -14,6 +15,7 @@ public class Party {
 	private int[] playerTable;
 	private int partyLeaderId;
 	private int numberMembers;
+	private final Faction faction;
 	private PremadeGroup premadeGroup;
 	private final ArrayList<PremadeGroupApplication> applicationList;
 	
@@ -26,6 +28,7 @@ public class Party {
 		this.premadeGroup = null;
 		this.numberMembers = 2;
 		this.applicationList = new ArrayList<PremadeGroupApplication>();
+		this.faction = leader.getFaction();
 	}
 	
 	public void addPremadeGroupApplication(PremadeGroupApplication application)
@@ -129,6 +132,8 @@ public class Party {
 			{
 				this.playerTable[i] = 0;
 				--this.numberMembers;
+				if (player.getUnitID() == this.partyLeaderId && this.numberMembers > 1)
+					chooseNewLeader();
 				return;
 			}
 		}
@@ -155,6 +160,16 @@ public class Party {
 			}
 			i++;
 		}
+	}
+	
+	public Faction getFaction()
+	{
+		return (this.faction);
+	}
+	
+	public void chooseNewLeader()
+	{
+		
 	}
 	
 	public void setLeader(Player player)

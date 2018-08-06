@@ -216,7 +216,9 @@ public class PacketID {
 	public final static short PREMADE_GROUP_REFUSE_APPLICATION = 212;
 	public final static short PREMADE_GROUP_CANCEL_APPLICATION = 213;
 	public final static short PREMADE_GROUP_EDIT = 214;
-	public final static short PREMADE_GROUP_REQUEST_UPDATE = 215;
+	public final static short PREMADE_GROUP_REQUEST_FETCH = 215;
 	public final static short PREMADE_GROUP_APPLICATION_CANCELED_FROM_GROUP = 216;
 	public final static short PREMADE_GROUP_DELISTED = 217;
+	public final static short PREMADE_GROUP_ADD_APPLICATION = 218;
+	public final static short PREMADE_GROUP_SEND_APPLICATION = 219;
 }

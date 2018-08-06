@@ -43,6 +43,10 @@ import net.game.manager.FriendMgr;
 import net.game.manager.ItemMgr;
 import net.game.manager.LoginQueueMgr;
 import net.game.premade_group.PremadeGroup;
+import net.game.premade_group.PremadeGroupApplication;
+import net.game.premade_group.PremadeGroupFactionMgr;
+import net.game.premade_group.PremadeGroupMgr;
+import net.game.premade_group.PremadeGroupType;
 import net.game.profession.Profession;
 import net.game.quest.PlayerQuestMgr;
 import net.game.shortcut.Shortcut;
@@ -56,16 +60,19 @@ public class Player extends Unit {
 	//private ProfessionManager professionManager = new ProfessionManager();
 	private HashSet<Integer> itemSentToClient = new HashSet<Integer>();
 	private SpellBarManager spellBarManager = new SpellBarManager();
+	private ArrayList<PremadeGroupApplication> sentApplicationList;
 	private final static int MAXIMUM_AMOUNT_FRIENDS = 20;
 	public final static int WHO_COMMAND_FREQUENCE = 1000;
+	private PremadeGroupType lastPremadeGroupFetchType;
 	private ItemMgr itemManager = new ItemMgr();
 	private HashMap<Integer, Spell> spellUnlocked;
 	private ArrayList<Integer> playerWhoAreFriend;
 	private ArrayList<String> chatChannelJoined;
 	private ConnectionManager connectionManager;
 	private ArrayList<Integer> friendList;
-	private HashSet<Long> loadedMailSet;
 	private ArrayList<Integer> ignoreList;
+	private HashSet<Long> loadedMailSet;
+	private long premadeGroupFetchTimer;
 	private PlayerQuestMgr questManager;
 	private Profession secondProfession;
 	private Profession firstProfession;
@@ -76,7 +83,6 @@ public class Player extends Unit {
 	private long playedLevelTimer;
 	private long lastLeveledUpTimer;
 	private boolean hasInitParty;
-	private long loginTimer;
 	private int numberYellowGem;
 	private Shortcut[] shortcut;
 	private String accountName;
@@ -93,6 +99,7 @@ public class Player extends Unit {
 	private int defaultArmor;
 	private int numberRedGem;
 	private Faction faction = Faction.HORDE;
+	private long loginTimer;
 	private long pingTimer;
 	private boolean logged;
 	private boolean isGMOn;
@@ -241,6 +248,39 @@ public class Player extends Unit {
 	public void initQuestMgr()
 	{
 		this.questManager = new PlayerQuestMgr(this);
+	}
+	
+	public void addPremadeGroupApplication(PremadeGroupApplication application)
+	{
+		this.sentApplicationList.add(application);
+	}
+	
+	public void clearPremadeGroupApplication()
+	{
+		this.sentApplicationList.clear();
+	}
+	
+	public PremadeGroupType getLastPremadeGroupFetchType()
+	{
+		return (this.lastPremadeGroupFetchType);
+	}
+	
+	public void setLastPremadeGroupFetchType(PremadeGroupType type)
+	{
+		this.lastPremadeGroupFetchType = type;
+	}
+	
+	public ArrayList<PremadeGroupApplication> getPremadeGroupApplicationList()
+	{
+		return (this.sentApplicationList);
+	}
+	
+	public PremadeGroupApplication getPremadeGroupApplication(long applicationId)
+	{
+		for (int i = 0; i < this.sentApplicationList.size(); ++i)
+			if (this.sentApplicationList.get(i).getId() == applicationId)
+				return (this.sentApplicationList.get(i));
+		return (null);
 	}
 
 	public void sendStats() {
@@ -441,6 +481,9 @@ public class Player extends Unit {
 		if(this.trade != null || this.playerTrade != null) {
 			CommandTrade.closeTrade(this);
 		}
+		PremadeGroupFactionMgr premadeGroupMgr = PremadeGroupMgr.getPremadeGroupMgr(this.faction);
+		if (premadeGroupMgr != null)
+			premadeGroupMgr.cancelApplicationOnLogout(this);
 	}
 	
 	public void close(boolean shouldNotifyClient) {
@@ -537,6 +580,16 @@ public class Player extends Unit {
 			i++;
 		}
 		return false;
+	}
+	
+	public long getPremadeGroupFetchTimer()
+	{
+		return (this.premadeGroupFetchTimer);
+	}
+	
+	public void setPremadeGroupFetchTimer(long timer)
+	{
+		this.premadeGroupFetchTimer = timer;
 	}
 	
 	public void addIgnore(int id) {

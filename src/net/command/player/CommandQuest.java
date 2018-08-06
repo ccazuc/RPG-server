@@ -48,6 +48,11 @@ public class CommandQuest extends Command {
 		{
 			int questId = connection.readInt();
 			Quest quest = QuestMgr.getQuest(questId);
+			if (quest == null)
+			{
+				Log.writePlayerLog(player, "Tried to cancel a quest that doesn't exist, questId: "+questId);
+				return;
+			}
 			player.getQuestManager().cancelQuest(quest);
 		}
 	}

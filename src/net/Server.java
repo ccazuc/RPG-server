@@ -34,7 +34,6 @@ import net.game.manager.CharacterMgr;
 import net.game.manager.DatabaseMgr;
 import net.game.manager.DebugMgr;
 import net.game.manager.LoginQueueMgr;
-import net.game.premade_group.PremadeGroupMgr;
 import net.game.quest.QuestMgr;
 import net.game.spell.SpellMgr;
 import net.game.unit.Player;
@@ -102,7 +101,6 @@ public class Server {
 		AuraMgr.loadAuras();
 		SpellMgr.loadSpells();
 		ChannelMgr.initChannelMgr();
-		PremadeGroupMgr.initPremadeGroupMap();
 		QuestMgr.loadQuest();
 		ThreadMgr.initThread();
 		System.out.println("Init took "+(System.currentTimeMillis()-time)+" ms.");

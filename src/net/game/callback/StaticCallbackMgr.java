@@ -1,6 +1,7 @@
 package net.game.callback;
 
 import net.game.Party;
+import net.game.premade_group.PremadeGroupFactionMgr;
 import net.game.premade_group.PremadeGroupMgr;
 import net.game.unit.Player;
 
@@ -14,6 +15,9 @@ public class StaticCallbackMgr {
 	
 	public static void onPartyDisbanded(Party party)
 	{
-		PremadeGroupMgr.removeAllApplicationOnPartyDisband(party);
+		PremadeGroupFactionMgr premadeGroupMgr = PremadeGroupMgr.getPremadeGroupMgr(party.getFaction());
+		if (premadeGroupMgr == null)
+			return;
+		premadeGroupMgr.removeAllApplicationOnPartyDisband(party);
 	}
 }

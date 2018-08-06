@@ -17,6 +17,7 @@ public class PremadeGroup {
 	private final ArrayList<PremadeGroupApplication> applicationList;
 	private int requiredLevel;
 	private Party party;
+	private boolean isAutoAccept;
 	private final long createTimer;
 	
 	public PremadeGroup(Player player, long id, String name, String description, PremadeGroupType type, int requiredLevel)
@@ -66,12 +67,22 @@ public class PremadeGroup {
 		this.leaderId = player.getUnitID();
 	}
 	
-	public int getLeaderId()
+	public final void setAutoAccept(boolean we)
+	{
+		this.isAutoAccept = we;
+	}
+	
+	public final boolean getIsAutoAccept()
+	{
+		return (this.isAutoAccept);
+	}
+	
+	public final int getLeaderId()
 	{
 		return (this.leaderId);
 	}
 	
-	public String getLeaderName()
+	public final String getLeaderName()
 	{
 		return (this.leaderName);
 	}

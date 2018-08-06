@@ -118,6 +118,7 @@ public class ConnectionManager {
 		loggedCommandList.put(AUCTION, new CommandAuction("AUCTION", true));
 		loggedCommandList.put(MAIL, new CommandMail("MAIL", true));
 		loggedCommandList.put(PLAYED, new CommandPlayed("PLAYED", true));
+		loggedCommandList.put(PREMADE_GROUP, new CommandPlayed("PREMADE_GROUP", true));
 	}
 	
 	public static void initAuthCommand() {
@@ -158,10 +159,7 @@ public class ConnectionManager {
 			}
 		} 
 		catch (IOException e) {
-			//e.printStackTrace();
-			//System.out.println("IOException on read.");
 			this.player.close();
-			//System.out.println("Read took "+(System.nanoTime()-timer)/1000+" µs");
 		}
 	}
 	
