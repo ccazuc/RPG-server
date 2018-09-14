@@ -14,32 +14,45 @@ import net.thread.sql.SQLRequest;
 import net.thread.sql.SQLRequestPriority;
 import net.utils.StringUtils;
 
-public class CommandCreateCharacter extends Command {
+public class CommandCreateCharacter extends Command
+{
 	
 	private static JDOStatement create_character; //TODO: move all these statement out of Command
 	private static JDOStatement check_character;
 	private static JDOStatement character_id;
-	private static SQLRequest insert_bag = new SQLRequest("INSERT INTO `bag` (character_id) VALUES (?)", "Create character insert_bag", SQLRequestPriority.HIGH) {
+	private static SQLRequest insert_bag = new SQLRequest("INSERT INTO `bag` (character_id) VALUES (?)", "Create character insert_bag", SQLRequestPriority.HIGH)
+	
+	{
 		@Override
-		public void gatherData() throws SQLException {
+		public void gatherData() throws SQLException
+		{
 			this.statement.putInt((int)getNextObject());
 		}
 	};
-	private static SQLRequest character_containers = new SQLRequest("INSERT INTO character_containers (character_id) VALUES (?)", "Create character character_containers", SQLRequestPriority.HIGH) {
+	private static SQLRequest character_containers = new SQLRequest("INSERT INTO character_containers (character_id) VALUES (?)", "Create character character_containers", SQLRequestPriority.HIGH)
+	
+	{
 		@Override
-		public void gatherData() throws SQLException {
+		public void gatherData() throws SQLException
+		{
 			this.statement.putInt((int)getNextObject());
 		}
 	};
-	private static SQLRequest character_stuff = new SQLRequest("INSERT INTO character_stuff (character_id) VALUES (?)", "Create character character_stuff", SQLRequestPriority.HIGH) {
+	private static SQLRequest character_stuff = new SQLRequest("INSERT INTO character_stuff (character_id) VALUES (?)", "Create character character_stuff", SQLRequestPriority.HIGH)
+	
+	{
 		@Override
-		public void gatherData() throws SQLException {
+		public void gatherData() throws SQLException
+		{
 			this.statement.putInt((int)getNextObject());	
 		}
 	};
-	private static SQLRequest spellbar = new SQLRequest("INSERT INTO spellbar (character_id) VALUES (?)", "Create character spellbar", SQLRequestPriority.HIGH) {
+	private static SQLRequest spellbar = new SQLRequest("INSERT INTO spellbar (character_id) VALUES (?)", "Create character spellbar", SQLRequestPriority.HIGH)
+	
+	{
 		@Override
-		public void gatherData() throws SQLException {
+		public void gatherData() throws SQLException
+		{
 			this.statement.putInt((int)getNextObject());
 		}
 	};
@@ -50,19 +63,24 @@ public class CommandCreateCharacter extends Command {
 	}	
 	
 	@Override
-	public void read(Player player) {
-		if(Server.getInGameCharacter(player.getUnitID()) != null) {
+	public void read(Player player)
+	{
+		if(Server.getInGameCharacter(player.getUnitID()) != null)
+		{
 			Log.writePlayerLog(player, "Tried to create a character while beeing in-game");
 			player.close();
 			return;
 		}
 		Connection connection = player.getConnection();
-		if(create_character == null) {
-			try {
+		if(create_character == null)
+		{
+			try
+			{
 				create_character = Server.getJDO().prepare("INSERT INTO `character` (account_id, name, class, race, experience, gold) VALUES (?, ?, ?, ?, 0, 1000000)");
 				character_id = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
 			}
-			catch(SQLException e) {
+			catch (SQLException e)
+			{
 				e.printStackTrace();
 			}
 		}
@@ -71,10 +89,10 @@ public class CommandCreateCharacter extends Command {
 		String classe = connection.readString();
 		String race = connection.readString();
 		int characterId = 0;
-		try {
-			if(!checkCharacterName(connection, name)) {
+		try
+		{
+			if (!checkCharacterName(connection, name))
 				return;
-			}
 			name = StringUtils.formatPlayerName(name);
 			create_character.putInt(player.getAccountId());
 			create_character.putString(name);
@@ -88,12 +106,10 @@ public class CommandCreateCharacter extends Command {
 			character_id.clear();
 			character_id.putString(name);
 			character_id.execute();
-			if(character_id.fetch()) {
+			if(character_id.fetch())
 				characterId = character_id.getInt();
-			}
-			if(characterId == 0) {
+			if(characterId == 0)
 				return;
-			}
 			SQLDatas datas = new SQLDatas(characterId);
 			insert_bag.addDatas(datas);
 			Server.executeSQLRequest(insert_bag);
@@ -104,54 +120,60 @@ public class CommandCreateCharacter extends Command {
 			spellbar.addDatas(datas);
 			Server.executeSQLRequest(spellbar);
 		}
-		catch(SQLException e) {
+		catch (SQLException e)
+		{
 			e.printStackTrace();
 		}
 	}
 	
+	//TODO: Create function to handle each error case
 	private static boolean checkCharacterName(Connection connection, String name) throws SQLException {
 		int i = 0;
-		if(name.length() < 3 || name.length() > 10) {
+		if (name.length() < 3 || name.length() > 10)
+		{
 			connection.startPacket();
 			connection.writeShort(PacketID.CREATE_CHARACTER);
 			connection.writeShort(PacketID.ERROR_NAME_LENGTH);
 			connection.endPacket();
 			connection.send();
 		}
-		while(i < name.length()) {
+		while(i < name.length())
+		{
 			char c = name.charAt(i);
-			if(!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) && c != 'é' && c != 'è' && c != 'ç' && c != 'à' && c != 'ê' && c != 'â' && c != 'û' && c != 'ë' && c != 'ä' && c != 'ü') {
+			if(!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½')
+			{
 				connection.startPacket();
 				connection.writeShort(PacketID.CREATE_CHARACTER);
 				connection.writeShort(PacketID.ERROR_NAME_ALPHABET);
 				connection.endPacket();
 				connection.send();
-				return false;
+				return (false);
 			}
-			if(i < name.length()-3) {
-				if(name.charAt(i) == name.charAt(i+1) && name.charAt(i+1) == name.charAt(i+2)) {
-					return false;
-				}
+			if(i < name.length()-3)
+			{
+				if(name.charAt(i) == name.charAt(i+1) && name.charAt(i+1) == name.charAt(i+2))
+					return (false);
 			}
 			i++;
 		}
-		if(check_character == null) {
+		if(check_character == null)
 			check_character = Server.getJDO().prepare("SELECT character_id FROM `character` WHERE name = ?");
-		}
 		check_character.clear();
 		check_character.putString(name);
 		check_character.execute();
-		if(check_character.fetch()) {
+		if(check_character.fetch())
+		{
 			int id = check_character.getInt();
-			if(id != 0) {	
+			if(id != 0)
+			{	
 				connection.startPacket();
 				connection.writeShort(PacketID.CREATE_CHARACTER);
 				connection.writeShort(PacketID.ERROR_NAME_ALREADY_TAKEN);
 				connection.endPacket();
 				connection.send();
-				return false;
+				return (false);
 			}
 		}
-		return true;
+		return (true);
 	}
 }

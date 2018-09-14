@@ -9,7 +9,8 @@ import net.game.manager.BanMgr;
 import net.game.manager.CharacterMgr;
 import net.game.unit.Player;
 
-public class CommandLoadCharacter extends Command {
+public class CommandLoadCharacter extends Command
+{
 
 	public CommandLoadCharacter(String name, boolean debug)
 	{
@@ -17,17 +18,20 @@ public class CommandLoadCharacter extends Command {
 	}
 	
 	@Override
-	public void read(Player player) {
+	public void read(Player player)
+	{
 		Connection connection = player.getConnection();
 		int id = connection.readInt();
 		//System.out.println("Character " + id + " tried to connect");
 		long duration;
-		if(!Server.getLoggedPlayerList().containsKey(player.getAccountId())) {
+		if (!Server.getLoggedPlayerList().containsKey(player.getAccountId()))
+		{
 			Log.writePlayerLog(player, new StringBuilder().append("Tried to load character ").append(id).append(" whereas he's not connected").toString());
 			player.close();
 			return;
 		}
-		if(!CharacterMgr.checkPlayerAccount(player.getAccountId(), id)) {
+		if(!CharacterMgr.checkPlayerAccount(player.getAccountId(), id))
+		{
 			player.close();
 			Log.writePlayerLog(player, new StringBuilder().append("tried to connect on someone else's character (id = ").append(id).append(')').toString());
 			return;
@@ -76,7 +80,9 @@ public class CommandLoadCharacter extends Command {
 		connection.writeShort(PacketID.CHARACTER_LOGIN);
 		connection.writeShort(PacketID.CHARACTER_LOGIN_BANNED);
 		if (duration == 0)
+		{
 			connection.writeBoolean(true);
+		}
 		else
 		{
 			connection.writeBoolean(false);

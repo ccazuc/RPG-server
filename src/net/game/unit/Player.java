@@ -54,7 +54,8 @@ import net.game.spell.Spell;
 import net.game.spell.SpellBarManager;
 import net.game.spell.SpellMgr;
 
-public class Player extends Unit {
+public class Player extends Unit
+{
 
 	private final static HashMap<Integer, Integer> levelMap = new HashMap<Integer, Integer>(); //key = level, value = exp
 	//private ProfessionManager professionManager = new ProfessionManager();
@@ -283,7 +284,7 @@ public class Player extends Unit {
 		return (null);
 	}
 
-	public void sendStats() {
+	/*public void sendStats() {
 		this.connectionManager.getConnection().startPacket();
 		this.connectionManager.getConnection().writeShort(PacketID.LOAD_STATS);
 		this.connectionManager.getConnection().writeInt(this.unitID);
@@ -292,7 +293,7 @@ public class Player extends Unit {
 		this.connectionManager.getConnection().writeInt(this.accountRank.getValue());
 		this.connectionManager.getConnection().endPacket();
 		this.connectionManager.getConnection().send();
-	}
+	}*/
 	
 	public void initTable() {
 		this.spells = new Shortcut[36];

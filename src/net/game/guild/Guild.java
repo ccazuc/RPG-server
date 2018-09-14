@@ -98,7 +98,7 @@ public class Guild {
 		this.isBeingDeleted = true;
 	}
 	
-	public boolean isBeingDelete() {
+	public boolean isBeingDeleted() {
 		return this.isBeingDeleted;
 	}
 	

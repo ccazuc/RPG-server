@@ -13,7 +13,8 @@ import net.game.mail.MailTemplate;
 import net.game.manager.CharacterMgr;
 import net.game.unit.Player;
 
-public class CommandMail extends Command {
+public class CommandMail extends Command
+{
 
 	public CommandMail(String name, boolean debug)
 	{

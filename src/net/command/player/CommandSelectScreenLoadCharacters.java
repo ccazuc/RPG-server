@@ -11,7 +11,8 @@ import net.game.log.Log;
 import net.game.unit.Player;
 
 
-public class CommandSelectScreenLoadCharacters extends Command {
+public class CommandSelectScreenLoadCharacters extends Command
+{
 	
 	private static JDOStatement write_statement; //TODO: move this out of Command
 
@@ -21,32 +22,29 @@ public class CommandSelectScreenLoadCharacters extends Command {
 	}
 	
 	@Override
-	public void read(Player player) {
-		if(!player.isOnline()) {
+	public void read(Player player)
+	{
+		if(!player.isOnline())
 			write(player, player.getAccountId());
-		}
-		else {
+		else
 			Log.writePlayerLog(player, "tried to load select screen characters while beeing online");
-		}
 	}
 	
-	private static void write(Player player, int accountId) {
-		try {
+	private static void write(Player player, int accountId)
+	{
+		try
+		{
 			long timer = System.nanoTime();
 			Connection connection = player.getConnection();
-			if(write_statement == null) {
+			if(write_statement == null)
 				write_statement = Server.getJDO().prepare("SELECT character_id, name, experience, class, race FROM `character` WHERE account_id = ?");
-			}
-			boolean hasSendId = true;
 			write_statement.clear();
 			write_statement.putInt(accountId);
 			write_statement.execute();
 			connection.startPacket();
 			connection.writeShort(PacketID.SELECT_SCREEN_LOAD_CHARACTERS);
-			while(write_statement.fetch()) {
-				if(hasSendId) {
-					hasSendId = false;
-				}
+			while(write_statement.fetch())
+			{
 				int id = write_statement.getInt();
 				String name = write_statement.getString();
 				int level = Player.getLevel(write_statement.getInt());
@@ -61,9 +59,10 @@ public class CommandSelectScreenLoadCharacters extends Command {
 			connection.writeInt(-1);
 			connection.endPacket();
 			connection.send();
-			System.out.println("[SQL REQUEST] load characters took "+(System.nanoTime()-timer)/1000+" µs to execute.");
+			System.out.println("[SQL REQUEST] load characters took "+(System.nanoTime()-timer)/1000+" ï¿½s to execute.");
 		}
-		catch(SQLException e) {
+		catch(SQLException e)
+		{
 			e.printStackTrace();
 		}
 	}

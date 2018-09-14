@@ -11,7 +11,8 @@ import net.game.quest.Quest;
 import net.game.quest.QuestMgr;
 import net.game.unit.Player;
 
-public class CommandQuest extends Command {
+public class CommandQuest extends Command
+{
 
 	public CommandQuest(String name, boolean debug)
 	{
@@ -19,7 +20,8 @@ public class CommandQuest extends Command {
 	}
 	
 	@Override
-	public void read(Player player) {
+	public void read(Player player)
+	{
 		Connection connection = player.getConnection();
 		short packetId = connection.readShort();
 		if (packetId == PacketID.QUEST_COMPLETE_REQUEST)
@@ -57,17 +59,20 @@ public class CommandQuest extends Command {
 		}
 	}
 	
-	public static void InitQuests(Player player) {
+	public static void InitQuests(Player player)
+	{
 		PlayerQuestMgr questManager = player.getQuestManager();
 		Connection connection = player.getConnection();
 		connection.startPacket();
 		connection.writeShort(PacketID.QUEST);
 		connection.writeShort(PacketID.QUEST_INIT);
-		for (PlayerQuest quest : questManager.getQuestMap().values()) {
+		for (PlayerQuest quest : questManager.getQuestMap().values())
+		{
 			connection.writeInt(quest.getQuest().getId());
 			connection.writeByte((byte)quest.getObjectives().size());
 			int i = -1;
-			while (++i < quest.getObjectives().size()) {
+			while (++i < quest.getObjectives().size())
+			{
 				connection.writeShort(quest.getObjective(i).getObjective().getAmount());
 				connection.writeString(quest.getObjective(i).getObjective().getDescription());
 				connection.writeShort(quest.getObjective(i).getProgress());
@@ -79,7 +84,8 @@ public class CommandQuest extends Command {
 		connection.send();
 	}
 	
-	public static void ObjectiveUpdate(Player player, PlayerQuestObjective objective) {
+	public static void ObjectiveUpdate(Player player, PlayerQuestObjective objective)
+	{
 		Connection connection = player.getConnection();
 		connection.startPacket();
 		connection.writeShort(PacketID.QUEST);

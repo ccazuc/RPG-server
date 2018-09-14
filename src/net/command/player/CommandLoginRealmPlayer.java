@@ -10,7 +10,8 @@ import net.game.log.Log;
 import net.game.manager.LoginQueueMgr;
 import net.game.unit.Player;
 
-public class CommandLoginRealmPlayer extends Command {
+public class CommandLoginRealmPlayer extends Command
+{
 
 	public CommandLoginRealmPlayer(String name, boolean debug)
 	{
@@ -18,20 +19,23 @@ public class CommandLoginRealmPlayer extends Command {
 	}
 	
 	@Override
-	public void read(Player player) {
+	public void read(Player player)
+	{
 		Connection connection = player.getConnection();
 		short packetId = connection.readShort();
-		if(packetId == PacketID.LOGIN_REALM_REQUEST) {
+		if (packetId == PacketID.LOGIN_REALM_REQUEST)
+		{
 			double key = connection.readDouble();
 			int account_id = connection.readInt();
 			//System.out.println("Key: " + key);
 			System.out.println(player.getIpAdress());
-			if(!Server.hasKey(player, key, account_id)) {
+			if (!Server.hasKey(player, key, account_id)) {
 				Log.writePlayerLog(player, "Unknown loggin key");
 				player.close();
 				return;
 			}
-			if(!Server.isAcceptingConnection()) {
+			if (!Server.isAcceptingConnection())
+			{
 				connectionRefused(connection);
 				return;
 			}
@@ -55,7 +59,8 @@ public class CommandLoginRealmPlayer extends Command {
 		}
 	}
 	
-	private static void connectionRefused(Connection connection) {
+	private static void connectionRefused(Connection connection)
+	{
 		connection.startPacket();
 		connection.writeShort(PacketID.LOGIN_REALM);
 		connection.writeShort(PacketID.LOGIN_REALM_DOESNT_ACCEPT_CONNECTION);
@@ -63,7 +68,8 @@ public class CommandLoginRealmPlayer extends Command {
 		connection.send();
 	}
 	
-	private static void connectionAccepted(Connection connection) {
+	private static void connectionAccepted(Connection connection)
+	{
 		connection.startPacket();
 		connection.writeShort(PacketID.LOGIN_REALM);
 		connection.writeShort(PacketID.LOGIN_REALM_SUCCESS);

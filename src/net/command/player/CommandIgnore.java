@@ -14,7 +14,8 @@ import net.game.manager.IgnoreMgr;
 import net.game.unit.Player;
 import net.utils.StringUtils;
 
-public class CommandIgnore extends Command {
+public class CommandIgnore extends Command
+{
 
 	public CommandIgnore(String name, boolean debug)
 	{
@@ -22,12 +23,15 @@ public class CommandIgnore extends Command {
 	}
 	
 	@Override
-	public void read(Player player) {
+	public void read(Player player)
+	{
 		Connection connection = player.getConnection();
 		short packetId = connection.readShort();
-		if(packetId == PacketID.IGNORE_ADD) {
+		if (packetId == PacketID.IGNORE_ADD)
+		{
 			String name = connection.readString();
-			if(!StringUtils.checkPlayerNameLength(name)) {
+			if (!StringUtils.checkPlayerNameLength(name))
+			{
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
@@ -39,28 +43,31 @@ public class CommandIgnore extends Command {
 			}
 			Player ignore = Server.getInGameCharacterByName(name);
 			int character_id = 0;
-			if(ignore == null) {
+			if (ignore == null)
 				character_id = CharacterMgr.loadCharacterIDFromName(name);
-			}
-			if(ignore == null && character_id == -1) {
+			if (ignore == null && character_id == -1)
+			{
 				CommandPlayerNotFound.write(connection, name);
 				return;
 			}
-			if(ignore != null && !IgnoreMgr.isIgnored(player.getUnitID(), ignore.getUnitID())) {
+			if (ignore != null && !IgnoreMgr.isIgnored(player.getUnitID(), ignore.getUnitID()))
+			{
 				IgnoreMgr.addIgnore(player.getUnitID(), ignore.getUnitID());
 				addIgnore(connection, ignore);
 			}
-			else if(character_id != -1 && !IgnoreMgr.isIgnored(player.getUnitID(), character_id)) {
+			else if (character_id != -1 && !IgnoreMgr.isIgnored(player.getUnitID(), character_id))
+			{
 				IgnoreMgr.addIgnore(player.getUnitID(), character_id);
 				addIgnore(connection, character_id, name);
 			}
-			else {
+			else
 				CommandSendMessage.selfWithoutAuthor(connection, name.concat(" is already in your ignore list."), MessageType.SELF);
-			}
 		}
-		else if(packetId == PacketID.IGNORE_REMOVE) {
+		else if (packetId == PacketID.IGNORE_REMOVE)
+		{
 			int id = connection.readInt();
-			if(!IgnoreMgr.isIgnored(player.getUnitID(), id)) {
+			if (!IgnoreMgr.isIgnored(player.getUnitID(), id))
+			{
 				CommandSendMessage.selfWithoutAuthor(connection, "This player is not in your ignore list.", MessageType.SELF);
 				return;
 			}
@@ -69,9 +76,10 @@ public class CommandIgnore extends Command {
 		}
 	}
 	
-	public static void ignoreInit(Connection connection, Player player) {
+	public static void ignoreInit(Connection connection, Player player)
+	{
 		HashSet<Integer> ignoreList = IgnoreMgr.getIgnoreList(player.getUnitID());
-		if(ignoreList == null)
+		if (ignoreList == null)
 			return;
 		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
@@ -84,14 +92,14 @@ public class CommandIgnore extends Command {
 			if ((tmp = Server.getInGameCharacter(id)) != null)
 				connection.writeString(tmp.getName());
 			else
-				connection.writeString(CharacterMgr.loadCharacterNameFromID(id));
-				
+				connection.writeString(CharacterMgr.loadCharacterNameFromID(id));			
 		}
 		connection.endPacket();
 		connection.send();
 	}
 	
-	public static void removeIgnore(Connection connection, int id) {
+	public static void removeIgnore(Connection connection, int id)
+	{
 		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_REMOVE);
@@ -100,7 +108,8 @@ public class CommandIgnore extends Command {
 		connection.send();
 	}
 	
-	public static void addIgnore(Connection connection, Player ignore) {
+	public static void addIgnore(Connection connection, Player ignore)
+	{
 		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_ADD);
@@ -110,7 +119,8 @@ public class CommandIgnore extends Command {
 		connection.send();
 	}
 	
-	public static void addIgnore(Connection connection, int id, String name) {
+	public static void addIgnore(Connection connection, int id, String name)
+	{
 		connection.startPacket();
 		connection.writeShort(PacketID.IGNORE);
 		connection.writeShort(PacketID.IGNORE_ADD);

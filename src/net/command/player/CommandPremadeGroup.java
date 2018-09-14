@@ -66,8 +66,7 @@ public class CommandPremadeGroup extends Command
 			}
 			else
 			{
-				int i = -1;
-				while (++i < player.getParty().getPlayerList().length)
+				for (int i = 0; i < player.getParty().getPlayerList().length; ++i)
 				{
 					if (player.getParty().getPlayerList()[i] == 0)
 						continue;

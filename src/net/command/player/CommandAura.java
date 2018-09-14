@@ -11,7 +11,8 @@ import net.game.log.Log;
 import net.game.unit.Player;
 import net.game.unit.Unit;
 
-public class CommandAura extends Command {
+public class CommandAura extends Command
+{
 
 	public CommandAura(String name, boolean debug)
 	{
@@ -19,30 +20,36 @@ public class CommandAura extends Command {
 	}
 	
 	@Override
-	public void read(Player player) {
+	public void read(Player player)
+	{
 		Connection connection = player.getConnection();
 		short packetId = connection.readShort();
-		if(packetId == PacketID.AURA_CANCEL) {
+		if (packetId == PacketID.AURA_CANCEL)
+		{
 			int auraID = connection.readInt();
 			Aura aura = AuraMgr.getAura(auraID);
-			if(aura == null) {
+			if (aura == null)
+			{
 				Log.writePlayerLog(player, "Tried to remove a non-existing aura, auraID: "+auraID);
 				return;
 			}
-			if(!aura.isVisible()) {
+			if (!aura.isVisible())
+			{
 				Log.writePlayerLog(player, "Tried to remove a non-visible aura, auraID: "+auraID);
 				return;
 			}
-			if(!aura.isBuff()) {
+			if (!aura.isBuff())
+			{
 				Log.writePlayerLog(player, "Tried to remove a debuff aura, auraID: "+auraID);
 				return;
 			}
-			if(!player.removeAura(auraID, AuraRemoveList.CANCEL))
+			if (!player.removeAura(auraID, AuraRemoveList.CANCEL))
 				Log.writePlayerLog(player, "Tried to remove the aura "+auraID+" whereas he's not affected by it.");
 		}
 	}
 	
-	public static void sendAura(Player player, int unitID, AppliedAura aura) {
+	public static void sendAura(Player player, int unitID, AppliedAura aura)
+	{
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.AURA);
 		player.getConnection().writeShort(PacketID.AURA_SEND);
@@ -54,7 +61,8 @@ public class CommandAura extends Command {
 		player.getConnection().send();
 	}
 	
-	public static void updateAura(Player player, int unitID, AppliedAura aura) {
+	public static void updateAura(Player player, int unitID, AppliedAura aura)
+	{
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.AURA);
 		player.getConnection().writeShort(PacketID.AURA_UPDATE);
@@ -66,7 +74,8 @@ public class CommandAura extends Command {
 		player.getConnection().send();
 	}
 	
-	public static void removeAura(Player player, int unitID, int auraID) {
+	public static void removeAura(Player player, int unitID, int auraID)
+	{
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.AURA);
 		player.getConnection().writeShort(PacketID.AURA_CANCEL);
@@ -76,18 +85,18 @@ public class CommandAura extends Command {
 		player.getConnection().send();
 	}
 	
-	public static void initAura(Player player, Unit unit) {
+	public static void initAura(Player player, Unit unit)
+	{
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.AURA);
 		player.getConnection().writeShort(PacketID.AURA_INIT);
-		int i = 0;
 		player.getConnection().writeInt(unit.getUnitID());
 		player.getConnection().writeShort((short)unit.getAuraList().size());
-		while(i < unit.getAuraList().size()) {
+		for (int i = 0; i < unit.getAuraList().size(); ++i)
+		{
 			player.getConnection().writeInt(unit.getAuraList().get(i).getAura().getId());
 			player.getConnection().writeLong(unit.getAuraList().get(i).getEndTimer());
 			player.getConnection().writeByte(unit.getAuraList().get(i).getNumberStack());
-			i++;
 		}
 		player.getConnection().endPacket();
 		player.getConnection().send();

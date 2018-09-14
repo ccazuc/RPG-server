@@ -1,6 +1,7 @@
 package net.game.manager;
 
-public class DebugMgr {
+public class DebugMgr
+{
 
 	private static boolean CHAT_COMMAND_TIMER = false;
 	private static boolean SQL_REQUEST_TIMER = false;
@@ -10,51 +11,63 @@ public class DebugMgr {
 	private static boolean PACKET_EXECUTE_TIMER = false;
 	private static int LOOP_TOO_LONG_VALUE = 5;
 	
-	public static boolean getChatCommandTimer() {
-		return CHAT_COMMAND_TIMER;
+	public static boolean getChatCommandTimer()
+	{
+		return (CHAT_COMMAND_TIMER);
 	}
 	
-	public static void setChatCommandTimer(boolean we) {
+	public static void setChatCommandTimer(boolean we)
+	{
 		CHAT_COMMAND_TIMER = we;
 	}
 	
-	public static boolean getSQLRequestTimer() {
-		return SQL_REQUEST_TIMER;
+	public static boolean getSQLRequestTimer()
+	{
+		return (SQL_REQUEST_TIMER);
 	}
 	
-	public static void setSQLRequestTimer(boolean we) {
+	public static void setSQLRequestTimer(boolean we)
+	{
 		SQL_REQUEST_TIMER = we;
 	}
 	
-	public static boolean getWriteLogFileTimer() {
-		return WRITE_LOG_FILE_TIMER;
+	public static boolean getWriteLogFileTimer()
+	{
+		return (WRITE_LOG_FILE_TIMER);
 	}
 	
-	public static void setWriteLogFileTimer(boolean we) {
+	public static void setWriteLogFileTimer(boolean we)
+	{
 		WRITE_LOG_FILE_TIMER = we;
 	}
 	
-	public static int getLoopTooLongValue() {
-		return LOOP_TOO_LONG_VALUE;
+	public static int getLoopTooLongValue()
+	{
+		return (LOOP_TOO_LONG_VALUE);
 	}
 	
-	public static void setLoopTooLongValue(int value) {
+	public static void setLoopTooLongValue(int value)
+	{
 		LOOP_TOO_LONG_VALUE = value;
 	}
 	
-	public static boolean getExecuteWhoTimer() {
-		return EXECUTE_WHO_TIMER;
+	public static boolean getExecuteWhoTimer()
+	{
+		return (EXECUTE_WHO_TIMER);
 	}
 	
-	public static void setExecuteWhoTimer(boolean we) {
+	public static void setExecuteWhoTimer(boolean we)
+	{
 		EXECUTE_WHO_TIMER = we;
 	}
 	
-	public static boolean getPacketReceived() {
-		return PACKET_RECEIVED;
+	public static boolean getPacketReceived()
+	{
+		return (PACKET_RECEIVED);
 	}
 	
-	public static void setPacketReceived(boolean we) {
+	public static void setPacketReceived(boolean we)
+	{
 		PACKET_RECEIVED = we;
 	}
 	

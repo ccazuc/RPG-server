@@ -4,7 +4,8 @@ import net.command.Command;
 import net.connection.PacketID;
 import net.game.unit.Player;
 
-public class CommandLogout extends Command {
+public class CommandLogout extends Command
+{
 
 	public CommandLogout(String name, boolean debug)
 	{
@@ -12,12 +13,14 @@ public class CommandLogout extends Command {
 	}
 	
 	@Override
-	public final void read(Player player) {
+	public final void read(Player player)
+	{
 		player.close(false);
 		System.out.println("Logout received from account: " + player.getAccountName());
 	}
 	
-	public static void loggout(Player player) {
+	public static void loggout(Player player)
+	{
 		player.getConnection().startPacket();
 		player.getConnection().writeShort(PacketID.LOGOUT);
 		player.getConnection().endPacket();
