@@ -221,4 +221,5 @@ public class PacketID {
 	public final static short PREMADE_GROUP_DELISTED = 217;
 	public final static short PREMADE_GROUP_ADD_APPLICATION = 218;
 	public final static short PREMADE_GROUP_SEND_APPLICATION = 219;
+	public final static short TRADE_NEW_CONFIRMED = 220;
 }

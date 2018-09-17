@@ -1,6 +1,7 @@
 package net.game.manager;
 
-public class DatabaseMgr {
+public class DatabaseMgr
+{
 
 	public final static int PORT = 3306;
 	public final static String TABLE_NAME = "rpg";

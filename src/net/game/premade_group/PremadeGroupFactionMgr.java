@@ -119,7 +119,7 @@ public class PremadeGroupFactionMgr {
 			return;
 		if (group.getParty() == null)
 		{
-			
+			CommandPremadeGroup.sendApplicationRefused(player);
 		}
 		else
 		{

@@ -64,6 +64,7 @@ public class CommandTrade extends Command
 			player.setPlayerTrade(trade);
 			CommandSendMessage.selfWithAuthor(trade.getConnection(), " wants to trade with you.", player.getName(), MessageType.SELF);
 			write(PacketID.TRADE_REQUEST, trade, player.getName());
+			writeTradeNewConfirmed(player);
 		}
 		else if (packetID == PacketID.TRADE_NEW_CONFIRM)
 		{ //confirm the trade
@@ -210,6 +211,15 @@ public class CommandTrade extends Command
 			}
 			closeTrade(player);
 		}
+	}
+	
+	private static void writeTradeNewConfirmed(Player player)
+	{
+		player.getConnection().startPacket();
+		player.getConnection().writeShort(PacketID.TRADE);
+		player.getConnection().writeShort(PacketID.TRADE_NEW_CONFIRMED);
+		player.getConnection().endPacket();
+		player.getConnection().send();
 	}
 	
 	private static void tradeAccept(Player player)

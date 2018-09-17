@@ -32,8 +32,8 @@ public class CommandLoadCharacter extends Command
 		}
 		if(!CharacterMgr.checkPlayerAccount(player.getAccountId(), id))
 		{
-			player.close();
 			Log.writePlayerLog(player, new StringBuilder().append("tried to connect on someone else's character (id = ").append(id).append(')').toString());
+			player.close();
 			return;
 		}
 		if ((duration = BanMgr.isCharacterBannedHighAsync(id)) != -1)
