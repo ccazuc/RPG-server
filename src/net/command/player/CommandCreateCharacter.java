@@ -140,7 +140,7 @@ public class CommandCreateCharacter extends Command
 		while(i < name.length())
 		{
 			char c = name.charAt(i);
-			if(!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½')
+			if(!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) /*&& c != 'é' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½' && c != 'ï¿½'*/)
 			{
 				connection.startPacket();
 				connection.writeShort(PacketID.CREATE_CHARACTER);
